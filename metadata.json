@@ -1,0 +1,5 @@
+{
+  "name": "SafePost Compliance Checker",
+  "description": "A compliance analysis tool for Australian medical practitioners to check social media posts against Ahpra advertising guidelines.",
+  "requestFramePermissions": []
+}
