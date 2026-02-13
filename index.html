@@ -32,35 +32,31 @@
 
     body {
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background-color: #030712;
-      color: #f8fafc;
+      background-color: #f7f7f4;
+      color: #1a1a1a;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
 
-    /* Subtle animated gradient background */
     .bg-mesh {
-      background:
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.12) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 50%, rgba(99, 102, 241, 0.06) 0%, transparent 50%),
-        #030712;
+      background: #f7f7f4;
     }
 
     /* Glow effects */
     .input-glow {
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.1);
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06);
       transition: box-shadow 0.3s ease, border-color 0.3s ease;
     }
     .input-glow:focus-within {
-      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.1), 0 8px 32px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.06), 0 8px 32px rgba(0, 0, 0, 0.06);
     }
 
     /* Card glass effect */
     .glass-card {
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(255, 255, 255, 0.8);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(148, 163, 184, 0.08);
+      border: 1px solid rgba(0, 0, 0, 0.06);
     }
 
     /* Smooth transitions */
@@ -82,14 +78,14 @@
 
     /* Gradient text */
     .gradient-text {
-      background: linear-gradient(135deg, #f8fafc 0%, #94a3b8 100%);
+      background: linear-gradient(135deg, #1a1a1a 0%, #4a4a4a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
 
     .gradient-text-blue {
-      background: linear-gradient(135deg, #60a5fa 0%, #818cf8 100%);
+      background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -98,8 +94,8 @@
     /* Refined scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.2); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(148, 163, 184, 0.3); }
+    ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.12); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.2); }
 
     /* Button shine */
     .btn-primary {
@@ -131,8 +127,8 @@
     }
 
     /* Textarea styling */
-    textarea::placeholder { color: #475569; }
-    textarea { color: #f1f5f9; }
+    textarea::placeholder { color: #9ca3af; }
+    textarea { color: #1a1a1a; }
   </style>
 </head>
 <body>
