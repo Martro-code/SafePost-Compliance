@@ -331,13 +331,13 @@ const App: React.FC = () => {
       {/* Activities That Trigger Ahpra Investigation */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="text-center mb-12">
+          <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
               Activities that trigger Ahpra investigation
             </h2>
           </div>
 
-          <div className="max-w-3xl mx-auto flex flex-col gap-4">
+          <div className="flex flex-col gap-4">
             {[
               {
                 title: 'Political content that calls for inappropriate action',
