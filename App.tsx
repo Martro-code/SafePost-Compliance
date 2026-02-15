@@ -153,7 +153,7 @@ const App: React.FC = () => {
 
       {/* How It Works — Video Demo */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32">
+        <div className="max-w-6xl mx-auto px-6 pt-8 md:pt-12 pb-24 md:pb-32">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
             {/* Left Column — Text Content */}
             <div className="space-y-6">
@@ -161,16 +161,16 @@ const App: React.FC = () => {
                 How it works
               </span>
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
-                See SafePost in action
+                See SafePost™ in action
               </h2>
               <p className="text-lg text-gray-500 leading-relaxed">
-                Watch how SafePost identifies AHPRA compliance issues and generates compliant alternatives in seconds.
+                Watch how SafePost™ identifies AHPRA compliance issues and generates compliant alternatives in seconds.
               </p>
               <p className="text-[15px] text-gray-400 leading-relaxed">
                 Our AI-powered tool analyses your social media posts and advertising content against AHPRA's advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
               </p>
               <div className="pt-2">
-                <button className="btn-primary px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/20 transition-all duration-300 flex items-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-500/30 hover:translate-y-[-1px]">
+                <button className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px]">
                   Request Early Access
                   <ArrowRight className="w-4 h-4" />
                 </button>
