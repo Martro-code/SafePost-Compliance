@@ -331,16 +331,13 @@ const App: React.FC = () => {
       {/* Activities That Trigger Ahpra Investigation */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="text-center mb-6">
+          <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
               Activities that trigger Ahpra investigation
             </h2>
           </div>
-          <p className="text-center text-[15px] text-gray-500 leading-relaxed max-w-3xl mx-auto mb-12">
-            National Boards may take action in respect of notifications if the social media activity presents risks to public safety, risks the public's confidence in the profession, or requires action to maintain professional standards.
-          </p>
 
-          <div className="max-w-3xl mx-auto flex flex-col gap-3">
+          <div className="max-w-3xl mx-auto flex flex-col gap-4">
             {[
               {
                 title: 'Political content that calls for inappropriate action',
@@ -367,25 +364,30 @@ const App: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className="bg-white rounded-2xl border border-black/[0.06] transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm overflow-hidden"
+                  className={`rounded-xl border bg-white overflow-hidden transition-all duration-200 ${
+                    isOpen
+                      ? 'border-black/[0.08] shadow-md shadow-black/[0.04]'
+                      : 'border-black/[0.06] shadow-sm shadow-black/[0.02] hover:border-black/[0.1] hover:shadow-md hover:shadow-black/[0.04]'
+                  }`}
                 >
                   <button
                     onClick={() => setOpenAccordion(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between px-7 py-5 text-left cursor-pointer"
+                    className="w-full flex items-center justify-between px-6 py-5 text-left cursor-pointer group"
                   >
-                    <div className="flex items-center gap-4 min-w-0">
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-blue-600 whitespace-nowrap">
-                        Example {index + 1}
-                      </span>
-                      <span className="text-[15px] font-semibold text-gray-900 leading-snug">
-                        {item.title}
-                      </span>
-                    </div>
-                    <ChevronDown
-                      className={`w-5 h-5 text-gray-400 flex-shrink-0 ml-4 transition-transform duration-300 ${
-                        isOpen ? 'rotate-180' : ''
+                    <span className="text-[15px] font-semibold text-gray-900 leading-snug pr-4">
+                      {item.title}
+                    </span>
+                    <div
+                      className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-200 ${
+                        isOpen ? 'bg-gray-100' : 'bg-gray-50 group-hover:bg-gray-100'
                       }`}
-                    />
+                    >
+                      <ChevronDown
+                        className={`w-4 h-4 text-gray-500 transition-transform duration-300 ease-in-out ${
+                          isOpen ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </div>
                   </button>
                   <div
                     className="transition-all duration-300 ease-in-out"
@@ -394,8 +396,8 @@ const App: React.FC = () => {
                       opacity: isOpen ? 1 : 0,
                     }}
                   >
-                    <div className="px-7 pb-6 pt-0">
-                      <div className="border-t border-black/[0.04] pt-5">
+                    <div className="px-6 pb-6 pt-0">
+                      <div className="border-t border-gray-100 pt-4">
                         <p className="text-[14px] text-gray-500 leading-relaxed">
                           {item.description}
                         </p>
