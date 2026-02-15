@@ -520,6 +520,31 @@ const App: React.FC = () => {
             </div>
           </div>
         </section>
+
+        {/* Call to Action */}
+        <section className="w-full bg-white">
+          <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-10">
+              Try SafePost™ Now
+            </h2>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+              <button
+                onClick={() => {}}
+                className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px]"
+              >
+                Get Started
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => {}}
+                className="px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center gap-2.5 active:scale-[0.97]"
+              >
+                Login
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </section>
       </main>
 
       {/* Footer / Disclaimer */}
