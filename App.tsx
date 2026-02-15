@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Search, ShieldCheck, AlertCircle, CheckCircle2, Loader2, Info, ArrowRight, AlertTriangle, Image as ImageIcon, X, Sparkles, Copy, Check, ExternalLink, ChevronDown } from 'lucide-react';
+import { Search, ShieldCheck, AlertCircle, CheckCircle2, Loader2, Info, ArrowRight, AlertTriangle, Image as ImageIcon, X, Sparkles, Copy, Check, ExternalLink, ChevronDown, ShieldAlert, Users, Clock } from 'lucide-react';
 import { analyzePost, generateCompliantRewrites } from './services/geminiService';
 import { AnalysisResult, ComplianceStatus, RewrittenPost } from './types';
 
@@ -256,6 +256,56 @@ const App: React.FC = () => {
           </div>
           {/* Hero image/banner placeholder — add your image here */}
           <div className="mt-12 md:mt-16" />
+        </div>
+      </section>
+
+      {/* Why AHPRA Compliance Matters */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-14 text-center">
+            Why AHPRA compliance matters
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Column 1 */}
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
+              <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                <ShieldAlert className="w-7 h-7 text-blue-500/80" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                Protect your registration
+              </h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                Non-compliant advertising can trigger AHPRA investigations and disciplinary action. Even unintentional breaches can lead to conditions on your registration, fines, or suspension — putting your entire career at risk.
+              </p>
+            </div>
+
+            {/* Column 2 */}
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
+              <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                <Users className="w-7 h-7 text-blue-500/80" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                Safeguard your professional reputation
+              </h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                AHPRA breaches become public record. Misleading claims or unprofessional conduct online can damage patient trust, impact referrals, and harm your practice's reputation in the community for years.
+              </p>
+            </div>
+
+            {/* Column 3 */}
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
+              <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                <Clock className="w-7 h-7 text-blue-500/80" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                Navigate complex guidelines with confidence
+              </h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                AHPRA's advertising rules are intricate and constantly evolving. Manually checking every post against Section 133, testimonial restrictions, and cosmetic procedure guidelines wastes valuable time — and mistakes are easy to make.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
