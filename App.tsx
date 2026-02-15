@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { ShieldCheck, ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info } from 'lucide-react';
+import { ShieldCheck, ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink } from 'lucide-react';
 import { analyzePost, generateCompliantRewrites } from './services/geminiService';
 import { AnalysisResult, ComplianceStatus, RewrittenPost } from './types';
 
@@ -17,7 +17,17 @@ const App: React.FC = () => {
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [customersDropdownOpen, setCustomersDropdownOpen] = useState(false);
+  const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [openAccordion, setOpenAccordion] = useState<number | null>(null);
+
+  const resourceLinks = [
+    { label: 'Ahpra advertising guidelines', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
+    { label: 'Code of conduct for doctors', href: 'https://www.ahpra.gov.au/documents/default.aspx?record=WD20%2f30051&dbid=AP&chksum=9BSTs75R4%2fcPJY7vrmzHPg%3d%3d&_gl=1*1db63l6*_ga*MTk3OTQ0NjMyOC4xNzYxNDU3NTU5*_ga_F1G6LRCHZB*czE3NzExOTIyNDkkbzYkZzAkdDE3NzExOTIyNDkkajYwJGwwJGgw' },
+    { label: 'TGA advertising guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
+    { label: 'AMA guide to social media', href: 'https://www.ama.com.au/sites/default/files/2021-04/2020%20AMA%20Social%20Media%20Guide.pdf' },
+  ];
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -195,9 +205,32 @@ const App: React.FC = () => {
                 </div>
               )}
             </div>
-            <a href="#" onClick={(e) => e.preventDefault()} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Resources
-            </a>
+            <div className="relative">
+              <button
+                onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
+                onBlur={() => setTimeout(() => setResourcesDropdownOpen(false), 150)}
+                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Resources
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${resourcesDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {resourcesDropdownOpen && (
+                <div className="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  {resourceLinks.map((link, i) => (
+                    <a
+                      key={i}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
+                    >
+                      {link.label}
+                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
 
           {/* Right: Auth buttons */}
@@ -208,6 +241,77 @@ const App: React.FC = () => {
             <button onClick={() => {}} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
               Sign Up
             </button>
+          </div>
+
+          {/* Mobile: Hamburger button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
+            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Product
+            </a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Customers
+            </a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Company
+            </a>
+
+            {/* Mobile Resources Dropdown */}
+            <div>
+              <button
+                onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
+                className="w-full flex items-center justify-between px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Resources
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileResourcesOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{
+                  maxHeight: mobileResourcesOpen ? '300px' : '0px',
+                  opacity: mobileResourcesOpen ? 1 : 0,
+                }}
+              >
+                <div className="pl-4 space-y-0.5 pt-1">
+                  {resourceLinks.map((link, i) => (
+                    <a
+                      key={i}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors"
+                    >
+                      {link.label}
+                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile Auth Buttons */}
+            <div className="pt-3 border-t border-black/[0.06] flex flex-col gap-2">
+              <button onClick={() => {}} className="w-full px-4 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
+                Login
+              </button>
+              <button onClick={() => {}} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
+                Sign Up
+              </button>
+            </div>
           </div>
         </div>
       </header>
