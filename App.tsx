@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play } from 'lucide-react';
+import { ShieldCheck, ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp } from 'lucide-react';
 
 const App: React.FC = () => {
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -194,6 +194,81 @@ const App: React.FC = () => {
                   </span>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust & Credibility Indicators */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pt-4 md:pt-6 pb-24 md:pb-32">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+              Built on official AHPRA guidelines
+            </h2>
+            <p className="text-lg text-gray-500">
+              Comprehensive coverage you can trust
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Column 1 — Comprehensive Coverage */}
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
+              <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                <CheckCircle className="w-7 h-7 text-blue-500/80" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                Comprehensive coverage
+              </h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                Analyses posts against Section 133 of the National Law, testimonial restrictions, before/after photo regulations, cosmetic procedure advertising rules, and professional conduct standards.
+              </p>
+            </div>
+
+            {/* Column 2 — Official Guidelines */}
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
+              <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                <FileText className="w-7 h-7 text-blue-500/80" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                Official guidelines
+              </h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                Based directly on AHPRA's Social Media Guidance and Advertising Guidelines. All compliance checks reference current regulations.
+              </p>
+              <div className="flex flex-col gap-2">
+                <a
+                  href="https://www.ahpra.gov.au/Resources/Advertising-hub/Advertising-guidelines.aspx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  AHPRA Advertising Guidelines
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+                <a
+                  href="https://www.ahpra.gov.au/Resources/Advertising-hub/Resources-for-practitioners.aspx"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  Social Media Guidance
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Column 3 — Trusted by Professionals */}
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
+              <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                <TrendingUp className="w-7 h-7 text-blue-500/80" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                Trusted by medical professionals
+              </h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                Designed specifically for Australian medical practitioners and practices navigating complex advertising compliance requirements.
+              </p>
             </div>
           </div>
         </div>
