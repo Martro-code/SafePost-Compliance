@@ -242,6 +242,23 @@ const App: React.FC = () => {
         </div>
       </header>
 
+      {/* Hero Section */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20">
+          <div className="max-w-3xl">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-gray-900 mb-6">
+              Navigate your online presence and stay{' '}
+              <span className="gradient-text-blue">AHPRA-compliant.</span>
+            </h1>
+            <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
+              Instant social media and online advertising compliance checks for medical practitioners and practices.
+            </p>
+          </div>
+          {/* Hero image/banner placeholder — add your image here */}
+          <div className="mt-12 md:mt-16" />
+        </div>
+      </section>
+
       <main className="flex-grow flex flex-col items-center">
         {/* Hero / Search Section */}
         <section className={`w-full flex flex-col items-center transition-all duration-700 ease-out ${result ? 'pt-12 pb-8' : 'pt-28 md:pt-36 pb-16'}`}>
