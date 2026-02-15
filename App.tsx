@@ -332,9 +332,12 @@ const App: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
           <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
               Activities that trigger Ahpra investigation
             </h2>
+            <p className="text-lg text-gray-500">
+              Social media activities that are likely to warrant investigation.
+            </p>
           </div>
 
           <div className="flex flex-col gap-4">
