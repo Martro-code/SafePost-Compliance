@@ -278,6 +278,55 @@ const App: React.FC = () => {
         </div>
       </section>
 
+      {/* How It Works — 3 Steps */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+          <div className="text-center mb-14">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">
+              How it works
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mt-4">
+              Three simple steps to compliance
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Step 1 */}
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
+              <div className="text-5xl font-extrabold text-blue-600/20 mb-5">1</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                Paste your content
+              </h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                Copy and paste your social media post, ad copy, or marketing content directly into the tool — no sign-up or setup required.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
+              <div className="text-5xl font-extrabold text-blue-600/20 mb-5">2</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                Get instant analysis
+              </h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                Our AI analyses your content against AHPRA compliance guidelines and flags specific issues with direct references to the relevant rules and sections.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
+              <div className="text-5xl font-extrabold text-blue-600/20 mb-5">3</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                Receive compliant alternatives
+              </h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                Get ready-to-use rewritten versions of your content that meet AHPRA regulatory requirements — so you can post with confidence.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <main className="flex-grow flex flex-col items-center">
         {/* How It Works — Video Demo */}
         <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
