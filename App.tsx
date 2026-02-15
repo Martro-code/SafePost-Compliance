@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { ShieldCheck, ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { analyzePost, generateCompliantRewrites } from './services/geminiService';
 import { AnalysisResult, ComplianceStatus, RewrittenPost } from './types';
 
@@ -17,7 +18,6 @@ const App: React.FC = () => {
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [customersDropdownOpen, setCustomersDropdownOpen] = useState(false);
-  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -329,83 +329,51 @@ const App: React.FC = () => {
       </section>
 
       {/* Activities That Trigger Ahpra Investigation */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="text-center mb-6">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
-              Activities that trigger Ahpra investigation
-            </h2>
-          </div>
-          <p className="text-center text-[15px] text-gray-500 leading-relaxed max-w-3xl mx-auto mb-12">
-            National Boards may take action in respect of notifications if the social media activity presents risks to public safety, risks the public's confidence in the profession, or requires action to maintain professional standards.
-          </p>
-
-          <div className="max-w-3xl mx-auto flex flex-col gap-3">
-            {[
-              {
-                title: 'Political content that calls for inappropriate action',
-                description:
-                  'A practitioner posts to social media a condemnation of citizens of a country, or a cultural or religious identity. The post includes a call to action, such as signing a petition or attending a protest march, specifically aimed at denigrating or discriminating against a population or group. Depending on the specific circumstances or events being reported, this is potentially discriminatory and could be a breach of the code of conduct and social media guidance.',
-              },
-              {
-                title: 'Political content that is deliberately biased and not factual',
-                description:
-                  'A practitioner shares intentionally misleading content about citizens of a country, or a cultural or religious identity that is biased, inflammatory and has the potential to incite racial hatred, intolerance. The content is intended to influence and persuade and is not factual. A member of the public makes a complaint that the content is derogatory, slanderous or offensive, and that it is not factual. Depending on the specific circumstances or events being reported, the content may be a breach of the practitioner\u2019s code of conduct and social media guidance, and a review of the matter reveals that the non-factual material is a repost of private political sentiment that is posted to gain traction against a target group.',
-              },
-              {
-                title: 'Political content that raises concern about unsafe care',
-                description:
-                  'A practitioner claims in a social media post that the level of care they provide to a person may be affected by the person\u2019s nationality, racial background or the cultural beliefs of the person. This post has the potential to incite fear, racial hatred and intolerance. It also raises concerns that the practitioner\u2019s personal bias might lead to them not providing culturally safe care and/or providing inadequate care to patients from this background. The practitioner\u2019s activity is captured by a member of the public and reported to Ahpra.',
-              },
-              {
-                title: 'Praise for terrorist actions or groups',
-                description:
-                  'A practitioner creates posts glorifying or supporting violent actions and members of a terrorist organisation. The posts use language like \u2018the resistance\u2019 and other phrasing that makes light of, supports, denies or provides misinformation or propaganda around actions of the group. A colleague sees these posts and is concerned for the safety of the practitioner\u2019s multi-cultural patients so makes a notification to Ahpra. The promotion of misinformation, propaganda and content inciting hatred about another\u2019s country, religion or cultural beliefs could likely result in a National Board taking action in response to the notification.',
-              },
-            ].map((item, index) => {
-              const isOpen = openAccordion === index;
-              return (
-                <div
-                  key={index}
-                  className="bg-white rounded-2xl border border-black/[0.06] transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm overflow-hidden"
-                >
-                  <button
-                    onClick={() => setOpenAccordion(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between px-7 py-5 text-left cursor-pointer"
-                  >
-                    <div className="flex items-center gap-4 min-w-0">
-                      <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-blue-600 whitespace-nowrap">
-                        Example {index + 1}
-                      </span>
-                      <span className="text-[15px] font-semibold text-gray-900 leading-snug">
-                        {item.title}
-                      </span>
-                    </div>
-                    <ChevronDown
-                      className={`w-5 h-5 text-gray-400 flex-shrink-0 ml-4 transition-transform duration-300 ${
-                        isOpen ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </button>
-                  <div
-                    className="transition-all duration-300 ease-in-out"
-                    style={{
-                      maxHeight: isOpen ? '500px' : '0px',
-                      opacity: isOpen ? 1 : 0,
-                    }}
-                  >
-                    <div className="px-7 pb-6 pt-0">
-                      <div className="border-t border-black/[0.04] pt-5">
-                        <p className="text-[14px] text-gray-500 leading-relaxed">
-                          {item.description}
-                        </p>
-                      </div>
-                    </div>
+      <section className="w-full py-32" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6">
+          <h1 className="mb-4 text-3xl font-semibold md:mb-11 md:text-5xl">
+            Activities that trigger Ahpra investigation
+          </h1>
+          {[
+            {
+              title: 'Political content that calls for inappropriate action',
+              description:
+                'A practitioner posts to social media a condemnation of citizens of a country, or a cultural or religious identity. The post includes a call to action, such as signing a petition or attending a protest march, specifically aimed at denigrating or discriminating against a population or group. Depending on the specific circumstances or events being reported, this is potentially discriminatory and could be a breach of the code of conduct and social media guidance.',
+            },
+            {
+              title: 'Political content that is deliberately biased and not factual',
+              description:
+                'A practitioner shares intentionally misleading content about citizens of a country, or a cultural or religious identity that is biased, inflammatory and has the potential to incite racial hatred, intolerance. The content is intended to influence and persuade and is not factual. A member of the public makes a complaint that the content is derogatory, slanderous or offensive, and that it is not factual. Depending on the specific circumstances or events being reported, the content may be a breach of the practitioner\u2019s code of conduct and social media guidance, and a review of the matter reveals that the non-factual material is a repost of private political sentiment that is posted to gain traction against a target group.',
+            },
+            {
+              title: 'Political content that raises concern about unsafe care',
+              description:
+                'A practitioner claims in a social media post that the level of care they provide to a person may be affected by the person\u2019s nationality, racial background or the cultural beliefs of the person. This post has the potential to incite fear, racial hatred and intolerance. It also raises concerns that the practitioner\u2019s personal bias might lead to them not providing culturally safe care and/or providing inadequate care to patients from this background. The practitioner\u2019s activity is captured by a member of the public and reported to Ahpra.',
+            },
+            {
+              title: 'Praise for terrorist actions or groups',
+              description:
+                'A practitioner creates posts glorifying or supporting violent actions and members of a terrorist organisation. The posts use language like \u2018the resistance\u2019 and other phrasing that makes light of, supports, denies or provides misinformation or propaganda around actions of the group. A colleague sees these posts and is concerned for the safety of the practitioner\u2019s multi-cultural patients so makes a notification to Ahpra. The promotion of misinformation, propaganda and content inciting hatred about another\u2019s country, religion or cultural beliefs could likely result in a National Board taking action in response to the notification.',
+            },
+          ].map((item, index) => (
+            <Accordion key={index} type="single" collapsible>
+              <AccordionItem value={`item-${index}`}>
+                <AccordionTrigger className="hover:text-foreground/60 hover:no-underline">
+                  <div className="flex items-center gap-4 text-left">
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.15em] text-blue-600 whitespace-nowrap">
+                      Example {index + 1}
+                    </span>
+                    <span>{item.title}</span>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <p className="text-[14px] text-gray-500 leading-relaxed">
+                    {item.description}
+                  </p>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          ))}
         </div>
       </section>
 
