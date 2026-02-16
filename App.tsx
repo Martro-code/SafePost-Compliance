@@ -654,18 +654,78 @@ const App: React.FC = () => {
         </section>
       </main>
 
-      {/* Footer / Disclaimer */}
-      <footer className="bg-white border-t border-gray-200 py-12">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <div className="flex items-center justify-center gap-2 mb-6 opacity-60">
-            <ShieldCheck className="w-5 h-5 text-gray-400" />
-            <span className="text-gray-900 font-bold tracking-tight">SafePost Compliance Checker</span>
+      {/* Footer */}
+      <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
+        <div className="max-w-6xl mx-auto px-6">
+          {/* Footer Columns */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
+            {/* Product */}
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Product</h4>
+            </div>
+
+            {/* Pricing */}
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Pricing</h4>
+              <ul className="space-y-2.5">
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Medical Practitioners</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Medical Practices</a></li>
+              </ul>
+            </div>
+
+            {/* Company */}
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
+              <ul className="space-y-2.5">
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
+              </ul>
+            </div>
+
+            {/* Resources */}
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Resources</h4>
+              <ul className="space-y-2.5">
+                <li><a href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Ahpra Advertising Guidelines</a></li>
+                <li><a href="https://www.ahpra.gov.au/documents/default.aspx?record=WD20%2f30051&dbid=AP&chksum=9BSTs75R4%2fcPJY7vrmzHPg%3d%3d&_gl=1*1db63l6*_ga*MTk3OTQ0NjMyOC4xNzYxNDU3NTU5*_ga_F1G6LRCHZB*czE3NzExOTIyNDkkbzYkZzAkdDE3NzExOTIyNDkkajYwJGwwJGgw" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Code of Conduct for Doctors</a></li>
+                <li><a href="https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">TGA Advertising Guidelines</a></li>
+                <li><a href="https://www.ama.com.au/sites/default/files/2021-04/2020%20AMA%20Social%20Media%20Guide.pdf" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">AMA Guide to Social Media</a></li>
+              </ul>
+            </div>
+
+            {/* Legal */}
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Legal</h4>
+              <ul className="space-y-2.5">
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Terms of Service</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Privacy Policy</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Data Use</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Security</a></li>
+              </ul>
+            </div>
+
+            {/* Connect */}
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Connect</h4>
+              <ul className="space-y-2.5">
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">X</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">LinkedIn</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">YouTube</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Facebook</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Instagram</a></li>
+              </ul>
+            </div>
           </div>
-          <p className="text-[10px] text-gray-400 max-w-2xl mx-auto leading-relaxed tracking-wide">
-            Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
-            Ahpra and the National Boards do not provide pre-approval for advertising.
-            Registered health practitioners are ultimately responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law.
-          </p>
+
+          {/* Disclaimer + Copyright */}
+          <div className="mt-14 pt-6 border-t border-black/[0.06]">
+            <p className="text-[10px] text-gray-400 max-w-3xl leading-relaxed tracking-wide">
+              Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
+              Ahpra and the National Boards do not provide pre-approval for advertising.
+              Registered health practitioners are ultimately responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law.
+            </p>
+            <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2025</p>
+          </div>
         </div>
       </footer>
     </div>
