@@ -719,7 +719,7 @@ const App: React.FC = () => {
 
           {/* Disclaimer + Copyright */}
           <div className="mt-14 pt-6 border-t border-black/[0.06]">
-            <p className="text-[10px] text-gray-400 max-w-3xl leading-relaxed tracking-wide">
+            <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
               Ahpra and the National Boards do not provide pre-approval for advertising.
               Registered health practitioners are ultimately responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law.
