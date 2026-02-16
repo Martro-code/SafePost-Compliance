@@ -724,7 +724,7 @@ const App: React.FC = () => {
               Ahpra and the National Boards do not provide pre-approval for advertising.
               Registered health practitioners are ultimately responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law.
             </p>
-            <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2025</p>
+            <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>
           </div>
         </div>
       </footer>
