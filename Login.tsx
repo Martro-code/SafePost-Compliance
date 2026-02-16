@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ShieldCheck, ChevronDown, Eye, EyeOff, Menu, X, ExternalLink } from 'lucide-react';
 
-const SignUp: React.FC = () => {
+const Login: React.FC = () => {
   const navigate = useNavigate();
 
-  const [firstName, setFirstName] = useState('');
-  const [surname, setSurname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   // Header state
@@ -31,8 +27,6 @@ const SignUp: React.FC = () => {
 
   // Validation helpers
   const isValidEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-  const isValidPassword = (val: string) => val.length >= 8;
-  const passwordsMatch = () => confirmPassword.length > 0 && password === confirmPassword;
 
   const getInputClasses = (value: string, isValid: boolean) => {
     const base = 'w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200 placeholder:text-gray-400';
@@ -219,52 +213,22 @@ const SignUp: React.FC = () => {
         </div>
       </header>
 
-      {/* Sign Up Form */}
+      {/* Login Form */}
       <main className="flex-grow flex items-center justify-center px-6 py-16 md:py-24">
         <div className="w-full max-w-[450px]">
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Create Account
+                Welcome Back
               </h1>
               <p className="text-[14px] text-gray-500">
-                Enter your information to create a new account
+                Sign in to your account to continue
               </p>
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* First Name */}
-              <div>
-                <label htmlFor="firstName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  First name
-                </label>
-                <input
-                  id="firstName"
-                  type="text"
-                  placeholder="Enter your first name"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className={getInputClasses(firstName, firstName.trim().length > 0)}
-                />
-              </div>
-
-              {/* Surname */}
-              <div>
-                <label htmlFor="surname" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Surname
-                </label>
-                <input
-                  id="surname"
-                  type="text"
-                  placeholder="Enter your surname"
-                  value={surname}
-                  onChange={(e) => setSurname(e.target.value)}
-                  className={getInputClasses(surname, surname.trim().length > 0)}
-                />
-              </div>
-
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-[13px] font-medium text-gray-700 mb-1.5">
@@ -273,7 +237,7 @@ const SignUp: React.FC = () => {
                 <input
                   id="email"
                   type="email"
-                  placeholder="Enter your email address"
+                  placeholder="john.doe@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className={getInputClasses(email, isValidEmail(email))}
@@ -282,17 +246,22 @@ const SignUp: React.FC = () => {
 
               {/* Password */}
               <div>
-                <label htmlFor="password" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Password
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label htmlFor="password" className="block text-[13px] font-medium text-gray-700">
+                    Password
+                  </label>
+                  <a href="#" onClick={(e) => e.preventDefault()} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium">
+                    Forgot password?
+                  </a>
+                </div>
                 <div className="relative">
                   <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Create a password (min. 8 characters)"
+                    placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className={getInputClasses(password, isValidPassword(password))}
+                    className={getInputClasses(password, password.length > 0)}
                   />
                   <button
                     type="button"
@@ -304,48 +273,17 @@ const SignUp: React.FC = () => {
                 </div>
               </div>
 
-              {/* Confirm Password */}
-              <div>
-                <label htmlFor="confirmPassword" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Confirm Password
-                </label>
-                <div className="relative">
-                  <input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    placeholder="Confirm your password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className={getInputClasses(confirmPassword, passwordsMatch())}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showConfirmPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Terms Checkbox */}
-              <div className="flex items-start gap-3 pt-2">
+              {/* Remember Me Checkbox */}
+              <div className="flex items-center justify-end gap-2 pt-1">
                 <input
-                  id="terms"
+                  id="rememberMe"
                   type="checkbox"
-                  checked={agreedToTerms}
-                  onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
                 />
-                <label htmlFor="terms" className="text-[13px] text-gray-600 leading-relaxed cursor-pointer">
-                  I agree to the{' '}
-                  <a href="#" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                    Terms and Conditions
-                  </a>{' '}
-                  and{' '}
-                  <a href="#" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                    Privacy Policy
-                  </a>
+                <label htmlFor="rememberMe" className="text-[13px] text-gray-600 cursor-pointer">
+                  Remember me
                 </label>
               </div>
 
@@ -355,16 +293,16 @@ const SignUp: React.FC = () => {
                   type="submit"
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  Create Account
+                  Sign In
                 </button>
               </div>
             </form>
 
             {/* Footer */}
             <p className="text-center text-[13px] text-gray-500 mt-6">
-              Already have an account?{' '}
-              <a onClick={() => navigate('/login')} className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-2 cursor-pointer">
-                Sign In
+              Don't have an account?{' '}
+              <a onClick={() => navigate('/signup')} className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-2 cursor-pointer">
+                Sign Up
               </a>
             </p>
           </div>
@@ -374,4 +312,4 @@ const SignUp: React.FC = () => {
   );
 };
 
-export default SignUp;
+export default Login;
