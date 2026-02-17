@@ -221,7 +221,7 @@ const PricingMedicalPractitioners: React.FC = () => {
       {/* Hero Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-10 md:pb-12 text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.08] text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Pricing for Medical Practitioners
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
@@ -306,25 +306,10 @@ const PricingMedicalPractitioners: React.FC = () => {
                 <p className="text-[14px] text-gray-500">For practitioners who post regularly</p>
               </div>
               <div className="mb-8">
-                {isYearly ? (
-                  <div>
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-4xl md:text-5xl font-extrabold text-gray-900">$16</span>
-                      <span className="text-[15px] text-gray-500 font-medium">/month</span>
-                    </div>
-                    <div className="mt-1.5 flex items-center gap-2">
-                      <span className="text-[14px] text-gray-400 line-through">$20</span>
-                      <span className="text-[12px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
-                        Save $48/year
-                      </span>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-4xl md:text-5xl font-extrabold text-gray-900">$20</span>
-                    <span className="text-[15px] text-gray-500 font-medium">/month</span>
-                  </div>
-                )}
+                <div className="flex items-baseline gap-2">
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900">{isYearly ? '$16' : '$20'}</span>
+                  <span className="text-[15px] text-gray-500 font-medium">/month</span>
+                </div>
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
