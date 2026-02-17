@@ -40,8 +40,8 @@ const PricingMedicalPractices: React.FC = () => {
       answer: 'SafePost\u2122 includes specialised analysis for cosmetic procedure advertising, which has particularly strict AHPRA requirements. We check for prohibited before/after photos, testimonial restrictions, claims about outcomes, use of practitioner titles, and cosmetic procedure terminology. The Ultra plan also provides guidance on TGA compliance for therapeutic goods often used in aesthetic practices (prescription medications, medical devices, etc.).',
     },
     {
-      question: 'How does SafePost\u2122 stay up-to-date with changing AHPRA and TGA regulations?',
-      answer: 'AHPRA and TGA guidelines are regularly updated, and SafePost\u2122\u2019s compliance database is continuously maintained to reflect the latest regulatory changes. Our team monitors official guidance updates, case decisions, and regulatory announcements to ensure our analysis remains current. Ultra plan subscribers receive proactive notifications when significant guideline changes affect their content categories, helping your practice stay ahead of compliance requirements.',
+      question: 'What types of online advertising does SafePost\u2122 check?',
+      answer: 'SafePost\u2122 analyses a wide range of online advertising content including social media posts (Instagram, Facebook, LinkedIn, TikTok), paid social media ads, Google Ads copy, website content and landing pages, email marketing campaigns, online directory listings, and promotional blog posts. The Ultra plan extends coverage to include Google Business Profile content, third-party review site responses, patient newsletter content, and TGA-regulated therapeutic goods advertising across all digital channels.',
     },
   ];
 
@@ -266,8 +266,13 @@ const PricingMedicalPractices: React.FC = () => {
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">$49</span>
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$39' : '$49'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
+                  {isYearly && (
+                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
+                      Save 20%
+                    </span>
+                  )}
                 </div>
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
@@ -311,6 +316,11 @@ const PricingMedicalPractices: React.FC = () => {
                 <div className="flex items-end gap-2">
                   <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$160' : '$200'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
+                  {isYearly && (
+                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
+                      Save 20%
+                    </span>
+                  )}
                 </div>
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
