@@ -250,11 +250,6 @@ const PricingMedicalPractitioners: React.FC = () => {
             <span className={`text-[14px] font-medium transition-colors duration-200 ${isYearly ? 'text-gray-900' : 'text-gray-400'}`}>
               Yearly
             </span>
-            {isYearly && (
-              <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
-                Save 20%
-              </span>
-            )}
           </div>
         </div>
       </section>
@@ -309,6 +304,11 @@ const PricingMedicalPractitioners: React.FC = () => {
                 <div className="flex items-baseline gap-2">
                   <span className="text-4xl md:text-5xl font-extrabold text-gray-900">{isYearly ? '$16' : '$20'}</span>
                   <span className="text-[15px] text-gray-500 font-medium">/month</span>
+                  {isYearly && (
+                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
+                      Save 20%
+                    </span>
+                  )}
                 </div>
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
