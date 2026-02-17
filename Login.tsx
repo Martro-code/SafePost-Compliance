@@ -19,10 +19,9 @@ const Login: React.FC = () => {
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
 
   const resourceLinks = [
-    { label: 'Ahpra advertising guidelines', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
-    { label: 'Code of conduct for doctors', href: 'https://www.ahpra.gov.au/documents/default.aspx?record=WD20%2f30051&dbid=AP&chksum=9BSTs75R4%2fcPJY7vrmzHPg%3d%3d&_gl=1*1db63l6*_ga*MTk3OTQ0NjMyOC4xNzYxNDU3NTU5*_ga_F1G6LRCHZB*czE3NzExOTIyNDkkbzYkZzAkdDE3NzExOTIyNDkkajYwJGwwJGgw' },
-    { label: 'TGA advertising guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
-    { label: 'AMA guide to social media', href: 'https://www.ama.com.au/sites/default/files/2021-04/2020%20AMA%20Social%20Media%20Guide.pdf' },
+    { label: 'Advertising hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
+    { label: 'Code of conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
+    { label: 'TGA guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
   // Validation helpers
@@ -53,7 +52,7 @@ const Login: React.FC = () => {
               </div>
             </div>
             <span className="text-[15px] font-semibold text-gray-900 tracking-tight">
-              SafePost<span className="text-blue-600 ml-0.5">.</span>
+              SafePost&trade;
             </span>
           </Link>
 
@@ -68,7 +67,7 @@ const Login: React.FC = () => {
                 onBlur={() => setTimeout(() => setCustomersDropdownOpen(false), 150)}
                 className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
               >
-                Customers
+                Pricing
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${customersDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {customersDropdownOpen && (
@@ -161,7 +160,7 @@ const Login: React.FC = () => {
               Product
             </a>
             <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Customers
+              Pricing
             </a>
             <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Company

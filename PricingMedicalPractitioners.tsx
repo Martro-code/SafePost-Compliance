@@ -16,10 +16,9 @@ const PricingMedicalPractitioners: React.FC = () => {
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
 
   const resourceLinks = [
-    { label: 'Ahpra advertising guidelines', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
-    { label: 'Code of conduct for doctors', href: 'https://www.ahpra.gov.au/documents/default.aspx?record=WD20%2f30051&dbid=AP&chksum=9BSTs75R4%2fcPJY7vrmzHPg%3d%3d&_gl=1*1db63l6*_ga*MTk3OTQ0NjMyOC4xNzYxNDU3NTU5*_ga_F1G6LRCHZB*czE3NzExOTIyNDkkbzYkZzAkdDE3NzExOTIyNDkkajYwJGwwJGgw' },
-    { label: 'TGA advertising guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
-    { label: 'AMA guide to social media', href: 'https://www.ama.com.au/sites/default/files/2021-04/2020%20AMA%20Social%20Media%20Guide.pdf' },
+    { label: 'Advertising hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
+    { label: 'Code of conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
+    { label: 'TGA guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
   const faqs = [
@@ -58,7 +57,7 @@ const PricingMedicalPractitioners: React.FC = () => {
               </div>
             </div>
             <span className="text-[15px] font-semibold text-gray-900 tracking-tight">
-              SafePost<span className="text-blue-600 ml-0.5">.</span>
+              SafePost&trade;
             </span>
           </Link>
 
@@ -473,10 +472,9 @@ const PricingMedicalPractitioners: React.FC = () => {
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Resources</h4>
               <ul className="space-y-2.5">
-                <li><a href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Ahpra Advertising Guidelines</a></li>
-                <li><a href="https://www.ahpra.gov.au/documents/default.aspx?record=WD20%2f30051&dbid=AP&chksum=9BSTs75R4%2fcPJY7vrmzHPg%3d%3d&_gl=1*1db63l6*_ga*MTk3OTQ0NjMyOC4xNzYxNDU3NTU5*_ga_F1G6LRCHZB*czE3NzExOTIyNDkkbzYkZzAkdDE3NzExOTIyNDkkajYwJGwwJGgw" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Code of Conduct for Doctors</a></li>
-                <li><a href="https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">TGA Advertising Guidelines</a></li>
-                <li><a href="https://www.ama.com.au/sites/default/files/2021-04/2020%20AMA%20Social%20Media%20Guide.pdf" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">AMA Guide to Social Media</a></li>
+                <li><a href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Advertising hub</a></li>
+                <li><a href="https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Code of conduct</a></li>
+                <li><a href="https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">TGA guidelines</a></li>
               </ul>
             </div>
 
