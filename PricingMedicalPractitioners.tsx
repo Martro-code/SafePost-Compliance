@@ -301,11 +301,11 @@ const PricingMedicalPractitioners: React.FC = () => {
                 <p className="text-[14px] text-gray-500">For practitioners who post regularly</p>
               </div>
               <div className="mb-8">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900">{isYearly ? '$16' : '$20'}</span>
-                  <span className="text-[15px] text-gray-500 font-medium">/month</span>
+                <div className="flex items-end gap-2">
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$16' : '$20'}</span>
+                  <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
                   {isYearly && (
-                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
+                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
                       Save 20%
                     </span>
                   )}
