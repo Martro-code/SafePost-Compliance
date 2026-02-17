@@ -515,7 +515,7 @@ const PricingMedicalPractices: React.FC = () => {
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Connect</h4>
               <ul className="space-y-2.5">
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Contact us</a></li>
+                <li><button onClick={() => navigate('/contact')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Contact us</button></li>
               </ul>
             </div>
           </div>

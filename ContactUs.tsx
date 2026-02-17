@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
+import { ShieldCheck, ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 
-const PricingMedicalPractitioners: React.FC = () => {
+const ContactUs: React.FC = () => {
   const navigate = useNavigate();
 
-  const [isYearly, setIsYearly] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [firstName, setFirstName] = useState('');
+  const [surname, setSurname] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
+  const [message, setMessage] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -22,28 +27,44 @@ const PricingMedicalPractitioners: React.FC = () => {
     { label: 'AMA guide to social media', href: 'https://www.ama.com.au/sites/default/files/2021-04/2020%20AMA%20Social%20Media%20Guide.pdf' },
   ];
 
-  const faqs = [
-    {
-      question: 'Do I need to be AHPRA-registered to use SafePost\u2122?',
-      answer: 'Yes, SafePost\u2122 is designed specifically for AHPRA-registered medical practitioners in Australia. Our compliance checks are based on Australian health practitioner advertising regulations and may not be applicable to practitioners in other jurisdictions.',
-    },
-    {
-      question: 'Can SafePost\u2122 guarantee my content will be compliant?',
-      answer: 'SafePost\u2122 is a guidance tool that helps identify potential compliance issues based on AHPRA\u2019s advertising guidelines and social media guidance. While we provide comprehensive analysis and compliant alternatives, AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain ultimately responsible for ensuring their content complies with the National Law.',
-    },
-    {
-      question: 'What happens if I exceed my 3 free checks?',
-      answer: 'Once you\u2019ve used your 3 compliance checks on the Starter plan, you\u2019ll need to upgrade to SafePost\u2122 Professional for unlimited checks. We\u2019ll send you a notification when you\u2019re exceeded your limit.',
-    },
-    {
-      question: 'Can I analyse content that includes images or before/after photos?',
-      answer: 'Yes! SafePost\u2122 Professional includes image and video content analysis, which is particularly important for cosmetic procedure advertising. Our AI analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan only supports text-based analysis.',
-    },
-    {
-      question: 'How quickly can I get compliance results?',
-      answer: 'SafePost\u2122 provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA guideline references, and if you\u2019re on the Professional plan, you\u2019ll also receive AI-generated compliant alternatives you can use right away.',
-    },
-  ];
+  // Validation helpers
+  const isValidEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+
+  const getInputClasses = (value: string, isValid: boolean) => {
+    const base = 'w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200 placeholder:text-gray-400';
+    if (!submitted && value.length === 0) return `${base} border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20`;
+    if (isValid) return `${base} border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20`;
+    return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
+  };
+
+  const getTextareaClasses = (value: string, isValid: boolean) => {
+    const base = 'w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200 placeholder:text-gray-400 resize-none';
+    if (!submitted && value.length === 0) return `${base} border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20`;
+    if (isValid) return `${base} border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20`;
+    return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+
+    const isFormValid =
+      firstName.trim().length > 0 &&
+      surname.trim().length > 0 &&
+      isValidEmail(email) &&
+      phone.trim().length > 0 &&
+      message.trim().length > 0;
+
+    if (isFormValid) {
+      setSuccess(true);
+      setFirstName('');
+      setSurname('');
+      setEmail('');
+      setPhone('');
+      setMessage('');
+      setSubmitted(false);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
@@ -165,9 +186,9 @@ const PricingMedicalPractitioners: React.FC = () => {
             <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Product
             </a>
-            <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Pricing
-            </button>
+            </a>
             <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Company
             </a>
@@ -218,228 +239,120 @@ const PricingMedicalPractitioners: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-10 md:pb-12 text-center">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Pricing for Medical Practitioners
-          </h1>
-          <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Choose the plan that's right for you
-          </p>
-        </div>
-      </section>
-
-      {/* Monthly/Yearly Toggle */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-12 md:pb-16">
-          <div className="flex items-center justify-center gap-3">
-            <span className={`text-[14px] font-medium transition-colors duration-200 ${!isYearly ? 'text-gray-900' : 'text-gray-400'}`}>
-              Monthly
-            </span>
-            <button
-              onClick={() => setIsYearly(!isYearly)}
-              className="relative w-12 h-7 rounded-full transition-colors duration-300 focus:outline-none"
-              style={{ backgroundColor: isYearly ? '#3b82f6' : '#d1d5db' }}
-            >
-              <div
-                className="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-sm transition-transform duration-300"
-                style={{ transform: isYearly ? 'translateX(20px)' : 'translateX(0)' }}
-              />
-            </button>
-            <span className={`text-[14px] font-medium transition-colors duration-200 ${isYearly ? 'text-gray-900' : 'text-gray-400'}`}>
-              Yearly
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Cards */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-20 md:pb-24">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Starter Card */}
-            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 md:p-10 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm flex flex-col">
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Starter</h3>
-                <p className="text-[14px] text-gray-500">Perfect for trying out SafePost&trade;</p>
-              </div>
-              <div className="mb-8">
-                <span className="text-4xl md:text-5xl font-extrabold text-gray-900">Free</span>
-              </div>
-              <ul className="space-y-3.5 mb-10 flex-grow">
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">3 free compliance checks</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Identify non-compliant content</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">No credit card required</span>
-                </li>
-              </ul>
-              <button
-                onClick={() => navigate('/signup')}
-                className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
-              >
-                Start Free
-              </button>
+      {/* Contact Form */}
+      <main className="flex-grow flex items-center justify-center px-6 py-16 md:py-24">
+        <div className="w-full max-w-[550px]">
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
+                Get in touch
+              </h1>
+              <p className="text-[14px] text-gray-500">
+                We'd love to hear from you! Please fill out the form below
+              </p>
             </div>
 
-            {/* Professional Card */}
-            <div className="relative bg-white rounded-2xl border-2 border-blue-200 p-8 md:p-10 shadow-lg shadow-blue-600/[0.06] flex flex-col">
-              <div className="absolute -top-3 right-6">
-                <span className="text-[11px] font-semibold text-white bg-blue-600 px-3 py-1 rounded-full shadow-sm">
-                  Most Popular
-                </span>
+            {/* Success Message */}
+            {success && (
+              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-[14px] text-green-700 text-center">
+                  Thank you for contacting us! We'll get back to you within 24 hours.
+                </p>
               </div>
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Professional</h3>
-                <p className="text-[14px] text-gray-500">For practitioners who post regularly</p>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* First Name */}
+              <div>
+                <label htmlFor="firstName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  First name
+                </label>
+                <input
+                  id="firstName"
+                  type="text"
+                  placeholder="John"
+                  value={firstName}
+                  onChange={(e) => { setFirstName(e.target.value); setSuccess(false); }}
+                  className={getInputClasses(firstName, firstName.trim().length > 0)}
+                />
               </div>
-              <div className="mb-8">
-                <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$16' : '$20'}</span>
-                  <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
-                  {isYearly && (
-                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
-                      Save 20%
-                    </span>
-                  )}
-                </div>
+
+              {/* Surname */}
+              <div>
+                <label htmlFor="surname" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Surname
+                </label>
+                <input
+                  id="surname"
+                  type="text"
+                  placeholder="Doe"
+                  value={surname}
+                  onChange={(e) => { setSurname(e.target.value); setSuccess(false); }}
+                  className={getInputClasses(surname, surname.trim().length > 0)}
+                />
               </div>
-              <ul className="space-y-3.5 mb-10 flex-grow">
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Unlimited compliance checks</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliant content rewrites (AI-generated alternatives)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Image and video content analysis</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliance history tracking</span>
-                </li>
-              </ul>
-              <button
-                onClick={() => navigate('/signup')}
-                className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
-              >
-                Go Pro
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Trust Indicators */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
-            <span className="text-[13px] text-gray-500 font-medium">Cancel anytime</span>
-            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
-            <span className="text-[13px] text-gray-500 font-medium">No long-term contracts</span>
-            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
-            <span className="text-[13px] text-gray-500 font-medium">Australian-based support</span>
-          </div>
-        </div>
-      </section>
+              {/* Email */}
+              <div>
+                <label htmlFor="email" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="john.doe@example.com"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); setSuccess(false); }}
+                  className={getInputClasses(email, isValidEmail(email))}
+                />
+              </div>
 
-      {/* FAQ Section */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-14 text-center">
-            Frequently Asked Questions
-          </h2>
+              {/* Phone Number */}
+              <div>
+                <label htmlFor="phone" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Phone number
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  placeholder="04XX XXX XXX"
+                  value={phone}
+                  onChange={(e) => { setPhone(e.target.value); setSuccess(false); }}
+                  className={getInputClasses(phone, phone.trim().length > 0)}
+                />
+              </div>
 
-          <div className="flex flex-col gap-4">
-            {faqs.map((faq, index) => {
-              const isOpen = openFaq === index;
-              return (
-                <div
-                  key={index}
-                  className={`rounded-xl border bg-white overflow-hidden transition-all duration-200 ${
-                    isOpen
-                      ? 'border-black/[0.08] shadow-md shadow-black/[0.04]'
-                      : 'border-black/[0.06] shadow-sm shadow-black/[0.02] hover:border-black/[0.1] hover:shadow-md hover:shadow-black/[0.04]'
-                  }`}
+              {/* Message */}
+              <div>
+                <label htmlFor="message" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  placeholder="Tell us how we can help..."
+                  value={message}
+                  onChange={(e) => { setMessage(e.target.value); setSuccess(false); }}
+                  rows={6}
+                  style={{ height: '150px' }}
+                  className={getTextareaClasses(message, message.trim().length > 0)}
+                />
+              </div>
+
+              {/* Submit Button */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  <button
-                    onClick={() => setOpenFaq(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between px-6 py-5 text-left cursor-pointer group"
-                  >
-                    <span className="text-[15px] font-semibold text-gray-900 leading-snug pr-4">
-                      {faq.question}
-                    </span>
-                    <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-200 ${
-                        isOpen ? 'bg-gray-100' : 'bg-gray-50 group-hover:bg-gray-100'
-                      }`}
-                    >
-                      <ChevronDown
-                        className={`w-4 h-4 text-gray-500 transition-transform duration-300 ease-in-out ${
-                          isOpen ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </div>
-                  </button>
-                  <div
-                    className="transition-all duration-300 ease-in-out"
-                    style={{
-                      maxHeight: isOpen ? '500px' : '0px',
-                      opacity: isOpen ? 1 : 0,
-                    }}
-                  >
-                    <div className="px-6 pb-6 pt-0">
-                      <div className="border-t border-gray-100 pt-4">
-                        <p className="text-[14px] text-gray-500 leading-relaxed">
-                          {faq.answer}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to stay compliant?
-          </h2>
-          <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Start with 3 free compliance checks and see how SafePost&trade; can protect your practice
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => navigate('/signup')}
-              className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px] min-w-[180px]"
-            >
-              Get Started
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
-            >
-              Login
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section>
+      </main>
 
       {/* Footer */}
       <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
@@ -515,4 +428,4 @@ const PricingMedicalPractitioners: React.FC = () => {
   );
 };
 
-export default PricingMedicalPractitioners;
+export default ContactUs;

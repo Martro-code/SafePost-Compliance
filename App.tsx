@@ -5,6 +5,7 @@ import SignUp from './SignUp';
 import Login from './Login';
 import PricingMedicalPractitioners from './PricingMedicalPractitioners';
 import PricingMedicalPractices from './PricingMedicalPractices';
+import ContactUs from './ContactUs';
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/pricing/medical-practitioners" element={<PricingMedicalPractitioners />} />
       <Route path="/pricing/medical-practices" element={<PricingMedicalPractices />} />
+      <Route path="/contact" element={<ContactUs />} />
     </Routes>
   );
 };
