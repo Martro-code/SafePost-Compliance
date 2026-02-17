@@ -182,9 +182,9 @@ const HomePage: React.FC = () => {
                   <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     Medical Practitioners
                   </button>
-                  <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                  <button onClick={() => navigate('/pricing/medical-practices')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     Medical Practices
-                  </a>
+                  </button>
                 </div>
               )}
             </div>
@@ -672,7 +672,7 @@ const HomePage: React.FC = () => {
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Pricing</h4>
               <ul className="space-y-2.5">
                 <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Medical Practitioners</button></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Medical Practices</a></li>
+                <li><button onClick={() => navigate('/pricing/medical-practices')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Medical Practices</button></li>
               </ul>
             </div>
 

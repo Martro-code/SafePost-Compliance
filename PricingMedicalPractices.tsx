@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ShieldCheck, ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 
-const PricingMedicalPractitioners: React.FC = () => {
+const PricingMedicalPractices: React.FC = () => {
   const navigate = useNavigate();
 
   const [isYearly, setIsYearly] = useState(false);
@@ -24,24 +24,24 @@ const PricingMedicalPractitioners: React.FC = () => {
 
   const faqs = [
     {
-      question: 'Do I need to be AHPRA-registered to use SafePost\u2122?',
-      answer: 'Yes, SafePost\u2122 is designed specifically for AHPRA-registered medical practitioners in Australia. Our compliance checks are based on Australian health practitioner advertising regulations and may not be applicable to practitioners in other jurisdictions.',
+      question: 'What\u2019s the difference between social media and online advertising compliance checks?',
+      answer: 'Social media compliance focuses on organic posts, stories, and reels on platforms like Instagram, Facebook, LinkedIn, and TikTok. Online advertising compliance covers paid promotional content including Google Ads, Facebook/Instagram Ads, website landing pages, and any therapeutic goods advertising subject to TGA regulations. The Ultra plan provides comprehensive analysis across both categories, which is essential for practices running integrated marketing campaigns.',
     },
     {
-      question: 'Can SafePost\u2122 guarantee my content will be compliant?',
-      answer: 'SafePost\u2122 is a guidance tool that helps identify potential compliance issues based on AHPRA\u2019s advertising guidelines and social media guidance. While we provide comprehensive analysis and compliant alternatives, AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain ultimately responsible for ensuring their content complies with the National Law.',
+      question: 'Can multiple staff members use the same SafePost\u2122 account?',
+      answer: 'Yes! The Pro+ plan includes access for up to 3 team members (perfect for a practice manager and 2 practitioners), while the Ultra plan supports up to 10 team members. Each team member gets their own login, and you can track compliance checks by user. This is ideal for practices where multiple people manage social media, marketing materials, or patient communications.',
     },
     {
-      question: 'What happens if I exceed my 3 free checks?',
-      answer: 'Once you\u2019ve used your 3 compliance checks on the Starter plan, you\u2019ll need to upgrade to SafePost\u2122 Professional for unlimited checks. We\u2019ll send you a notification when you\u2019re exceeded your limit.',
+      question: 'Do you offer compliance checks for social media activity and website content?',
+      answer: 'Yes! Both Pro+ and Ultra plans include online advertising compliance analysis, which covers website content, patient information pages, and promotional materials. The Ultra plan includes more comprehensive analysis for complex advertising scenarios, including TGA therapeutic goods advertising requirements, multi-channel campaigns, and bulk content reviews. This ensures your entire digital presence remains compliant.',
     },
     {
-      question: 'Can I analyse content that includes images or before/after photos?',
-      answer: 'Yes! SafePost\u2122 Professional includes image and video content analysis, which is particularly important for cosmetic procedure advertising. Our AI analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan only supports text-based analysis.',
+      question: 'How does SafePost\u2122 handle compliance for cosmetic procedures?',
+      answer: 'SafePost\u2122 includes specialised analysis for cosmetic procedure advertising, which has particularly strict AHPRA requirements. We check for prohibited before/after photos, testimonial restrictions, claims about outcomes, use of practitioner titles, and cosmetic procedure terminology. The Ultra plan also provides guidance on TGA compliance for therapeutic goods often used in aesthetic practices (prescription medications, medical devices, etc.).',
     },
     {
-      question: 'How quickly can I get compliance results?',
-      answer: 'SafePost\u2122 provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA guideline references, and if you\u2019re on the Professional plan, you\u2019ll also receive AI-generated compliant alternatives you can use right away.',
+      question: 'How does SafePost\u2122 stay up-to-date with changing AHPRA and TGA regulations?',
+      answer: 'AHPRA and TGA guidelines are regularly updated, and SafePost\u2122\u2019s compliance database is continuously maintained to reflect the latest regulatory changes. Our team monitors official guidance updates, case decisions, and regulatory announcements to ensure our analysis remains current. Ultra plan subscribers receive proactive notifications when significant guideline changes affect their content categories, helping your practice stay ahead of compliance requirements.',
     },
   ];
 
@@ -222,10 +222,10 @@ const PricingMedicalPractitioners: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-10 md:pb-12 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Pricing for Medical Practitioners
+            Pricing for Medical Practices
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Choose the plan that's right for you
+            Choose the right plan for your practice
           </p>
         </div>
       </section>
@@ -258,38 +258,45 @@ const PricingMedicalPractitioners: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-4xl mx-auto px-6 pb-20 md:pb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Starter Card */}
+            {/* Pro+ Card */}
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 md:p-10 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm flex flex-col">
               <div className="mb-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Starter</h3>
-                <p className="text-[14px] text-gray-500">Perfect for trying out SafePost&trade;</p>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">Pro+</h3>
+                <p className="text-[14px] text-gray-500">For practices with small marketing teams</p>
               </div>
               <div className="mb-8">
-                <span className="text-4xl md:text-5xl font-extrabold text-gray-900">Free</span>
+                <div className="flex items-end gap-2">
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">$49</span>
+                  <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
+                </div>
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">3 free compliance checks</span>
+                  <span className="text-[14px] text-gray-600">Everything in Professional, plus:</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Identify non-compliant content</span>
+                  <span className="text-[14px] text-gray-600">Multi-user access (up to 3 team members)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">No credit card required</span>
+                  <span className="text-[14px] text-gray-600">Basic online advertising compliance analysis</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">Custom compliance guidelines repository</span>
                 </li>
               </ul>
               <button
                 onClick={() => navigate('/signup')}
                 className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
               >
-                Start Free
+                Get Pro+
               </button>
             </div>
 
-            {/* Professional Card */}
+            {/* Ultra Card */}
             <div className="relative bg-white rounded-2xl border-2 border-blue-200 p-8 md:p-10 shadow-lg shadow-blue-600/[0.06] flex flex-col">
               <div className="absolute -top-3 right-6">
                 <span className="text-[11px] font-semibold text-white bg-blue-600 px-3 py-1 rounded-full shadow-sm">
@@ -297,43 +304,46 @@ const PricingMedicalPractitioners: React.FC = () => {
                 </span>
               </div>
               <div className="mb-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Professional</h3>
-                <p className="text-[14px] text-gray-500">For practitioners who post regularly</p>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">Ultra</h3>
+                <p className="text-[14px] text-gray-500">Best for multi-practitioner practices</p>
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$16' : '$20'}</span>
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$160' : '$200'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
-                  {isYearly && (
-                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
-                      Save 20%
-                    </span>
-                  )}
                 </div>
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Unlimited compliance checks</span>
+                  <span className="text-[14px] text-gray-600">Everything in Pro+, plus:</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliant content rewrites (AI-generated alternatives)</span>
+                  <span className="text-[14px] text-gray-600">Unlimited compliance checks for social media AND online advertising</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Image and video content analysis</span>
+                  <span className="text-[14px] text-gray-600">Multi-user access (up to 10 team members)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliance history tracking</span>
+                  <span className="text-[14px] text-gray-600">Advanced advertising compliance analysis</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">Bulk content review (upload multiple posts/ads at once)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">Proactive notification of guideline changes</span>
                 </li>
               </ul>
               <button
                 onClick={() => navigate('/signup')}
                 className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
               >
-                Go Pro
+                Get Ultra
               </button>
             </div>
           </div>
@@ -346,9 +356,9 @@ const PricingMedicalPractitioners: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
             <span className="text-[13px] text-gray-500 font-medium">Cancel anytime</span>
             <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
-            <span className="text-[13px] text-gray-500 font-medium">No long-term contracts</span>
-            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
             <span className="text-[13px] text-gray-500 font-medium">Australian-based support</span>
+            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
+            <span className="text-[13px] text-gray-500 font-medium">AHPRA &amp; TGA compliant</span>
           </div>
         </div>
       </section>
@@ -420,7 +430,7 @@ const PricingMedicalPractitioners: React.FC = () => {
             Ready to stay compliant?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Start with 3 free compliance checks and see how SafePost&trade; can protect your practice
+            Get your practice set up with SafePost&trade; and keep your entire team compliant
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -515,4 +525,4 @@ const PricingMedicalPractitioners: React.FC = () => {
   );
 };
 
-export default PricingMedicalPractitioners;
+export default PricingMedicalPractices;
