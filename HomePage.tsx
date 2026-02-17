@@ -174,7 +174,7 @@ const HomePage: React.FC = () => {
                 onBlur={() => setTimeout(() => setCustomersDropdownOpen(false), 150)}
                 className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
               >
-                Customers
+                Pricing
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${customersDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {customersDropdownOpen && (
@@ -267,7 +267,7 @@ const HomePage: React.FC = () => {
               Product
             </a>
             <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Customers
+              Pricing
             </a>
             <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Company
@@ -443,7 +443,7 @@ const HomePage: React.FC = () => {
               Activities that trigger Ahpra investigation
             </h2>
             <p className="text-lg text-gray-500">
-              Social media activities that are likely to warrant investigation.
+              Social media activities that are likely to warrant investigation
             </p>
           </div>
 
@@ -635,7 +635,7 @@ const HomePage: React.FC = () => {
               Try SafePost™ Now
             </h2>
             <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-              Protect your practice with instant AHPRA social media activities and advertising compliance checks.
+              Protect your practice with instant AHPRA social media activities and advertising compliance checks
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
@@ -711,11 +711,7 @@ const HomePage: React.FC = () => {
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Connect</h4>
               <ul className="space-y-2.5">
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">X</a></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">LinkedIn</a></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">YouTube</a></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Facebook</a></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Instagram</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Contact us</a></li>
               </ul>
             </div>
           </div>
