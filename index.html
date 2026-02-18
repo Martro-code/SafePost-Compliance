@@ -136,6 +136,15 @@
       left: 100%;
     }
 
+    /* Page transition */
+    .page-transition {
+      animation: pageEnter 0.25s ease-out;
+    }
+    @keyframes pageEnter {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     /* Subtle pulse for loading */
     .pulse-subtle {
       animation: pulseSoft 2s ease-in-out infinite;
