@@ -236,7 +236,7 @@ const Login: React.FC = () => {
                 <input
                   id="email"
                   type="email"
-                  placeholder="john.doe@example.com"
+                  placeholder="Enter your email address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className={getInputClasses(email, isValidEmail(email))}

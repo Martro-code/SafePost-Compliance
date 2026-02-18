@@ -275,7 +275,7 @@ const ContactUs: React.FC = () => {
                 <input
                   id="firstName"
                   type="text"
-                  placeholder="John"
+                  placeholder="Enter your first name"
                   value={firstName}
                   onChange={(e) => { setFirstName(e.target.value); setSuccess(false); }}
                   className={getInputClasses(firstName, firstName.trim().length > 0)}
@@ -290,7 +290,7 @@ const ContactUs: React.FC = () => {
                 <input
                   id="surname"
                   type="text"
-                  placeholder="Doe"
+                  placeholder="Enter your surname"
                   value={surname}
                   onChange={(e) => { setSurname(e.target.value); setSuccess(false); }}
                   className={getInputClasses(surname, surname.trim().length > 0)}
@@ -305,7 +305,7 @@ const ContactUs: React.FC = () => {
                 <input
                   id="email"
                   type="email"
-                  placeholder="john.doe@example.com"
+                  placeholder="Enter your email address"
                   value={email}
                   onChange={(e) => { setEmail(e.target.value); setSuccess(false); }}
                   className={getInputClasses(email, isValidEmail(email))}
