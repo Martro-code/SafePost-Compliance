@@ -98,6 +98,9 @@ const Login: React.FC = () => {
                   <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     News
                   </a>
+                  <button onClick={() => navigate('/contact')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Contact us
+                  </button>
                 </div>
               )}
             </div>
