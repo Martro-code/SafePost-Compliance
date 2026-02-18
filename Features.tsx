@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
+import { ShieldCheck, ChevronDown, ArrowRight, Menu, X, ExternalLink, Zap, FileText, Globe, Image, BookOpen, History } from 'lucide-react';
 
-const PricingMedicalPractitioners: React.FC = () => {
+const Features: React.FC = () => {
   const navigate = useNavigate();
-
-  const [isYearly, setIsYearly] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -21,26 +18,36 @@ const PricingMedicalPractitioners: React.FC = () => {
     { label: 'TGA guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
-  const faqs = [
+  const features = [
     {
-      question: 'Do I need to be AHPRA-registered to use SafePost\u2122?',
-      answer: 'Yes, SafePost\u2122 is designed specifically for AHPRA-registered medical practitioners in Australia. Our compliance checks are based on Australian health practitioner advertising regulations and may not be applicable to practitioners in other jurisdictions.',
+      icon: <Zap className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Instant AHPRA analysis',
+      description: 'Get compliance results in seconds with specific guideline references.',
     },
     {
-      question: 'Can SafePost\u2122 guarantee my content will be compliant?',
-      answer: 'SafePost\u2122 is a guidance tool that helps identify potential compliance issues based on AHPRA\u2019s advertising guidelines and social media guidance. While we provide comprehensive analysis and compliant alternatives, AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain ultimately responsible for ensuring their content complies with the National Law.',
+      icon: <FileText className="w-7 h-7 text-blue-500/80" />,
+      heading: 'AI-powered rewrites',
+      description: 'Receive compliant alternatives ready to post immediately.',
     },
     {
-      question: 'What happens if I exceed my 3 free checks?',
-      answer: 'Once you\u2019ve used your 3 compliance checks on the Starter plan, you\u2019ll need to upgrade to SafePost\u2122 Professional for unlimited checks. We\u2019ll send you a notification when you\u2019re exceeded your limit.',
+      icon: <Globe className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Multi-platform support',
+      description: 'Check content for Instagram, Facebook, LinkedIn, websites, and ads.',
     },
     {
-      question: 'Can I analyse content that includes images or before/after photos?',
-      answer: 'Yes! SafePost\u2122 Professional includes image and video content analysis, which is particularly important for cosmetic procedure advertising. Our AI analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan only supports text-based analysis.',
+      icon: <Image className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Image and video analysis',
+      description: 'Analyze visual content for before/after photo compliance (Professional plans).',
     },
     {
-      question: 'How quickly can I get compliance results?',
-      answer: 'SafePost\u2122 provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA guideline references, and if you\u2019re on the Professional plan, you\u2019ll also receive AI-generated compliant alternatives you can use right away.',
+      icon: <BookOpen className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Compliance resource library',
+      description: 'Access curated AHPRA guidelines, case studies, and best practice examples. Stay informed with the latest regulatory updates and guidance.',
+    },
+    {
+      icon: <History className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Compliance history',
+      description: 'Track all your checks and maintain an audit trail for peace of mind.',
     },
   ];
 
@@ -167,9 +174,9 @@ const PricingMedicalPractitioners: React.FC = () => {
             <button onClick={() => navigate('/features')} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Features
             </button>
-            <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Pricing
-            </button>
+            </a>
             <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Company
             </a>
@@ -222,195 +229,36 @@ const PricingMedicalPractitioners: React.FC = () => {
 
       {/* Hero Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-10 md:pb-12 text-center">
+        <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Pricing for Medical Practitioners
+            Powerful compliance checking, simplified
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Choose the plan that's right for you
+            Everything you need to ensure your content meets AHPRA and TGA guidelines
           </p>
         </div>
       </section>
 
-      {/* Monthly/Yearly Toggle */}
+      {/* Features Grid */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-12 md:pb-16">
-          <div className="flex items-center justify-center gap-3">
-            <span className={`text-[14px] font-medium transition-colors duration-200 ${!isYearly ? 'text-gray-900' : 'text-gray-400'}`}>
-              Monthly
-            </span>
-            <button
-              onClick={() => setIsYearly(!isYearly)}
-              className="relative w-12 h-7 rounded-full transition-colors duration-300 focus:outline-none"
-              style={{ backgroundColor: isYearly ? '#3b82f6' : '#d1d5db' }}
-            >
-              <div
-                className="absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow-sm transition-transform duration-300"
-                style={{ transform: isYearly ? 'translateX(20px)' : 'translateX(0)' }}
-              />
-            </button>
-            <span className={`text-[14px] font-medium transition-colors duration-200 ${isYearly ? 'text-gray-900' : 'text-gray-400'}`}>
-              Yearly
-            </span>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Cards */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-20 md:pb-24">
+        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Starter Card */}
-            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 md:p-10 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm flex flex-col">
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Starter</h3>
-                <p className="text-[14px] text-gray-500">Perfect for trying out SafePost&trade;</p>
-              </div>
-              <div className="mb-8">
-                <span className="text-4xl md:text-5xl font-extrabold text-gray-900">Free</span>
-              </div>
-              <ul className="space-y-3.5 mb-10 flex-grow">
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">3 free compliance checks</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Identify non-compliant content</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">No credit card required</span>
-                </li>
-              </ul>
-              <button
-                onClick={() => navigate('/signup')}
-                className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
+            {features.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm"
               >
-                Start Free
-              </button>
-            </div>
-
-            {/* Professional Card */}
-            <div className="relative bg-white rounded-2xl border-2 border-blue-200 p-8 md:p-10 shadow-lg shadow-blue-600/[0.06] flex flex-col">
-              <div className="absolute -top-3 right-6">
-                <span className="text-[11px] font-semibold text-white bg-blue-600 px-3 py-1 rounded-full shadow-sm">
-                  Most Popular
-                </span>
-              </div>
-              <div className="mb-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Professional</h3>
-                <p className="text-[14px] text-gray-500">For practitioners who post regularly</p>
-              </div>
-              <div className="mb-8">
-                <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$16' : '$20'}</span>
-                  <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
-                  {isYearly && (
-                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
-                      Save 20%
-                    </span>
-                  )}
+                <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                  {feature.icon}
                 </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                  {feature.heading}
+                </h3>
+                <p className="text-[14px] text-gray-500 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
-              <ul className="space-y-3.5 mb-10 flex-grow">
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Unlimited compliance checks</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliant content rewrites (AI-generated alternatives)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Image and video content analysis</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliance history tracking</span>
-                </li>
-              </ul>
-              <button
-                onClick={() => navigate('/signup')}
-                className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
-              >
-                Go Pro
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
-            <span className="text-[13px] text-gray-500 font-medium">Cancel anytime</span>
-            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
-            <span className="text-[13px] text-gray-500 font-medium">No long-term contracts</span>
-            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
-            <span className="text-[13px] text-gray-500 font-medium">Australian-based support</span>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-14 text-center">
-            Frequently Asked Questions
-          </h2>
-
-          <div className="flex flex-col gap-4">
-            {faqs.map((faq, index) => {
-              const isOpen = openFaq === index;
-              return (
-                <div
-                  key={index}
-                  className={`rounded-xl border bg-white overflow-hidden transition-all duration-200 ${
-                    isOpen
-                      ? 'border-black/[0.08] shadow-md shadow-black/[0.04]'
-                      : 'border-black/[0.06] shadow-sm shadow-black/[0.02] hover:border-black/[0.1] hover:shadow-md hover:shadow-black/[0.04]'
-                  }`}
-                >
-                  <button
-                    onClick={() => setOpenFaq(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between px-6 py-5 text-left cursor-pointer group"
-                  >
-                    <span className="text-[15px] font-semibold text-gray-900 leading-snug pr-4">
-                      {faq.question}
-                    </span>
-                    <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-200 ${
-                        isOpen ? 'bg-gray-100' : 'bg-gray-50 group-hover:bg-gray-100'
-                      }`}
-                    >
-                      <ChevronDown
-                        className={`w-4 h-4 text-gray-500 transition-transform duration-300 ease-in-out ${
-                          isOpen ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </div>
-                  </button>
-                  <div
-                    className="transition-all duration-300 ease-in-out"
-                    style={{
-                      maxHeight: isOpen ? '500px' : '0px',
-                      opacity: isOpen ? 1 : 0,
-                    }}
-                  >
-                    <div className="px-6 pb-6 pt-0">
-                      <div className="border-t border-gray-100 pt-4">
-                        <p className="text-[14px] text-gray-500 leading-relaxed">
-                          {faq.answer}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            ))}
           </div>
         </div>
       </section>
@@ -419,24 +267,24 @@ const PricingMedicalPractitioners: React.FC = () => {
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to stay compliant?
+            Ready to get started?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Start with 3 free compliance checks and see how SafePost&trade; can protect your practice
+            Join medical practitioners across Australia using SafePost&trade; for compliance confidence
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => navigate('/signup')}
               className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px] min-w-[180px]"
             >
-              Get Started
+              Start Free Trial
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/pricing/medical-practitioners')}
               className="px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
             >
-              Login
+              View Pricing
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -521,4 +369,4 @@ const PricingMedicalPractitioners: React.FC = () => {
   );
 };
 
-export default PricingMedicalPractitioners;
+export default Features;

@@ -84,9 +84,9 @@ const ContactUs: React.FC = () => {
 
           {/* Center: Navigation */}
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-            <a href="#" onClick={(e) => e.preventDefault()} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Product
-            </a>
+            <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Features
+            </button>
             <div className="relative">
               <button
                 onClick={() => setPricingDropdownOpen(!pricingDropdownOpen)}
@@ -185,9 +185,9 @@ const ContactUs: React.FC = () => {
           }`}
         >
           <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
-            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Product
-            </a>
+            <button onClick={() => navigate('/features')} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Features
+            </button>
             <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Pricing
             </a>
@@ -361,9 +361,14 @@ const ContactUs: React.FC = () => {
         <div className="max-w-6xl mx-auto px-6">
           {/* Footer Columns */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
-            {/* Product */}
+            {/* Features */}
             <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Product</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Features</h4>
+              <ul className="space-y-2.5">
+                <li><button onClick={() => navigate('/features')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Features</button></li>
+                <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Pricing</button></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Demo</a></li>
+              </ul>
             </div>
 
             {/* Pricing */}
