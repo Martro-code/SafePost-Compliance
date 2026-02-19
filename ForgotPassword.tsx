@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink } from 'lucide-react';
+import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
-const Login: React.FC = () => {
+const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
   // Header state
@@ -209,17 +206,17 @@ const Login: React.FC = () => {
         </div>
       </header>
 
-      {/* Login Form */}
+      {/* Forgot Password Form */}
       <main className="flex-grow flex items-center justify-center px-6 py-16 md:py-24">
         <div className="w-full max-w-[450px]">
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Welcome Back
+                Reset Password
               </h1>
               <p className="text-[14px] text-gray-500">
-                Sign in to your account to continue
+                Enter your email address and we'll send you a link to reset your password
               </p>
             </div>
 
@@ -240,65 +237,22 @@ const Login: React.FC = () => {
                 />
               </div>
 
-              {/* Password */}
-              <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label htmlFor="password" className="block text-[13px] font-medium text-gray-700">
-                    Password
-                  </label>
-                  <a onClick={() => navigate('/forgot-password')} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
-                    Forgot password?
-                  </a>
-                </div>
-                <div className="relative">
-                  <input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={getInputClasses(password, password.length > 0)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Remember Me Checkbox */}
-              <div className="flex items-center justify-end gap-2 pt-1">
-                <input
-                  id="rememberMe"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                />
-                <label htmlFor="rememberMe" className="text-[13px] text-gray-600 cursor-pointer">
-                  Remember me
-                </label>
-              </div>
-
               {/* Submit Button */}
               <div className="pt-2">
                 <button
                   type="submit"
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  Sign In
+                  Send reset link
                 </button>
               </div>
             </form>
 
             {/* Footer */}
             <p className="text-center text-[13px] text-gray-500 mt-6">
-              Don't have an account?{' '}
-              <a onClick={() => navigate('/signup')} className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-2 cursor-pointer">
-                Sign Up
+              Back to{' '}
+              <a onClick={() => navigate('/login')} className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-2 cursor-pointer">
+                Sign In
               </a>
             </p>
           </div>
@@ -383,4 +337,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default ForgotPassword;

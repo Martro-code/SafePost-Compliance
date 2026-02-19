@@ -8,6 +8,7 @@ import PricingMedicalPractices from './PricingMedicalPractices';
 import ContactUs from './ContactUs';
 import Features from './Features';
 import About from './About';
+import ForgotPassword from './ForgotPassword';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -33,6 +34,7 @@ const App: React.FC = () => {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
         </Routes>
       </div>
     </>
