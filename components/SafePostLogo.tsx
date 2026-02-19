@@ -1,11 +1,11 @@
 import React from 'react';
 
 const SafePostLogo: React.FC<{ className?: string }> = ({ className = '' }) => (
-  <div className={`flex items-center gap-1.5 ${className}`}>
+  <div className={`flex items-center gap-2.5 ${className}`}>
     {/* Icon: Three horizontal bars */}
     <svg
-      width="20"
-      height="20"
+      width="34"
+      height="34"
       viewBox="0 0 20 20"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -18,13 +18,13 @@ const SafePostLogo: React.FC<{ className?: string }> = ({ className = '' }) => (
     </svg>
     {/* Wordmark */}
     <span
-      className="text-[20px] font-bold tracking-tight leading-none"
+      className="text-[34px] font-bold tracking-tight leading-none"
       style={{ fontFamily: "'Inter', system-ui, -apple-system, sans-serif" }}
     >
       <span className="text-slate-900">Safe</span>
       <span className="text-blue-600">Post</span>
     </span>
-    <span className="text-[8px] font-medium text-gray-400 -ml-0.5 self-start mt-0.5">
+    <span className="text-[11px] font-medium text-gray-400 -ml-2 self-start mt-1">
       &trade;
     </span>
   </div>
