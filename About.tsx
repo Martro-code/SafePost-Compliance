@@ -5,7 +5,6 @@ import { ShieldCheck, ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'luc
 const About: React.FC = () => {
   const navigate = useNavigate();
 
-  // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
@@ -23,7 +22,6 @@ const About: React.FC = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Left: Logo */}
           <Link to="/" className="flex items-center gap-3">
             <div className="relative">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-600/20">
@@ -35,7 +33,6 @@ const About: React.FC = () => {
             </span>
           </Link>
 
-          {/* Center: Navigation */}
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
             <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Features
@@ -111,7 +108,6 @@ const About: React.FC = () => {
             </div>
           </nav>
 
-          {/* Right: Auth buttons */}
           <div className="hidden md:flex items-center gap-2.5">
             <button onClick={() => navigate('/login')} className="px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
               Login
@@ -121,7 +117,6 @@ const About: React.FC = () => {
             </button>
           </div>
 
-          {/* Mobile: Hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
@@ -131,7 +126,6 @@ const About: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
@@ -148,7 +142,6 @@ const About: React.FC = () => {
               Company
             </a>
 
-            {/* Mobile Resources Dropdown */}
             <div>
               <button
                 onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
@@ -181,7 +174,6 @@ const About: React.FC = () => {
               </div>
             </div>
 
-            {/* Mobile Auth Buttons */}
             <div className="pt-3 border-t border-black/[0.06] flex flex-col gap-2">
               <button onClick={() => navigate('/login')} className="w-full px-4 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
                 Login
@@ -213,20 +205,20 @@ const About: React.FC = () => {
             {/* Section 1 */}
             <div>
               <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-5">
-                We're a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day.
+                {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day."}
               </h2>
               <p className="text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
-                For over 12 years, we've worked in medical indemnity, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA investigations. We've watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts.
+                {"For over 12 years, we\u2019ve worked in medical indemnity, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
               </p>
             </div>
 
             {/* Section 2 */}
             <div>
               <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-5">
-                We founded SafePost&trade; because compliance shouldn't hold you back from connecting with patients.
+                {"We founded SafePost\u2122 because compliance shouldn\u2019t hold you back from connecting with patients."}
               </h2>
               <p className="text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
-                Social media and digital marketing are essential tools for modern medical practices — but the regulatory landscape is increasingly complex. AHPRA's advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules — it's a minefield. One unclear post can put your registration at risk.
+                {"Social media and digital marketing are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post can put your registration at risk."}
               </p>
             </div>
 
@@ -236,17 +228,17 @@ const About: React.FC = () => {
                 Our mission is simple: help Australian medical practitioners and practices communicate confidently, compliantly, and authentically.
               </h2>
               <p className="text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
-                We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost&trade; provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations.
+                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost\u2122 provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations."}
               </p>
             </div>
 
             {/* Section 4 */}
             <div>
               <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-5">
-                We're not lawyers. We're your compliance partner.
+                {"We\u2019re not lawyers. We\u2019re your compliance partner."}
               </h2>
               <p className="text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
-                SafePost&trade; doesn't replace professional advice — it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns, we're here to support you at every step.
+                {"SafePost\u2122 doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns, we\u2019re here to support you at every step."}
               </p>
             </div>
 
@@ -264,31 +256,34 @@ const About: React.FC = () => {
               </h2>
               <div className="space-y-6 text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
                 <p>
-                  Our logo isn't just a visual mark — it tells the story of what we do.
+                  {"Our logo isn\u2019t just a visual mark \u2014 it tells the story of what we do."}
                 </p>
                 <p>
                   The three horizontal bars represent the layers every medical practitioner navigates when sharing content online:
                 </p>
                 <p>
-                  <span className="font-bold text-gray-900">The top bar</span> represents the regulatory framework — AHPRA guidelines, advertising standards, and legal boundaries that govern your communication. These are the non-negotiables, the rules you must work within.
+                  <span className="font-bold text-gray-900">The top bar</span>
+                  {" represents the regulatory framework \u2014 AHPRA guidelines, advertising standards, and legal boundaries that govern your communication. These are the non-negotiables, the rules you must work within."}
                 </p>
                 <p>
-                  <span className="font-bold text-gray-900">The middle bar</span> is where SafePost lives. This is the interpretation layer, where your content meets intelligence. It's where risk transforms into clarity, where uncertainty becomes confidence. This is our promise: to stand between complexity and action.
+                  <span className="font-bold text-gray-900">The middle bar</span>
+                  {" is where SafePost lives. This is the interpretation layer, where your content meets intelligence. It\u2019s where risk transforms into clarity, where uncertainty becomes confidence. This is our promise: to stand between complexity and action."}
                 </p>
                 <p>
-                  <span className="font-bold text-gray-900">The bottom bar</span> is your approved content — what actually reaches your audience. Clean, compliant, and safe to publish.
+                  <span className="font-bold text-gray-900">The bottom bar</span>
+                  {" is your approved content \u2014 what actually reaches your audience. Clean, compliant, and safe to publish."}
                 </p>
                 <p>
-                  Together, these bars represent controlled flow. Not restriction, but structure. Not limitation, but confidence. The horizontal orientation signals stability and grounding — like guardrails that keep you moving forward safely.
+                  {"Together, these bars represent controlled flow. Not restriction, but structure. Not limitation, but confidence. The horizontal orientation signals stability and grounding \u2014 like guardrails that keep you moving forward safely."}
                 </p>
                 <p>
-                  We chose this design because compliance isn't chaos. It's order. And SafePost is the system that makes that order simple, instant, and reliable.
+                  {"We chose this design because compliance isn\u2019t chaos. It\u2019s order. And SafePost is the system that makes that order simple, instant, and reliable."}
                 </p>
                 <p>
-                  In a world where one post can trigger an investigation, we built SafePost to be your layer of protection — the filter between intention and publication, between creativity and compliance.
+                  {"In a world where one post can trigger an investigation, we built SafePost to be your layer of protection \u2014 the filter between intention and publication, between creativity and compliance."}
                 </p>
                 <p className="font-bold text-gray-900">
-                  Because posting shouldn't feel risky. It should feel safe.
+                  {"Because posting shouldn\u2019t feel risky. It should feel safe."}
                 </p>
               </div>
             </div>
@@ -327,9 +322,7 @@ const About: React.FC = () => {
       {/* Footer */}
       <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
         <div className="max-w-6xl mx-auto px-6">
-          {/* Footer Columns */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
-            {/* Features */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Features</h4>
               <ul className="space-y-2.5">
@@ -339,7 +332,6 @@ const About: React.FC = () => {
               </ul>
             </div>
 
-            {/* Pricing */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Pricing</h4>
               <ul className="space-y-2.5">
@@ -348,7 +340,6 @@ const About: React.FC = () => {
               </ul>
             </div>
 
-            {/* Company */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2.5">
@@ -357,7 +348,6 @@ const About: React.FC = () => {
               </ul>
             </div>
 
-            {/* Resources */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Resources</h4>
               <ul className="space-y-2.5">
@@ -367,7 +357,6 @@ const About: React.FC = () => {
               </ul>
             </div>
 
-            {/* Legal */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Legal</h4>
               <ul className="space-y-2.5">
@@ -378,7 +367,6 @@ const About: React.FC = () => {
               </ul>
             </div>
 
-            {/* Connect */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Connect</h4>
               <ul className="space-y-2.5">
@@ -387,7 +375,6 @@ const About: React.FC = () => {
             </div>
           </div>
 
-          {/* Disclaimer + Copyright */}
           <div className="mt-14 pt-6 border-t border-black/[0.06]">
             <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
