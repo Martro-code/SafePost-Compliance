@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ShieldCheck, ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink } from 'lucide-react';
+import SafePostLogo from './components/SafePostLogo';
 import { analyzePost, generateCompliantRewrites } from './services/geminiService';
 import { AnalysisResult, ComplianceStatus, RewrittenPost } from './types';
 
@@ -151,16 +152,9 @@ const HomePage: React.FC = () => {
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Left: Logo */}
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-600/20">
-                <ShieldCheck className="w-4.5 h-4.5 text-white" strokeWidth={2.5} />
-              </div>
-            </div>
-            <span className="text-[15px] font-semibold text-gray-900 tracking-tight">
-              SafePost&trade;
-            </span>
-          </div>
+          <Link to="/">
+            <SafePostLogo />
+          </Link>
 
           {/* Center: Navigation */}
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
