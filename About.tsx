@@ -200,7 +200,7 @@ const About: React.FC = () => {
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             About SafePost&trade;
           </h1>
-          <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
+          <p className="text-lg text-gray-500">
             Supporting Australian medical practitioners with compliance confidence
           </p>
         </div>
@@ -208,7 +208,7 @@ const About: React.FC = () => {
 
       {/* Main Content */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-[800px] mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
           <div className="space-y-16">
             {/* Section 1 */}
             <div>
@@ -255,6 +255,42 @@ const About: React.FC = () => {
               <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-0">
                 Because your practice deserves to grow without compliance anxiety.
               </h2>
+            </div>
+
+            {/* Section 6 - Logo Narrative */}
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-5">
+                Why we designed SafePost this way
+              </h2>
+              <div className="space-y-6 text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
+                <p>
+                  Our logo isn't just a visual mark — it tells the story of what we do.
+                </p>
+                <p>
+                  The three horizontal bars represent the layers every medical practitioner navigates when sharing content online:
+                </p>
+                <p>
+                  <span className="font-bold text-gray-900">The top bar</span> represents the regulatory framework — AHPRA guidelines, advertising standards, and legal boundaries that govern your communication. These are the non-negotiables, the rules you must work within.
+                </p>
+                <p>
+                  <span className="font-bold text-gray-900">The middle bar</span> is where SafePost lives. This is the interpretation layer, where your content meets intelligence. It's where risk transforms into clarity, where uncertainty becomes confidence. This is our promise: to stand between complexity and action.
+                </p>
+                <p>
+                  <span className="font-bold text-gray-900">The bottom bar</span> is your approved content — what actually reaches your audience. Clean, compliant, and safe to publish.
+                </p>
+                <p>
+                  Together, these bars represent controlled flow. Not restriction, but structure. Not limitation, but confidence. The horizontal orientation signals stability and grounding — like guardrails that keep you moving forward safely.
+                </p>
+                <p>
+                  We chose this design because compliance isn't chaos. It's order. And SafePost is the system that makes that order simple, instant, and reliable.
+                </p>
+                <p>
+                  In a world where one post can trigger an investigation, we built SafePost to be your layer of protection — the filter between intention and publication, between creativity and compliance.
+                </p>
+                <p className="font-bold text-gray-900">
+                  Because posting shouldn't feel risky. It should feel safe.
+                </p>
+              </div>
             </div>
           </div>
         </div>
