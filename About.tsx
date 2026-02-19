@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, ChevronDown, ArrowRight, Menu, X, ExternalLink, Zap, FileText, Globe, Image, BookOpen, History } from 'lucide-react';
+import { ShieldCheck, ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 
-const Features: React.FC = () => {
+const About: React.FC = () => {
   const navigate = useNavigate();
 
   // Header state
@@ -16,39 +16,6 @@ const Features: React.FC = () => {
     { label: 'Advertising hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
     { label: 'Code of conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
     { label: 'TGA guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
-  ];
-
-  const features = [
-    {
-      icon: <Zap className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Instant AHPRA analysis',
-      description: 'Get compliance results in seconds with specific guideline references.',
-    },
-    {
-      icon: <FileText className="w-7 h-7 text-blue-500/80" />,
-      heading: 'AI-powered rewrites',
-      description: 'Receive compliant alternatives ready to post immediately.',
-    },
-    {
-      icon: <Globe className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Multi-platform support',
-      description: 'Check content for Instagram, Facebook, LinkedIn, websites, and ads.',
-    },
-    {
-      icon: <Image className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Image and video analysis',
-      description: 'Analyze visual content for before/after photo compliance (Professional plans).',
-    },
-    {
-      icon: <BookOpen className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Compliance resource library',
-      description: 'Access curated AHPRA guidelines, case studies, and best practice examples. Stay informed with the latest regulatory updates and guidance.',
-    },
-    {
-      icon: <History className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Compliance history',
-      description: 'Track all your checks and maintain an audit trail for peace of mind.',
-    },
   ];
 
   return (
@@ -231,34 +198,64 @@ const Features: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Powerful compliance checking, simplified
+            About SafePost&trade;
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Everything you need to ensure your content meets AHPRA and TGA guidelines
+            Supporting Australian medical practitioners with compliance confidence
           </p>
         </div>
       </section>
 
-      {/* Features Grid */}
+      {/* Main Content */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm"
-              >
-                <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
-                  {feature.icon}
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
-                  {feature.heading}
-                </h3>
-                <p className="text-[14px] text-gray-500 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
+        <div className="max-w-[800px] mx-auto px-6 pb-24 md:pb-32">
+          <div className="space-y-16">
+            {/* Section 1 */}
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-5">
+                We're a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day.
+              </h2>
+              <p className="text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
+                For over 12 years, we've worked in medical indemnity, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA investigations. We've watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts.
+              </p>
+            </div>
+
+            {/* Section 2 */}
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-5">
+                We founded SafePost&trade; because compliance shouldn't hold you back from connecting with patients.
+              </h2>
+              <p className="text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
+                Social media and digital marketing are essential tools for modern medical practices — but the regulatory landscape is increasingly complex. AHPRA's advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules — it's a minefield. One unclear post can put your registration at risk.
+              </p>
+            </div>
+
+            {/* Section 3 */}
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-5">
+                Our mission is simple: help Australian medical practitioners and practices communicate confidently, compliantly, and authentically.
+              </h2>
+              <p className="text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
+                We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost&trade; provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations.
+              </p>
+            </div>
+
+            {/* Section 4 */}
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-5">
+                We're not lawyers. We're your compliance partner.
+              </h2>
+              <p className="text-[16px] md:text-[17px] text-gray-500 leading-[1.8]">
+                SafePost&trade; doesn't replace professional advice — it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns, we're here to support you at every step.
+              </p>
+            </div>
+
+            {/* Section 5 */}
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900 leading-snug mb-0">
+                Because your practice deserves to grow without compliance anxiety.
+              </h2>
+            </div>
           </div>
         </div>
       </section>
@@ -267,24 +264,24 @@ const Features: React.FC = () => {
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to get started?
+            Ready to experience compliance confidence?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join medical practitioners across Australia using SafePost&trade; for compliance confidence
+            Join medical practitioners across Australia using SafePost&trade; to communicate with confidence
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => navigate('/signup')}
               className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px] min-w-[180px]"
             >
-              Start Free Trial
+              Get Started
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
-              onClick={() => navigate('/pricing/medical-practitioners')}
+              onClick={() => navigate('/contact')}
               className="px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
             >
-              View Pricing
+              Contact Us
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -369,4 +366,4 @@ const Features: React.FC = () => {
   );
 };
 
-export default Features;
+export default About;
