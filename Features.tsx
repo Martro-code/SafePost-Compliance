@@ -233,10 +233,19 @@ const Features: React.FC = () => {
         </div>
       </section>
 
+      {/* Hero Image */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 mb-16 md:mb-20">
+          <div className="w-full h-[300px] md:h-[450px] bg-gray-100 rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] flex items-center justify-center">
+            <p className="text-[15px] text-gray-400 font-medium">Hero image placeholder — replace with actual image</p>
+          </div>
+        </div>
+      </section>
+
       {/* Features Grid */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <div
                 key={index}
