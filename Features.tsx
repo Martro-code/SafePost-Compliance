@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink, Zap, FileText, Globe, Image, BookOpen, History } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import heroImage from './assets/features-hero.png';
 
 const Features: React.FC = () => {
   const navigate = useNavigate();
@@ -236,9 +237,11 @@ const Features: React.FC = () => {
       {/* Hero Image */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 mb-16 md:mb-20">
-          <div className="w-full h-[300px] md:h-[450px] bg-gray-100 rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] flex items-center justify-center">
-            <p className="text-[15px] text-gray-400 font-medium">Hero image placeholder — replace with actual image</p>
-          </div>
+          <img
+            src={heroImage}
+            alt="SafePost compliance checking interface showing content verification"
+            className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
+          />
         </div>
       </section>
 
