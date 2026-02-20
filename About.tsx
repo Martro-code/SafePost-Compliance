@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import aboutUsLogo from './assets/about-us-logo.png';
 
 const About: React.FC = () => {
   const navigate = useNavigate();
@@ -236,11 +237,13 @@ const About: React.FC = () => {
               </p>
             </div>
 
-            {/* Section 5 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-0">
-                Because your practice deserves to grow without compliance anxiety.
-              </h2>
+            {/* SafePost Logo Divider */}
+            <div className="py-16 flex justify-center">
+              <img
+                src={aboutUsLogo}
+                alt="SafePost logo"
+                className="max-w-[200px] md:max-w-[250px] w-full h-auto"
+              />
             </div>
 
             {/* Section 6 - Our Design Story */}
