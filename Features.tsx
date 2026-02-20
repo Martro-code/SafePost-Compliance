@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink, Zap, FileText, Globe, Image, BookOpen, History } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
-import heroImage from './assets/features-hero.png';
 
 const Features: React.FC = () => {
   const navigate = useNavigate();
@@ -237,11 +236,14 @@ const Features: React.FC = () => {
       {/* Hero Image */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-5xl mx-auto px-6 mb-16 md:mb-20">
-          <img
-            src={heroImage}
-            alt="SafePost compliance checking interface showing content verification"
-            className="w-full max-h-[200px] md:max-h-[320px] object-cover object-top rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
-          />
+          <div className="w-full h-[200px] md:h-[320px] rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
+            <div className="text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-blue-100 flex items-center justify-center">
+                <Zap className="w-8 h-8 text-blue-600" />
+              </div>
+              <p className="text-[14px] font-medium text-gray-400">SafePost Compliance Platform</p>
+            </div>
+          </div>
         </div>
       </section>
 
