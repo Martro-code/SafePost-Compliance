@@ -249,16 +249,19 @@ const About: React.FC = () => {
             {/* Section 6 - Our Design Story */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                Every detail of SafePost was built with purpose.
+                {"Every detail of SafePost\u2122 was built with purpose."}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Even our logo tells the story of what we stand for. The three horizontal bars represent the journey every piece of your content takes \u2014 from the regulatory framework at the top, through SafePost\u2019s intelligent compliance layer in the middle, to your approved, ready-to-publish content at the bottom."}
+                {"Even our logo tells the story of what we stand for. The three horizontal bars represent the journey every piece of your content takes \u2014 from the regulatory framework at the top, through SafePost\u2019s\u2122 intelligent compliance layer in the middle, to your approved, ready-to-publish content at the bottom."}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                {"It\u2019s a visual reminder that compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
+                {"But look closer. The staggered alignment of these bars creates something subtle yet intentional: a phantom \u201CS\u201D in the negative space. This hidden letter represents both Safe and Social \u2014 a visual reminder that compliance and communication aren\u2019t opposing forces. They\u2019re integrated, flowing together naturally."}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                {"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}
+                {"It\u2019s a design that says compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
+                <strong className="text-gray-900">{"We built SafePost\u2122 to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}</strong>
               </p>
             </div>
           </div>
