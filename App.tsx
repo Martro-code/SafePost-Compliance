@@ -11,6 +11,7 @@ import About from './About';
 import ForgotPassword from './ForgotPassword';
 import UpdatePassword from './UpdatePassword';
 import Dashboard from './Dashboard';
+import Checkout from './Checkout';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -39,6 +40,7 @@ const App: React.FC = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </div>
     </>
