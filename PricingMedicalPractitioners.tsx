@@ -329,7 +329,7 @@ const PricingMedicalPractitioners: React.FC = () => {
                 onClick={() => navigate('/signup')}
                 className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
               >
-                Go Pro
+                Get Pro
               </button>
             </div>
           </div>
