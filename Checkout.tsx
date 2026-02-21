@@ -151,7 +151,7 @@ const Checkout: React.FC = () => {
             <SafePostLogo />
           </Link>
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate('/pricing/medical-practitioners')}
             className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
