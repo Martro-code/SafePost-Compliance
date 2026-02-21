@@ -321,7 +321,7 @@ const HomePage: React.FC = () => {
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-gray-900 mb-6">
               Navigate your online presence and stay{' '}
-              <span className="gradient-text-blue">AHPRA-compliant.</span>
+              <span className="text-[#2563EB]">AHPRA-compliant.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
               Instant social media and online advertising compliance checks for medical practitioners and practices.
