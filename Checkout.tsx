@@ -72,6 +72,16 @@ const Checkout: React.FC = () => {
   const plan = searchParams.get('plan') || 'professional';
   const billing = searchParams.get('billing') || 'monthly';
 
+  // Route guard: redirect unverified users to signup with plan params
+  const isVerified = sessionStorage.getItem('safepost_verified') === 'true';
+  if (!isVerified) {
+    const params = new URLSearchParams();
+    params.set('plan', plan);
+    params.set('billing', billing);
+    navigate(`/signup?${params.toString()}`, { replace: true });
+    return null;
+  }
+
   const selectedPlan = planData[plan];
 
   // Redirect to pricing if invalid plan

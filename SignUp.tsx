@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const plan = searchParams.get('plan') || '';
+  const billing = searchParams.get('billing') || '';
 
   const [firstName, setFirstName] = useState('');
   const [surname, setSurname] = useState('');
@@ -44,6 +47,24 @@ const SignUp: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+
+    // Validate all fields before navigating
+    if (
+      firstName.trim() &&
+      surname.trim() &&
+      isValidEmail(email) &&
+      isValidPassword(password) &&
+      passwordsMatch() &&
+      agreedToTerms
+    ) {
+      // Store email in session for the verification page
+      sessionStorage.setItem('safepost_signup_email', email);
+      const params = new URLSearchParams();
+      params.set('email', email);
+      if (plan) params.set('plan', plan);
+      if (billing) params.set('billing', billing);
+      navigate(`/verify-email?${params.toString()}`);
+    }
   };
 
   return (
