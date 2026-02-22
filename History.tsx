@@ -69,7 +69,7 @@ const History: React.FC = () => {
                   <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
                 </div>
                 <div className="border-t border-black/[0.06] my-1" />
-                <button className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                   Profile
                 </button>
                 <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
@@ -125,7 +125,7 @@ const History: React.FC = () => {
               </button>
             ))}
             <div className="border-t border-black/[0.06] my-1" />
-            <button onClick={() => { setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+            <button onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Profile
             </button>
             <button onClick={() => { navigate('/billing'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
@@ -168,6 +168,73 @@ const History: React.FC = () => {
           </div>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Features</h4>
+              <ul className="space-y-2.5">
+                <li><button onClick={() => navigate('/features')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Features</button></li>
+                <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Pricing</button></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Demo</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Pricing</h4>
+              <ul className="space-y-2.5">
+                <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Medical Practitioners</button></li>
+                <li><button onClick={() => navigate('/pricing/medical-practices')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Medical Practices</button></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
+              <ul className="space-y-2.5">
+                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About us</button></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Resources</h4>
+              <ul className="space-y-2.5">
+                <li><a href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Advertising hub</a></li>
+                <li><a href="https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Code of conduct</a></li>
+                <li><a href="https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">TGA guidelines</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Legal</h4>
+              <ul className="space-y-2.5">
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Terms of Service</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Privacy Policy</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Data Use</a></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Security</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Connect</h4>
+              <ul className="space-y-2.5">
+                <li><button onClick={() => navigate('/contact')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Contact us</button></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-14 pt-6 border-t border-black/[0.06]">
+            <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
+              Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
+              Ahpra and the National Boards do not provide pre-approval for advertising.
+              Registered health practitioners are ultimately responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law.
+            </p>
+            <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
