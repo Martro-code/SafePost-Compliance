@@ -17,6 +17,7 @@ import BillingInformation from './BillingInformation';
 import History from './History';
 import Settings from './Settings';
 import Profile from './Profile';
+import ChangePlan from './ChangePlan';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -51,6 +52,7 @@ const App: React.FC = () => {
           <Route path="/history" element={<History />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/change-plan" element={<ChangePlan />} />
         </Routes>
       </div>
     </>
