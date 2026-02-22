@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink, Zap, FileText, Globe, Image, BookOpen, History } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
-import featuresHero from './assets/features-hero.png';
+import heroImage from './assets/features-hero.png';
 
 const Features: React.FC = () => {
   const navigate = useNavigate();
@@ -236,15 +236,13 @@ const Features: React.FC = () => {
 
       {/* Hero Image */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-5xl mx-auto px-6 mb-16 md:mb-20">
+        <div className="max-w-5xl mx-auto px-6 mb-16 md:mb-20 flex justify-center">
           <img
-            src={featuresHero}
-            alt="SafePost Compliance Platform"
-            width={1200}
-            height={320}
+            src={heroImage}
+            alt="SafePost Features"
             loading="eager"
             fetchPriority="high"
-            className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
+            className="max-w-[300px] md:max-w-[400px] w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
           />
         </div>
       </section>
