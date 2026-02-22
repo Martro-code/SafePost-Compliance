@@ -203,7 +203,7 @@ const About: React.FC = () => {
                 {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"For over 12 years, we\u2019ve worked in medical indemnity, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
+                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
               </p>
             </div>
 
@@ -220,7 +220,7 @@ const About: React.FC = () => {
             {/* Section 3 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                Our mission is simple: help Australian medical practitioners and practices communicate confidently, compliantly, and authentically
+                Our mission is to help Australian medical practitioners and practices communicate confidently, compliantly and authentically
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost\u2122 provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations."}
@@ -242,7 +242,7 @@ const About: React.FC = () => {
               <img
                 src={aboutUsLogo}
                 alt="SafePost logo"
-                className="max-w-[200px] md:max-w-[250px] w-full h-auto"
+                className="max-w-[500px] md:max-w-[600px] w-full h-auto"
               />
             </div>
 
