@@ -1,16 +1,23 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { ChevronDown, Menu, X, ExternalLink, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, CreditCard } from 'lucide-react';
+import { useNavigate, Link, useSearchParams, useLocation } from 'react-router-dom';
+import { ChevronDown, Menu, X, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, CreditCard, LogOut } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Read plan info from URL params or sessionStorage
   const planName = searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
   const billingPeriod = searchParams.get('billing') || sessionStorage.getItem('safepost_billing') || '';
+
+  // Read user info from sessionStorage
+  const userEmail = sessionStorage.getItem('safepost_signup_email') || 'your@email.com';
+  const firstName = sessionStorage.getItem('safepost_first_name') || '';
+
+  const hasPaidPlan = planName && !['free', 'starter'].includes(planName.toLowerCase());
 
   const formatPlanName = (plan: string) => {
     return plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase();
@@ -22,17 +29,8 @@ const Dashboard: React.FC = () => {
   const [view, setView] = useState<'input' | 'loading' | 'results'>('input');
 
   // Header state
-  const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
-  const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
-  const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
+  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
-
-  const resourceLinks = [
-    { label: 'Advertising hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
-    { label: 'Code of conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
-    { label: 'TGA guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
-  ];
 
   const recentChecks = [
     { id: 1, status: 'non-compliant', preview: 'My patients give me a 5 star...', time: '2 mins ago' },
@@ -71,99 +69,82 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const handleLogOut = () => {
+    sessionStorage.clear();
+    navigate('/');
+  };
+
+  const navLinks = [
+    { label: 'Dashboard', path: '/dashboard' },
+    { label: 'History', path: '/history' },
+    { label: 'Settings', path: '/settings' },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/">
-            <SafePostLogo />
-          </Link>
-
-          <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-            <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
-            <div className="relative">
-              <button
-                onClick={() => setPricingDropdownOpen(!pricingDropdownOpen)}
-                onBlur={() => setTimeout(() => setPricingDropdownOpen(false), 150)}
-                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
-              >
-                Pricing
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${pricingDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {pricingDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
-                  <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    Medical Practitioners
-                  </button>
-                  <button onClick={() => navigate('/pricing/medical-practices')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    Medical Practices
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="relative">
-              <button
-                onClick={() => setCompanyDropdownOpen(!companyDropdownOpen)}
-                onBlur={() => setTimeout(() => setCompanyDropdownOpen(false), 150)}
-                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
-              >
-                Company
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${companyDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {companyDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
-                  <button onClick={() => navigate('/about')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    About us
-                  </button>
-                  <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    News
-                  </a>
-                  <button onClick={() => navigate('/contact')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    Contact us
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="relative">
-              <button
-                onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
-                onBlur={() => setTimeout(() => setResourcesDropdownOpen(false), 150)}
-                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
-              >
-                Resources
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${resourcesDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {resourcesDropdownOpen && (
-                <div className="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
-                  {resourceLinks.map((link, i) => (
-                    <a
-                      key={i}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
-                    >
-                      {link.label}
-                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          </nav>
-
-          <div className="hidden md:flex items-center gap-2.5">
-            <button onClick={() => navigate('/login')} className="px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
-              Login
-            </button>
-            <button onClick={() => navigate('/signup')} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-              Sign Up
-            </button>
+          {/* Left: Logo + Nav */}
+          <div className="flex items-center gap-8">
+            <Link to="/dashboard">
+              <SafePostLogo />
+            </Link>
+            <nav className="hidden md:flex items-center gap-1">
+              {navLinks.map((link) => (
+                <button
+                  key={link.path}
+                  onClick={() => navigate(link.path)}
+                  className={`px-3.5 py-2 text-[13px] font-medium rounded-lg transition-all duration-200 ${
+                    location.pathname === link.path
+                      ? 'text-gray-900 bg-black/[0.04]'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04]'
+                  }`}
+                >
+                  {link.label}
+                </button>
+              ))}
+            </nav>
           </div>
 
+          {/* Right: My Account dropdown */}
+          <div className="hidden md:block relative">
+            <button
+              onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
+              onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
+              className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+            >
+              {firstName || 'My Account'}
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accountDropdownOpen ? 'rotate-180' : ''}`} />
+            </button>
+            {accountDropdownOpen && (
+              <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                <div className="px-4 py-2.5">
+                  <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
+                </div>
+                <div className="border-t border-black/[0.06] my-1" />
+                <button className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                  Profile
+                </button>
+                <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                  Billing
+                </button>
+                <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                  Pricing Plans
+                </button>
+                <div className="border-t border-black/[0.06] my-1" />
+                <button
+                  onClick={handleLogOut}
+                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                  Log Out
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile hamburger */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
@@ -180,56 +161,41 @@ const Dashboard: React.FC = () => {
           }`}
         >
           <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
-            <button onClick={() => navigate('/features')} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
-            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Pricing
-            </a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Company
-            </a>
-
-            <div>
+            <div className="px-3 py-2.5">
+              <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
+            </div>
+            <div className="border-t border-black/[0.06] my-1" />
+            {navLinks.map((link) => (
               <button
-                onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
-                className="w-full flex items-center justify-between px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+                key={link.path}
+                onClick={() => { navigate(link.path); setMobileMenuOpen(false); }}
+                className={`block w-full text-left px-3 py-2.5 text-[13px] font-medium rounded-lg transition-all duration-200 ${
+                  location.pathname === link.path
+                    ? 'text-gray-900 bg-black/[0.04]'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04]'
+                }`}
               >
-                Resources
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileResourcesOpen ? 'rotate-180' : ''}`} />
+                {link.label}
               </button>
-              <div
-                className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{
-                  maxHeight: mobileResourcesOpen ? '300px' : '0px',
-                  opacity: mobileResourcesOpen ? 1 : 0,
-                }}
-              >
-                <div className="pl-4 space-y-0.5 pt-1">
-                  {resourceLinks.map((link, i) => (
-                    <a
-                      key={i}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors"
-                    >
-                      {link.label}
-                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-black/[0.06] flex flex-col gap-2">
-              <button onClick={() => navigate('/login')} className="w-full px-4 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
-                Login
-              </button>
-              <button onClick={() => navigate('/signup')} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-                Sign Up
-              </button>
-            </div>
+            ))}
+            <div className="border-t border-black/[0.06] my-1" />
+            <button onClick={() => { setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Profile
+            </button>
+            <button onClick={() => { navigate('/billing'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Billing
+            </button>
+            <button onClick={() => { navigate('/pricing/medical-practitioners'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Pricing Plans
+            </button>
+            <div className="border-t border-black/[0.06] my-1" />
+            <button
+              onClick={handleLogOut}
+              className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              Log Out
+            </button>
           </div>
         </div>
       </header>
@@ -245,7 +211,7 @@ const Dashboard: React.FC = () => {
               {/* Welcome */}
               <div>
                 <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                  Check your content
+                  {firstName ? `Welcome back, ${firstName}` : 'Welcome back'}
                 </h2>
                 <p className="text-[14px] text-gray-500">
                   Paste your social media post or advertising content to check AHPRA compliance
@@ -254,8 +220,8 @@ const Dashboard: React.FC = () => {
 
               {/* Active Plan Badge */}
               {planName && (
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-200 bg-blue-50 text-[12px] font-medium text-blue-700">
-                  SafePost {formatPlanName(planName)}{billingPeriod ? ` — ${formatPlanName(billingPeriod)}` : ''}
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-gray-200 bg-gray-50 text-[12px] font-medium text-gray-600">
+                  SafePost {formatPlanName(planName)} &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
                 </div>
               )}
 
@@ -428,44 +394,46 @@ const Dashboard: React.FC = () => {
                   ))}
                 </div>
                 <div className="border-t border-black/[0.06] mt-3 pt-3">
-                  <button className="flex items-center gap-1 text-[13px] text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                  <button onClick={() => navigate('/history')} className="flex items-center gap-1 text-[13px] text-blue-600 hover:text-blue-700 font-medium transition-colors">
                     View All
                     <ArrowRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
 
-              {/* Upgrade CTA */}
-              <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <Rocket className="w-5 h-5 text-blue-600" />
-                  <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider">Upgrade to Pro</h3>
+              {/* Upgrade CTA - only show if no paid plan */}
+              {!hasPaidPlan && (
+                <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6">
+                  <div className="flex items-center gap-2.5 mb-3">
+                    <Rocket className="w-5 h-5 text-blue-600" />
+                    <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider">Upgrade to Pro</h3>
+                  </div>
+                  <ul className="space-y-2.5 mb-5">
+                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
+                      <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                      Unlimited checks
+                    </li>
+                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
+                      <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                      AI-powered rewrites
+                    </li>
+                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
+                      <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                      Full history tracking
+                    </li>
+                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
+                      <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                      Priority support
+                    </li>
+                  </ul>
+                  <button
+                    onClick={() => navigate('/pricing/medical-practitioners')}
+                    className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+                  >
+                    Upgrade Now
+                  </button>
                 </div>
-                <ul className="space-y-2.5 mb-5">
-                  <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
-                    <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    Unlimited checks
-                  </li>
-                  <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
-                    <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    AI-powered rewrites
-                  </li>
-                  <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
-                    <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    Full history tracking
-                  </li>
-                  <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
-                    <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    Priority support
-                  </li>
-                </ul>
-                <button
-                  onClick={() => navigate('/pricing/medical-practitioners')}
-                  className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
-                >
-                  Upgrade Now
-                </button>
-              </div>
+              )}
             </div>
 
           </div>

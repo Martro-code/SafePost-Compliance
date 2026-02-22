@@ -14,6 +14,8 @@ import Dashboard from './Dashboard';
 import Checkout from './Checkout';
 import VerifyEmail from './VerifyEmail';
 import BillingInformation from './BillingInformation';
+import History from './History';
+import Settings from './Settings';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -45,6 +47,8 @@ const App: React.FC = () => {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
           <Route path="/billing" element={<BillingInformation />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </div>
     </>

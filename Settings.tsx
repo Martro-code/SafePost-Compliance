@@ -1,51 +1,15 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, CreditCard, Mail, CalendarDays, LogOut } from 'lucide-react';
+import { ChevronDown, Menu, X, LogOut, Settings as SettingsIcon } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
-const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }> = {
-  professional: { monthlyPrice: 20, yearlyPrice: 192 },
-  proplus: { monthlyPrice: 49, yearlyPrice: 470 },
-  ultra: { monthlyPrice: 200, yearlyPrice: 1920 },
-};
-
-const BillingInformation: React.FC = () => {
+const Settings: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
-  // Read plan info from sessionStorage
-  const planName = sessionStorage.getItem('safepost_plan') || '';
-  const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
 
   // Read user info from sessionStorage
   const userEmail = sessionStorage.getItem('safepost_signup_email') || 'your@email.com';
   const firstName = sessionStorage.getItem('safepost_first_name') || '';
-
-  const formatPlanName = (plan: string) => {
-    return plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase();
-  };
-
-  // Calculate next payment amount and date
-  const { nextPaymentAmount, nextPaymentDate } = useMemo(() => {
-    const pricing = planPricing[planName.toLowerCase()];
-    let amount = 0;
-    if (pricing) {
-      amount = billingPeriod.toLowerCase() === 'yearly' ? pricing.yearlyPrice : pricing.monthlyPrice;
-    }
-
-    const date = new Date();
-    if (billingPeriod.toLowerCase() === 'yearly') {
-      date.setFullYear(date.getFullYear() + 1);
-    } else {
-      date.setMonth(date.getMonth() + 1);
-    }
-    const formatted = date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
-
-    return { nextPaymentAmount: amount, nextPaymentDate: formatted };
-  }, [planName, billingPeriod]);
-
-  // Billing email state
-  const [billingEmail, setBillingEmail] = useState('');
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
@@ -184,114 +148,23 @@ const BillingInformation: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-grow">
-        <div className="max-w-2xl mx-auto px-6 py-16 md:py-20">
-          {/* Back to Dashboard */}
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </button>
-
-          {/* Page Heading */}
+        <div className="max-w-4xl mx-auto px-6 py-16 md:py-20">
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-              Billing Information
+              Settings
             </h1>
             <p className="text-[14px] text-gray-500">
-              Manage your billing details and payment method
+              Manage your account preferences
             </p>
           </div>
 
-          {/* Billing Card */}
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]">
-            {/* Section 1: Payment Method */}
-            <div className="p-6 md:p-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                  <CreditCard className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Payment Method</h3>
-                </div>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-[14px] font-medium text-gray-900">Visa ending in XXXX</p>
-                  <p className="text-[13px] text-gray-500 mt-0.5">Expires 12/2027</p>
-                </div>
-                <button className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                  Edit
-                </button>
-              </div>
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
+            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
+              <SettingsIcon className="w-6 h-6 text-gray-400" />
             </div>
-
-            <div className="border-t border-black/[0.06]" />
-
-            {/* Section 2: Billing Email */}
-            <div className="p-6 md:p-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                  <Mail className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Billing Email</h3>
-                </div>
-              </div>
-              <input
-                type="email"
-                value={billingEmail}
-                onChange={(e) => setBillingEmail(e.target.value)}
-                placeholder="youremail@example.com.au"
-                className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-              />
-              <p className="text-[12px] text-gray-400 mt-1.5">Receipts and invoices will be sent to this address</p>
-            </div>
-
-            <div className="border-t border-black/[0.06]" />
-
-            {/* Section 3: Next Payment */}
-            <div className="p-6 md:p-8">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
-                  <CalendarDays className="w-5 h-5 text-blue-600" />
-                </div>
-                <div className="flex items-center gap-2.5">
-                  <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Next Payment</h3>
-                  <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
-                    Upcoming
-                  </span>
-                </div>
-              </div>
-              {planName ? (
-                <div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-[14px] font-medium text-gray-900">
-                        SafePost {formatPlanName(planName)}{billingPeriod ? ` — ${formatPlanName(billingPeriod)}` : ''}
-                      </p>
-                      <p className="text-[13px] text-gray-500 mt-0.5">{nextPaymentDate}</p>
-                    </div>
-                    <p className="text-lg font-extrabold text-gray-900">
-                      ${nextPaymentAmount}.00 <span className="text-[12px] font-medium text-gray-500">AUD</span>
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-[14px] text-gray-500">No active plan</p>
-              )}
-            </div>
-
-            <div className="border-t border-black/[0.06]" />
-
-            {/* Update Payment Method Button */}
-            <div className="p-6 md:p-8">
-              <button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5">
-                <CreditCard className="w-4 h-4" />
-                Update Payment Method
-              </button>
-            </div>
+            <p className="text-[14px] text-gray-500">
+              Account settings coming soon
+            </p>
           </div>
         </div>
       </main>
@@ -299,4 +172,4 @@ const BillingInformation: React.FC = () => {
   );
 };
 
-export default BillingInformation;
+export default Settings;
