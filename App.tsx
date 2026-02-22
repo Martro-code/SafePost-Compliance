@@ -18,6 +18,7 @@ import History from './History';
 import Settings from './Settings';
 import Profile from './Profile';
 import ChangePlan from './ChangePlan';
+import PrivacyPolicy from './PrivacyPolicy';
 import ProtectedRoute from './ProtectedRoute';
 
 const ScrollToTop: React.FC = () => {
@@ -44,6 +45,7 @@ const App: React.FC = () => {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
