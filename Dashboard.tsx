@@ -223,7 +223,7 @@ const Dashboard: React.FC = () => {
                   {firstName ? `Welcome back, ${firstName}` : 'Welcome back'}
                 </h2>
                 <p className="text-[14px] text-gray-500">
-                  Paste your social media post or advertising content to check AHPRA compliance.
+                  Instant AHPRA compliance check for medical practitioners and practices.
                 </p>
               </div>
 
@@ -246,7 +246,7 @@ const Dashboard: React.FC = () => {
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    placeholder="Paste your social media post content here..."
+                    placeholder="Paste your social media or online advertising content here..."
                     className="w-full min-h-[200px] px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-y"
                   />
 
