@@ -521,11 +521,11 @@ const HomePage: React.FC = () => {
         {/* How It Works — Video Demo */}
         <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
           <div className="max-w-6xl mx-auto px-6 pt-4 md:pt-6 pb-24 md:pb-32">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-stretch">
               {/* Left Column — Text Content */}
               <div className="space-y-6">
                 <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">
-                  How it works
+                  See it in action
                 </span>
                 <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
                   See SafePost™ in action
@@ -555,10 +555,9 @@ const HomePage: React.FC = () => {
               </div>
 
               {/* Right Column — Video Player Placeholder */}
-              <div className="w-full">
+              <div className="w-full self-stretch">
                 {/* Replace with actual video embed later */}
-                <div className="relative w-full rounded-2xl overflow-hidden border border-black/[0.06] shadow-lg shadow-black/[0.04] bg-gray-100"
-                     style={{ aspectRatio: '16 / 9' }}>
+                <div className="relative w-full h-full rounded-2xl overflow-hidden border border-black/[0.06] shadow-lg shadow-black/[0.04] bg-gray-100">
                   {/* Placeholder — swap this div for a YouTube/Vimeo iframe */}
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-20 h-20 rounded-full bg-white/90 border border-black/[0.06] shadow-lg flex items-center justify-center cursor-pointer hover:scale-105 transition-transform duration-200">
