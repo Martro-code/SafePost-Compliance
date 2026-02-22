@@ -160,7 +160,7 @@ const Settings: React.FC = () => {
               Settings
             </h1>
             <p className="text-[14px] text-gray-500">
-              Manage your account preferences.
+              Manage your account preferences
             </p>
           </div>
 

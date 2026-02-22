@@ -97,7 +97,7 @@ const Checkout: React.FC = () => {
   const trialEndDate = useMemo(() => {
     const date = new Date();
     date.setDate(date.getDate() + 7);
-    return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+    return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
   }, []);
 
   // Form state

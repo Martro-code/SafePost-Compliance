@@ -39,7 +39,7 @@ const BillingInformation: React.FC = () => {
     } else {
       date.setMonth(date.getMonth() + 1);
     }
-    const formatted = date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+    const formatted = date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
 
     return { nextPaymentAmount: amount, nextPaymentDate: formatted };
   }, [planName, billingPeriod]);

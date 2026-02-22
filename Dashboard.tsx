@@ -129,8 +129,8 @@ const Dashboard: React.FC = () => {
                 <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                   Billing
                 </button>
-                <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                  Pricing Plans
+                <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                  Settings
                 </button>
                 <div className="border-t border-black/[0.06] my-1" />
                 <button
@@ -185,8 +185,8 @@ const Dashboard: React.FC = () => {
             <button onClick={() => { navigate('/billing'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Billing
             </button>
-            <button onClick={() => { navigate('/pricing/medical-practitioners'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Pricing Plans
+            <button onClick={() => { navigate('/settings'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Settings
             </button>
             <div className="border-t border-black/[0.06] my-1" />
             <button
@@ -357,7 +357,7 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
                 <div className="border-t border-black/[0.06] mt-4 pt-4">
-                  <p className="text-[12px] text-gray-400">Resets: Mar 1, 2026</p>
+                  <p className="text-[12px] text-gray-400">Resets: 1 Mar 2026</p>
                 </div>
               </div>
 
