@@ -220,7 +220,7 @@ const Dashboard: React.FC = () => {
               {/* Welcome */}
               <div>
                 <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                  {firstName ? `Welcome back, ${firstName}` : 'Welcome back'}
+                  {firstName ? `Welcome Back, ${firstName}!` : 'Welcome Back!'}
                 </h2>
                 <p className="text-[14px] text-gray-500">
                   Instant AHPRA compliance check for medical practitioners and practices
