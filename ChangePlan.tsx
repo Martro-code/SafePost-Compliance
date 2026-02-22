@@ -1,30 +1,69 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, LogOut, Eye, EyeOff } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut, RefreshCw, Check } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
-const Profile: React.FC = () => {
+const plans = [
+  {
+    key: 'professional',
+    name: 'Professional',
+    monthlyPrice: 20,
+    yearlyPrice: 192,
+    yearlySaving: 48,
+    features: [
+      'Unlimited compliance checks',
+      'Compliant content rewrites (AI-generated alternatives)',
+      'Image and video content analysis',
+      'Compliance history tracking',
+    ],
+  },
+  {
+    key: 'proplus',
+    name: 'Pro+',
+    monthlyPrice: 49,
+    yearlyPrice: 470,
+    yearlySaving: 118,
+    features: [
+      'Everything in Professional, plus:',
+      'Multi-user access (up to 3 team members)',
+      'Basic online advertising compliance analysis',
+      'Custom compliance guidelines repository',
+    ],
+  },
+  {
+    key: 'ultra',
+    name: 'Ultra',
+    monthlyPrice: 200,
+    yearlyPrice: 1920,
+    yearlySaving: 480,
+    features: [
+      'Everything in Pro+, plus:',
+      'Unlimited compliance checks for social media AND online advertising',
+      'Multi-user access (up to 10 team members)',
+      'Advanced advertising compliance analysis',
+      'Bulk content review (upload multiple posts/ads at once)',
+      'Proactive notification of guideline changes',
+    ],
+  },
+];
+
+const ChangePlan: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
   // Read user info from sessionStorage
   const userEmail = sessionStorage.getItem('safepost_signup_email') || 'your@email.com';
   const firstName = sessionStorage.getItem('safepost_first_name') || '';
-  const surname = sessionStorage.getItem('safepost_surname') || '';
-  const storedPassword = sessionStorage.getItem('safepost_password') || '';
   const planName = sessionStorage.getItem('safepost_plan') || '';
-  const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
 
   const planDisplayNames: Record<string, string> = {
     professional: 'SafePost Professional',
     proplus: 'SafePost Pro+',
     ultra: 'SafePost Ultra',
   };
-  const displayPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Free';
   const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
 
-  // Password visibility toggle
-  const [showPassword, setShowPassword] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
@@ -40,6 +79,10 @@ const Profile: React.FC = () => {
     { label: 'History', path: '/history' },
     { label: 'Settings', path: '/settings' },
   ];
+
+  const currentPlanKey = planName.toLowerCase();
+  const availablePlans = plans.filter((p) => p.key !== currentPlanKey);
+  const selectedPlanData = plans.find((p) => p.key === selectedPlan);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
@@ -175,101 +218,77 @@ const Profile: React.FC = () => {
             Back to Dashboard
           </button>
 
+          {/* Page Heading */}
           <div className="mb-8">
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-              Profile
-            </h1>
+            <div className="flex items-center gap-3 mb-2">
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900">
+                Change your plan
+              </h1>
+              <RefreshCw className="w-6 h-6 text-gray-400" />
+            </div>
             <p className="text-[14px] text-gray-500">
-              Manage your personal information
+              Pick one of the following plans
             </p>
           </div>
 
+          {/* Plan Card */}
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]">
-            {/* Section 1: Personal Details */}
-            <div className="p-6 md:p-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Personal Details</h3>
-                <button className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                  Edit
-                </button>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] text-gray-500">First Name</span>
-                  <span className="text-[14px] font-medium text-gray-900">{firstName || '—'}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] text-gray-500">Surname</span>
-                  <span className="text-[14px] font-medium text-gray-900">{surname || '—'}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t border-black/[0.06]" />
-
-            {/* Section: Account Details */}
-            <div className="p-6 md:p-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Account Details</h3>
-                <button onClick={() => navigate('/change-plan')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                  Change Plan
-                </button>
-              </div>
-              <div>
-                <p className="text-[14px] font-medium text-gray-900">{displayPlanName}</p>
-                {billingPeriod && (
-                  <p className="text-[12px] text-gray-400 mt-0.5">{billingPeriod.charAt(0).toUpperCase() + billingPeriod.slice(1).toLowerCase()}</p>
-                )}
-              </div>
-            </div>
-
-            <div className="border-t border-black/[0.06]" />
-
-            {/* Section 2: Contact Details */}
-            <div className="p-6 md:p-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Contact Details</h3>
-                <button className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                  Edit
-                </button>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] text-gray-500">Email</span>
-                  <span className="text-[14px] font-medium text-gray-900">{userEmail}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] text-gray-500">Practice Name</span>
-                  <span className="text-[14px] text-gray-400">Not provided</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[13px] text-gray-500">Practice Address</span>
-                  <span className="text-[14px] text-gray-400">Not provided</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-t border-black/[0.06]" />
-
-            {/* Section 3: Password */}
-            <div className="p-6 md:p-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Password</h3>
-                <button className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
-                  Edit
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-[14px] font-medium text-gray-900">
-                  {showPassword && storedPassword ? storedPassword : '••••••••••••'}
-                </span>
+            {/* Plan Radio Options */}
+            {availablePlans.map((plan, index) => (
+              <div key={plan.key}>
+                {index > 0 && <div className="border-t border-black/[0.06]" />}
                 <button
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors"
+                  onClick={() => setSelectedPlan(plan.key)}
+                  className="w-full flex items-center justify-between p-6 md:px-8 text-left transition-colors hover:bg-black/[0.01]"
                 >
-                  {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+                  <div>
+                    <p className="text-[14px] font-medium text-gray-900">{plan.name}</p>
+                    <p className="text-[13px] text-gray-500 mt-0.5">
+                      ${plan.monthlyPrice}/month or ${plan.yearlyPrice.toLocaleString()}/year (save ${plan.yearlySaving})
+                    </p>
+                  </div>
+                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
+                    selectedPlan === plan.key ? 'border-blue-600 bg-blue-600' : 'border-gray-300'
+                  }`}>
+                    {selectedPlan === plan.key && (
+                      <div className="w-2 h-2 rounded-full bg-white" />
+                    )}
+                  </div>
                 </button>
               </div>
+            ))}
+
+            {/* Features Section (shown when a plan is selected) */}
+            {selectedPlanData && (
+              <>
+                <div className="border-t border-black/[0.06]" />
+                <div className="p-6 md:px-8">
+                  <p className="text-[13px] font-semibold text-gray-700 mb-3">Features include:</p>
+                  <ul className="space-y-2.5">
+                    {selectedPlanData.features.map((feature, i) => (
+                      <li key={i} className="flex items-start gap-2.5">
+                        <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
+                        <span className="text-[13px] text-gray-600">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </>
+            )}
+
+            <div className="border-t border-black/[0.06]" />
+
+            {/* Bottom Actions */}
+            <div className="p-6 md:px-8">
+              <button className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-[15px] font-semibold rounded-lg shadow-sm transition-all duration-200 active:scale-[0.98]">
+                Change plan
+              </button>
+              <button
+                onClick={() => navigate('/profile')}
+                className="w-full mt-3 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors py-2"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -345,4 +364,4 @@ const Profile: React.FC = () => {
   );
 };
 
-export default Profile;
+export default ChangePlan;
