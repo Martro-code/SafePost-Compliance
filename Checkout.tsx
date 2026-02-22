@@ -289,7 +289,7 @@ const Checkout: React.FC = () => {
                   />
                   <span className="text-[13px] text-gray-600 leading-relaxed">
                     I agree to the{' '}
-                    <a href="#" onClick={(e) => e.preventDefault()} className="text-blue-600 hover:text-blue-700 underline">Terms of Service</a>
+                    <a href="#" onClick={(e) => e.preventDefault()} className="text-blue-600 hover:text-blue-700 underline">Terms of Use</a>
                     {' '}and{' '}
                     <a href="#" onClick={(e) => e.preventDefault()} className="text-blue-600 hover:text-blue-700 underline">Privacy Policy</a>
                   </span>
