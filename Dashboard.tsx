@@ -128,9 +128,7 @@ const Dashboard: React.FC = () => {
               <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                 <div className="px-4 py-2.5">
                   <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
-                  <span className="inline-block mt-1.5 px-2 py-0.5 text-[10px] font-medium text-gray-500 bg-gray-100 rounded-full">
-                    {dropdownPlanName}
-                  </span>
+                  <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
                 </div>
                 <div className="border-t border-black/[0.06] my-1" />
                 <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
@@ -173,9 +171,7 @@ const Dashboard: React.FC = () => {
           <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
             <div className="px-3 py-2.5">
               <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
-              <span className="inline-block mt-1.5 px-2 py-0.5 text-[10px] font-medium text-gray-500 bg-gray-100 rounded-full">
-                {dropdownPlanName}
-              </span>
+              <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
             </div>
             <div className="border-t border-black/[0.06] my-1" />
             {navLinks.map((link) => (
@@ -227,7 +223,7 @@ const Dashboard: React.FC = () => {
                   {firstName ? `Welcome back, ${firstName}` : 'Welcome back'}
                 </h2>
                 <p className="text-[14px] text-gray-500">
-                  Paste your social media post or advertising content to check AHPRA compliance.
+                  Instant AHPRA compliance check for medical practitioners and practices.
                 </p>
               </div>
 
@@ -250,7 +246,7 @@ const Dashboard: React.FC = () => {
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    placeholder="Paste your social media post content here..."
+                    placeholder="Paste your social media or online advertising content here..."
                     className="w-full min-h-[200px] px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-y"
                   />
 

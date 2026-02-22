@@ -21,6 +21,13 @@ const BillingInformation: React.FC = () => {
   const userEmail = sessionStorage.getItem('safepost_signup_email') || 'your@email.com';
   const firstName = sessionStorage.getItem('safepost_first_name') || '';
 
+  const planDisplayNames: Record<string, string> = {
+    professional: 'SafePost Professional',
+    proplus: 'SafePost Pro+',
+    ultra: 'SafePost Ultra',
+  };
+  const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
+
   const formatPlanName = (plan: string) => {
     return plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase();
   };
@@ -103,6 +110,7 @@ const BillingInformation: React.FC = () => {
               <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                 <div className="px-4 py-2.5">
                   <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
+                  <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
                 </div>
                 <div className="border-t border-black/[0.06] my-1" />
                 <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
@@ -145,6 +153,7 @@ const BillingInformation: React.FC = () => {
           <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
             <div className="px-3 py-2.5">
               <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
+              <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
             </div>
             <div className="border-t border-black/[0.06] my-1" />
             {navLinks.map((link) => (
