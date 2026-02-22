@@ -12,6 +12,15 @@ const Profile: React.FC = () => {
   const firstName = sessionStorage.getItem('safepost_first_name') || '';
   const surname = sessionStorage.getItem('safepost_surname') || '';
   const storedPassword = sessionStorage.getItem('safepost_password') || '';
+  const planName = sessionStorage.getItem('safepost_plan') || '';
+  const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
+
+  const planDisplayNames: Record<string, string> = {
+    professional: 'SafePost Professional',
+    proplus: 'SafePost Pro+',
+    ultra: 'SafePost Ultra',
+  };
+  const displayPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Free';
 
   // Password visibility toggle
   const [showPassword, setShowPassword] = useState(false);
@@ -186,6 +195,24 @@ const Profile: React.FC = () => {
 
             <div className="border-t border-black/[0.06]" />
 
+            {/* Section: Account Details */}
+            <div className="p-6 md:p-8">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Account Details</h3>
+                <button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                  Upgrade
+                </button>
+              </div>
+              <div>
+                <p className="text-[14px] font-medium text-gray-900">{displayPlanName}</p>
+                {billingPeriod && (
+                  <p className="text-[12px] text-gray-400 mt-0.5">{billingPeriod.charAt(0).toUpperCase() + billingPeriod.slice(1).toLowerCase()}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="border-t border-black/[0.06]" />
+
             {/* Section 2: Contact Details */}
             <div className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-4">
@@ -220,7 +247,7 @@ const Profile: React.FC = () => {
                   Edit
                 </button>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 <span className="text-[14px] font-medium text-gray-900">
                   {showPassword && storedPassword ? storedPassword : '••••••••••••'}
                 </span>
