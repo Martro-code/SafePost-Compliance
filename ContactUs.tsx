@@ -242,7 +242,7 @@ const ContactUs: React.FC = () => {
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Get in touch
+                Get in Touch
               </h1>
               <p className="text-[14px] text-gray-500">
                 We'd love to hear from you! Please fill out the form below
