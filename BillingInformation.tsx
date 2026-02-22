@@ -301,8 +301,7 @@ const BillingInformation: React.FC = () => {
 
             {/* Update Payment Method Button */}
             <div className="p-6 md:p-8">
-              <button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5">
-                <CreditCard className="w-4 h-4" />
+              <button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center">
                 Update Payment Method
               </button>
             </div>
