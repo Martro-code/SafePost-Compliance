@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link, useSearchParams, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, CreditCard, LogOut } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, LogOut } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const Dashboard: React.FC = () => {
@@ -214,7 +214,7 @@ const Dashboard: React.FC = () => {
                   {firstName ? `Welcome back, ${firstName}` : 'Welcome back'}
                 </h2>
                 <p className="text-[14px] text-gray-500">
-                  Paste your social media post or advertising content to check AHPRA compliance
+                  Paste your social media post or advertising content to check AHPRA compliance.
                 </p>
               </div>
 
@@ -361,46 +361,6 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Billing Information */}
-              <button
-                onClick={() => navigate('/billing')}
-                className="w-full bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 flex items-center justify-between group hover:border-black/[0.1] transition-all duration-200"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
-                    <CreditCard className="w-4.5 h-4.5 text-blue-600" />
-                  </div>
-                  <span className="text-[14px] font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Billing Information</span>
-                </div>
-                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
-              </button>
-
-              {/* Recent Checks */}
-              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6">
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">Recent Checks</h3>
-                <div className="space-y-1">
-                  {recentChecks.map((check) => (
-                    <button
-                      key={check.id}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-black/[0.03] transition-colors text-left group"
-                    >
-                      {getStatusIcon(check.status)}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[13px] text-gray-700 truncate">{check.preview}</p>
-                        <p className="text-[11px] text-gray-400">{check.time}</p>
-                      </div>
-                      <ChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0" />
-                    </button>
-                  ))}
-                </div>
-                <div className="border-t border-black/[0.06] mt-3 pt-3">
-                  <button onClick={() => navigate('/history')} className="flex items-center gap-1 text-[13px] text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                    View All
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-
               {/* Upgrade CTA - only show if no paid plan */}
               {!hasPaidPlan && (
                 <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6">
@@ -434,6 +394,33 @@ const Dashboard: React.FC = () => {
                   </button>
                 </div>
               )}
+
+              {/* Recent Checks */}
+              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6">
+                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">Recent Checks</h3>
+                <div className="space-y-1">
+                  {recentChecks.map((check) => (
+                    <button
+                      key={check.id}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-black/[0.03] transition-colors text-left group"
+                    >
+                      {getStatusIcon(check.status)}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[13px] text-gray-700 truncate">{check.preview}</p>
+                        <p className="text-[11px] text-gray-400">{check.time}</p>
+                      </div>
+                      <ChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0" />
+                    </button>
+                  ))}
+                </div>
+                <div className="border-t border-black/[0.06] mt-3 pt-3">
+                  <button onClick={() => navigate('/history')} className="flex items-center gap-1 text-[13px] text-blue-600 hover:text-blue-700 font-medium transition-colors">
+                    View All
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+
             </div>
 
           </div>

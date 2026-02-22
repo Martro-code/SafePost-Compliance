@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, LogOut, Settings as SettingsIcon } from 'lucide-react';
+import { ChevronDown, Menu, X, LogOut, Bell, ShieldCheck, Moon, Mail } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const Settings: React.FC = () => {
@@ -10,6 +10,12 @@ const Settings: React.FC = () => {
   // Read user info from sessionStorage
   const userEmail = sessionStorage.getItem('safepost_signup_email') || 'your@email.com';
   const firstName = sessionStorage.getItem('safepost_first_name') || '';
+
+  // Toggle state
+  const [pushNotifications, setPushNotifications] = useState(true);
+  const [twoFactor, setTwoFactor] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  const [emailUpdates, setEmailUpdates] = useState(true);
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
@@ -148,23 +154,101 @@ const Settings: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-grow">
-        <div className="max-w-4xl mx-auto px-6 py-16 md:py-20">
+        <div className="max-w-2xl mx-auto px-6 py-16 md:py-20">
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
               Settings
             </h1>
             <p className="text-[14px] text-gray-500">
-              Manage your account preferences
+              Manage your account preferences.
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
-            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
-              <SettingsIcon className="w-6 h-6 text-gray-400" />
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm">
+            {/* Push Notifications */}
+            <div className="flex items-center justify-between p-6 md:px-8">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <Bell className="w-4.5 h-4.5 text-blue-600" />
+                </div>
+                <span className="text-[14px] font-medium text-gray-700">Push Notifications</span>
+              </div>
+              <button
+                onClick={() => setPushNotifications(!pushNotifications)}
+                className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${pushNotifications ? 'bg-blue-600' : 'bg-gray-200'}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${pushNotifications ? 'translate-x-5' : 'translate-x-0'}`} />
+              </button>
             </div>
-            <p className="text-[14px] text-gray-500">
-              Account settings coming soon
-            </p>
+
+            <div className="border-t border-black/[0.06]" />
+
+            {/* Two-Factor Authentication */}
+            <div className="flex items-center justify-between p-6 md:px-8">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <ShieldCheck className="w-4.5 h-4.5 text-blue-600" />
+                </div>
+                <span className="text-[14px] font-medium text-gray-700">Two-Factor Authentication</span>
+              </div>
+              <button
+                onClick={() => setTwoFactor(!twoFactor)}
+                className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${twoFactor ? 'bg-blue-600' : 'bg-gray-200'}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${twoFactor ? 'translate-x-5' : 'translate-x-0'}`} />
+              </button>
+            </div>
+
+            <div className="border-t border-black/[0.06]" />
+
+            {/* Dark Mode */}
+            <div className="flex items-center justify-between p-6 md:px-8">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <Moon className="w-4.5 h-4.5 text-blue-600" />
+                </div>
+                <span className="text-[14px] font-medium text-gray-700">Dark Mode</span>
+              </div>
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${darkMode ? 'bg-blue-600' : 'bg-gray-200'}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${darkMode ? 'translate-x-5' : 'translate-x-0'}`} />
+              </button>
+            </div>
+
+            <div className="border-t border-black/[0.06]" />
+
+            {/* Email Updates */}
+            <div className="flex items-center justify-between p-6 md:px-8">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <Mail className="w-4.5 h-4.5 text-blue-600" />
+                </div>
+                <span className="text-[14px] font-medium text-gray-700">Email Updates</span>
+              </div>
+              <button
+                onClick={() => setEmailUpdates(!emailUpdates)}
+                className={`relative w-11 h-6 rounded-full transition-colors duration-200 ${emailUpdates ? 'bg-blue-600' : 'bg-gray-200'}`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${emailUpdates ? 'translate-x-5' : 'translate-x-0'}`} />
+              </button>
+            </div>
+
+            <div className="border-t border-black/[0.06]" />
+
+            {/* Buttons */}
+            <div className="flex items-center gap-3 p-6 md:px-8">
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
+              >
+                Close
+              </button>
+              <button className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30">
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
       </main>
