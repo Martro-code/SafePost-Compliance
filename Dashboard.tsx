@@ -1,11 +1,20 @@
 import React, { useState, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { ChevronDown, Menu, X, ExternalLink, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Read plan info from URL params or sessionStorage
+  const planName = searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
+  const billingPeriod = searchParams.get('billing') || sessionStorage.getItem('safepost_billing') || '';
+
+  const formatPlanName = (plan: string) => {
+    return plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase();
+  };
 
   // Form state
   const [content, setContent] = useState('');
@@ -242,6 +251,13 @@ const Dashboard: React.FC = () => {
                   Paste your social media post or advertising content to check AHPRA compliance
                 </p>
               </div>
+
+              {/* Active Plan Badge */}
+              {planName && (
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-200 bg-blue-50 text-[12px] font-medium text-blue-700">
+                  SafePost {formatPlanName(planName)}{billingPeriod ? ` — ${formatPlanName(billingPeriod)}` : ''}
+                </div>
+              )}
 
               {/* Usage badge */}
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-black/[0.08] bg-white text-[12px] font-medium text-gray-500">
