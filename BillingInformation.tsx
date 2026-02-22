@@ -299,9 +299,15 @@ const BillingInformation: React.FC = () => {
 
             <div className="border-t border-black/[0.06]" />
 
-            {/* Update Payment Method Button */}
-            <div className="p-6 md:p-8">
-              <button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center">
+            {/* Buttons */}
+            <div className="flex items-center gap-3 p-6 md:px-8">
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
+              >
+                Cancel
+              </button>
+              <button className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30">
                 Update Payment Method
               </button>
             </div>
