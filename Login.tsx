@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import { supabase } from './src/services/supabaseClient';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -35,9 +38,21 @@ const Login: React.FC = () => {
     return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    setAuthError('');
+    setIsSubmitting(true);
+
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+    setIsSubmitting(false);
+
+    if (error) {
+      setAuthError('Invalid email or password');
+      return;
+    }
+
     navigate('/dashboard');
   };
 
@@ -285,13 +300,19 @@ const Login: React.FC = () => {
                 </label>
               </div>
 
+              {/* Auth Error */}
+              {authError && (
+                <p className="text-[13px] text-red-600 font-medium">{authError}</p>
+              )}
+
               {/* Submit Button */}
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
+                  disabled={isSubmitting}
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  Sign In
+                  {isSubmitting ? 'Signing In...' : 'Sign In'}
                 </button>
               </div>
             </form>

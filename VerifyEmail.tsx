@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { Mail, ArrowLeft } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import { supabase } from './src/services/supabaseClient';
 
 const VerifyEmail: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [resent, setResent] = useState(false);
 
-  const email = searchParams.get('email') || sessionStorage.getItem('safepost_signup_email') || '';
+  const email = searchParams.get('email') || '';
   const plan = searchParams.get('plan') || '';
   const billing = searchParams.get('billing') || '';
 
@@ -18,13 +19,12 @@ const VerifyEmail: React.FC = () => {
     : '/checkout?plan=professional&billing=monthly';
 
   const handleVerified = () => {
-    // Demo: mark user as verified in sessionStorage
-    sessionStorage.setItem('safepost_verified', 'true');
-    sessionStorage.setItem('safepost_email', email);
     navigate(checkoutUrl);
   };
 
-  const handleResend = () => {
+  const handleResend = async () => {
+    if (!email) return;
+    await supabase.auth.resend({ type: 'signup', email });
     setResent(true);
     setTimeout(() => setResent(false), 3000);
   };

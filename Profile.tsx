@@ -2,16 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ArrowLeft, LogOut, Eye, EyeOff } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import { useAuth } from './useAuth';
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { userEmail, firstName, surname, signOut } = useAuth();
 
-  // Read user info from sessionStorage
-  const userEmail = sessionStorage.getItem('safepost_signup_email') || 'your@email.com';
-  const firstName = sessionStorage.getItem('safepost_first_name') || '';
-  const surname = sessionStorage.getItem('safepost_surname') || '';
-  const storedPassword = sessionStorage.getItem('safepost_password') || '';
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
 
@@ -30,8 +27,8 @@ const Profile: React.FC = () => {
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogOut = () => {
-    sessionStorage.clear();
+  const handleLogOut = async () => {
+    await signOut();
     navigate('/');
   };
 
@@ -261,7 +258,7 @@ const Profile: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[14px] font-medium text-gray-900">
-                  {showPassword && storedPassword ? storedPassword : '••••••••••••'}
+                  {'••••••••••••'}
                 </span>
                 <button
                   onClick={() => setShowPassword(!showPassword)}

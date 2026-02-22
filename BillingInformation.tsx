@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ArrowLeft, CreditCard, Mail, CalendarDays, LogOut } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import { useAuth } from './useAuth';
 
 const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }> = {
   professional: { monthlyPrice: 20, yearlyPrice: 192 },
@@ -12,14 +13,11 @@ const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }>
 const BillingInformation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { userEmail, firstName, signOut } = useAuth();
 
   // Read plan info from sessionStorage
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
-
-  // Read user info from sessionStorage
-  const userEmail = sessionStorage.getItem('safepost_signup_email') || 'your@email.com';
-  const firstName = sessionStorage.getItem('safepost_first_name') || '';
 
   const planDisplayNames: Record<string, string> = {
     professional: 'SafePost Professional',
@@ -51,15 +49,15 @@ const BillingInformation: React.FC = () => {
     return { nextPaymentAmount: amount, nextPaymentDate: formatted };
   }, [planName, billingPeriod]);
 
-  // Billing email state — pre-populate from sessionStorage
-  const [billingEmail, setBillingEmail] = useState(sessionStorage.getItem('safepost_signup_email') || '');
+  // Billing email state — pre-populate from Supabase session
+  const [billingEmail, setBillingEmail] = useState(userEmail);
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogOut = () => {
-    sessionStorage.clear();
+  const handleLogOut = async () => {
+    await signOut();
     navigate('/');
   };
 
