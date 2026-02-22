@@ -247,6 +247,11 @@ const PricingMedicalPractices: React.FC = () => {
               Yearly
             </span>
           </div>
+          <div className="flex items-center justify-center mt-4">
+            <button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors duration-200">
+              &larr; Pricing for Medical Practitioners
+            </button>
+          </div>
         </div>
       </section>
 
