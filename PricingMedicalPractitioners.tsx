@@ -336,19 +336,6 @@ const PricingMedicalPractitioners: React.FC = () => {
         </div>
       </section>
 
-      {/* Trust Indicators */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
-            <span className="text-[13px] text-gray-500 font-medium">Cancel anytime</span>
-            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
-            <span className="text-[13px] text-gray-500 font-medium">No long-term contracts</span>
-            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
-            <span className="text-[13px] text-gray-500 font-medium">Australian-based support</span>
-          </div>
-        </div>
-      </section>
-
       {/* FAQ Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
