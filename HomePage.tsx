@@ -193,7 +193,7 @@ const HomePage: React.FC = () => {
               {companyDropdownOpen && (
                 <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                   <button onClick={() => navigate('/about')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    About
+                    About us
                   </button>
                   <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     News
@@ -681,7 +681,7 @@ const HomePage: React.FC = () => {
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About</button></li>
+                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About us</button></li>
                 <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
               </ul>
             </div>
