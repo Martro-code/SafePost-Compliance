@@ -236,13 +236,13 @@ const Features: React.FC = () => {
 
       {/* Hero Image */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-5xl mx-auto px-6 mb-16 md:mb-20 flex justify-center">
+        <div className="max-w-5xl mx-auto px-6 mb-16 md:mb-20">
           <img
             src={heroImage}
             alt="SafePost Features"
             loading="eager"
             fetchPriority="high"
-            className="max-w-[300px] md:max-w-[400px] w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
+            className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
           />
         </div>
       </section>
@@ -283,16 +283,16 @@ const Features: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               onClick={() => navigate('/signup')}
-              className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px] min-w-[180px]"
+              className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
             >
-              Start Free Trial
+              Get Started
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
-              onClick={() => navigate('/pricing/medical-practitioners')}
+              onClick={() => navigate('/login')}
               className="px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
             >
-              View Pricing
+              Login
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
