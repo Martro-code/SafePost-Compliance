@@ -1,25 +1,46 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { ChevronDown, Menu, X, ExternalLink, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, CreditCard } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { ChevronDown, Menu, X, ExternalLink, ArrowLeft, CreditCard, Mail, CalendarDays } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
-const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const fileInputRef = useRef<HTMLInputElement>(null);
+const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }> = {
+  professional: { monthlyPrice: 20, yearlyPrice: 192 },
+  proplus: { monthlyPrice: 49, yearlyPrice: 470 },
+  ultra: { monthlyPrice: 200, yearlyPrice: 1920 },
+};
 
-  // Read plan info from URL params or sessionStorage
-  const planName = searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
-  const billingPeriod = searchParams.get('billing') || sessionStorage.getItem('safepost_billing') || '';
+const BillingInformation: React.FC = () => {
+  const navigate = useNavigate();
+
+  // Read plan info from sessionStorage
+  const planName = sessionStorage.getItem('safepost_plan') || '';
+  const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
 
   const formatPlanName = (plan: string) => {
     return plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase();
   };
 
-  // Form state
-  const [content, setContent] = useState('');
-  const [attachedFile, setAttachedFile] = useState<File | null>(null);
-  const [view, setView] = useState<'input' | 'loading' | 'results'>('input');
+  // Calculate next payment amount and date
+  const { nextPaymentAmount, nextPaymentDate } = useMemo(() => {
+    const pricing = planPricing[planName.toLowerCase()];
+    let amount = 0;
+    if (pricing) {
+      amount = billingPeriod.toLowerCase() === 'yearly' ? pricing.yearlyPrice : pricing.monthlyPrice;
+    }
+
+    const date = new Date();
+    if (billingPeriod.toLowerCase() === 'yearly') {
+      date.setFullYear(date.getFullYear() + 1);
+    } else {
+      date.setMonth(date.getMonth() + 1);
+    }
+    const formatted = date.toLocaleDateString('en-AU', { day: 'numeric', month: 'long', year: 'numeric' });
+
+    return { nextPaymentAmount: amount, nextPaymentDate: formatted };
+  }, [planName, billingPeriod]);
+
+  // Billing email state
+  const [billingEmail, setBillingEmail] = useState('');
 
   // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -33,43 +54,6 @@ const Dashboard: React.FC = () => {
     { label: 'Code of conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
     { label: 'TGA guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
-
-  const recentChecks = [
-    { id: 1, status: 'non-compliant', preview: 'My patients give me a 5 star...', time: '2 mins ago' },
-    { id: 2, status: 'compliant', preview: 'Join our wellness workshop...', time: '1 hour ago' },
-    { id: 3, status: 'warning', preview: 'New treatment now available...', time: 'Yesterday' },
-  ];
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'non-compliant':
-        return <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />;
-      case 'compliant':
-        return <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />;
-      case 'warning':
-        return <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />;
-      default:
-        return null;
-    }
-  };
-
-  const handleCheckCompliance = () => {
-    if (!content.trim()) return;
-    setView('loading');
-    setTimeout(() => setView('results'), 2000);
-  };
-
-  const handleNewCheck = () => {
-    setContent('');
-    setAttachedFile(null);
-    setView('input');
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setAttachedFile(e.target.files[0]);
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
@@ -234,240 +218,116 @@ const Dashboard: React.FC = () => {
         </div>
       </header>
 
-      {/* Dashboard Content */}
+      {/* Main Content */}
       <main className="flex-grow">
-        <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
-          {/* Two-column grid: on mobile, sidebar cards appear first via order classes */}
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_340px] gap-6">
+        <div className="max-w-2xl mx-auto px-6 py-16 md:py-20">
+          {/* Back to Dashboard */}
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Dashboard
+          </button>
 
-            {/* LEFT COLUMN - Compliance Checker */}
-            <div className="space-y-6 order-2 md:order-1">
-              {/* Welcome */}
-              <div>
-                <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                  Check your content
-                </h2>
-                <p className="text-[14px] text-gray-500">
-                  Paste your social media post or advertising content to check AHPRA compliance
-                </p>
-              </div>
+          {/* Page Heading */}
+          <div className="mb-8">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
+              Billing Information
+            </h1>
+            <p className="text-[14px] text-gray-500">
+              Manage your billing details and payment method
+            </p>
+          </div>
 
-              {/* Active Plan Badge */}
-              {planName && (
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-blue-200 bg-blue-50 text-[12px] font-medium text-blue-700">
-                  SafePost {formatPlanName(planName)}{billingPeriod ? ` — ${formatPlanName(billingPeriod)}` : ''}
+          {/* Billing Card */}
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]">
+            {/* Section 1: Payment Method */}
+            <div className="p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <CreditCard className="w-5 h-5 text-blue-600" />
                 </div>
-              )}
-
-              {/* Usage badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-black/[0.08] bg-white text-[12px] font-medium text-gray-500">
-                <Clock className="w-3.5 h-3.5 text-gray-400" />
-                2 of 3 checks used this month
-              </div>
-
-              {/* Input / Loading / Results views */}
-              {view === 'input' && (
-                <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 md:p-8 space-y-4">
-                  <textarea
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                    placeholder="Paste your social media post content here..."
-                    className="w-full min-h-[200px] px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-y"
-                  />
-
-                  {/* Attached file indicator */}
-                  {attachedFile && (
-                    <div className="flex items-center gap-2 text-[13px] text-gray-500">
-                      <Paperclip className="w-3.5 h-3.5" />
-                      <span className="truncate">{attachedFile.name}</span>
-                      <button onClick={() => setAttachedFile(null)} className="text-gray-400 hover:text-gray-600 ml-1">
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  )}
-
-                  {/* Attach image */}
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-2 text-[13px] text-gray-500 hover:text-gray-700 transition-colors"
-                  >
-                    <Paperclip className="w-4 h-4" />
-                    Attach Image (optional)
-                  </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
-
-                  {/* Submit */}
-                  <button
-                    onClick={handleCheckCompliance}
-                    disabled={!content.trim()}
-                    className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
-                  >
-                    Check Compliance
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-
-              {view === 'loading' && (
-                <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center gap-4">
-                  <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                  <p className="text-[14px] text-gray-500 font-medium">Analysing your content for AHPRA compliance...</p>
-                </div>
-              )}
-
-              {view === 'results' && (
-                <div className="space-y-4">
-                  {/* Verdict card */}
-                  <div className="bg-red-50 rounded-2xl border border-red-200 p-6 md:p-8">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
-                        <XCircle className="w-5 h-5 text-red-600" />
-                      </div>
-                      <div>
-                        <p className="text-[11px] font-semibold text-red-500 uppercase tracking-wider">Verdict</p>
-                        <h3 className="text-lg font-bold text-red-700">Non-Compliant</h3>
-                      </div>
-                    </div>
-                    <p className="text-[14px] text-red-700/80 leading-relaxed mb-5">
-                      This content contains testimonial-style claims and uses superlative language that may breach AHPRA advertising guidelines under Section 133 of the National Law.
-                    </p>
-
-                    <div className="space-y-3">
-                      <h4 className="text-[12px] font-semibold text-red-600 uppercase tracking-wider">Identified Risks</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-start gap-2.5">
-                          <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                          <p className="text-[13px] text-red-700/80">Use of patient testimonials and star ratings</p>
-                        </div>
-                        <div className="flex items-start gap-2.5">
-                          <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                          <p className="text-[13px] text-red-700/80">Superlative claims that could create unreasonable expectations</p>
-                        </div>
-                        <div className="flex items-start gap-2.5">
-                          <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                          <p className="text-[13px] text-red-700/80">Missing required disclaimers for advertised services</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Action buttons */}
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <button className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2">
-                      <Sparkles className="w-4 h-4" />
-                      Generate Compliant Rewrites
-                    </button>
-                    <button
-                      onClick={handleNewCheck}
-                      className="flex-1 h-12 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
-                    >
-                      Back to New Check
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* RIGHT SIDEBAR */}
-            <div className="space-y-6 order-1 md:order-2">
-              {/* Usage Stats */}
-              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6">
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">Your Usage</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="w-4 h-4 text-green-500" />
-                    <span className="text-[14px] text-gray-700">2 checks used</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-4 h-4 text-blue-500" />
-                    <span className="text-[14px] text-gray-700">1 remaining</span>
-                  </div>
-                </div>
-                <div className="border-t border-black/[0.06] mt-4 pt-4">
-                  <p className="text-[12px] text-gray-400">Resets: Mar 1, 2026</p>
+                <div>
+                  <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Payment Method</h3>
                 </div>
               </div>
-
-              {/* Billing Information */}
-              <button
-                onClick={() => navigate('/billing')}
-                className="w-full bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 flex items-center justify-between group hover:border-black/[0.1] transition-all duration-200"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center">
-                    <CreditCard className="w-4.5 h-4.5 text-blue-600" />
-                  </div>
-                  <span className="text-[14px] font-medium text-gray-700 group-hover:text-gray-900 transition-colors">Billing Information</span>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[14px] font-medium text-gray-900">Visa ending in XXXX</p>
+                  <p className="text-[13px] text-gray-500 mt-0.5">Expires 12/2027</p>
                 </div>
-                <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
-              </button>
-
-              {/* Recent Checks */}
-              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6">
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">Recent Checks</h3>
-                <div className="space-y-1">
-                  {recentChecks.map((check) => (
-                    <button
-                      key={check.id}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-black/[0.03] transition-colors text-left group"
-                    >
-                      {getStatusIcon(check.status)}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[13px] text-gray-700 truncate">{check.preview}</p>
-                        <p className="text-[11px] text-gray-400">{check.time}</p>
-                      </div>
-                      <ChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0" />
-                    </button>
-                  ))}
-                </div>
-                <div className="border-t border-black/[0.06] mt-3 pt-3">
-                  <button className="flex items-center gap-1 text-[13px] text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                    View All
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Upgrade CTA */}
-              <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6">
-                <div className="flex items-center gap-2.5 mb-3">
-                  <Rocket className="w-5 h-5 text-blue-600" />
-                  <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider">Upgrade to Pro</h3>
-                </div>
-                <ul className="space-y-2.5 mb-5">
-                  <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
-                    <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    Unlimited checks
-                  </li>
-                  <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
-                    <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    AI-powered rewrites
-                  </li>
-                  <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
-                    <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    Full history tracking
-                  </li>
-                  <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
-                    <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    Priority support
-                  </li>
-                </ul>
-                <button
-                  onClick={() => navigate('/pricing/medical-practitioners')}
-                  className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
-                >
-                  Upgrade Now
+                <button className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                  Edit
                 </button>
               </div>
             </div>
 
+            <div className="border-t border-black/[0.06]" />
+
+            {/* Section 2: Billing Email */}
+            <div className="p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <Mail className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Billing Email</h3>
+                </div>
+              </div>
+              <input
+                type="email"
+                value={billingEmail}
+                onChange={(e) => setBillingEmail(e.target.value)}
+                placeholder="youremail@example.com.au"
+                className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              />
+              <p className="text-[12px] text-gray-400 mt-1.5">Receipts and invoices will be sent to this address</p>
+            </div>
+
+            <div className="border-t border-black/[0.06]" />
+
+            {/* Section 3: Next Payment */}
+            <div className="p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+                  <CalendarDays className="w-5 h-5 text-blue-600" />
+                </div>
+                <div className="flex items-center gap-2.5">
+                  <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Next Payment</h3>
+                  <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                    Upcoming
+                  </span>
+                </div>
+              </div>
+              {planName ? (
+                <div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[14px] font-medium text-gray-900">
+                        SafePost {formatPlanName(planName)}{billingPeriod ? ` — ${formatPlanName(billingPeriod)}` : ''}
+                      </p>
+                      <p className="text-[13px] text-gray-500 mt-0.5">{nextPaymentDate}</p>
+                    </div>
+                    <p className="text-lg font-extrabold text-gray-900">
+                      ${nextPaymentAmount}.00 <span className="text-[12px] font-medium text-gray-500">AUD</span>
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <p className="text-[14px] text-gray-500">No active plan</p>
+              )}
+            </div>
+
+            <div className="border-t border-black/[0.06]" />
+
+            {/* Update Payment Method Button */}
+            <div className="p-6 md:p-8">
+              <button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5">
+                <CreditCard className="w-4 h-4" />
+                Update Payment Method
+              </button>
+            </div>
           </div>
         </div>
       </main>
@@ -542,4 +402,4 @@ const Dashboard: React.FC = () => {
   );
 };
 
-export default Dashboard;
+export default BillingInformation;
