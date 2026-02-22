@@ -7,7 +7,7 @@ import { useAuth } from './useAuth';
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userEmail, firstName, surname, signOut } = useAuth();
+  const { userEmail, firstName, surname, mobileNumber, practiceName, streetAddress, suburb, userState, postcode, signOut } = useAuth();
 
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
@@ -236,12 +236,28 @@ const Profile: React.FC = () => {
                   <span className="text-[14px] font-medium text-gray-900">{userEmail}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[13px] text-gray-500">Practice Name</span>
-                  <span className="text-[14px] text-gray-400">Not provided</span>
+                  <span className="text-[13px] text-gray-500">Mobile Number</span>
+                  <span className={`text-[14px] ${mobileNumber ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{mobileNumber || 'Not provided'}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[13px] text-gray-500">Practice Address</span>
-                  <span className="text-[14px] text-gray-400">Not provided</span>
+                  <span className="text-[13px] text-gray-500">Practice Name</span>
+                  <span className={`text-[14px] ${practiceName ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{practiceName || 'Not provided'}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] text-gray-500">Street Address</span>
+                  <span className={`text-[14px] ${streetAddress ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{streetAddress || 'Not provided'}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] text-gray-500">Suburb</span>
+                  <span className={`text-[14px] ${suburb ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{suburb || 'Not provided'}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] text-gray-500">State</span>
+                  <span className={`text-[14px] ${userState ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{userState || 'Not provided'}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] text-gray-500">Postcode</span>
+                  <span className={`text-[14px] ${postcode ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{postcode || 'Not provided'}</span>
                 </div>
               </div>
             </div>
