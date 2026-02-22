@@ -18,6 +18,7 @@ import History from './History';
 import Settings from './Settings';
 import Profile from './Profile';
 import ChangePlan from './ChangePlan';
+import ProtectedRoute from './ProtectedRoute';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -45,14 +46,14 @@ const App: React.FC = () => {
           <Route path="/about" element={<About />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password" element={<UpdatePassword />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/billing" element={<BillingInformation />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/change-plan" element={<ChangePlan />} />
+          <Route path="/billing" element={<ProtectedRoute><BillingInformation /></ProtectedRoute>} />
+          <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/change-plan" element={<ProtectedRoute><ChangePlan /></ProtectedRoute>} />
         </Routes>
       </div>
     </>

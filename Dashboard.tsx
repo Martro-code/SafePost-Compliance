@@ -2,20 +2,18 @@ import React, { useState, useRef } from 'react';
 import { useNavigate, Link, useSearchParams, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, LogOut } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import { useAuth } from './useAuth';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { userEmail, firstName, signOut } = useAuth();
 
   // Read plan info from URL params or sessionStorage
   const planName = searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
   const billingPeriod = searchParams.get('billing') || sessionStorage.getItem('safepost_billing') || '';
-
-  // Read user info from sessionStorage
-  const userEmail = sessionStorage.getItem('safepost_signup_email') || 'your@email.com';
-  const firstName = sessionStorage.getItem('safepost_first_name') || '';
 
   const hasPaidPlan = planName && !['free', 'starter'].includes(planName.toLowerCase());
 
@@ -76,8 +74,8 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const handleLogOut = () => {
-    sessionStorage.clear();
+  const handleLogOut = async () => {
+    await signOut();
     navigate('/');
   };
 

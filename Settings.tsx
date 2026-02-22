@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ArrowLeft, LogOut, Bell, ShieldCheck, Moon, Mail } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import { useAuth } from './useAuth';
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { userEmail, firstName, signOut } = useAuth();
 
-  // Read user info from sessionStorage
-  const userEmail = sessionStorage.getItem('safepost_signup_email') || 'your@email.com';
-  const firstName = sessionStorage.getItem('safepost_first_name') || '';
   const planName = sessionStorage.getItem('safepost_plan') || '';
 
   const planDisplayNames: Record<string, string> = {
@@ -29,8 +28,8 @@ const Settings: React.FC = () => {
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogOut = () => {
-    sessionStorage.clear();
+  const handleLogOut = async () => {
+    await signOut();
     navigate('/');
   };
 

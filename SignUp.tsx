@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import { supabase } from './src/services/supabaseClient';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const SignUp: React.FC = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [authError, setAuthError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -44,11 +47,11 @@ const SignUp: React.FC = () => {
     return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    setAuthError('');
 
-    // Validate all fields before navigating
     if (
       firstName.trim() &&
       surname.trim() &&
@@ -57,8 +60,28 @@ const SignUp: React.FC = () => {
       passwordsMatch() &&
       agreedToTerms
     ) {
-      // Store email in session for the verification page
-      sessionStorage.setItem('safepost_signup_email', email);
+      setIsSubmitting(true);
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: firstName.trim(),
+            surname: surname.trim(),
+          },
+        },
+      });
+
+      setIsSubmitting(false);
+
+      if (error) {
+        setAuthError(error.message);
+        return;
+      }
+
+      if (plan) sessionStorage.setItem('safepost_plan', plan);
+      if (billing) sessionStorage.setItem('safepost_billing', billing);
+
       const params = new URLSearchParams();
       params.set('email', email);
       if (plan) params.set('plan', plan);
@@ -368,13 +391,19 @@ const SignUp: React.FC = () => {
                 </label>
               </div>
 
+              {/* Auth Error */}
+              {authError && (
+                <p className="text-[13px] text-red-600 font-medium">{authError}</p>
+              )}
+
               {/* Submit Button */}
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
+                  disabled={isSubmitting}
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  Create Account
+                  {isSubmitting ? 'Creating Account...' : 'Create Account'}
                 </button>
               </div>
             </form>
