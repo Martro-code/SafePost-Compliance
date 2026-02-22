@@ -8,7 +8,7 @@ const VerifyEmail: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [resent, setResent] = useState(false);
 
-  const email = searchParams.get('email') || '';
+  const email = searchParams.get('email') || sessionStorage.getItem('safepost_signup_email') || '';
   const plan = searchParams.get('plan') || '';
   const billing = searchParams.get('billing') || '';
 
@@ -62,9 +62,6 @@ const VerifyEmail: React.FC = () => {
               <p className="text-[14px] font-semibold text-gray-900 mb-6">
                 {email}
               </p>
-            )}
-            {!email && (
-              <p className="text-[14px] text-gray-400 mb-6">your email address</p>
             )}
 
             <p className="text-[13px] text-gray-400 leading-relaxed mb-8">
