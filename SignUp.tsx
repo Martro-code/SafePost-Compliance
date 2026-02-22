@@ -13,6 +13,12 @@ const SignUp: React.FC = () => {
   const [firstName, setFirstName] = useState('');
   const [surname, setSurname] = useState('');
   const [email, setEmail] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [practiceName, setPracticeName] = useState('');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [suburb, setSuburb] = useState('');
+  const [state, setState] = useState('');
+  const [postcode, setPostcode] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -68,6 +74,12 @@ const SignUp: React.FC = () => {
           data: {
             first_name: firstName.trim(),
             surname: surname.trim(),
+            mobile_number: mobileNumber.trim(),
+            practice_name: practiceName.trim(),
+            street_address: streetAddress.trim(),
+            suburb: suburb.trim(),
+            state,
+            postcode: postcode.trim(),
           },
         },
       });
@@ -317,6 +329,108 @@ const SignUp: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className={getInputClasses(email, isValidEmail(email))}
+                />
+              </div>
+
+              {/* Mobile Number */}
+              <div>
+                <label htmlFor="mobileNumber" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Mobile Number
+                </label>
+                <input
+                  id="mobileNumber"
+                  type="text"
+                  placeholder="Enter your mobile number"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                  className={getInputClasses(mobileNumber, mobileNumber.trim().length > 0)}
+                />
+              </div>
+
+              {/* Practice Name */}
+              <div>
+                <label htmlFor="practiceName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Practice Name
+                </label>
+                <input
+                  id="practiceName"
+                  type="text"
+                  placeholder="Enter your practice name"
+                  value={practiceName}
+                  onChange={(e) => setPracticeName(e.target.value)}
+                  className={getInputClasses(practiceName, practiceName.trim().length > 0)}
+                />
+              </div>
+
+              {/* Street Address */}
+              <div>
+                <label htmlFor="streetAddress" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Street Address
+                </label>
+                <input
+                  id="streetAddress"
+                  type="text"
+                  placeholder="Enter your street address"
+                  value={streetAddress}
+                  onChange={(e) => setStreetAddress(e.target.value)}
+                  className={getInputClasses(streetAddress, streetAddress.trim().length > 0)}
+                />
+              </div>
+
+              {/* Suburb */}
+              <div>
+                <label htmlFor="suburb" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Suburb
+                </label>
+                <input
+                  id="suburb"
+                  type="text"
+                  placeholder="Enter your suburb"
+                  value={suburb}
+                  onChange={(e) => setSuburb(e.target.value)}
+                  className={getInputClasses(suburb, suburb.trim().length > 0)}
+                />
+              </div>
+
+              {/* State */}
+              <div>
+                <label htmlFor="state" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  State
+                </label>
+                <div className="relative">
+                  <select
+                    id="state"
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    className={`${getInputClasses(state, state.length > 0)} appearance-none cursor-pointer`}
+                  >
+                    <option value="" disabled>Select your state</option>
+                    <option value="NSW">NSW</option>
+                    <option value="VIC">VIC</option>
+                    <option value="QLD">QLD</option>
+                    <option value="WA">WA</option>
+                    <option value="SA">SA</option>
+                    <option value="TAS">TAS</option>
+                    <option value="ACT">ACT</option>
+                    <option value="NT">NT</option>
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Postcode */}
+              <div>
+                <label htmlFor="postcode" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Postcode
+                </label>
+                <input
+                  id="postcode"
+                  type="text"
+                  placeholder="Enter your postcode"
+                  value={postcode}
+                  onChange={(e) => setPostcode(e.target.value.slice(0, 4))}
+                  maxLength={4}
+                  className={getInputClasses(postcode, postcode.trim().length > 0)}
                 />
               </div>
 
