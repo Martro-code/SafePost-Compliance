@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, LogOut, RefreshCw, Check } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut, Check } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const plans = [
@@ -220,12 +220,9 @@ const ChangePlan: React.FC = () => {
 
           {/* Page Heading */}
           <div className="mb-8">
-            <div className="flex items-center gap-3 mb-2">
-              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900">
-                Change your plan
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
+                Change your Plan
               </h1>
-              <RefreshCw className="w-6 h-6 text-gray-400" />
-            </div>
             <p className="text-[14px] text-gray-500">
               Pick one of the following plans
             </p>
@@ -280,12 +277,12 @@ const ChangePlan: React.FC = () => {
 
             {/* Bottom Actions */}
             <div className="p-6 md:px-8">
-              <button className="w-full h-12 bg-gray-900 hover:bg-gray-800 text-white text-[15px] font-semibold rounded-lg shadow-sm transition-all duration-200 active:scale-[0.98]">
-                Change plan
+              <button className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30">
+                Change Plan
               </button>
               <button
                 onClick={() => navigate('/profile')}
-                className="w-full mt-3 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors py-2"
+                className="w-full mt-3 text-[13px] font-medium text-gray-500 hover:text-gray-700 transition-colors py-2"
               >
                 Cancel
               </button>
