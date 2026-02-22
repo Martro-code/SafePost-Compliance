@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, LogOut, Eye, EyeOff } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut, Eye, EyeOff } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const Profile: React.FC = () => {
@@ -165,7 +165,16 @@ const Profile: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-grow">
-        <div className="max-w-2xl mx-auto px-6 py-16 md:py-20">
+        <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
+          {/* Back to Dashboard */}
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Dashboard
+          </button>
+
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
               Profile

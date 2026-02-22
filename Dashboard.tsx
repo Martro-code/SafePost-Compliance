@@ -223,7 +223,7 @@ const Dashboard: React.FC = () => {
                   {firstName ? `Welcome back, ${firstName}` : 'Welcome back'}
                 </h2>
                 <p className="text-[14px] text-gray-500">
-                  Instant AHPRA compliance check for medical practitioners and practices.
+                  Instant AHPRA compliance check for medical practitioners and practices
                 </p>
               </div>
 
