@@ -229,7 +229,7 @@ const Features: React.FC = () => {
             Powerful compliance checking, simplified
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Everything you need to ensure your content meets AHPRA and TGA guidelines
+            Everything you need to ensure your content meets AHPRA guidelines
           </p>
         </div>
       </section>

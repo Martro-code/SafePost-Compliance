@@ -436,7 +436,7 @@ const HomePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Activities that trigger Ahpra investigation
+              Activities that trigger AHPRA investigation
             </h2>
             <p className="text-lg text-gray-500">
               Social media activities that are likely to warrant investigation
@@ -536,9 +536,19 @@ const HomePage: React.FC = () => {
                 <p className="text-[15px] text-gray-400 leading-relaxed">
                   Our AI-powered tool analyses your social media posts and advertising content against AHPRA's advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
                 </p>
-                <div className="pt-2">
-                  <button className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px]">
-                    Request Early Access
+                <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={() => navigate('/contact')}
+                    className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px]"
+                  >
+                    Contact Us
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => navigate('/signup')}
+                    className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px]"
+                  >
+                    Get Started
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
