@@ -237,7 +237,7 @@ const SignUp: React.FC = () => {
       </header>
 
       {/* Sign Up Form */}
-      <main className="flex-grow flex items-center justify-center px-6 py-16 md:py-24">
+      <main className="flex-grow flex items-center justify-center px-6 pt-6 pb-10 md:pt-8 md:pb-16">
         <div className="w-full max-w-[450px]">
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
             {/* Header */}
