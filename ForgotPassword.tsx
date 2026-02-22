@@ -42,10 +42,12 @@ const ForgotPassword: React.FC = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          {/* Left: Logo */}
           <Link to="/">
             <SafePostLogo />
           </Link>
 
+          {/* Center: Navigation */}
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
             <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Features
@@ -121,6 +123,7 @@ const ForgotPassword: React.FC = () => {
             </div>
           </nav>
 
+          {/* Right: Auth buttons */}
           <div className="hidden md:flex items-center gap-2.5">
             <button onClick={() => navigate('/login')} className="px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
               Login
@@ -130,6 +133,7 @@ const ForgotPassword: React.FC = () => {
             </button>
           </div>
 
+          {/* Mobile: Hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
@@ -139,6 +143,7 @@ const ForgotPassword: React.FC = () => {
           </button>
         </div>
 
+        {/* Mobile Menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
@@ -154,6 +159,8 @@ const ForgotPassword: React.FC = () => {
             <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Company
             </a>
+
+            {/* Mobile Resources Dropdown */}
             <div>
               <button
                 onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
@@ -185,6 +192,8 @@ const ForgotPassword: React.FC = () => {
                 </div>
               </div>
             </div>
+
+            {/* Mobile Auth Buttons */}
             <div className="pt-3 border-t border-black/[0.06] flex flex-col gap-2">
               <button onClick={() => navigate('/login')} className="w-full px-4 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
                 Login
@@ -198,9 +207,10 @@ const ForgotPassword: React.FC = () => {
       </header>
 
       {/* Forgot Password Form */}
-      <main className="flex-grow flex items-center justify-center px-6 py-6 md:py-10">
+      <main className="flex-grow flex items-center justify-center px-6 py-16 md:py-24">
         <div className="w-full max-w-[450px]">
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
+            {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
                 Reset Password
@@ -210,7 +220,9 @@ const ForgotPassword: React.FC = () => {
               </p>
             </div>
 
+            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-[13px] font-medium text-gray-700 mb-1.5">
                   Email
@@ -225,16 +237,18 @@ const ForgotPassword: React.FC = () => {
                 />
               </div>
 
+              {/* Submit Button */}
               <div className="pt-2">
                 <button
                   type="submit"
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  Send Reset Link
+                  Send reset link
                 </button>
               </div>
             </form>
 
+            {/* Footer */}
             <p className="text-center text-[13px] text-gray-500 mt-6">
               Back to{' '}
               <a onClick={() => navigate('/login')} className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-2 cursor-pointer">

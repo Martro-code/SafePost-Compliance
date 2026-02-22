@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
+import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import aboutUsLogo from './assets/about-us-logo.png';
 
@@ -24,11 +24,9 @@ const About: React.FC = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <SafePostLogo />
-            </Link>
-          </div>
+          <Link to="/">
+            <SafePostLogo />
+          </Link>
 
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
             <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
@@ -66,7 +64,7 @@ const About: React.FC = () => {
               {companyDropdownOpen && (
                 <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                   <button onClick={() => navigate('/about')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    About us
+                    About
                   </button>
                   <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     News
@@ -190,7 +188,7 @@ const About: React.FC = () => {
             About SafePost&trade;
           </h1>
           <p className="text-lg text-gray-500">
-            Supporting Australian medical practitioners and practices with compliance confidence
+            Supporting Australian medical practitioners with compliance confidence
           </p>
         </div>
       </section>
@@ -202,17 +200,17 @@ const About: React.FC = () => {
             {/* Section 1 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day"}
+                {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day."}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
+                {"For over 12 years, we\u2019ve worked in medical indemnity, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
               </p>
             </div>
 
             {/* Section 2 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We founded SafePost\u2122 because compliance shouldn\u2019t hold you back from connecting with patients"}
+                {"We founded SafePost\u2122 because compliance shouldn\u2019t hold you back from connecting with patients."}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 {"Social media and digital marketing are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post can put your registration at risk."}
@@ -222,7 +220,7 @@ const About: React.FC = () => {
             {/* Section 3 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                Our mission is to help Australian medical practitioners and practices communicate confidently, compliantly and authentically
+                Our mission is simple: help Australian medical practitioners and practices communicate confidently, compliantly, and authentically.
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost\u2122 provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations."}
@@ -232,7 +230,7 @@ const About: React.FC = () => {
             {/* Section 4 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re not lawyers. We\u2019re your compliance partner"}
+                {"We\u2019re not lawyers. We\u2019re your compliance partner."}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 {"SafePost\u2122 doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns, we\u2019re here to support you at every step."}
@@ -244,17 +242,17 @@ const About: React.FC = () => {
               <img
                 src={aboutUsLogo}
                 alt="SafePost logo"
-                className="max-w-[400px] md:max-w-[500px] w-full h-auto"
+                className="max-w-[200px] md:max-w-[250px] w-full h-auto"
               />
             </div>
 
             {/* Section 6 - Our Design Story */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                Every detail of SafePost&trade; was built with purpose.
+                {"Every detail of SafePost\u2122 was built with purpose."}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Even our logo tells the story of what we stand for. The three horizontal bars represent the journey every piece of your content takes \u2014 from the regulatory framework at the top, through SafePost\u2019\s\u2122 intelligent compliance layer in the middle, to your approved, ready-to-publish content at the bottom."}
+                {"Even our logo tells the story of what we stand for. The three horizontal bars represent the journey every piece of your content takes \u2014 from the regulatory framework at the top, through SafePost\u2019s\u2122 intelligent compliance layer in the middle, to your approved, ready-to-publish content at the bottom."}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
                 {"But look closer. The staggered alignment of these bars creates something subtle yet intentional: a phantom \u201CS\u201D in the negative space. This hidden letter represents both Safe and Social \u2014 a visual reminder that compliance and communication aren\u2019t opposing forces. They\u2019re integrated, flowing together naturally."}
@@ -263,7 +261,7 @@ const About: React.FC = () => {
                 {"It\u2019s a design that says compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                {"We built SafePost\u2122 to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}
+                <strong className="text-gray-900">{"We built SafePost\u2122 to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}</strong>
               </p>
             </div>
           </div>
@@ -277,7 +275,7 @@ const About: React.FC = () => {
             Ready to experience compliance confidence?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join medical practitioners and practices across Australia using SafePost&trade; to communicate with confidence
+            Join medical practitioners across Australia using SafePost&trade; to communicate with confidence
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -322,7 +320,7 @@ const About: React.FC = () => {
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About us</button></li>
+                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About</button></li>
                 <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
               </ul>
             </div>

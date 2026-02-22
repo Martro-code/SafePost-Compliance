@@ -211,7 +211,7 @@ const UpdatePassword: React.FC = () => {
       </header>
 
       {/* Update Password Form */}
-      <main className="flex-grow flex items-center justify-center px-6 py-6 md:py-10">
+      <main className="flex-grow flex items-center justify-center px-6 py-16 md:py-24">
         <div className="w-full max-w-[450px]">
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
             {/* Header */}

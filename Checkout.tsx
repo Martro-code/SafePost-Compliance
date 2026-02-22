@@ -65,13 +65,6 @@ const planData: Record<string, {
   },
 };
 
-// Small chevron icon for the country dropdown
-const ChevronIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-  </svg>
-);
-
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -79,14 +72,15 @@ const Checkout: React.FC = () => {
   const plan = searchParams.get('plan') || 'professional';
   const billing = searchParams.get('billing') || 'monthly';
 
-   const isVerified = sessionStorage.getItem('safepost_verified') === 'true';
+  // Route guard: redirect unverified users to signup with plan params
+  const isVerified = sessionStorage.getItem('safepost_verified') === 'true';
   if (!isVerified) {
     const params = new URLSearchParams();
     params.set('plan', plan);
     params.set('billing', billing);
     navigate(`/signup?${params.toString()}`, { replace: true });
     return null;
-  } 
+  }
 
   const selectedPlan = planData[plan];
 
@@ -409,5 +403,12 @@ const Checkout: React.FC = () => {
     </div>
   );
 };
+
+// Small chevron icon for the country dropdown
+const ChevronIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
+    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+  </svg>
+);
 
 export default Checkout;

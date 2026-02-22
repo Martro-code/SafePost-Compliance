@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
+import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const PricingMedicalPractices: React.FC = () => {
@@ -51,11 +51,9 @@ const PricingMedicalPractices: React.FC = () => {
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Left: Logo */}
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <SafePostLogo />
-            </Link>
-          </div>
+          <Link to="/">
+            <SafePostLogo />
+          </Link>
 
           {/* Center: Navigation */}
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
@@ -94,7 +92,7 @@ const PricingMedicalPractices: React.FC = () => {
               {companyDropdownOpen && (
                 <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                   <button onClick={() => navigate('/about')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    About us
+                    About
                   </button>
                   <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     News
@@ -358,6 +356,19 @@ const PricingMedicalPractices: React.FC = () => {
         </div>
       </section>
 
+      {/* Trust Indicators */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-10">
+            <span className="text-[13px] text-gray-500 font-medium">Cancel anytime</span>
+            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
+            <span className="text-[13px] text-gray-500 font-medium">Australian-based support</span>
+            <span className="hidden sm:block w-1 h-1 bg-gray-300 rounded-full" />
+            <span className="text-[13px] text-gray-500 font-medium">AHPRA &amp; TGA compliant</span>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
@@ -474,7 +485,7 @@ const PricingMedicalPractices: React.FC = () => {
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About us</button></li>
+                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About</button></li>
                 <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
               </ul>
             </div>

@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink } from 'lucide-react';
+import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink } from 'lucide-react';
+import SafePostLogo from './components/SafePostLogo';
 import { analyzePost, generateCompliantRewrites } from './services/geminiService';
 import { AnalysisResult, ComplianceStatus, RewrittenPost } from './types';
-import SafePostLogo from './components/SafePostLogo';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -152,11 +152,9 @@ const HomePage: React.FC = () => {
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Left: Logo */}
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <SafePostLogo />
-            </Link>
-          </div>
+          <Link to="/">
+            <SafePostLogo />
+          </Link>
 
           {/* Center: Navigation */}
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
@@ -195,7 +193,7 @@ const HomePage: React.FC = () => {
               {companyDropdownOpen && (
                 <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                   <button onClick={() => navigate('/about')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    About us
+                    About
                   </button>
                   <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     News
@@ -433,12 +431,12 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Activities That Trigger AHPRA Investigation */}
+      {/* Activities That Trigger Ahpra Investigation */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Activities that trigger AHPRA investigation
+              Activities that trigger Ahpra investigation
             </h2>
             <p className="text-lg text-gray-500">
               Social media activities that are likely to warrant investigation
@@ -460,12 +458,12 @@ const HomePage: React.FC = () => {
               {
                 title: 'Political content that raises concern about unsafe care',
                 description:
-                  'A practitioner claims in a social media post that the level of care they provide to a person may be affected by the person\u2019s nationality, racial background or the cultural beliefs of the person. This post has the potential to incite fear, racial hatred and intolerance. It also raises concerns that the practitioner\u2019s personal bias might lead to them not providing culturally safe care and/or providing inadequate care to patients from this background. The practitioner\u2019s activity is captured by a member of the public and reported to AHPRA.',
+                  'A practitioner claims in a social media post that the level of care they provide to a person may be affected by the person\u2019s nationality, racial background or the cultural beliefs of the person. This post has the potential to incite fear, racial hatred and intolerance. It also raises concerns that the practitioner\u2019s personal bias might lead to them not providing culturally safe care and/or providing inadequate care to patients from this background. The practitioner\u2019s activity is captured by a member of the public and reported to Ahpra.',
               },
               {
                 title: 'Praise for terrorist actions or groups',
                 description:
-                  'A practitioner creates posts glorifying or supporting violent actions and members of a terrorist organisation. The posts use language like \u2018the resistance\u2019 and other phrasing that makes light of, supports, denies or provides misinformation or propaganda around actions of the group. A colleague sees these posts and is concerned for the safety of the practitioner\u2019s multi-cultural patients so makes a notification to AHPRA. The promotion of misinformation, propaganda and content inciting hatred about another\u2019s country, religion or cultural beliefs could likely result in a National Board taking action in response to the notification.',
+                  'A practitioner creates posts glorifying or supporting violent actions and members of a terrorist organisation. The posts use language like \u2018the resistance\u2019 and other phrasing that makes light of, supports, denies or provides misinformation or propaganda around actions of the group. A colleague sees these posts and is concerned for the safety of the practitioner\u2019s multi-cultural patients so makes a notification to Ahpra. The promotion of misinformation, propaganda and content inciting hatred about another\u2019s country, religion or cultural beliefs could likely result in a National Board taking action in response to the notification.',
               },
             ].map((item, index) => {
               const isOpen = openAccordion === index;
@@ -540,7 +538,7 @@ const HomePage: React.FC = () => {
                 </p>
                 <div className="pt-2">
                   <button className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px]">
-                    Get Started
+                    Request Early Access
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -683,7 +681,7 @@ const HomePage: React.FC = () => {
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About us</button></li>
+                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About</button></li>
                 <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
               </ul>
             </div>
@@ -722,7 +720,7 @@ const HomePage: React.FC = () => {
           <div className="mt-14 pt-6 border-t border-black/[0.06]">
             <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
-              AHPRA and the National Boards do not provide pre-approval for advertising.
+              Ahpra and the National Boards do not provide pre-approval for advertising.
               Registered health practitioners are ultimately responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law.
             </p>
             <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>

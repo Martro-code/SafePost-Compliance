@@ -100,7 +100,7 @@ const Features: React.FC = () => {
               {companyDropdownOpen && (
                 <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                   <button onClick={() => navigate('/about')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    About us
+                    About
                   </button>
                   <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     News
@@ -229,7 +229,7 @@ const Features: React.FC = () => {
             Powerful compliance checking, simplified
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Everything you need to ensure your content meets AHPRA guidelines
+            Everything you need to ensure your content meets AHPRA and TGA guidelines
           </p>
         </div>
       </section>
@@ -238,15 +238,14 @@ const Features: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-5xl mx-auto px-6 mb-16 md:mb-20">
           <img
-           src={featuresHero}
-           alt="SafePost Compliance Platform"
-           width={1200}
-           height={320}
-           loading="eager"
-           fetchPriority="high"
-           className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
+            src={featuresHero}
+            alt="SafePost Compliance Platform"
+            width={1200}
+            height={320}
+            loading="eager"
+            fetchPriority="high"
+            className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
           />
-
         </div>
       </section>
 
@@ -288,14 +287,14 @@ const Features: React.FC = () => {
               onClick={() => navigate('/signup')}
               className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 hover:translate-y-[-1px] min-w-[180px]"
             >
-              Get Started
+              Start Free Trial
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => navigate('/pricing/medical-practitioners')}
               className="px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
             >
-              Login
+              View Pricing
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -330,7 +329,7 @@ const Features: React.FC = () => {
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200"> About us</button></li>
+                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About</button></li>
                 <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
               </ul>
             </div>

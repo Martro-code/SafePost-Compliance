@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ShieldCheck, ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
+import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const ContactUs: React.FC = () => {
@@ -71,12 +71,10 @@ const ContactUs: React.FC = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-           {/* Left: Logo */}
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <SafePostLogo />
-            </Link>
-          </div>
+          {/* Left: Logo */}
+          <Link to="/">
+            <SafePostLogo />
+          </Link>
 
           {/* Center: Navigation */}
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
@@ -115,7 +113,7 @@ const ContactUs: React.FC = () => {
               {companyDropdownOpen && (
                 <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                   <button onClick={() => navigate('/about')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    About us
+                    About
                   </button>
                   <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     News
@@ -238,13 +236,13 @@ const ContactUs: React.FC = () => {
       </header>
 
       {/* Contact Form */}
-      <main className="flex-grow flex items-center justify-center px-6 py-6 md:py-10">
+      <main className="flex-grow flex items-center justify-center px-6 py-16 md:py-24">
         <div className="w-full max-w-[550px]">
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Get in Touch
+                Get in touch
               </h1>
               <p className="text-[14px] text-gray-500">
                 We'd love to hear from you! Please fill out the form below
@@ -380,7 +378,7 @@ const ContactUs: React.FC = () => {
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About us</button></li>
+                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About</button></li>
                 <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
               </ul>
             </div>
