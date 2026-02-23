@@ -197,7 +197,7 @@ const Profile: React.FC = () => {
                   <span className="text-[14px] font-medium text-gray-900">{firstName || '—'}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[13px] text-gray-500">Surname</span>
+                  <span className="text-[13px] text-gray-500">Last Name</span>
                   <span className="text-[14px] font-medium text-gray-900">{surname || '—'}</span>
                 </div>
               </div>

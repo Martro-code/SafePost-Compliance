@@ -263,7 +263,7 @@ const ContactUs: React.FC = () => {
               {/* First Name */}
               <div>
                 <label htmlFor="firstName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  First name
+                  First Name
                 </label>
                 <input
                   id="firstName"
@@ -278,12 +278,12 @@ const ContactUs: React.FC = () => {
               {/* Surname */}
               <div>
                 <label htmlFor="surname" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Surname
+                  Last Name
                 </label>
                 <input
                   id="surname"
                   type="text"
-                  placeholder="Enter your surname"
+                  placeholder="Enter your last name"
                   value={surname}
                   onChange={(e) => { setSurname(e.target.value); setSuccess(false); }}
                   className={getInputClasses(surname, surname.trim().length > 0)}
