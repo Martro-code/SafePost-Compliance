@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const TermsOfUse: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
@@ -180,22 +181,42 @@ const TermsOfUse: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Terms of Use
-          </h1>
-          <p className="text-lg text-gray-500">
-            Effective Date: February 2026
-          </p>
-        </div>
-      </section>
-
       {/* Main Content */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="max-w-[800px] mx-auto space-y-12">
+        <div className="max-w-6xl mx-auto px-6 pt-10 md:pt-14 pb-16 md:pb-24">
+          <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
+
+            {/* Sidebar Navigation */}
+            <nav className="flex md:flex-col gap-4 md:gap-2 md:pt-1">
+              <button
+                onClick={() => navigate('/terms-of-use')}
+                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                  location.pathname === '/terms-of-use' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+                }`}
+              >
+                Terms of Use
+              </button>
+              <button
+                onClick={() => navigate('/privacy-policy')}
+                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                  location.pathname === '/privacy-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+                }`}
+              >
+                Privacy Policy
+              </button>
+            </nav>
+
+            {/* Document Content */}
+            <div className="max-w-[800px] space-y-8">
+
+            <div>
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
+                Terms of Use
+              </h1>
+              <p className="text-[14px] text-gray-500">
+                Last updated 23 February 2026
+              </p>
+            </div>
 
             {/* Introduction */}
             <div>
@@ -460,6 +481,7 @@ const TermsOfUse: React.FC = () => {
               </div>
             </div>
 
+          </div>
           </div>
         </div>
       </section>

@@ -19,6 +19,7 @@ const VerifyEmail: React.FC = () => {
     : '/checkout?plan=professional&billing=monthly';
 
   const handleVerified = () => {
+    sessionStorage.setItem('safepost_verified', 'true');
     navigate(checkoutUrl);
   };
 
