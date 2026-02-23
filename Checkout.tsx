@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Check, Lock, CreditCard, Shield } from 'lucide-react';
+import { ArrowLeft, Check, Lock, CreditCard, Shield, ChevronDown } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 
 const planData: Record<string, {
@@ -103,10 +103,13 @@ const Checkout: React.FC = () => {
   // Form state
   const [email, setEmail] = useState('');
   const [cardNumber, setCardNumber] = useState('');
+  const [cardNumberError, setCardNumberError] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvc, setCvc] = useState('');
   const [cardholderName, setCardholderName] = useState('');
-  const [country] = useState('Australia');
+  const [streetAddress, setStreetAddress] = useState('');
+  const [suburb, setSuburb] = useState('');
+  const [billingState, setBillingState] = useState('');
   const [postcode, setPostcode] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -177,21 +180,21 @@ const Checkout: React.FC = () => {
               {/* Heading */}
               <div>
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                  Complete your purchase
+                  Complete Purchase
                 </h1>
                 <p className="text-[14px] text-gray-500">
-                  7-day free trial &bull; Cancel anytime
+                  Cancel anytime
                 </p>
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Email address</label>
+                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Email</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="youremail@example.com.au"
+                  placeholder="Enter your billing email address"
                   className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 />
                 <p className="text-[12px] text-gray-400 mt-1.5">{"We\u2019ll send your receipt and account details here"}</p>
@@ -199,16 +202,26 @@ const Checkout: React.FC = () => {
 
               {/* Payment Information */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Payment information</label>
+                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Payment Information</label>
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
                   {/* Card Number */}
                   <div className="relative border-b border-gray-200">
                     <input
                       type="text"
                       value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value)}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/\D/g, '');
+                        if (raw.length > 16) {
+                          setCardNumberError('Card number must be exactly 16 digits');
+                          return;
+                        }
+                        setCardNumberError('');
+                        const formatted = raw.replace(/(.{4})/g, '$1 ').trim();
+                        setCardNumber(formatted);
+                      }}
                       placeholder="4242 4242 4242 4242"
                       className="w-full px-4 py-3 text-[14px] text-gray-900 bg-transparent outline-none placeholder:text-gray-400 pr-24"
+                      inputMode="numeric"
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
                       <div className="w-8 h-5 rounded bg-[#1A1F71] flex items-center justify-center">
@@ -222,6 +235,9 @@ const Checkout: React.FC = () => {
                       </div>
                     </div>
                   </div>
+                  {cardNumberError && (
+                    <p className="text-[12px] text-red-500 mt-1 px-4">{cardNumberError}</p>
+                  )}
                   {/* Expiry + CVC row */}
                   <div className="flex">
                     <input
@@ -256,23 +272,47 @@ const Checkout: React.FC = () => {
 
               {/* Billing Address */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Billing address</label>
+                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Billing Address</label>
                 <div className="space-y-3">
-                  <div className="relative">
-                    <select
-                      value={country}
-                      disabled
-                      className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none appearance-none cursor-not-allowed opacity-80"
-                    >
-                      <option value="Australia">Australia</option>
-                    </select>
-                    <ChevronIcon className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                  </div>
                   <input
                     type="text"
+                    value={streetAddress}
+                    onChange={(e) => setStreetAddress(e.target.value)}
+                    placeholder="Enter your street address"
+                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  />
+                  <input
+                    type="text"
+                    value={suburb}
+                    onChange={(e) => setSuburb(e.target.value)}
+                    placeholder="Enter your suburb"
+                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  />
+                  <div className="relative">
+                    <select
+                      value={billingState}
+                      onChange={(e) => setBillingState(e.target.value)}
+                      className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none cursor-pointer"
+                    >
+                      <option value="" disabled>Select your state</option>
+                      <option value="NSW">NSW</option>
+                      <option value="VIC">VIC</option>
+                      <option value="QLD">QLD</option>
+                      <option value="WA">WA</option>
+                      <option value="SA">SA</option>
+                      <option value="TAS">TAS</option>
+                      <option value="ACT">ACT</option>
+                      <option value="NT">NT</option>
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
+                  <input
+                    type="tel"
                     value={postcode}
-                    onChange={(e) => setPostcode(e.target.value)}
-                    placeholder="Postcode"
+                    onChange={(e) => setPostcode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                    onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
+                    maxLength={4}
+                    placeholder="Enter your postcode"
                     className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   />
                 </div>
@@ -304,7 +344,7 @@ const Checkout: React.FC = () => {
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
                 >
                   <Lock className="w-4 h-4" />
-                  Start 7-Day Free Trial
+                  Complete Purchase
                 </button>
                 <p className="text-[12px] text-gray-400 text-center mt-2.5">
                   {"You won\u2019t be charged until " + trialEndDate}
@@ -392,7 +432,6 @@ const Checkout: React.FC = () => {
                     <span className="text-[14px] font-semibold text-gray-900">Total</span>
                     <span className="text-xl font-extrabold text-gray-900">${price}.00 <span className="text-[13px] font-medium text-gray-500">AUD</span></span>
                   </div>
-                  <p className="text-[12px] text-gray-400">Includes 7-day free trial</p>
                 </div>
               </div>
             </div>
@@ -403,12 +442,5 @@ const Checkout: React.FC = () => {
     </div>
   );
 };
-
-// Small chevron icon for the country dropdown
-const ChevronIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg className={className} viewBox="0 0 20 20" fill="currentColor">
-    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-  </svg>
-);
 
 export default Checkout;
