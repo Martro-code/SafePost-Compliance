@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Check, Lock, CreditCard, Shield } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
@@ -72,23 +72,23 @@ const Checkout: React.FC = () => {
   const plan = searchParams.get('plan') || 'professional';
   const billing = searchParams.get('billing') || 'monthly';
 
-  // Route guard: redirect unverified users to signup with plan params
   const isVerified = sessionStorage.getItem('safepost_verified') === 'true';
-  if (!isVerified) {
-    const params = new URLSearchParams();
-    params.set('plan', plan);
-    params.set('billing', billing);
-    navigate(`/signup?${params.toString()}`, { replace: true });
-    return null;
-  }
-
   const selectedPlan = planData[plan];
 
-  // Redirect to pricing if invalid plan
-  if (!selectedPlan) {
-    navigate('/pricing/medical-practitioners');
-    return null;
-  }
+  // Route guard: redirect unverified users or invalid plans via useEffect
+  useEffect(() => {
+    if (!isVerified) {
+      const params = new URLSearchParams();
+      params.set('plan', plan);
+      params.set('billing', billing);
+      navigate(`/signup?${params.toString()}`, { replace: true });
+    } else if (!selectedPlan) {
+      navigate('/pricing/medical-practitioners', { replace: true });
+    }
+  }, [isVerified, selectedPlan, plan, billing, navigate]);
+
+  // Show nothing while redirecting
+  if (!isVerified || !selectedPlan) return null;
 
   const price = billing === 'yearly' ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice;
   const monthlyEquivalent = billing === 'yearly' ? Math.round(selectedPlan.yearlyPrice / 12) : selectedPlan.monthlyPrice;
