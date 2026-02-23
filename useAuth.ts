@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { supabase } from './src/services/supabaseClient';
 import type { User } from '@supabase/supabase-js';
 
+export let isLoggingOut = false;
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -12,8 +14,11 @@ export function useAuth() {
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
+      if (event === 'SIGNED_OUT' && isLoggingOut) {
+        setTimeout(() => { isLoggingOut = false; }, 500);
+      }
     });
 
     return () => subscription.unsubscribe();
@@ -30,6 +35,7 @@ export function useAuth() {
   const postcode = (user?.user_metadata?.postcode as string) || '';
 
   const signOut = async () => {
+    isLoggingOut = true;
     await supabase.auth.signOut();
   };
 
