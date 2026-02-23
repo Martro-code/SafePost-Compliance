@@ -111,6 +111,7 @@ const Checkout: React.FC = () => {
   const [suburb, setSuburb] = useState('');
   const [billingState, setBillingState] = useState('');
   const [postcode, setPostcode] = useState('');
+  const [abn, setAbn] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -243,15 +244,28 @@ const Checkout: React.FC = () => {
                     <input
                       type="text"
                       value={expiry}
-                      onChange={(e) => setExpiry(e.target.value)}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/\D/g, '').slice(0, 4);
+                        if (raw.length <= 2) {
+                          setExpiry(raw);
+                        } else {
+                          setExpiry(raw.slice(0, 2) + ' / ' + raw.slice(2));
+                        }
+                      }}
                       placeholder="MM / YY"
+                      inputMode="numeric"
                       className="flex-1 px-4 py-3 text-[14px] text-gray-900 bg-transparent outline-none placeholder:text-gray-400 border-r border-gray-200"
                     />
                     <input
                       type="text"
                       value={cvc}
-                      onChange={(e) => setCvc(e.target.value)}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/\D/g, '').slice(0, 3);
+                        setCvc(raw);
+                      }}
                       placeholder="CVC"
+                      inputMode="numeric"
+                      maxLength={3}
                       className="flex-1 px-4 py-3 text-[14px] text-gray-900 bg-transparent outline-none placeholder:text-gray-400"
                     />
                   </div>
@@ -315,6 +329,19 @@ const Checkout: React.FC = () => {
                     placeholder="Enter your postcode"
                     className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   />
+                  <div>
+                    <label className="block text-[13px] font-semibold text-gray-700 mb-2">ABN (optional)</label>
+                    <input
+                      type="tel"
+                      value={abn}
+                      onChange={(e) => setAbn(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                      onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
+                      maxLength={11}
+                      placeholder="Enter your ABN"
+                      className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                    />
+                    <p className="text-[12px] text-gray-400 mt-1.5">{`Australian Business Number \u2014 required for GST tax invoices`}</p>
+                  </div>
                 </div>
               </div>
 
@@ -432,6 +459,7 @@ const Checkout: React.FC = () => {
                     <span className="text-[14px] font-semibold text-gray-900">Total</span>
                     <span className="text-xl font-extrabold text-gray-900">${price}.00 <span className="text-[13px] font-medium text-gray-500">AUD</span></span>
                   </div>
+                  <p className="text-[12px] text-gray-400 text-right">Incl. GST</p>
                 </div>
               </div>
             </div>
