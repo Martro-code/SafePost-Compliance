@@ -329,19 +329,19 @@ const Checkout: React.FC = () => {
                     placeholder="Enter your postcode"
                     className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                   />
-                  <div>
-                    <label className="block text-[13px] font-semibold text-gray-700 mb-2">ABN (optional)</label>
-                    <input
-                      type="tel"
-                      value={abn}
-                      onChange={(e) => setAbn(e.target.value.replace(/\D/g, '').slice(0, 11))}
-                      onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
-                      maxLength={11}
-                      placeholder="Enter your ABN"
-                      className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                    />
-                    <p className="text-[12px] text-gray-400 mt-1.5">{`Australian Business Number \u2014 required for GST tax invoices`}</p>
-                  </div>
+                </div>
+                <div className="mt-8">
+                  <label className="block text-[13px] font-semibold text-gray-700 mb-2">ABN (optional)</label>
+                  <input
+                    type="tel"
+                    value={abn}
+                    onChange={(e) => setAbn(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                    onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
+                    maxLength={11}
+                    placeholder="Enter your ABN"
+                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  />
+                  <p className="text-[12px] text-gray-400 mt-1.5">{`Australian Business Number \u2014 required for GST tax invoices`}</p>
                 </div>
               </div>
 
