@@ -29,6 +29,7 @@ const Settings: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogOut = async () => {
+    sessionStorage.clear();
     await signOut();
     navigate('/');
   };

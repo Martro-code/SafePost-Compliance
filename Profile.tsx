@@ -28,6 +28,7 @@ const Profile: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogOut = async () => {
+    sessionStorage.clear();
     await signOut();
     navigate('/');
   };
@@ -274,7 +275,7 @@ const Profile: React.FC = () => {
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-[14px] font-medium text-gray-900">
-                  {'••••••••••••'}
+                  {showPassword ? (sessionStorage.getItem('safepost_password') || '••••••••••••') : '••••••••••••'}
                 </span>
                 <button
                   onClick={() => setShowPassword(!showPassword)}

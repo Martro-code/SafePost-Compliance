@@ -91,6 +91,7 @@ const SignUp: React.FC = () => {
         return;
       }
 
+      sessionStorage.setItem('safepost_password', password);
       if (plan) sessionStorage.setItem('safepost_plan', plan);
       if (billing) sessionStorage.setItem('safepost_billing', billing);
 
@@ -339,10 +340,11 @@ const SignUp: React.FC = () => {
                 </label>
                 <input
                   id="mobileNumber"
-                  type="text"
+                  type="tel"
                   placeholder="Enter your mobile number"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
+                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
                   className={getInputClasses(mobileNumber, mobileNumber.trim().length > 0)}
                 />
               </div>
@@ -425,10 +427,11 @@ const SignUp: React.FC = () => {
                 </label>
                 <input
                   id="postcode"
-                  type="text"
+                  type="tel"
                   placeholder="Enter your postcode"
                   value={postcode}
                   onChange={(e) => setPostcode(e.target.value.slice(0, 4))}
+                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
                   maxLength={4}
                   className={getInputClasses(postcode, postcode.trim().length > 0)}
                 />
@@ -495,13 +498,13 @@ const SignUp: React.FC = () => {
                 />
                 <label htmlFor="terms" className="text-[13px] text-gray-600 leading-relaxed cursor-pointer">
                   I agree to the{' '}
-                  <a href="#" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                    Terms and Conditions
-                  </a>{' '}
+                  <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/terms-of-use'); }} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                    Terms of Use
+                  </button>{' '}
                   and{' '}
-                  <a href="#" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                  <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/privacy-policy'); }} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
                     Privacy Policy
-                  </a>
+                  </button>
                 </label>
               </div>
 
