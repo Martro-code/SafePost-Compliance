@@ -230,7 +230,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Who We Are */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Who We Are</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">1. Who We Are</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 {`SafePost\u2122 is an AI-powered compliance checking platform designed specifically for Australian medical practitioners and healthcare practices. Our platform helps users assess whether their social media posts and online advertising content comply with AHPRA advertising guidelines, the National Law, and TGA requirements.`}
               </p>
@@ -241,12 +241,12 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Information We Collect */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Information We Collect</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">2. Information We Collect</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We may collect the following types of personal information:
               </p>
 
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Account and Identity Information</h3>
+              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.1 Account and Identity Information</h3>
               <ul className="list-disc pl-5 space-y-1.5 mb-6">
                 <li className="text-[14px] text-gray-500 leading-relaxed">Full name (first name and surname)</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Email address</li>
@@ -254,14 +254,14 @@ const PrivacyPolicy: React.FC = () => {
                 <li className="text-[14px] text-gray-500 leading-relaxed">{`Password (stored in encrypted form \u2014 we never store passwords in plain text)`}</li>
               </ul>
 
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Practice Information</h3>
+              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.2 Practice Information</h3>
               <ul className="list-disc pl-5 space-y-1.5 mb-6">
                 <li className="text-[14px] text-gray-500 leading-relaxed">Practice name</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Practice street address, suburb, state and postcode</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Profession type and registration details where voluntarily provided</li>
               </ul>
 
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Compliance Check Content</h3>
+              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.3 Compliance Check Content</h3>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-2">
                 {`When you use the SafePost\u2122 compliance checker, we collect and process:`}
               </p>
@@ -272,7 +272,7 @@ const PrivacyPolicy: React.FC = () => {
                 <li className="text-[14px] text-gray-500 leading-relaxed">Your compliance check history, stored to power the History feature in your dashboard</li>
               </ul>
 
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Billing and Payment Information</h3>
+              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.4 Billing and Payment Information</h3>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-2">
                 We collect billing-related information to process your subscription payments. Payment processing is handled by Stripe. We do not store your full credit card details on our systems. We retain:
               </p>
@@ -282,7 +282,7 @@ const PrivacyPolicy: React.FC = () => {
                 <li className="text-[14px] text-gray-500 leading-relaxed">Your selected subscription plan and billing cycle</li>
               </ul>
 
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Technical and Usage Information</h3>
+              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.5 Technical and Usage Information</h3>
               <ul className="list-disc pl-5 space-y-1.5">
                 <li className="text-[14px] text-gray-500 leading-relaxed">IP address and device information</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Browser type and version</li>
@@ -293,7 +293,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* How We Collect Information */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">How We Collect Information</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">3. How We Collect Information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We collect your personal information in the following ways:
               </p>
@@ -311,7 +311,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* How We Use Your Information */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">How We Use Your Information</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">4. How We Use Your Information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We use your personal information for the following purposes:
               </p>
@@ -333,7 +333,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* AI Processing and Compliance Content */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">AI Processing and Compliance Content</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">5. AI Processing and Compliance Content</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 {`SafePost\u2122 uses artificial intelligence to analyse content submitted through the compliance checker. When you submit content for a compliance check:`}
               </p>
@@ -354,7 +354,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Sharing and Disclosure of Information */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Sharing and Disclosure of Information</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Sharing and Disclosure of Information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We may disclose your personal information to the following types of third parties:
               </p>
@@ -376,7 +376,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Overseas Disclosure */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Overseas Disclosure</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Overseas Disclosure</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 Some of our third-party service providers are located overseas, including in the United States of America. For example, Supabase stores data in cloud infrastructure that may be located internationally, and our AI processing providers may operate outside Australia.
               </p>
@@ -387,7 +387,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Cookies and Tracking Technologies */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Cookies and Tracking Technologies</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Cookies and Tracking Technologies</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 Our platform uses cookies and similar technologies to improve your experience and help us understand how our platform is used. Cookies are small text files stored on your device.
               </p>
@@ -406,7 +406,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Security */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Security</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">9. Security</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We take the security of your personal information seriously. We implement reasonable technical and organisational measures to protect your information from unauthorised access, disclosure, alteration or destruction. These measures include:
               </p>
@@ -424,7 +424,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Retention of Information */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Retention of Information</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">10. Retention of Information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We retain your personal information for as long as your account is active or as needed to provide you with our services. If you close your account, we will delete or de-identify your personal information within a reasonable period, unless we are required to retain it by law or for legitimate business purposes such as resolving disputes or complying with legal obligations.
               </p>
@@ -435,7 +435,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Marketing Communications */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Marketing Communications</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">11. Marketing Communications</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 {`We may send you marketing communications about SafePost\u2122 products, features and updates by email. You may opt out of marketing communications at any time by:`}
               </p>
@@ -451,7 +451,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Accessing, Updating and Correcting Your Information */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Accessing, Updating and Correcting Your Information</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">12. Accessing, Updating and Correcting Your Information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 {`You have the right to access, update and correct the personal information we hold about you. You can manage most of your personal information directly through your SafePost\u2122 account, including:`}
               </p>
@@ -475,7 +475,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Complaints */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Complaints</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">13. Complaints</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 If you have a complaint about how we have handled your personal information, or believe we have breached the Australian Privacy Principles, please contact us in the first instance at:
               </p>
@@ -500,7 +500,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Changes to This Privacy Policy */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Changes to This Privacy Policy</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">14. Changes to This Privacy Policy</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We reserve the right to update this Privacy Policy from time to time to reflect changes to our practices, technology or legal requirements. When we make material changes, we will notify you by posting an updated version on our website and, where appropriate, by sending you an email notification.
               </p>
@@ -511,7 +511,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Contact Us */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Contact Us</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">15. Contact Us</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 If you have any questions, concerns or requests regarding this Privacy Policy or our privacy practices, please contact us:
               </p>
@@ -521,9 +521,6 @@ const PrivacyPolicy: React.FC = () => {
                 <p>Email: privacy@safepost.com.au</p>
                 <p>Website: www.safepost.com.au</p>
               </div>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-6 font-medium text-gray-700">
-                February 2026
-              </p>
             </div>
 
           </div>
