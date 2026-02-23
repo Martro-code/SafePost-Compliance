@@ -316,6 +316,7 @@ const ContactUs: React.FC = () => {
                   placeholder="04XX XXX XXX"
                   value={phone}
                   onChange={(e) => { setPhone(e.target.value); setSuccess(false); }}
+                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
                   className={getInputClasses(phone, phone.trim().length > 0)}
                 />
               </div>

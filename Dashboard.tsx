@@ -75,6 +75,7 @@ const Dashboard: React.FC = () => {
   };
 
   const handleLogOut = async () => {
+    sessionStorage.clear();
     await signOut();
     navigate('/');
   };

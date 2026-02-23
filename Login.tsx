@@ -53,6 +53,7 @@ const Login: React.FC = () => {
       return;
     }
 
+    sessionStorage.setItem('safepost_password', password);
     navigate('/dashboard');
   };
 
