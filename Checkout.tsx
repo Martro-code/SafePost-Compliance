@@ -103,7 +103,6 @@ const Checkout: React.FC = () => {
   // Form state
   const [email, setEmail] = useState('');
   const [cardNumber, setCardNumber] = useState('');
-  const [cardNumberError, setCardNumberError] = useState('');
   const [expiry, setExpiry] = useState('');
   const [cvc, setCvc] = useState('');
   const [cardholderName, setCardholderName] = useState('');
@@ -211,12 +210,7 @@ const Checkout: React.FC = () => {
                       type="text"
                       value={cardNumber}
                       onChange={(e) => {
-                        const raw = e.target.value.replace(/\D/g, '');
-                        if (raw.length > 16) {
-                          setCardNumberError('Card number must be exactly 16 digits');
-                          return;
-                        }
-                        setCardNumberError('');
+                        const raw = e.target.value.replace(/\D/g, '').slice(0, 16);
                         const formatted = raw.replace(/(.{4})/g, '$1 ').trim();
                         setCardNumber(formatted);
                       }}
@@ -236,9 +230,6 @@ const Checkout: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  {cardNumberError && (
-                    <p className="text-[12px] text-red-500 mt-1 px-4">{cardNumberError}</p>
-                  )}
                   {/* Expiry + CVC row */}
                   <div className="flex">
                     <input
