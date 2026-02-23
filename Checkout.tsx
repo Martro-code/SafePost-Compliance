@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Check, Lock, CreditCard, Shield, ChevronDown } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
@@ -92,13 +92,6 @@ const Checkout: React.FC = () => {
 
   const price = billing === 'yearly' ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice;
   const monthlyEquivalent = billing === 'yearly' ? Math.round(selectedPlan.yearlyPrice / 12) : selectedPlan.monthlyPrice;
-
-  // Calculate date 7 days from now
-  const trialEndDate = useMemo(() => {
-    const date = new Date();
-    date.setDate(date.getDate() + 7);
-    return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
-  }, []);
 
   // Form state
   const [email, setEmail] = useState('');
@@ -359,14 +352,11 @@ const Checkout: React.FC = () => {
                 <button
                   onClick={handleSubmit}
                   disabled={!agreedToTerms}
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
                 >
                   <Lock className="w-4 h-4" />
                   Complete Purchase
                 </button>
-                <p className="text-[12px] text-gray-400 text-center mt-2.5">
-                  {"You won\u2019t be charged until " + trialEndDate}
-                </p>
               </div>
 
               {/* Security Badges */}
