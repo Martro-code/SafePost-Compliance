@@ -521,9 +521,6 @@ const PrivacyPolicy: React.FC = () => {
                 <p>Email: privacy@safepost.com.au</p>
                 <p>Website: www.safepost.com.au</p>
               </div>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-6 font-medium text-gray-700">
-                February 2026
-              </p>
             </div>
 
           </div>
