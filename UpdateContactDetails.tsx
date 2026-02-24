@@ -1,14 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, LogOut, Eye, EyeOff } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 import { supabase } from './src/services/supabaseClient';
 
-const UpdatePassword: React.FC = () => {
+const UpdateContactDetails: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userEmail, firstName, signOut } = useAuth();
+  const {
+    userEmail,
+    firstName,
+    mobileNumber: currentMobile,
+    practiceName: currentPractice,
+    streetAddress: currentStreet,
+    suburb: currentSuburb,
+    userState: currentState,
+    postcode: currentPostcode,
+    signOut,
+  } = useAuth();
 
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const planDisplayNames: Record<string, string> = {
@@ -19,18 +29,17 @@ const UpdatePassword: React.FC = () => {
   const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
 
   // Form state
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [email, setEmail] = useState(userEmail);
+  const [mobileNumber, setMobileNumber] = useState(currentMobile);
+  const [practiceName, setPracticeName] = useState(currentPractice);
+  const [streetAddress, setStreetAddress] = useState(currentStreet);
+  const [suburb, setSuburb] = useState(currentSuburb);
+  const [state, setState] = useState(currentState);
+  const [postcode, setPostcode] = useState(currentPostcode);
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const passwordMismatch = confirmNewPassword.length > 0 && newPassword !== confirmNewPassword;
 
   const handleLogOut = async () => {
     sessionStorage.clear();
@@ -38,9 +47,17 @@ const UpdatePassword: React.FC = () => {
     navigate('/');
   };
 
-  const handleUpdatePassword = async () => {
-    if (passwordMismatch || !newPassword) return;
-    await supabase.auth.updateUser({ password: newPassword });
+  const handleSave = async () => {
+    await supabase.auth.updateUser({
+      data: {
+        mobile_number: mobileNumber.trim(),
+        practice_name: practiceName.trim(),
+        street_address: streetAddress.trim(),
+        suburb: suburb.trim(),
+        state,
+        postcode: postcode.trim(),
+      },
+    });
     navigate('/profile');
   };
 
@@ -181,86 +198,104 @@ const UpdatePassword: React.FC = () => {
 
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-              Update Password
+              Contact Details
             </h1>
             <p className="text-[14px] text-gray-500">
-              Choose a strong password for your account
+              Update your contact and practice information
             </p>
           </div>
 
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]">
             <div className="p-6 md:p-8 space-y-4">
-              {/* Current Password */}
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Current Password</label>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Email</label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Mobile Number</label>
+                <input
+                  type="tel"
+                  value={mobileNumber}
+                  onChange={(e) => setMobileNumber(e.target.value)}
+                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
+                  placeholder="Enter your mobile number"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Practice Name</label>
+                <input
+                  type="text"
+                  value={practiceName}
+                  onChange={(e) => setPracticeName(e.target.value)}
+                  placeholder="Enter your practice name"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Street Address</label>
+                <input
+                  type="text"
+                  value={streetAddress}
+                  onChange={(e) => setStreetAddress(e.target.value)}
+                  placeholder="Enter your street address"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Suburb</label>
+                <input
+                  type="text"
+                  value={suburb}
+                  onChange={(e) => setSuburb(e.target.value)}
+                  placeholder="Enter your suburb"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">State</label>
                 <div className="relative">
-                  <input
-                    type={showCurrentPassword ? 'text' : 'password'}
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="Enter your current password"
-                    className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 pr-12"
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
+                  <select
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none cursor-pointer"
                   >
-                    {showCurrentPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-                  </button>
+                    <option value="" disabled>Select your state</option>
+                    <option value="NSW">NSW</option>
+                    <option value="VIC">VIC</option>
+                    <option value="QLD">QLD</option>
+                    <option value="WA">WA</option>
+                    <option value="SA">SA</option>
+                    <option value="TAS">TAS</option>
+                    <option value="ACT">ACT</option>
+                    <option value="NT">NT</option>
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                 </div>
               </div>
 
-              {/* New Password */}
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">New Password</label>
-                <div className="relative">
-                  <input
-                    type={showNewPassword ? 'text' : 'password'}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter your new password (min. 8 characters)"
-                    className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 pr-12"
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showNewPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Confirm New Password */}
-              <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Confirm New Password</label>
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={confirmNewPassword}
-                    onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    placeholder="Confirm your new password"
-                    className={`w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200 placeholder:text-gray-400 pr-12 ${
-                      passwordMismatch
-                        ? 'border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
-                        : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                    }`}
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showConfirmPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-                  </button>
-                </div>
-                {passwordMismatch && (
-                  <p className="text-[12px] text-red-500 mt-1.5">Passwords do not match</p>
-                )}
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Postcode</label>
+                <input
+                  type="tel"
+                  value={postcode}
+                  onChange={(e) => setPostcode(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
+                  maxLength={4}
+                  placeholder="Enter your postcode"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
               </div>
             </div>
 
@@ -274,10 +309,10 @@ const UpdatePassword: React.FC = () => {
                 Cancel
               </button>
               <button
-                onClick={handleUpdatePassword}
+                onClick={handleSave}
                 className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
               >
-                Update Password
+                Save Changes
               </button>
             </div>
           </div>
@@ -352,4 +387,4 @@ const UpdatePassword: React.FC = () => {
   );
 };
 
-export default UpdatePassword;
+export default UpdateContactDetails;
