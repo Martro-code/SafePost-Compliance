@@ -42,7 +42,7 @@ const Profile: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4] dark:bg-gray-900">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06] dark:bg-gray-900 dark:border-gray-700">
+      <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Left: Logo + Nav */}
           <div className="flex items-center gap-8">
@@ -238,27 +238,27 @@ const Profile: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[13px] text-gray-500 dark:text-gray-400">Mobile Number</span>
-                  <span className={`text-[14px] ${mobileNumber ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{mobileNumber || 'Not provided'}</span>
+                  <span className={`text-[14px] ${mobileNumber ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{mobileNumber || 'Not provided'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[13px] text-gray-500 dark:text-gray-400">Practice Name</span>
-                  <span className={`text-[14px] ${practiceName ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{practiceName || 'Not provided'}</span>
+                  <span className={`text-[14px] ${practiceName ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{practiceName || 'Not provided'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[13px] text-gray-500 dark:text-gray-400">Street Address</span>
-                  <span className={`text-[14px] ${streetAddress ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{streetAddress || 'Not provided'}</span>
+                  <span className={`text-[14px] ${streetAddress ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{streetAddress || 'Not provided'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[13px] text-gray-500 dark:text-gray-400">Suburb</span>
-                  <span className={`text-[14px] ${suburb ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{suburb || 'Not provided'}</span>
+                  <span className={`text-[14px] ${suburb ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{suburb || 'Not provided'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[13px] text-gray-500 dark:text-gray-400">State</span>
-                  <span className={`text-[14px] ${userState ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{userState || 'Not provided'}</span>
+                  <span className={`text-[14px] ${userState ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{userState || 'Not provided'}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-[13px] text-gray-500 dark:text-gray-400">Postcode</span>
-                  <span className={`text-[14px] ${postcode ? 'font-medium text-gray-900' : 'text-gray-400'}`}>{postcode || 'Not provided'}</span>
+                  <span className={`text-[14px] ${postcode ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{postcode || 'Not provided'}</span>
                 </div>
               </div>
             </div>
