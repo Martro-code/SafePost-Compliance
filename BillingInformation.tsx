@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, CreditCard, Mail, CalendarDays, LogOut } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, CreditCard, Mail, CalendarDays, LogOut, Bell } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 
@@ -55,6 +55,19 @@ const BillingInformation: React.FC = () => {
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
+  const [notificationCount, setNotificationCount] = useState(3);
+  const notificationRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
+        setNotificationDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const handleLogOut = async () => {
     sessionStorage.clear();
@@ -95,42 +108,92 @@ const BillingInformation: React.FC = () => {
             </nav>
           </div>
 
-          {/* Right: My Account dropdown */}
-          <div className="hidden md:flex items-center justify-end min-w-[140px] relative">
-            <button
-              onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
-              onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200"
-            >
-              {firstName || 'My Account'}
-              <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accountDropdownOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {accountDropdownOpen && (
-              <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in dark:bg-gray-800 dark:border-gray-700">
-                <div className="px-4 py-2.5">
-                  <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
-                  <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
+          {/* Right: Bell + My Account */}
+          <div className="hidden md:flex items-center gap-1 justify-end min-w-[180px]">
+            {/* Notification Bell */}
+            <div className="relative" ref={notificationRef}>
+              <button
+                onClick={() => { setNotificationDropdownOpen(!notificationDropdownOpen); setAccountDropdownOpen(false); }}
+                className="relative p-2 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200 dark:text-gray-400 dark:hover:text-white"
+              >
+                <Bell className="w-[18px] h-[18px]" />
+                {notificationCount > 0 && (
+                  <span className="absolute top-1 right-1 w-4 h-4 bg-blue-600 rounded-full flex items-center justify-center">
+                    <span className="text-[9px] font-bold text-white">{notificationCount}</span>
+                  </span>
+                )}
+              </button>
+              {notificationDropdownOpen && (
+                <div className="absolute top-full right-0 mt-1 w-80 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in dark:bg-gray-800 dark:border-gray-700 z-50">
+                  <div className="flex items-center justify-between px-4 py-2.5">
+                    <p className="text-[13px] font-semibold text-gray-900 dark:text-white">Notifications</p>
+                    <button onClick={() => setNotificationCount(0)} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium transition-colors dark:text-blue-400">
+                      Mark all as read
+                    </button>
+                  </div>
+                  <div className="border-t border-black/[0.06] dark:border-gray-700" />
+                  <div className="py-1">
+                    <button className="w-full text-left px-4 py-3 hover:bg-black/[0.02] transition-colors dark:hover:bg-white/[0.02]">
+                      <p className="text-[13px] text-gray-900 dark:text-white">Compliance check complete</p>
+                      <p className="text-[12px] text-gray-400 mt-0.5">Your recent post has been analysed — 2 mins ago</p>
+                    </button>
+                    <button className="w-full text-left px-4 py-3 hover:bg-black/[0.02] transition-colors dark:hover:bg-white/[0.02]">
+                      <p className="text-[13px] text-gray-900 dark:text-white">Guideline update</p>
+                      <p className="text-[12px] text-gray-400 mt-0.5">AHPRA advertising guidelines updated — 1 hour ago</p>
+                    </button>
+                    <button className="w-full text-left px-4 py-3 hover:bg-black/[0.02] transition-colors dark:hover:bg-white/[0.02]">
+                      <p className="text-[13px] text-gray-900 dark:text-white">Billing notification</p>
+                      <p className="text-[12px] text-gray-400 mt-0.5">Your next payment is due soon — Yesterday</p>
+                    </button>
+                  </div>
+                  <div className="border-t border-black/[0.06] dark:border-gray-700" />
+                  <button
+                    onClick={() => { navigate('/notification-preferences'); setNotificationDropdownOpen(false); }}
+                    className="block w-full text-center px-4 py-2.5 text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400"
+                  >
+                    View All Notifications
+                  </button>
                 </div>
-                <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
-                <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
-                  Profile
-                </button>
-                <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
-                  Billing
-                </button>
-                <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
-                  Settings
-                </button>
-                <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
-                <button
-                  onClick={handleLogOut}
-                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white"
-                >
-                  <LogOut className="w-3.5 h-3.5" />
-                  Log Out
-                </button>
-              </div>
-            )}
+              )}
+            </div>
+
+            {/* My Account dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => { setAccountDropdownOpen(!accountDropdownOpen); setNotificationDropdownOpen(false); }}
+                onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
+                className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200"
+              >
+                {firstName || 'My Account'}
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accountDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {accountDropdownOpen && (
+                <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in dark:bg-gray-800 dark:border-gray-700">
+                  <div className="px-4 py-2.5">
+                    <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
+                    <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
+                  </div>
+                  <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
+                  <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
+                    Profile
+                  </button>
+                  <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
+                    Billing
+                  </button>
+                  <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
+                    Settings
+                  </button>
+                  <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
+                  <button
+                    onClick={handleLogOut}
+                    className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white"
+                  >
+                    <LogOut className="w-3.5 h-3.5" />
+                    Log Out
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile hamburger */}

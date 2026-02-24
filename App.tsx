@@ -25,6 +25,8 @@ import UpdateContactDetails from './UpdateContactDetails';
 import UpgradeConfirmation from './UpgradeConfirmation';
 import CancelSubscription from './CancelSubscription';
 import TwoFactorAuth from './TwoFactorAuth';
+import NotificationPreferences from './NotificationPreferences';
+import EmailPreferences from './EmailPreferences';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsOfUse from './TermsOfUse';
 import ProtectedRoute from './ProtectedRoute';
@@ -72,6 +74,8 @@ const App: React.FC = () => {
           <Route path="/upgrade-confirmation" element={<ProtectedRoute><UpgradeConfirmation /></ProtectedRoute>} />
           <Route path="/cancel-subscription" element={<ProtectedRoute><CancelSubscription /></ProtectedRoute>} />
           <Route path="/two-factor-auth" element={<ProtectedRoute><TwoFactorAuth /></ProtectedRoute>} />
+          <Route path="/notification-preferences" element={<ProtectedRoute><NotificationPreferences /></ProtectedRoute>} />
+          <Route path="/email-preferences" element={<ProtectedRoute><EmailPreferences /></ProtectedRoute>} />
         </Routes>
       </div>
     </>
