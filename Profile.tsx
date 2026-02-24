@@ -216,8 +216,16 @@ const Profile: React.FC = () => {
               <div>
                 <p className="text-[14px] font-medium text-gray-900 dark:text-white">{displayPlanName}</p>
                 {billingPeriod && (
-                  <p className="text-[12px] text-gray-400 mt-0.5">{billingPeriod.charAt(0).toUpperCase() + billingPeriod.slice(1).toLowerCase()}</p>
+                  <p className="text-[12px] text-gray-400 mt-0.5">{billingPeriod.charAt(0).toUpperCase() + billingPeriod.slice(1).toLowerCase()} billing</p>
                 )}
+              </div>
+              <div className="mt-5">
+                <button
+                  onClick={() => navigate('/cancel-subscription')}
+                  className="text-[12px] text-gray-400 hover:text-red-500 transition-colors duration-200"
+                >
+                  Cancel Subscription
+                </button>
               </div>
             </div>
 
