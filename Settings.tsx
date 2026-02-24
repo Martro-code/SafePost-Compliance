@@ -30,7 +30,7 @@ const Settings: React.FC = () => {
   const [notifBillingActivity, setNotifBillingActivity] = useState(savedNotifPrefs.billingActivity === true);
   const [notifNewFeatures, setNotifNewFeatures] = useState(savedNotifPrefs.newFeatures === true);
   const notifMasterOn = notifComplianceResults || notifGuidelineUpdates || notifBillingActivity || notifNewFeatures;
-  const [notifExpanded, setNotifExpanded] = useState(notifMasterOn);
+  const [notifExpanded, setNotifExpanded] = useState(false);
   const [notifSaved, setNotifSaved] = useState(false);
 
   // Email preferences
@@ -40,7 +40,7 @@ const Settings: React.FC = () => {
   const [emailUsageSummaries, setEmailUsageSummaries] = useState(savedEmailPrefs.usageSummaries === true);
   const [emailTipsEducation, setEmailTipsEducation] = useState(savedEmailPrefs.tipsEducation === true);
   const emailMasterOn = emailProductUpdates || emailComplianceAlerts || emailUsageSummaries || emailTipsEducation;
-  const [emailExpanded, setEmailExpanded] = useState(emailMasterOn);
+  const [emailExpanded, setEmailExpanded] = useState(false);
   const [emailSaved, setEmailSaved] = useState(false);
 
   // Header state
