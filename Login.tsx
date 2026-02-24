@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink } from 'lucide-react';
+import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink, ArrowLeft } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { supabase } from './src/services/supabaseClient';
 
@@ -229,6 +229,13 @@ const Login: React.FC = () => {
       {/* Login Form */}
       <main className="flex-grow flex items-center justify-center px-6 pt-6 pb-10 md:pt-8 md:pb-16">
         <div className="w-full max-w-[450px]">
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Home
+          </button>
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
             {/* Header */}
             <div className="text-center mb-8">
