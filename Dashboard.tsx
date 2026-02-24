@@ -211,6 +211,25 @@ const Dashboard: React.FC = () => {
       {/* Dashboard Content */}
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto px-6 py-16 md:py-20">
+          {/* Cancellation Banner */}
+          {sessionStorage.getItem('safepost_cancelled') === 'true' && (
+            <div className="mb-6 px-5 py-3.5 bg-amber-50 border border-amber-200 rounded-xl flex items-center justify-between dark:bg-amber-900/20 dark:border-amber-800">
+              <p className="text-[13px] text-amber-700 dark:text-amber-300">
+                Your subscription ends on {sessionStorage.getItem('safepost_cancel_date') || 'your next billing date'}. Reactivate anytime.
+              </p>
+              <button
+                onClick={() => {
+                  sessionStorage.removeItem('safepost_cancelled');
+                  sessionStorage.removeItem('safepost_cancel_date');
+                  navigate('/dashboard');
+                }}
+                className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0 ml-4 dark:text-blue-400 dark:hover:text-blue-300"
+              >
+                Reactivate
+              </button>
+            </div>
+          )}
+
           {/* Two-column grid: on mobile, sidebar cards appear first via order classes */}
           <div className="grid grid-cols-1 md:grid-cols-[1fr_340px] gap-6">
 
