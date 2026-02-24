@@ -187,7 +187,7 @@ const Profile: React.FC = () => {
             <div className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Personal Details</h3>
-                <button className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                <button onClick={() => navigate('/update-personal-details')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
                   Edit
                 </button>
               </div>
@@ -227,7 +227,7 @@ const Profile: React.FC = () => {
             <div className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Contact Details</h3>
-                <button className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                <button onClick={() => navigate('/update-contact-details')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
                   Edit
                 </button>
               </div>
@@ -269,7 +269,7 @@ const Profile: React.FC = () => {
             <div className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Password</h3>
-                <button className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                <button onClick={() => navigate('/update-password')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
                   Edit
                 </button>
               </div>

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, LogOut, Eye, EyeOff } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 import { supabase } from './src/services/supabaseClient';
 
-const UpdatePassword: React.FC = () => {
+const UpdatePersonalDetails: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userEmail, firstName, signOut } = useAuth();
+  const { userEmail, firstName: currentFirstName, surname: currentSurname, signOut } = useAuth();
 
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const planDisplayNames: Record<string, string> = {
@@ -19,18 +19,12 @@ const UpdatePassword: React.FC = () => {
   const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
 
   // Form state
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmNewPassword, setConfirmNewPassword] = useState('');
-  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-  const [showNewPassword, setShowNewPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [firstNameField, setFirstNameField] = useState(currentFirstName);
+  const [lastNameField, setLastNameField] = useState(currentSurname);
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const passwordMismatch = confirmNewPassword.length > 0 && newPassword !== confirmNewPassword;
 
   const handleLogOut = async () => {
     sessionStorage.clear();
@@ -38,9 +32,13 @@ const UpdatePassword: React.FC = () => {
     navigate('/');
   };
 
-  const handleUpdatePassword = async () => {
-    if (passwordMismatch || !newPassword) return;
-    await supabase.auth.updateUser({ password: newPassword });
+  const handleSave = async () => {
+    await supabase.auth.updateUser({
+      data: {
+        first_name: firstNameField.trim(),
+        surname: lastNameField.trim(),
+      },
+    });
     navigate('/profile');
   };
 
@@ -82,7 +80,7 @@ const UpdatePassword: React.FC = () => {
               onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
               className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
             >
-              {firstName || 'My Account'}
+              {currentFirstName || 'My Account'}
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accountDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
             {accountDropdownOpen && (
@@ -181,86 +179,35 @@ const UpdatePassword: React.FC = () => {
 
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-              Update Password
+              Personal Details
             </h1>
             <p className="text-[14px] text-gray-500">
-              Choose a strong password for your account
+              Update your personal information
             </p>
           </div>
 
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]">
             <div className="p-6 md:p-8 space-y-4">
-              {/* Current Password */}
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Current Password</label>
-                <div className="relative">
-                  <input
-                    type={showCurrentPassword ? 'text' : 'password'}
-                    value={currentPassword}
-                    onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="Enter your current password"
-                    className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 pr-12"
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showCurrentPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-                  </button>
-                </div>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">First Name</label>
+                <input
+                  type="text"
+                  value={firstNameField}
+                  onChange={(e) => setFirstNameField(e.target.value)}
+                  placeholder="Enter your first name"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
               </div>
 
-              {/* New Password */}
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">New Password</label>
-                <div className="relative">
-                  <input
-                    type={showNewPassword ? 'text' : 'password'}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter your new password (min. 8 characters)"
-                    className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 pr-12"
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showNewPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-                  </button>
-                </div>
-              </div>
-
-              {/* Confirm New Password */}
-              <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Confirm New Password</label>
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    value={confirmNewPassword}
-                    onChange={(e) => setConfirmNewPassword(e.target.value)}
-                    placeholder="Confirm your new password"
-                    className={`w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200 placeholder:text-gray-400 pr-12 ${
-                      passwordMismatch
-                        ? 'border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
-                        : 'border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20'
-                    }`}
-                  />
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    {showConfirmPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-                  </button>
-                </div>
-                {passwordMismatch && (
-                  <p className="text-[12px] text-red-500 mt-1.5">Passwords do not match</p>
-                )}
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Last Name</label>
+                <input
+                  type="text"
+                  value={lastNameField}
+                  onChange={(e) => setLastNameField(e.target.value)}
+                  placeholder="Enter your last name"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                />
               </div>
             </div>
 
@@ -274,10 +221,10 @@ const UpdatePassword: React.FC = () => {
                 Cancel
               </button>
               <button
-                onClick={handleUpdatePassword}
+                onClick={handleSave}
                 className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
               >
-                Update Password
+                Save Changes
               </button>
             </div>
           </div>
@@ -352,4 +299,4 @@ const UpdatePassword: React.FC = () => {
   );
 };
 
-export default UpdatePassword;
+export default UpdatePersonalDetails;

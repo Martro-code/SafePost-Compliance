@@ -20,6 +20,8 @@ import Profile from './Profile';
 import ChangePlan from './ChangePlan';
 import UpdateCard from './UpdateCard';
 import UpdateBillingEmail from './UpdateBillingEmail';
+import UpdatePersonalDetails from './UpdatePersonalDetails';
+import UpdateContactDetails from './UpdateContactDetails';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsOfUse from './TermsOfUse';
 import ProtectedRoute from './ProtectedRoute';
@@ -51,7 +53,7 @@ const App: React.FC = () => {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/update-password" element={<UpdatePassword />} />
+          <Route path="/update-password" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
@@ -62,6 +64,8 @@ const App: React.FC = () => {
           <Route path="/change-plan" element={<ProtectedRoute><ChangePlan /></ProtectedRoute>} />
           <Route path="/update-card" element={<ProtectedRoute><UpdateCard /></ProtectedRoute>} />
           <Route path="/update-billing-email" element={<ProtectedRoute><UpdateBillingEmail /></ProtectedRoute>} />
+          <Route path="/update-personal-details" element={<ProtectedRoute><UpdatePersonalDetails /></ProtectedRoute>} />
+          <Route path="/update-contact-details" element={<ProtectedRoute><UpdateContactDetails /></ProtectedRoute>} />
         </Routes>
       </div>
     </>
