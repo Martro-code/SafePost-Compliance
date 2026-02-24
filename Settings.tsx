@@ -24,21 +24,19 @@ const Settings: React.FC = () => {
   const twoFactor = sessionStorage.getItem('safepost_2fa') === 'true';
 
   // In-App Notification preferences
-  const savedNotifPrefs = JSON.parse(localStorage.getItem('safepost_notification_prefs') || '{}');
-  const [notifComplianceResults, setNotifComplianceResults] = useState(savedNotifPrefs.complianceResults === true);
-  const [notifGuidelineUpdates, setNotifGuidelineUpdates] = useState(savedNotifPrefs.guidelineUpdates === true);
-  const [notifBillingActivity, setNotifBillingActivity] = useState(savedNotifPrefs.billingActivity === true);
-  const [notifNewFeatures, setNotifNewFeatures] = useState(savedNotifPrefs.newFeatures === true);
+  const [notifComplianceResults, setNotifComplianceResults] = useState(false);
+  const [notifGuidelineUpdates, setNotifGuidelineUpdates] = useState(false);
+  const [notifBillingActivity, setNotifBillingActivity] = useState(false);
+  const [notifNewFeatures, setNotifNewFeatures] = useState(false);
   const notifMasterOn = notifComplianceResults || notifGuidelineUpdates || notifBillingActivity || notifNewFeatures;
   const [notifExpanded, setNotifExpanded] = useState(false);
   const [notifSaved, setNotifSaved] = useState(false);
 
   // Email preferences
-  const savedEmailPrefs = JSON.parse(localStorage.getItem('safepost_email_prefs') || '{}');
-  const [emailProductUpdates, setEmailProductUpdates] = useState(savedEmailPrefs.productUpdates === true);
-  const [emailComplianceAlerts, setEmailComplianceAlerts] = useState(savedEmailPrefs.complianceAlerts === true);
-  const [emailUsageSummaries, setEmailUsageSummaries] = useState(savedEmailPrefs.usageSummaries === true);
-  const [emailTipsEducation, setEmailTipsEducation] = useState(savedEmailPrefs.tipsEducation === true);
+  const [emailProductUpdates, setEmailProductUpdates] = useState(false);
+  const [emailComplianceAlerts, setEmailComplianceAlerts] = useState(false);
+  const [emailUsageSummaries, setEmailUsageSummaries] = useState(false);
+  const [emailTipsEducation, setEmailTipsEducation] = useState(false);
   const emailMasterOn = emailProductUpdates || emailComplianceAlerts || emailUsageSummaries || emailTipsEducation;
   const [emailExpanded, setEmailExpanded] = useState(false);
   const [emailSaved, setEmailSaved] = useState(false);
