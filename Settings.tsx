@@ -589,7 +589,7 @@ const Settings: React.FC = () => {
             {/* Setting 4 — Two-Factor Authentication */}
             <button
               onClick={() => navigate('/two-factor-auth')}
-              className="w-full bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 hover:border-black/[0.12] dark:hover:border-gray-600 transition-colors duration-200"
+              className="w-full bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 hover:border-black/[0.12] dark:hover:border-gray-600 transition-[border-color] duration-200"
             >
               <div className="flex items-center justify-between p-5 md:px-6">
                 <div className="flex items-center gap-3">
