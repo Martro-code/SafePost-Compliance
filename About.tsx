@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
-import aboutUsLogo from './assets/about-us-logo.png';
+import spLogo from './assets/SP-logo.svg';
 
 const About: React.FC = () => {
   const navigate = useNavigate();
@@ -240,7 +240,7 @@ const About: React.FC = () => {
             {/* SafePost Logo Divider */}
             <div className="py-16 flex justify-center">
               <img
-                src={aboutUsLogo}
+                src={spLogo}
                 alt="SafePost logo"
                 className="max-w-[500px] md:max-w-[600px] w-full h-auto"
               />
