@@ -103,7 +103,7 @@ const Dashboard: React.FC = () => {
                   onClick={() => navigate(link.path)}
                   className={`px-3.5 py-2 text-[13px] font-medium rounded-lg transition-all duration-200 ${
                     location.pathname === link.path
-                      ? 'text-gray-900 bg-black/[0.04] dark:text-white dark:bg-white/[0.08]'
+                      ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
                       : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.08]'
                   }`}
                 >
@@ -179,7 +179,7 @@ const Dashboard: React.FC = () => {
                 onClick={() => { navigate(link.path); setMobileMenuOpen(false); }}
                 className={`block w-full text-left px-3 py-2.5 text-[13px] font-medium rounded-lg transition-all duration-200 ${
                   location.pathname === link.path
-                    ? 'text-gray-900 bg-black/[0.04] dark:text-white dark:bg-white/[0.08]'
+                    ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
                     : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.08]'
                 }`}
               >
@@ -374,22 +374,22 @@ const Dashboard: React.FC = () => {
                 <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6 dark:bg-blue-950 dark:border-blue-900">
                   <div className="flex items-center gap-2.5 mb-3">
                     <Rocket className="w-5 h-5 text-blue-600" />
-                    <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider">Upgrade to Pro</h3>
+                    <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider dark:text-blue-400">Upgrade to Pro</h3>
                   </div>
                   <ul className="space-y-2.5 mb-5">
-                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
+                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                       <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
                       Unlimited checks
                     </li>
-                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
+                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                       <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
                       AI-powered rewrites
                     </li>
-                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
+                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                       <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
                       Full history tracking
                     </li>
-                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700">
+                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                       <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
                       Priority support
                     </li>
