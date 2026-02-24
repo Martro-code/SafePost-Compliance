@@ -1,22 +1,28 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, LogOut, Clock, Bell } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut, Bell, Info, Lock } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 
-const History: React.FC = () => {
+const EmailPreferences: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { userEmail, firstName, signOut } = useAuth();
 
   const planName = sessionStorage.getItem('safepost_plan') || '';
-
   const planDisplayNames: Record<string, string> = {
     professional: 'SafePost Professional',
     proplus: 'SafePost Pro+',
     ultra: 'SafePost Ultra',
   };
   const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
+
+  // Load saved preferences
+  const savedPrefs = JSON.parse(localStorage.getItem('safepost_email_prefs') || '{}');
+  const [productUpdates, setProductUpdates] = useState(savedPrefs.productUpdates !== false);
+  const [complianceAlerts, setComplianceAlerts] = useState(savedPrefs.complianceAlerts !== false);
+  const [usageSummaries, setUsageSummaries] = useState(savedPrefs.usageSummaries !== false);
+  const [tipsEducation, setTipsEducation] = useState(savedPrefs.tipsEducation === true);
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
@@ -35,6 +41,16 @@ const History: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  const handleSave = () => {
+    localStorage.setItem('safepost_email_prefs', JSON.stringify({
+      productUpdates,
+      complianceAlerts,
+      usageSummaries,
+      tipsEducation,
+    }));
+    navigate('/settings');
+  };
+
   const handleLogOut = async () => {
     sessionStorage.clear();
     await signOut();
@@ -46,6 +62,12 @@ const History: React.FC = () => {
     { label: 'History', path: '/history' },
     { label: 'Settings', path: '/settings' },
   ];
+
+  const toggleClass = (enabled: boolean) =>
+    `relative w-11 h-6 rounded-full transition-colors duration-200 ${enabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-600'}`;
+
+  const toggleDot = (enabled: boolean) =>
+    `absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${enabled ? 'translate-x-5' : 'translate-x-0'}`;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4] dark:bg-gray-900">
@@ -221,32 +243,136 @@ const History: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-grow">
-        <div className="max-w-4xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
-          {/* Back to Dashboard */}
+        <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
+          {/* Back to Settings */}
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/settings')}
             className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            Back to Settings
           </button>
 
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
-              Compliance History
+              Email Preferences
             </h1>
             <p className="text-[14px] text-gray-500 dark:text-gray-300">
-              A record of all your past compliance checks
+              Manage which emails you receive from SafePost
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 dark:bg-gray-800 dark:border-gray-700 flex flex-col items-center justify-center text-center">
-            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4 dark:bg-gray-700">
-              <Clock className="w-6 h-6 text-gray-400" />
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700">
+            {/* Product Updates */}
+            <div className="flex items-center justify-between p-6 md:px-8">
+              <div>
+                <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Product Updates</span>
+                <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">New features, improvements, and announcements</p>
+              </div>
+              <button
+                onClick={() => setProductUpdates(!productUpdates)}
+                className={toggleClass(productUpdates)}
+              >
+                <span className={toggleDot(productUpdates)} />
+              </button>
             </div>
-            <p className="text-[14px] text-gray-500 dark:text-gray-300">
-              Your compliance check history will appear here
-            </p>
+
+            <div className="border-t border-black/[0.06] dark:border-gray-700" />
+
+            {/* Compliance Alerts */}
+            <div className="flex items-center justify-between p-6 md:px-8">
+              <div>
+                <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Compliance Alerts</span>
+                <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Regulatory changes that may affect your content</p>
+              </div>
+              <button
+                onClick={() => setComplianceAlerts(!complianceAlerts)}
+                className={toggleClass(complianceAlerts)}
+              >
+                <span className={toggleDot(complianceAlerts)} />
+              </button>
+            </div>
+
+            <div className="border-t border-black/[0.06] dark:border-gray-700" />
+
+            {/* Billing Notifications (locked) */}
+            <div className="flex items-center justify-between p-6 md:px-8">
+              <div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Billing Notifications</span>
+                  <Lock className="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" />
+                </div>
+                <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Payment receipts, reminders, and subscription changes</p>
+              </div>
+              <button
+                disabled
+                className="relative w-11 h-6 rounded-full bg-blue-600 cursor-not-allowed opacity-60"
+              >
+                <span className="absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm translate-x-5" />
+              </button>
+            </div>
+
+            <div className="border-t border-black/[0.06] dark:border-gray-700" />
+
+            {/* Usage Summaries */}
+            <div className="flex items-center justify-between p-6 md:px-8">
+              <div>
+                <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Usage Summaries</span>
+                <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Weekly summary of your compliance check activity</p>
+              </div>
+              <button
+                onClick={() => setUsageSummaries(!usageSummaries)}
+                className={toggleClass(usageSummaries)}
+              >
+                <span className={toggleDot(usageSummaries)} />
+              </button>
+            </div>
+
+            <div className="border-t border-black/[0.06] dark:border-gray-700" />
+
+            {/* Tips & Education */}
+            <div className="flex items-center justify-between p-6 md:px-8">
+              <div>
+                <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Tips & Education</span>
+                <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Helpful guides and best practices for compliant advertising</p>
+              </div>
+              <button
+                onClick={() => setTipsEducation(!tipsEducation)}
+                className={toggleClass(tipsEducation)}
+              >
+                <span className={toggleDot(tipsEducation)} />
+              </button>
+            </div>
+
+            <div className="border-t border-black/[0.06] dark:border-gray-700" />
+
+            {/* Info Box */}
+            <div className="px-6 md:px-8 pt-5 pb-1">
+              <div className="flex gap-3 p-4 bg-blue-50 rounded-xl dark:bg-blue-900/20">
+                <Info className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                <p className="text-[13px] text-blue-700 leading-relaxed dark:text-blue-300">
+                  Essential emails such as billing notifications and security alerts will always be sent regardless of your preferences.
+                </p>
+              </div>
+            </div>
+
+            <div className="border-t border-black/[0.06] dark:border-gray-700 mt-5" />
+
+            {/* Buttons */}
+            <div className="flex items-center gap-3 p-6 md:px-8">
+              <button
+                onClick={() => navigate('/settings')}
+                className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSave}
+                className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
+              >
+                Save Changes
+              </button>
+            </div>
           </div>
         </div>
       </main>
@@ -319,4 +445,4 @@ const History: React.FC = () => {
   );
 };
 
-export default History;
+export default EmailPreferences;
