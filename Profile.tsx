@@ -54,7 +54,7 @@ const Profile: React.FC = () => {
                 <button
                   key={link.path}
                   onClick={() => navigate(link.path)}
-                  className={`px-3.5 py-2 text-[13px] font-medium rounded-lg transition-all duration-200 ${
+                  className={`px-3.5 py-2 text-[13px] font-medium rounded-lg transition-colors duration-200 ${
                     location.pathname === link.path
                       ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
                       : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-gray-900'
@@ -71,7 +71,7 @@ const Profile: React.FC = () => {
             <button
               onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
               onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200"
             >
               {firstName || 'My Account'}
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accountDropdownOpen ? 'rotate-180' : ''}`} />
@@ -130,7 +130,7 @@ const Profile: React.FC = () => {
               <button
                 key={link.path}
                 onClick={() => { navigate(link.path); setMobileMenuOpen(false); }}
-                className={`block w-full text-left px-3 py-2.5 text-[13px] font-medium rounded-lg transition-all duration-200 ${
+                className={`block w-full text-left px-3 py-2.5 text-[13px] font-medium rounded-lg transition-colors duration-200 ${
                   location.pathname === link.path
                     ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
                     : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-gray-900'
