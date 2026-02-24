@@ -18,6 +18,7 @@ import History from './History';
 import Settings from './Settings';
 import Profile from './Profile';
 import ChangePlan from './ChangePlan';
+import UpdateCard from './UpdateCard';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsOfUse from './TermsOfUse';
 import ProtectedRoute from './ProtectedRoute';
@@ -58,6 +59,7 @@ const App: React.FC = () => {
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/change-plan" element={<ProtectedRoute><ChangePlan /></ProtectedRoute>} />
+          <Route path="/update-card" element={<ProtectedRoute><UpdateCard /></ProtectedRoute>} />
         </Routes>
       </div>
     </>
