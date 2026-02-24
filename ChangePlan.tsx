@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, Link, useLocation, useSearchParams } from 'react-router-dom';
 import { ChevronDown, Menu, X, ArrowLeft, LogOut, Check } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
@@ -52,8 +52,10 @@ const ChangePlan: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [searchParams] = useSearchParams();
   const { userEmail, firstName, signOut } = useAuth();
   const planName = sessionStorage.getItem('safepost_plan') || '';
+  const isUpgradeMode = searchParams.get('mode') === 'upgrade';
 
   const planDisplayNames: Record<string, string> = {
     professional: 'SafePost Professional',
@@ -81,7 +83,14 @@ const ChangePlan: React.FC = () => {
   ];
 
   const currentPlanKey = planName.toLowerCase();
-  const availablePlans = plans.filter((p) => p.key !== currentPlanKey);
+  const tierOrder = ['free', '', 'professional', 'proplus', 'ultra'];
+  const currentTierIndex = tierOrder.indexOf(currentPlanKey);
+
+  const availablePlans = isUpgradeMode
+    ? plans.filter((p) => tierOrder.indexOf(p.key) > currentTierIndex)
+    : plans.filter((p) => p.key !== currentPlanKey);
+
+  const isHighestPlan = isUpgradeMode && currentPlanKey === 'ultra';
   const selectedPlanData = plans.find((p) => p.key === selectedPlan);
 
   return (
@@ -221,14 +230,28 @@ const ChangePlan: React.FC = () => {
           {/* Page Heading */}
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
-                Change your Plan
-              </h1>
+              {isUpgradeMode ? 'Upgrade your Plan' : 'Change your Plan'}
+            </h1>
             <p className="text-[14px] text-gray-500 dark:text-gray-300">
-              Pick one of the following plans
+              {isUpgradeMode ? 'Choose a higher plan to unlock more features' : 'Pick one of the following plans'}
             </p>
           </div>
 
+          {/* Highest Plan Message */}
+          {isHighestPlan && (
+            <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700 p-8 text-center">
+              <p className="text-[15px] font-medium text-gray-900 dark:text-white mb-4">You are already on our highest plan.</p>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="text-[14px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          )}
+
           {/* Plan Card */}
+          {!isHighestPlan && (
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
             {/* Plan Radio Options */}
             {availablePlans.map((plan, index) => (
@@ -278,16 +301,17 @@ const ChangePlan: React.FC = () => {
             {/* Bottom Actions */}
             <div className="p-6 md:px-8 flex items-center gap-3">
               <button
-                onClick={() => navigate('/profile')}
+                onClick={() => navigate(isUpgradeMode ? '/dashboard' : '/profile')}
                 className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
               >
                 Cancel
               </button>
               <button className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30">
-                Change Plan
+                {isUpgradeMode ? 'Upgrade Plan' : 'Change Plan'}
               </button>
             </div>
           </div>
+          )}
         </div>
       </main>
 
