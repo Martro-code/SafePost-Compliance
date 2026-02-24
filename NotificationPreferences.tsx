@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, LogOut, Bell, CheckCircle2, BookOpen, CreditCard, Sparkles } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut, Bell } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 
@@ -16,13 +16,6 @@ const NotificationPreferences: React.FC = () => {
     ultra: 'SafePost Ultra',
   };
   const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
-
-  // Load saved preferences
-  const savedPrefs = JSON.parse(localStorage.getItem('safepost_notification_prefs') || '{}');
-  const [complianceResults, setComplianceResults] = useState(savedPrefs.complianceResults !== false);
-  const [guidelineUpdates, setGuidelineUpdates] = useState(savedPrefs.guidelineUpdates !== false);
-  const [billingActivity, setBillingActivity] = useState(savedPrefs.billingActivity !== false);
-  const [newFeatures, setNewFeatures] = useState(savedPrefs.newFeatures !== false);
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
@@ -41,16 +34,6 @@ const NotificationPreferences: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSave = () => {
-    localStorage.setItem('safepost_notification_prefs', JSON.stringify({
-      complianceResults,
-      guidelineUpdates,
-      billingActivity,
-      newFeatures,
-    }));
-    navigate('/settings');
-  };
-
   const handleLogOut = async () => {
     sessionStorage.clear();
     await signOut();
@@ -62,12 +45,6 @@ const NotificationPreferences: React.FC = () => {
     { label: 'History', path: '/history' },
     { label: 'Settings', path: '/settings' },
   ];
-
-  const toggleClass = (enabled: boolean) =>
-    `relative w-11 h-6 rounded-full transition-colors duration-200 ${enabled ? 'bg-blue-600' : 'bg-gray-200 dark:bg-gray-600'}`;
-
-  const toggleDot = (enabled: boolean) =>
-    `absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-200 ${enabled ? 'translate-x-5' : 'translate-x-0'}`;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4] dark:bg-gray-900">
@@ -257,111 +234,22 @@ const NotificationPreferences: React.FC = () => {
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
               In-App Notifications
             </h1>
-            <p className="text-[14px] text-gray-500 dark:text-gray-300">
-              Choose which notifications you receive in the app
-            </p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700">
-            {/* Compliance Check Results */}
-            <div className="flex items-center justify-between p-6 md:px-8">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
-                  <CheckCircle2 className="w-4.5 h-4.5 text-blue-600" />
-                </div>
-                <div>
-                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Compliance Check Results</span>
-                  <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Get notified when your checks are complete</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setComplianceResults(!complianceResults)}
-                className={toggleClass(complianceResults)}
-              >
-                <span className={toggleDot(complianceResults)} />
-              </button>
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-8 text-center">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center mx-auto mb-4 dark:bg-blue-950">
+              <Bell className="w-6 h-6 text-blue-600" />
             </div>
-
-            <div className="border-t border-black/[0.06] dark:border-gray-700" />
-
-            {/* Guideline Updates */}
-            <div className="flex items-center justify-between p-6 md:px-8">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
-                  <BookOpen className="w-4.5 h-4.5 text-blue-600" />
-                </div>
-                <div>
-                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Guideline Updates</span>
-                  <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">AHPRA and TGA guideline changes</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setGuidelineUpdates(!guidelineUpdates)}
-                className={toggleClass(guidelineUpdates)}
-              >
-                <span className={toggleDot(guidelineUpdates)} />
-              </button>
-            </div>
-
-            <div className="border-t border-black/[0.06] dark:border-gray-700" />
-
-            {/* Billing Activity */}
-            <div className="flex items-center justify-between p-6 md:px-8">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
-                  <CreditCard className="w-4.5 h-4.5 text-blue-600" />
-                </div>
-                <div>
-                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Billing Activity</span>
-                  <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Payment confirmations and reminders</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setBillingActivity(!billingActivity)}
-                className={toggleClass(billingActivity)}
-              >
-                <span className={toggleDot(billingActivity)} />
-              </button>
-            </div>
-
-            <div className="border-t border-black/[0.06] dark:border-gray-700" />
-
-            {/* New Features */}
-            <div className="flex items-center justify-between p-6 md:px-8">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
-                  <Sparkles className="w-4.5 h-4.5 text-blue-600" />
-                </div>
-                <div>
-                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">New Features</span>
-                  <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Product updates and new capabilities</p>
-                </div>
-              </div>
-              <button
-                onClick={() => setNewFeatures(!newFeatures)}
-                className={toggleClass(newFeatures)}
-              >
-                <span className={toggleDot(newFeatures)} />
-              </button>
-            </div>
-
-            <div className="border-t border-black/[0.06] dark:border-gray-700" />
-
-            {/* Buttons */}
-            <div className="flex items-center gap-3 p-6 md:px-8">
-              <button
-                onClick={() => navigate('/settings')}
-                className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
-              >
-                Save Changes
-              </button>
-            </div>
+            <p className="text-[14px] text-gray-600 dark:text-gray-300 mb-6">
+              These preferences are now managed directly from the Settings page.
+            </p>
+            <button
+              onClick={() => navigate('/settings')}
+              className="inline-flex items-center gap-2 text-[13px] font-semibold text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Settings
+            </button>
           </div>
         </div>
       </main>
