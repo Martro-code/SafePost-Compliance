@@ -22,6 +22,7 @@ import UpdateCard from './UpdateCard';
 import UpdateBillingEmail from './UpdateBillingEmail';
 import UpdatePersonalDetails from './UpdatePersonalDetails';
 import UpdateContactDetails from './UpdateContactDetails';
+import UpgradeConfirmation from './UpgradeConfirmation';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsOfUse from './TermsOfUse';
 import ProtectedRoute from './ProtectedRoute';
@@ -66,6 +67,7 @@ const App: React.FC = () => {
           <Route path="/update-billing-email" element={<ProtectedRoute><UpdateBillingEmail /></ProtectedRoute>} />
           <Route path="/update-personal-details" element={<ProtectedRoute><UpdatePersonalDetails /></ProtectedRoute>} />
           <Route path="/update-contact-details" element={<ProtectedRoute><UpdateContactDetails /></ProtectedRoute>} />
+          <Route path="/upgrade-confirmation" element={<ProtectedRoute><UpgradeConfirmation /></ProtectedRoute>} />
         </Routes>
       </div>
     </>

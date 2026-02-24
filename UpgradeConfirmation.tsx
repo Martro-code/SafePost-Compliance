@@ -1,71 +1,40 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation, useSearchParams } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, LogOut, Check } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut, CreditCard, Info, CheckCircle } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 
-const plans = [
-  {
-    key: 'professional',
-    name: 'Professional',
-    monthlyPrice: 20,
-    yearlyPrice: 192,
-    yearlySaving: 48,
-    features: [
-      'Unlimited compliance checks',
-      'Compliant content rewrites (AI-generated alternatives)',
-      'Image and video content analysis',
-      'Compliance history tracking',
-    ],
-  },
-  {
-    key: 'proplus',
-    name: 'Pro+',
-    monthlyPrice: 49,
-    yearlyPrice: 470,
-    yearlySaving: 118,
-    features: [
-      'Everything in Professional, plus:',
-      'Multi-user access (up to 3 team members)',
-      'Basic online advertising compliance analysis',
-      'Custom compliance guidelines repository',
-    ],
-  },
-  {
-    key: 'ultra',
-    name: 'Ultra',
-    monthlyPrice: 200,
-    yearlyPrice: 1920,
-    yearlySaving: 480,
-    features: [
-      'Everything in Pro+, plus:',
-      'Unlimited compliance checks for social media AND online advertising',
-      'Multi-user access (up to 10 team members)',
-      'Advanced advertising compliance analysis',
-      'Bulk content review (upload multiple posts/ads at once)',
-      'Proactive notification of guideline changes',
-    ],
-  },
-];
+const plans: Record<string, { name: string; monthlyPrice: number; yearlyPrice: number }> = {
+  professional: { name: 'SafePost Professional', monthlyPrice: 20, yearlyPrice: 192 },
+  proplus: { name: 'SafePost Pro+', monthlyPrice: 49, yearlyPrice: 470 },
+  ultra: { name: 'SafePost Ultra', monthlyPrice: 200, yearlyPrice: 1920 },
+};
 
-const ChangePlan: React.FC = () => {
+const UpgradeConfirmation: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const [searchParams] = useSearchParams();
   const { userEmail, firstName, signOut } = useAuth();
-  const planName = sessionStorage.getItem('safepost_plan') || '';
-  const isUpgradeMode = searchParams.get('mode') === 'upgrade';
 
+  const planKey = searchParams.get('plan') || '';
+  const billing = searchParams.get('billing') || 'monthly';
+  const selectedPlan = plans[planKey];
+
+  const currentPlanName = sessionStorage.getItem('safepost_plan') || '';
   const planDisplayNames: Record<string, string> = {
     professional: 'SafePost Professional',
     proplus: 'SafePost Pro+',
     ultra: 'SafePost Ultra',
   };
-  const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
+  const dropdownPlanName = planDisplayNames[currentPlanName.toLowerCase()] || 'SafePost Professional';
 
-  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const price = selectedPlan
+    ? billing === 'yearly' ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice
+    : 0;
+  const billingLabel = billing === 'yearly' ? 'year' : 'month';
+  const formattedPrice = `$${price.toFixed(2)}/${billingLabel}`;
+
+  const [upgraded, setUpgraded] = useState(false);
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
@@ -77,22 +46,18 @@ const ChangePlan: React.FC = () => {
     navigate('/');
   };
 
+  const handleConfirmUpgrade = () => {
+    if (planKey) {
+      sessionStorage.setItem('safepost_plan', planKey);
+    }
+    setUpgraded(true);
+  };
+
   const navLinks = [
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'History', path: '/history' },
     { label: 'Settings', path: '/settings' },
   ];
-
-  const currentPlanKey = planName.toLowerCase();
-  const tierOrder = ['free', '', 'professional', 'proplus', 'ultra'];
-  const currentTierIndex = tierOrder.indexOf(currentPlanKey);
-
-  const availablePlans = isUpgradeMode
-    ? plans.filter((p) => tierOrder.indexOf(p.key) > currentTierIndex)
-    : plans.filter((p) => p.key !== currentPlanKey);
-
-  const isHighestPlan = isUpgradeMode && currentPlanKey === 'ultra';
-  const selectedPlanData = plans.find((p) => p.key === selectedPlan);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4] dark:bg-gray-900">
@@ -150,7 +115,7 @@ const ChangePlan: React.FC = () => {
                 <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
                 <button
                   onClick={handleLogOut}
-                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white"
+                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   Log Out
@@ -219,140 +184,125 @@ const ChangePlan: React.FC = () => {
       {/* Main Content */}
       <main className="flex-grow">
         <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
-          {/* Back to Dashboard */}
+          {/* Back to Plans */}
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/change-plan?mode=upgrade')}
             className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            Back to Plans
           </button>
 
           {/* Page Heading */}
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
-              {isUpgradeMode ? 'Upgrade your Plan' : 'Change your Plan'}
+              Confirm Your Upgrade
             </h1>
             <p className="text-[14px] text-gray-500 dark:text-gray-300">
-              {isUpgradeMode ? 'Choose a higher plan to unlock more features' : 'Pick one of the following plans'}
+              Review your new plan before confirming
             </p>
           </div>
 
-          {/* Highest Plan Message */}
-          {isHighestPlan && (
-            <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700 p-8 text-center">
-              <p className="text-[15px] font-medium text-gray-900 dark:text-white mb-4">You are already on our highest plan.</p>
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="text-[14px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
-              >
-                Back to Dashboard
-              </button>
-            </div>
-          )}
-
-          {/* Plan Card */}
-          {!isHighestPlan && (
+          {/* Card */}
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
-            {/* Billing Cycle Toggle */}
-            <div className="p-6 md:px-8 pb-0">
-              <div className="inline-flex rounded-lg border border-black/[0.06] dark:border-gray-600 p-0.5">
-                <button
-                  onClick={() => setBillingCycle('monthly')}
-                  className={`px-4 py-1.5 text-[13px] font-medium rounded-md transition-colors duration-200 ${
-                    billingCycle === 'monthly'
-                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
-                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                  }`}
-                >
-                  Monthly
-                </button>
-                <button
-                  onClick={() => setBillingCycle('yearly')}
-                  className={`px-4 py-1.5 text-[13px] font-medium rounded-md transition-colors duration-200 ${
-                    billingCycle === 'yearly'
-                      ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
-                      : 'text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                  }`}
-                >
-                  Yearly
-                </button>
-              </div>
-            </div>
+            {!upgraded ? (
+              <>
+                {/* Order Summary */}
+                <div className="p-6 md:p-8">
+                  <div className="flex items-center justify-between mb-1">
+                    <p className="text-[14px] font-semibold text-gray-900 dark:text-white">
+                      {selectedPlan?.name || 'Unknown Plan'}
+                    </p>
+                    <p className="text-[14px] font-medium text-gray-900 dark:text-white">{formattedPrice}</p>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[13px] text-gray-500 dark:text-gray-400">
+                      Billed {billing === 'yearly' ? 'annually' : 'monthly'}
+                    </p>
+                    <p className="text-[12px] text-gray-400 dark:text-gray-500">Incl. GST</p>
+                  </div>
 
-            {/* Plan Radio Options */}
-            {availablePlans.map((plan, index) => (
-              <div key={plan.key}>
-                {index > 0 && <div className="border-t border-black/[0.06] dark:border-gray-700" />}
-                <button
-                  onClick={() => setSelectedPlan(plan.key)}
-                  className="w-full flex items-center justify-between p-6 md:px-8 text-left transition-colors hover:bg-black/[0.01] dark:hover:bg-white/[0.02]"
-                >
-                  <div>
-                    <p className="text-[14px] font-medium text-gray-900 dark:text-white">{plan.name}</p>
-                    <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">
-                      {billingCycle === 'yearly'
-                        ? `$${plan.yearlyPrice.toLocaleString()}/year (save $${plan.yearlySaving})`
-                        : `$${plan.monthlyPrice}/month`}
+                  <div className="border-t border-black/[0.06] dark:border-gray-700 my-5" />
+
+                  <div className="flex items-center justify-between">
+                    <p className="text-[14px] font-semibold text-gray-900 dark:text-white">Total</p>
+                    <p className="text-[14px] font-semibold text-gray-900 dark:text-white">{formattedPrice}</p>
+                  </div>
+                </div>
+
+                <div className="border-t border-black/[0.06] dark:border-gray-700" />
+
+                {/* Payment Method */}
+                <div className="p-6 md:p-8">
+                  <p className="text-[11px] font-semibold text-gray-400 tracking-wider uppercase mb-3 dark:text-gray-500">Payment Method</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <CreditCard className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                      <div>
+                        <p className="text-[14px] font-medium text-gray-900 dark:text-white">Visa ending in 4242</p>
+                        <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">Expires 12/2027</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => navigate('/update-card')}
+                      className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300"
+                    >
+                      Update
+                    </button>
+                  </div>
+                </div>
+
+                <div className="border-t border-black/[0.06] dark:border-gray-700" />
+
+                {/* Info Notice */}
+                <div className="px-6 md:px-8 pt-5 pb-1">
+                  <div className="flex gap-3 p-4 bg-blue-50 rounded-xl dark:bg-blue-900/20">
+                    <Info className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <p className="text-[13px] text-blue-700 leading-relaxed dark:text-blue-300">
+                      Your new plan takes effect immediately. You will be charged the prorated difference for the remainder of your current billing period.
                     </p>
                   </div>
-                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                    selectedPlan === plan.key ? 'border-blue-600 bg-blue-600' : 'border-gray-300 dark:border-gray-600'
-                  }`}>
-                    {selectedPlan === plan.key && (
-                      <div className="w-2 h-2 rounded-full bg-white" />
-                    )}
-                  </div>
-                </button>
-              </div>
-            ))}
+                </div>
 
-            {/* Features Section (shown when a plan is selected) */}
-            {selectedPlanData && (
-              <>
-                <div className="border-t border-black/[0.06] dark:border-gray-700" />
-                <div className="p-6 md:px-8">
-                  <p className="text-[13px] font-semibold text-gray-700 mb-3 dark:text-gray-300">Features include:</p>
-                  <ul className="space-y-2.5">
-                    {selectedPlanData.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2.5">
-                        <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-[13px] text-gray-600 dark:text-gray-300">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="border-t border-black/[0.06] dark:border-gray-700 mt-5" />
+
+                {/* Buttons */}
+                <div className="flex items-center gap-3 p-6 md:px-8">
+                  <button
+                    onClick={() => navigate('/change-plan?mode=upgrade')}
+                    className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleConfirmUpgrade}
+                    className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
+                  >
+                    Confirm Upgrade
+                  </button>
                 </div>
               </>
+            ) : (
+              /* Success State */
+              <div className="p-6 md:p-8 text-center">
+                <div className="flex justify-center mb-4">
+                  <CheckCircle className="w-12 h-12 text-green-500" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-900 mb-2 dark:text-white">
+                  Plan Upgraded Successfully!
+                </h2>
+                <p className="text-[14px] text-gray-500 mb-6 dark:text-gray-300">
+                  Your plan has been upgraded to {selectedPlan?.name || 'your new plan'}. Your new features are now active.
+                </p>
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  className="h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
+                >
+                  Go to Dashboard
+                </button>
+              </div>
             )}
-
-            <div className="border-t border-black/[0.06] dark:border-gray-700" />
-
-            {/* Bottom Actions */}
-            <div className="p-6 md:px-8 flex items-center gap-3">
-              <button
-                onClick={() => navigate(isUpgradeMode ? '/dashboard' : '/profile')}
-                className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
-              >
-                Cancel
-              </button>
-              <button
-                disabled={!selectedPlan}
-                onClick={() => {
-                  if (isUpgradeMode && selectedPlan) {
-                    navigate(`/upgrade-confirmation?plan=${selectedPlan}&billing=${billingCycle}`);
-                  }
-                }}
-                className={`flex-1 h-11 text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98] ${
-                  selectedPlan
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                    : 'bg-blue-600/50 text-white/70 cursor-not-allowed'
-                }`}
-              >
-                {isUpgradeMode ? 'Upgrade Plan' : 'Change Plan'}
-              </button>
-            </div>
           </div>
-          )}
         </div>
       </main>
 
@@ -424,4 +374,4 @@ const ChangePlan: React.FC = () => {
   );
 };
 
-export default ChangePlan;
+export default UpgradeConfirmation;
