@@ -369,8 +369,8 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Upgrade CTA - only show if no paid plan */}
-              {!hasPaidPlan && (
+              {/* Upgrade CTA - only show if no paid plan and not on Ultra */}
+              {!hasPaidPlan && planName.toLowerCase() !== 'ultra' && (
                 <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6 dark:bg-blue-950 dark:border-blue-900">
                   <div className="flex items-center gap-2.5 mb-3">
                     <Rocket className="w-5 h-5 text-blue-600" />
@@ -395,7 +395,7 @@ const Dashboard: React.FC = () => {
                     </li>
                   </ul>
                   <button
-                    onClick={() => navigate('/pricing/medical-practitioners')}
+                    onClick={() => navigate('/change-plan?mode=upgrade')}
                     className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
                   >
                     Upgrade Now
