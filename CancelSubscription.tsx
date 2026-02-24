@@ -467,19 +467,19 @@ const CancelSubscription: React.FC = () => {
                 {/* Info box */}
                 <div className="bg-gray-50 rounded-xl p-5 space-y-3 dark:bg-gray-700/50">
                   <div className="flex items-start gap-2.5">
-                    <span className="text-green-500 text-[14px] mt-0.5 flex-shrink-0">&#10003;</span>
+                    <span className="text-green-500 text-[14px] leading-none mt-0.5 flex-shrink-0">&#10003;</span>
                     <p className="text-[13px] text-gray-600 dark:text-gray-300">Your access continues until {billingEndDate}</p>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <span className="text-green-500 text-[14px] mt-0.5 flex-shrink-0">&#10003;</span>
+                    <span className="text-green-500 text-[14px] leading-none mt-0.5 flex-shrink-0">&#10003;</span>
                     <p className="text-[13px] text-gray-600 dark:text-gray-300">Your compliance check history will be preserved</p>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <span className="text-green-500 text-[14px] mt-0.5 flex-shrink-0">&#10003;</span>
+                    <span className="text-green-500 text-[14px] leading-none mt-0.5 flex-shrink-0">&#10003;</span>
                     <p className="text-[13px] text-gray-600 dark:text-gray-300">You can reactivate your subscription at any time</p>
                   </div>
                   <div className="flex items-start gap-2.5">
-                    <span className="text-green-500 text-[14px] mt-0.5 flex-shrink-0">&#10003;</span>
+                    <span className="text-green-500 text-[14px] leading-none mt-0.5 flex-shrink-0">&#10003;</span>
                     <p className="text-[13px] text-gray-600 dark:text-gray-300">No further charges will be made after your access ends</p>
                   </div>
                 </div>
