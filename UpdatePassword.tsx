@@ -76,7 +76,7 @@ const UpdatePassword: React.FC = () => {
             </nav>
           </div>
 
-          <div className="hidden md:block relative">
+          <div className="hidden md:flex items-center justify-end min-w-[140px] relative">
             <button
               onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
               onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
