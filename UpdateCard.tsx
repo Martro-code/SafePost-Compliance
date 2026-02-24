@@ -189,7 +189,7 @@ const UpdateCard: React.FC = () => {
             <div className="p-6 md:p-8 space-y-5">
               {/* Name on Card */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Name on card</label>
+                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Name on Card</label>
                 <input
                   type="text"
                   value={nameOnCard}
@@ -222,7 +222,7 @@ const UpdateCard: React.FC = () => {
               {/* Expiry + CVC */}
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <label className="block text-[13px] font-semibold text-gray-700 mb-2">Expiry date</label>
+                  <label className="block text-[13px] font-semibold text-gray-700 mb-2">Expiry Date</label>
                   <input
                     type="text"
                     value={expiry}
