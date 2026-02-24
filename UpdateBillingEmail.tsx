@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, CreditCard, LogOut } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 
-const UpdateCard: React.FC = () => {
+const UpdateBillingEmail: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { userEmail, firstName, signOut } = useAuth();
@@ -17,12 +17,10 @@ const UpdateCard: React.FC = () => {
   };
   const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
 
-  // Form state
-  const [nameOnCard, setNameOnCard] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiry, setExpiry] = useState('');
-  const [cvc, setCvc] = useState('');
-  const [setAsDefault, setSetAsDefault] = useState(false);
+  // Pre-populate from sessionStorage
+  const [billingEmail, setBillingEmail] = useState(
+    sessionStorage.getItem('safepost_signup_email') || ''
+  );
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
@@ -177,96 +175,27 @@ const UpdateCard: React.FC = () => {
           {/* Page Heading */}
           <div className="mb-8">
             <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-              Update your Card
+              Update Billing Email
             </h1>
             <p className="text-[14px] text-gray-500">
-              Your new card will replace your current card
+              Your receipts and invoices will be sent to this address
             </p>
           </div>
 
-          {/* Update Card Form */}
+          {/* Update Billing Email Form */}
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]">
             <div className="p-6 md:p-8 space-y-5">
-              {/* Name on Card */}
+              {/* Billing Email */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Name on Card</label>
+                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Billing Email</label>
                 <input
-                  type="text"
-                  value={nameOnCard}
-                  onChange={(e) => setNameOnCard(e.target.value)}
-                  placeholder="Name on card"
+                  type="email"
+                  value={billingEmail}
+                  onChange={(e) => setBillingEmail(e.target.value)}
+                  placeholder="Enter your billing email address"
                   className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
                 />
-              </div>
-
-              {/* Card Number */}
-              <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Card Number</label>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={cardNumber}
-                    onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, '').slice(0, 16);
-                      const formatted = raw.replace(/(.{4})/g, '$1 ').trim();
-                      setCardNumber(formatted);
-                    }}
-                    placeholder="Card number"
-                    inputMode="numeric"
-                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 pr-12"
-                  />
-                  <CreditCard className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                </div>
-              </div>
-
-              {/* Expiry + CVC */}
-              <div className="flex gap-4">
-                <div className="flex-1">
-                  <label className="block text-[13px] font-semibold text-gray-700 mb-2">Expiry Date</label>
-                  <input
-                    type="text"
-                    value={expiry}
-                    onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, '').slice(0, 4);
-                      if (raw.length <= 2) {
-                        setExpiry(raw);
-                      } else {
-                        setExpiry(raw.slice(0, 2) + '/' + raw.slice(2));
-                      }
-                    }}
-                    placeholder="MM/YY"
-                    inputMode="numeric"
-                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                  />
-                </div>
-                <div className="flex-1">
-                  <label className="block text-[13px] font-semibold text-gray-700 mb-2">CVC</label>
-                  <input
-                    type="text"
-                    value={cvc}
-                    onChange={(e) => {
-                      const raw = e.target.value.replace(/\D/g, '').slice(0, 3);
-                      setCvc(raw);
-                    }}
-                    placeholder="CVC"
-                    inputMode="numeric"
-                    maxLength={3}
-                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                  />
-                </div>
-              </div>
-
-              {/* Default payment method checkbox */}
-              <div>
-                <label className="flex items-center gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={setAsDefault}
-                    onChange={(e) => setSetAsDefault(e.target.checked)}
-                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-[13px] text-gray-600">Set as default payment method</span>
-                </label>
+                <p className="text-[12px] text-gray-400 mt-1.5">Receipts and invoices will be sent to this address.</p>
               </div>
             </div>
 
@@ -281,7 +210,7 @@ const UpdateCard: React.FC = () => {
                 Cancel
               </button>
               <button className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]">
-                Update Card
+                Save Changes
               </button>
             </div>
           </div>
@@ -356,4 +285,4 @@ const UpdateCard: React.FC = () => {
   );
 };
 
-export default UpdateCard;
+export default UpdateBillingEmail;

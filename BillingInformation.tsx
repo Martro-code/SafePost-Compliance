@@ -248,7 +248,7 @@ const BillingInformation: React.FC = () => {
                     <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Billing Email</h3>
                   </div>
                 </div>
-                <button className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                <button onClick={() => navigate('/update-billing-email')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors">
                   Edit
                 </button>
               </div>
@@ -297,21 +297,6 @@ const BillingInformation: React.FC = () => {
               ) : (
                 <p className="text-[14px] text-gray-500">No active plan</p>
               )}
-            </div>
-
-            <div className="border-t border-black/[0.06]" />
-
-            {/* Buttons */}
-            <div className="flex items-center gap-3 p-6 md:px-8">
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
-              >
-                Cancel
-              </button>
-              <button className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30">
-                Update Card
-              </button>
             </div>
           </div>
         </div>
