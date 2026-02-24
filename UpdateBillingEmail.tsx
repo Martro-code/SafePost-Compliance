@@ -56,7 +56,7 @@ const UpdateBillingEmail: React.FC = () => {
                   className={`px-3.5 py-2 text-[13px] font-medium rounded-lg transition-all duration-200 ${
                     location.pathname === link.path
                       ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.08]'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-gray-900'
                   }`}
                 >
                   {link.label}
@@ -132,7 +132,7 @@ const UpdateBillingEmail: React.FC = () => {
                 className={`block w-full text-left px-3 py-2.5 text-[13px] font-medium rounded-lg transition-all duration-200 ${
                   location.pathname === link.path
                     ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
-                    : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.08]'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-gray-900'
                 }`}
               >
                 {link.label}
