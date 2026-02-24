@@ -68,9 +68,9 @@ const UpdateContactDetails: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+    <div className="min-h-screen flex flex-col bg-[#f7f7f4] dark:bg-gray-900">
       {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
+      <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06] dark:bg-gray-900 dark:border-gray-700">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <Link to="/dashboard">
@@ -83,8 +83,8 @@ const UpdateContactDetails: React.FC = () => {
                   onClick={() => navigate(link.path)}
                   className={`px-3.5 py-2 text-[13px] font-medium rounded-lg transition-all duration-200 ${
                     location.pathname === link.path
-                      ? 'text-gray-900 bg-black/[0.04]'
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04]'
+                      ? 'text-gray-900 bg-black/[0.04] dark:text-white dark:bg-white/[0.08]'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.08]'
                   }`}
                 >
                   {link.label}
@@ -97,31 +97,31 @@ const UpdateContactDetails: React.FC = () => {
             <button
               onClick={() => setAccountDropdownOpen(!accountDropdownOpen)}
               onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
-              className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white"
             >
               {firstName || 'My Account'}
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accountDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
             {accountDropdownOpen && (
-              <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+              <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in dark:bg-gray-800 dark:border-gray-700">
                 <div className="px-4 py-2.5">
                   <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
                   <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
                 </div>
-                <div className="border-t border-black/[0.06] my-1" />
-                <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
+                <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
                   Profile
                 </button>
-                <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
                   Billing
                 </button>
-                <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
                   Settings
                 </button>
-                <div className="border-t border-black/[0.06] my-1" />
+                <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
                 <button
                   onClick={handleLogOut}
-                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
+                  className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                   Log Out
@@ -132,7 +132,7 @@ const UpdateContactDetails: React.FC = () => {
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
+            className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -144,39 +144,39 @@ const UpdateContactDetails: React.FC = () => {
             mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
-          <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
+          <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] dark:border-gray-700 space-y-1">
             <div className="px-3 py-2.5">
               <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
               <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
             </div>
-            <div className="border-t border-black/[0.06] my-1" />
+            <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
             {navLinks.map((link) => (
               <button
                 key={link.path}
                 onClick={() => { navigate(link.path); setMobileMenuOpen(false); }}
                 className={`block w-full text-left px-3 py-2.5 text-[13px] font-medium rounded-lg transition-all duration-200 ${
                   location.pathname === link.path
-                    ? 'text-gray-900 bg-black/[0.04]'
-                    : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04]'
+                    ? 'text-gray-900 bg-black/[0.04] dark:text-white dark:bg-white/[0.08]'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.08]'
                 }`}
               >
                 {link.label}
               </button>
             ))}
-            <div className="border-t border-black/[0.06] my-1" />
-            <button onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+            <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
+            <button onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
               Profile
             </button>
-            <button onClick={() => { navigate('/billing'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+            <button onClick={() => { navigate('/billing'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
               Billing
             </button>
-            <button onClick={() => { navigate('/settings'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+            <button onClick={() => { navigate('/settings'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
               Settings
             </button>
-            <div className="border-t border-black/[0.06] my-1" />
+            <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
             <button
               onClick={handleLogOut}
-              className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white"
             >
               <LogOut className="w-3.5 h-3.5" />
               Log Out
@@ -190,86 +190,86 @@ const UpdateContactDetails: React.FC = () => {
         <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
           <button
             onClick={() => navigate('/profile')}
-            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
+            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Profile
           </button>
 
           <div className="mb-8">
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
               Contact Details
             </h1>
-            <p className="text-[14px] text-gray-500">
+            <p className="text-[14px] text-gray-500 dark:text-gray-300">
               Update your contact and practice information
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]">
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 md:p-8 space-y-4">
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Email</label>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Email</label>
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
-                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
 
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Mobile Number</label>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Mobile Number</label>
                 <input
                   type="tel"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
                   onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
                   placeholder="Enter your mobile number"
-                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
 
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Practice Name</label>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Practice Name</label>
                 <input
                   type="text"
                   value={practiceName}
                   onChange={(e) => setPracticeName(e.target.value)}
                   placeholder="Enter your practice name"
-                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
 
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Street Address</label>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Street Address</label>
                 <input
                   type="text"
                   value={streetAddress}
                   onChange={(e) => setStreetAddress(e.target.value)}
                   placeholder="Enter your street address"
-                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
 
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Suburb</label>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Suburb</label>
                 <input
                   type="text"
                   value={suburb}
                   onChange={(e) => setSuburb(e.target.value)}
                   placeholder="Enter your suburb"
-                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
 
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">State</label>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">State</label>
                 <div className="relative">
                   <select
                     value={state}
                     onChange={(e) => setState(e.target.value)}
-                    className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none cursor-pointer"
+                    className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none cursor-pointer dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   >
                     <option value="" disabled>Select your state</option>
                     <option value="NSW">NSW</option>
@@ -286,7 +286,7 @@ const UpdateContactDetails: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-[13px] font-medium text-gray-700 mb-1.5">Postcode</label>
+                <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Postcode</label>
                 <input
                   type="tel"
                   value={postcode}
@@ -294,17 +294,17 @@ const UpdateContactDetails: React.FC = () => {
                   onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
                   maxLength={4}
                   placeholder="Enter your postcode"
-                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
             </div>
 
-            <div className="border-t border-black/[0.06]" />
+            <div className="border-t border-black/[0.06] dark:border-gray-700" />
 
             <div className="flex items-center gap-3 p-6 md:px-8">
               <button
                 onClick={() => navigate('/profile')}
-                className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
+                className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
               >
                 Cancel
               </button>
@@ -320,60 +320,60 @@ const UpdateContactDetails: React.FC = () => {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
+      <footer className="bg-[#f7f7f4] dark:bg-gray-900 border-t border-black/[0.06] dark:border-gray-700 pt-14 pb-10">
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
             <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Features</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Features</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/features')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Features</button></li>
-                <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Pricing</button></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Demo</a></li>
+                <li><button onClick={() => navigate('/features')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Features</button></li>
+                <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Pricing</button></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Demo</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Pricing</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Pricing</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Medical Practitioners</button></li>
-                <li><button onClick={() => navigate('/pricing/medical-practices')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Medical Practices</button></li>
+                <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Medical Practitioners</button></li>
+                <li><button onClick={() => navigate('/pricing/medical-practices')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Medical Practices</button></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Company</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About us</button></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
+                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">About us</button></li>
+                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">News</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Resources</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Resources</h4>
               <ul className="space-y-2.5">
-                <li><a href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Advertising hub</a></li>
-                <li><a href="https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Code of conduct</a></li>
-                <li><a href="https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">TGA guidelines</a></li>
+                <li><a href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Advertising hub</a></li>
+                <li><a href="https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Code of conduct</a></li>
+                <li><a href="https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">TGA guidelines</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Legal</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Legal</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/terms-of-use')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Terms of Use</button></li>
-                <li><button onClick={() => navigate('/privacy-policy')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Privacy Policy</button></li>
+                <li><button onClick={() => navigate('/terms-of-use')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Terms of Use</button></li>
+                <li><button onClick={() => navigate('/privacy-policy')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Privacy Policy</button></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Connect</h4>
+              <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Connect</h4>
               <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/contact')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Contact us</button></li>
+                <li><button onClick={() => navigate('/contact')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Contact us</button></li>
               </ul>
             </div>
           </div>
 
-          <div className="mt-14 pt-6 border-t border-black/[0.06]">
+          <div className="mt-14 pt-6 border-t border-black/[0.06] dark:border-gray-700">
             <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
               Ahpra and the National Boards do not provide pre-approval for advertising.
