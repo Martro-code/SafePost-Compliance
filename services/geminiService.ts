@@ -94,7 +94,7 @@ You must return a structured JSON analysis of the post content provided.`;
 
 export const analyzePost = async (postContent: string, image?: { base64: string, mimeType: string }): Promise<AnalysisResult> => {
   // Use process.env.API_KEY directly as required by guidelines
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
   
   const parts: any[] = [{ text: `Analyse this social media post for Ahpra compliance: "${postContent}"` }];
 
@@ -109,7 +109,7 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-2.0-flash',
       contents: { parts },
       config: {
         systemInstruction: SYSTEM_INSTRUCTION,
@@ -166,7 +166,7 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
 };
 
 export const generateCompliantRewrites = async (originalPost: string, issues: ComplianceIssue[]): Promise<RewrittenPost[]> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = new GoogleGenAI({ apiKey: import.meta.env.VITE_GEMINI_API_KEY });
 
   const promptText = `
     The following social media post has been flagged with non-compliant issues under Australian Ahpra law.
@@ -185,7 +185,7 @@ export const generateCompliantRewrites = async (originalPost: string, issues: Co
 
   try {
     const response = await ai.models.generateContent({
-      model: 'gemini-3-pro-preview',
+      model: 'gemini-2.0-flash',
       contents: promptText,
       config: {
         responseMimeType: "application/json",

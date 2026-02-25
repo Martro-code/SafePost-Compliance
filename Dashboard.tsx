@@ -3,6 +3,7 @@ import { useNavigate, Link, useSearchParams, useLocation } from 'react-router-do
 import { ChevronDown, Menu, X, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, LogOut, Bell } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
+import { useComplianceChecker } from './src/hooks/useComplianceChecker';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const Dashboard: React.FC = () => {
   const [searchParams] = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { userEmail, firstName, signOut } = useAuth();
+  const checker = useComplianceChecker();
 
   // Read plan info from URL params or sessionStorage
   const planName = searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
@@ -69,10 +71,11 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  const handleCheckCompliance = () => {
+  const handleCheckCompliance = async () => {
     if (!content.trim()) return;
     setView('loading');
-    setTimeout(() => setView('results'), 2000);
+    await checker.runCheck(content);
+    setView('results');
   };
 
   const handleNewCheck = () => {
@@ -378,48 +381,128 @@ const Dashboard: React.FC = () => {
                 </div>
               )}
 
-              {view === 'results' && (
+              {view === 'results' && checker.result && (
                 <div className="space-y-4">
                   {/* Verdict card */}
-                  <div className="bg-red-50 rounded-2xl border border-red-200 p-6 md:p-8">
+                  <div className={`rounded-2xl border p-6 md:p-8 ${
+                    checker.result.overall_status === 'compliant'
+                      ? 'bg-green-50 border-green-200'
+                      : checker.result.overall_status === 'non_compliant'
+                      ? 'bg-red-50 border-red-200'
+                      : 'bg-amber-50 border-amber-200'
+                  }`}>
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
-                        <XCircle className="w-5 h-5 text-red-600" />
+                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
+                        checker.result.overall_status === 'compliant'
+                          ? 'bg-green-100'
+                          : checker.result.overall_status === 'non_compliant'
+                          ? 'bg-red-100'
+                          : 'bg-amber-100'
+                      }`}>
+                        {checker.result.overall_status === 'compliant'
+                          ? <CheckCircle2 className="w-5 h-5 text-green-600" />
+                          : checker.result.overall_status === 'non_compliant'
+                          ? <XCircle className="w-5 h-5 text-red-600" />
+                          : <AlertTriangle className="w-5 h-5 text-amber-600" />
+                        }
                       </div>
                       <div>
-                        <p className="text-[11px] font-semibold text-red-500 uppercase tracking-wider">Verdict</p>
-                        <h3 className="text-lg font-bold text-red-700">Non-Compliant</h3>
+                        <p className={`text-[11px] font-semibold uppercase tracking-wider ${
+                          checker.result.overall_status === 'compliant'
+                            ? 'text-green-500'
+                            : checker.result.overall_status === 'non_compliant'
+                            ? 'text-red-500'
+                            : 'text-amber-500'
+                        }`}>Verdict</p>
+                        <h3 className={`text-lg font-bold ${
+                          checker.result.overall_status === 'compliant'
+                            ? 'text-green-700'
+                            : checker.result.overall_status === 'non_compliant'
+                            ? 'text-red-700'
+                            : 'text-amber-700'
+                        }`}>
+                          {checker.result.overall_status === 'compliant'
+                            ? 'Compliant'
+                            : checker.result.overall_status === 'non_compliant'
+                            ? 'Non-Compliant'
+                            : 'Requires Review'
+                          }
+                        </h3>
                       </div>
                     </div>
-                    <p className="text-[14px] text-red-700/80 leading-relaxed mb-5">
-                      This content contains testimonial-style claims and uses superlative language that may breach AHPRA advertising guidelines under Section 133 of the National Law.
+
+                    <p className={`text-[14px] leading-relaxed mb-5 ${
+                      checker.result.overall_status === 'compliant'
+                        ? 'text-green-700/80'
+                        : checker.result.overall_status === 'non_compliant'
+                        ? 'text-red-700/80'
+                        : 'text-amber-700/80'
+                    }`}>
+                      {checker.result.summary}
                     </p>
 
-                    <div className="space-y-3">
-                      <h4 className="text-[12px] font-semibold text-red-600 uppercase tracking-wider">Identified Risks</h4>
-                      <div className="space-y-2">
-                        <div className="flex items-start gap-2.5">
-                          <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                          <p className="text-[13px] text-red-700/80">Use of patient testimonials and star ratings</p>
-                        </div>
-                        <div className="flex items-start gap-2.5">
-                          <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                          <p className="text-[13px] text-red-700/80">Superlative claims that could create unreasonable expectations</p>
-                        </div>
-                        <div className="flex items-start gap-2.5">
-                          <AlertTriangle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                          <p className="text-[13px] text-red-700/80">Missing required disclaimers for advertised services</p>
+                    {/* Issues list */}
+                    {checker.result.issues.length > 0 && (
+                      <div className="space-y-3">
+                        <h4 className={`text-[12px] font-semibold uppercase tracking-wider ${
+                          checker.result.overall_status === 'compliant'
+                            ? 'text-green-600'
+                            : checker.result.overall_status === 'non_compliant'
+                            ? 'text-red-600'
+                            : 'text-amber-600'
+                        }`}>
+                          Identified Issues ({checker.result.issues.length})
+                        </h4>
+                        <div className="space-y-2">
+                          {checker.result.issues.map((issue, i) => (
+                            <div key={i} className="flex items-start gap-2.5">
+                              {issue.severity === 'critical'
+                                ? <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                                : issue.severity === 'warning'
+                                ? <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
+                                : <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
+                              }
+                              <div>
+                                <p className="text-[13px] text-gray-800 font-medium">{issue.plain_english_summary}</p>
+                                <p className="text-[12px] text-gray-500 mt-0.5">{issue.explanation}</p>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                    </div>
+                    )}
+
+                    {/* Compliant elements */}
+                    {checker.result.compliant_elements.length > 0 && (
+                      <div className="mt-4 space-y-2">
+                        <h4 className="text-[12px] font-semibold text-green-600 uppercase tracking-wider">
+                          Compliant Elements
+                        </h4>
+                        {checker.result.compliant_elements.map((el, i) => (
+                          <div key={i} className="flex items-start gap-2.5">
+                            <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
+                            <p className="text-[13px] text-gray-700">{el}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
+
+                  {/* Revised suggestion */}
+                  {checker.result.revised_content_suggestion && (
+                    <div className="bg-white rounded-2xl border border-black/[0.06] p-6">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Sparkles className="w-4 h-4 text-purple-500" />
+                        <h4 className="text-[13px] font-semibold text-gray-800">Suggested Compliant Revision</h4>
+                      </div>
+                      <pre className="text-[13px] text-gray-700 whitespace-pre-wrap font-sans leading-relaxed bg-purple-50 rounded-xl p-4 border border-purple-100">
+                        {checker.result.revised_content_suggestion}
+                      </pre>
+                    </div>
+                  )}
 
                   {/* Action buttons */}
                   <div className="flex flex-col sm:flex-row gap-3">
-                    <button className="flex-1 h-12 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2">
-                      <Sparkles className="w-4 h-4" />
-                      Generate Compliant Rewrites
-                    </button>
                     <button
                       onClick={handleNewCheck}
                       className="flex-1 h-12 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
@@ -429,7 +512,25 @@ const Dashboard: React.FC = () => {
                   </div>
                 </div>
               )}
+
+              {view === 'results' && checker.error && (
+                <div className="bg-red-50 rounded-2xl border border-red-200 p-6">
+                  <div className="flex items-center gap-3 mb-2">
+                    <XCircle className="w-5 h-5 text-red-500" />
+                    <h3 className="text-[14px] font-semibold text-red-700">Analysis Failed</h3>
+                  </div>
+                  <p className="text-[13px] text-red-600">{checker.error}</p>
+                  <button
+                    onClick={handleNewCheck}
+                    className="mt-4 text-[13px] font-medium text-blue-600 hover:text-blue-700"
+                  >
+                    Try Again
+                  </button>
+                </div>
+              )}
+
             </div>
+            {/* END LEFT COLUMN */}
 
             {/* RIGHT SIDEBAR */}
             <div className="space-y-6 order-1 md:order-2">

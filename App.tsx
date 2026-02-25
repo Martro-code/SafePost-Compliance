@@ -30,6 +30,7 @@ import EmailPreferences from './EmailPreferences';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsOfUse from './TermsOfUse';
 import ProtectedRoute from './ProtectedRoute';
+import { ComplianceCheckerPage } from './src/components/ComplianceCheckerPage';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -76,6 +77,7 @@ const App: React.FC = () => {
           <Route path="/two-factor-auth" element={<ProtectedRoute><TwoFactorAuth /></ProtectedRoute>} />
           <Route path="/notification-preferences" element={<ProtectedRoute><NotificationPreferences /></ProtectedRoute>} />
           <Route path="/email-preferences" element={<ProtectedRoute><EmailPreferences /></ProtectedRoute>} />
+          <Route path="/compliance-checker" element={<ProtectedRoute><ComplianceCheckerPage /></ProtectedRoute>} />
         </Routes>
       </div>
     </>
