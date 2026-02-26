@@ -463,8 +463,8 @@ const Dashboard: React.FC = () => {
                                 : <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
                               }
                               <div>
-                                <p className="text-[13px] text-gray-800 font-medium">{issue.plain_english_summary}</p>
-                                <p className="text-[12px] text-gray-500 mt-0.5">{issue.explanation}</p>
+                                 <p className="text-[13px] text-gray-800 font-medium">{issue.finding}</p>
+                                 <p className="text-[12px] text-gray-500 mt-0.5">{issue.recommendation}</p>
                               </div>
                             </div>
                           ))}
@@ -473,7 +473,7 @@ const Dashboard: React.FC = () => {
                     )}
 
                     {/* Compliant elements */}
-                    {checker.result.compliant_elements.length > 0 && (
+                    {false && (
                       <div className="mt-4 space-y-2">
                         <h4 className="text-[12px] font-semibold text-green-600 uppercase tracking-wider">
                           Compliant Elements
@@ -489,7 +489,7 @@ const Dashboard: React.FC = () => {
                   </div>
 
                   {/* Revised suggestion */}
-                  {checker.result.revised_content_suggestion && (
+                  {false && (
                     <div className="bg-white rounded-2xl border border-black/[0.06] p-6">
                       <div className="flex items-center gap-2 mb-3">
                         <Sparkles className="w-4 h-4 text-purple-500" />

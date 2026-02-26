@@ -2,11 +2,38 @@ import { useState, useCallback } from 'react';
 import { analyzePost } from '../../services/geminiService';
 import { AnalysisResult, ComplianceStatus } from '../../types';
 import { supabase } from '../services/supabaseClient';
-import {
-  fetchUserComplianceHistory,
-  deleteComplianceCheck,
-  type SavedComplianceCheck,
-} from '../services/supabaseService';
+
+export interface SavedComplianceCheck {
+  id: string;
+  created_at: string;
+  user_id: string;
+  content_text: string;
+  content_type: string;
+  platform: string;
+  overall_status: string;
+  compliance_score: number;
+  result_json: any;
+  notes?: string;
+}
+
+async function fetchUserComplianceHistory(userId: string): Promise<SavedComplianceCheck[]> {
+  const { data, error } = await supabase
+    .from('compliance_checks')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(20);
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
+async function deleteComplianceCheck(id: string): Promise<void> {
+  const { error } = await supabase
+    .from('compliance_checks')
+    .delete()
+    .eq('id', id);
+  if (error) throw new Error(error.message);
+}
 
 export type CheckerStep = 'idle' | 'analyzing' | 'complete' | 'error';
 
