@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { AnalysisResult, ComplianceStatus, ComplianceIssue, RewrittenPost } from '../types';
+import { FAQ_CONTEXT } from './safepost_faq_prompt_context';
 
 const client = new Anthropic({
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
@@ -48,7 +49,9 @@ You must return a valid JSON object in this exact structure with no markdown, no
       "recommendation": "How to fix the content to be compliant."
     }
   ]
-}`;
+}
+  
+${FAQ_CONTEXT}`;
 
 export const analyzePost = async (postContent: string, image?: { base64: string, mimeType: string }): Promise<AnalysisResult> => {
   try {
