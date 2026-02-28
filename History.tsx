@@ -6,6 +6,7 @@ import {
   Filter, Trash2, ExternalLink, ChevronRight, FileText, Lock,
   ChevronLeft
 } from 'lucide-react';
+import jsPDF from 'jspdf';
 import SafePostLogo from './components/SafePostLogo';
 import LoggedInFooter from './src/components/LoggedInFooter';
 import { useAuth } from './useAuth';
@@ -86,28 +87,175 @@ const CheckRow: React.FC<{
 }> = ({ check, onView, onDelete, isUltra }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [showPdfTooltip, setShowPdfTooltip] = useState(false);
-  const [showPdfToast, setShowPdfToast] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const cfg = getStatusConfig(check.overall_status);
   const issueCount = check.result_json?.issues?.length ?? 0;
   const criticalCount = check.result_json?.issues?.filter(
     (i: any) => i.severity?.toLowerCase() === 'critical'
   ).length ?? 0;
 
-  const handleExportPdf = () => {
+  const handleExportPdf = async () => {
     if (!isUltra) return;
-    setShowPdfToast(true);
-    setTimeout(() => setShowPdfToast(false), 3000);
+    setIsExporting(true);
+    try {
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const margin = 15;
+      const contentWidth = pageWidth - margin * 2;
+      let y = margin;
+
+      // Title
+      pdf.setFontSize(18);
+      pdf.setFont('helvetica', 'bold');
+      pdf.text('SafePost\u2122 Compliance Report', margin, y);
+      y += 10;
+
+      // Date
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(100, 100, 100);
+      const checkDate = new Date(check.created_at).toLocaleDateString('en-AU', {
+        day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
+      });
+      pdf.text(`Date: ${checkDate}`, margin, y);
+      y += 8;
+
+      // Status
+      const statusLabel = getStatusConfig(check.overall_status).label;
+      pdf.setFontSize(12);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(0, 0, 0);
+      pdf.text(`Status: ${statusLabel}`, margin, y);
+      y += 10;
+
+      // Divider
+      pdf.setDrawColor(200, 200, 200);
+      pdf.line(margin, y, pageWidth - margin, y);
+      y += 8;
+
+      // Content assessed
+      pdf.setFontSize(11);
+      pdf.setFont('helvetica', 'bold');
+      pdf.setTextColor(0, 0, 0);
+      pdf.text('Content Assessed', margin, y);
+      y += 6;
+      pdf.setFontSize(10);
+      pdf.setFont('helvetica', 'normal');
+      pdf.setTextColor(60, 60, 60);
+      const contentLines = pdf.splitTextToSize(check.content_text || '', contentWidth);
+      for (const line of contentLines) {
+        if (y > pdf.internal.pageSize.getHeight() - margin) { pdf.addPage(); y = margin; }
+        pdf.text(line, margin, y);
+        y += 5;
+      }
+      y += 6;
+
+      // Summary
+      const resultJson = check.result_json;
+      if (resultJson?.summary || resultJson?.overallVerdict) {
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setTextColor(0, 0, 0);
+        pdf.text('Summary', margin, y);
+        y += 6;
+        pdf.setFontSize(10);
+        pdf.setFont('helvetica', 'normal');
+        pdf.setTextColor(60, 60, 60);
+        const summaryText = resultJson.summary || resultJson.overallVerdict || '';
+        const summaryLines = pdf.splitTextToSize(summaryText, contentWidth);
+        for (const line of summaryLines) {
+          if (y > pdf.internal.pageSize.getHeight() - margin) { pdf.addPage(); y = margin; }
+          pdf.text(line, margin, y);
+          y += 5;
+        }
+        y += 6;
+      }
+
+      // Issues
+      const issues = resultJson?.issues ?? [];
+      if (issues.length > 0) {
+        pdf.setFontSize(11);
+        pdf.setFont('helvetica', 'bold');
+        pdf.setTextColor(0, 0, 0);
+        pdf.text(`Issues (${issues.length})`, margin, y);
+        y += 7;
+
+        for (let i = 0; i < issues.length; i++) {
+          const issue = issues[i];
+          if (y > pdf.internal.pageSize.getHeight() - 30) { pdf.addPage(); y = margin; }
+
+          // Severity + finding
+          pdf.setFontSize(10);
+          pdf.setFont('helvetica', 'bold');
+          const sevLabel = issue.severity?.toLowerCase() === 'critical' ? '[CRITICAL]' : '[WARNING]';
+          pdf.setTextColor(issue.severity?.toLowerCase() === 'critical' ? 220 : 180, issue.severity?.toLowerCase() === 'critical' ? 38 : 130, issue.severity?.toLowerCase() === 'critical' ? 38 : 0);
+          pdf.text(sevLabel, margin, y);
+          const sevWidth = pdf.getTextWidth(sevLabel + ' ');
+          pdf.setTextColor(0, 0, 0);
+          pdf.setFont('helvetica', 'normal');
+          const findingLines = pdf.splitTextToSize(issue.finding || '', contentWidth - sevWidth);
+          pdf.text(findingLines[0] || '', margin + sevWidth, y);
+          y += 5;
+          for (let l = 1; l < findingLines.length; l++) {
+            if (y > pdf.internal.pageSize.getHeight() - margin) { pdf.addPage(); y = margin; }
+            pdf.text(findingLines[l], margin, y);
+            y += 5;
+          }
+
+          // Guideline reference
+          if (issue.guidelineReference) {
+            pdf.setFontSize(9);
+            pdf.setTextColor(120, 120, 120);
+            const refLines = pdf.splitTextToSize(`Ref: ${issue.guidelineReference}`, contentWidth);
+            for (const line of refLines) {
+              if (y > pdf.internal.pageSize.getHeight() - margin) { pdf.addPage(); y = margin; }
+              pdf.text(line, margin, y);
+              y += 4.5;
+            }
+          }
+
+          // Recommendation
+          if (issue.recommendation) {
+            pdf.setFontSize(9);
+            pdf.setTextColor(80, 80, 80);
+            const recLines = pdf.splitTextToSize(`Recommendation: ${issue.recommendation}`, contentWidth);
+            for (const line of recLines) {
+              if (y > pdf.internal.pageSize.getHeight() - margin) { pdf.addPage(); y = margin; }
+              pdf.text(line, margin, y);
+              y += 4.5;
+            }
+          }
+
+          y += 5;
+        }
+      }
+
+      // Footer disclaimer
+      y += 4;
+      if (y > pdf.internal.pageSize.getHeight() - 25) { pdf.addPage(); y = margin; }
+      pdf.setDrawColor(200, 200, 200);
+      pdf.line(margin, y, pageWidth - margin, y);
+      y += 6;
+      pdf.setFontSize(8);
+      pdf.setTextColor(140, 140, 140);
+      const disclaimer = 'SafePost\u2122 provides AI-powered guidance only and does not constitute legal advice. Practitioners are solely responsible for ensuring their advertising complies with the National Law and AHPRA guidelines.';
+      const disclaimerLines = pdf.splitTextToSize(disclaimer, contentWidth);
+      for (const line of disclaimerLines) {
+        pdf.text(line, margin, y);
+        y += 4;
+      }
+
+      const dateStr = new Date().toISOString().split('T')[0];
+      pdf.save(`SafePost-Compliance-Check-${dateStr}.pdf`);
+    } catch (error) {
+      console.error('PDF export failed:', error);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
     <div className={`bg-white rounded-xl border border-gray-100 border-l-4 ${cfg.row} shadow-sm shadow-black/[0.02] hover:shadow-md hover:shadow-black/[0.04] transition-all duration-200 overflow-visible`}>
-      {/* PDF Toast */}
-      {showPdfToast && (
-        <div className="fixed top-6 right-6 z-50 px-5 py-3 bg-gray-900 text-white text-[13px] font-medium rounded-xl shadow-lg shadow-black/20">
-          Coming soon — this feature is in development
-        </div>
-      )}
-
       <div className="flex items-start gap-4 p-4 md:p-5">
 
         {/* Status icon */}
@@ -155,17 +303,22 @@ const CheckRow: React.FC<{
           {/* Export PDF icon button */}
           <div className="relative z-10">
             <button
-              onClick={handleExportPdf}
+              onClick={isUltra ? handleExportPdf : undefined}
               onMouseEnter={() => !isUltra && setShowPdfTooltip(true)}
               onMouseLeave={() => setShowPdfTooltip(false)}
+              disabled={isExporting}
               className={`relative p-1.5 rounded-lg transition-all duration-150 ${
                 isUltra
                   ? 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
                   : 'text-gray-300 cursor-not-allowed'
-              }`}
+              } ${isExporting ? 'opacity-60 cursor-not-allowed' : ''}`}
             >
               {!isUltra && <Lock className="w-2.5 h-2.5 absolute -top-0.5 -right-0.5 text-gray-400" />}
-              <FileText className="w-3.5 h-3.5" />
+              {isExporting ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <FileText className="w-3.5 h-3.5" />
+              )}
             </button>
             {showPdfTooltip && !isUltra && (
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-lg z-50 pointer-events-none">

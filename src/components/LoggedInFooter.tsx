@@ -4,7 +4,16 @@ const LoggedInFooter = () => {
   return (
     <footer className="bg-[#f7f7f4] dark:bg-gray-900 border-t border-black/[0.06] dark:border-gray-700 pt-14 pb-10">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div>
+            <span className="text-[18px] font-extrabold tracking-tight text-gray-900 dark:text-white">
+              SafePost<span className="text-blue-600">&trade;</span>
+            </span>
+            <p className="text-[13px] text-gray-500 leading-relaxed mt-2 max-w-[200px]">
+              Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.
+            </p>
+          </div>
+
           <div>
             <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Resources</h4>
             <ul className="space-y-2.5">
@@ -26,6 +35,16 @@ const LoggedInFooter = () => {
             <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Connect</h4>
             <ul className="space-y-2.5">
               <li><Link to="/contact" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Contact us</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Follow Us</h4>
+            <ul className="space-y-2.5">
+              <li className="text-[13px] text-gray-400 dark:text-gray-600">X / Twitter</li>
+              <li className="text-[13px] text-gray-400 dark:text-gray-600">Instagram</li>
+              <li className="text-[13px] text-gray-400 dark:text-gray-600">LinkedIn</li>
+              <li className="text-[13px] text-gray-400 dark:text-gray-600">Facebook</li>
             </ul>
           </div>
         </div>
