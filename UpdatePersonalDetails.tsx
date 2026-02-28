@@ -26,7 +26,10 @@ const UpdatePersonalDetails: React.FC = () => {
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(3);
+  const [notificationCount, setNotificationCount] = useState(() => {
+    const saved = sessionStorage.getItem('safepost_notification_count');
+    return saved !== null ? parseInt(saved, 10) : 3;
+  });
   const notificationRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -106,7 +109,7 @@ const UpdatePersonalDetails: React.FC = () => {
                 <div className="absolute top-full right-0 mt-1 w-80 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in dark:bg-gray-800 dark:border-gray-700 z-50">
                   <div className="flex items-center justify-between px-4 py-2.5">
                     <p className="text-[13px] font-semibold text-gray-900 dark:text-white">Notifications</p>
-                    <button onClick={() => setNotificationCount(0)} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium transition-colors dark:text-blue-400">
+                    <button onClick={() => { setNotificationCount(0); sessionStorage.setItem('safepost_notification_count', '0'); }} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium transition-colors dark:text-blue-400">
                       Mark all as read
                     </button>
                   </div>
