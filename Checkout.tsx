@@ -8,7 +8,7 @@ const planData: Record<string, {
   subtitle: string;
   monthlyPrice: number;
   yearlyPrice: number;
-  yearlySavings: number;
+  yearlyMonthlyEquivalent: string;
   popular: boolean;
   features: string[];
 }> = {
@@ -16,51 +16,48 @@ const planData: Record<string, {
     name: 'SafePost Professional',
     subtitle: 'For practitioners who post regularly',
     monthlyPrice: 20,
-    yearlyPrice: 192,
-    yearlySavings: 48,
+    yearlyPrice: 200,
+    yearlyMonthlyEquivalent: '~$16',
     popular: true,
     features: [
-      'Unlimited compliance checks',
-      'AI-powered rewrites',
-      'Priority support (24hr)',
-      'Image & video analysis',
-      'Compliance history tracking',
-      'Monthly compliance reports',
-      'Early access to new features',
+      '30 compliance checks per month',
+      'AI-powered compliant content rewrites',
+      'Image and video content analysis',
+      'Compliance history (last 30 checks)',
+      'Email support',
     ],
   },
   proplus: {
     name: 'SafePost Pro+',
     subtitle: 'For practices with small marketing teams',
     monthlyPrice: 49,
-    yearlyPrice: 470,
-    yearlySavings: 118,
+    yearlyPrice: 490,
+    yearlyMonthlyEquivalent: '~$41',
     popular: false,
     features: [
       'Everything in Professional, plus:',
+      '100 compliance checks per month',
       'Multi-user access (up to 3 team members)',
-      'Team collaboration tools',
-      'Basic online advertising compliance',
-      'Brand voice consistency checker',
-      'Custom compliance guidelines repository',
+      'Compliance history (last 100 checks)',
+      'Priority email support',
     ],
   },
   ultra: {
     name: 'SafePost Ultra',
     subtitle: 'Best for multi-practitioner practices',
-    monthlyPrice: 200,
-    yearlyPrice: 1920,
-    yearlySavings: 480,
+    monthlyPrice: 149,
+    yearlyPrice: 1490,
+    yearlyMonthlyEquivalent: '~$124',
     popular: true,
     features: [
       'Everything in Pro+, plus:',
-      'Multi-user access (up to 15 team members)',
-      'Advanced advertising compliance (TGA)',
-      'Bulk content review',
-      'White-label compliance reports',
-      'Dedicated account manager',
-      'Priority phone & email support (4hr)',
-      'API access for workflow integration',
+      'Unlimited compliance checks',
+      'Multi-user access (up to 10 team members)',
+      'Unlimited compliance history',
+      'PDF compliance audit log export',
+      'Bulk content review (upload multiple posts at once)',
+      'Proactive notification of guideline changes',
+      'Priority support + onboarding',
     ],
   },
 };
@@ -91,7 +88,6 @@ const Checkout: React.FC = () => {
   if (!isVerified || !selectedPlan) return null;
 
   const price = billing === 'yearly' ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice;
-  const monthlyEquivalent = billing === 'yearly' ? Math.round(selectedPlan.yearlyPrice / 12) : selectedPlan.monthlyPrice;
 
   // Form state
   const [email, setEmail] = useState('');
@@ -399,16 +395,15 @@ const Checkout: React.FC = () => {
                   {billing === 'yearly' ? (
                     <div>
                       <div className="flex items-end gap-2">
-                        <span className="text-3xl font-extrabold text-gray-900">${selectedPlan.yearlyPrice}</span>
-                        <span className="text-[14px] text-gray-500 font-medium pb-0.5">/year</span>
+                        <span className="text-3xl font-extrabold text-gray-900">{selectedPlan.yearlyMonthlyEquivalent}</span>
+                        <span className="text-[14px] text-gray-500 font-medium pb-0.5">/month</span>
                       </div>
                       <div className="flex items-center gap-2 mt-1.5">
-                        <span className="text-[13px] text-gray-500">(${monthlyEquivalent}/month)</span>
+                        <span className="text-[13px] text-gray-500">billed as ${selectedPlan.yearlyPrice.toLocaleString()}/year</span>
                         <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
-                          Save ${selectedPlan.yearlySavings}
+                          2 months free
                         </span>
                       </div>
-                      <p className="text-[12px] text-gray-400 mt-1">Billed annually</p>
                     </div>
                   ) : (
                     <div>

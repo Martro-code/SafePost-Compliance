@@ -32,16 +32,20 @@ const PricingMedicalPractitioners: React.FC = () => {
       answer: 'SafePost\u2122 is a guidance tool that helps identify potential compliance issues based on AHPRA\u2019s advertising guidelines and social media guidance. While we provide comprehensive analysis and compliant alternatives, AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain ultimately responsible for ensuring their content complies with the National Law.',
     },
     {
-      question: 'What happens if I exceed my 3 free checks?',
-      answer: 'Once you\u2019ve used your 3 compliance checks on the Starter plan, you\u2019ll need to upgrade to SafePost\u2122 Professional for unlimited checks. We\u2019ll send you a notification when you\u2019re exceeded your limit.',
+      question: 'What happens if I exceed my monthly check limit?',
+      answer: 'When you reach your monthly check limit, you\u2019ll be prompted to upgrade to a higher plan. Your limit resets on the 1st of each month. We\u2019ll notify you when you\u2019re approaching your limit so you\u2019re never caught off guard.',
     },
     {
       question: 'Can I analyse content that includes images or before/after photos?',
-      answer: 'Yes! SafePost\u2122 Professional includes image and video content analysis, which is particularly important for cosmetic procedure advertising. Our AI analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan only supports text-based analysis.',
+      answer: 'Yes \u2014 SafePost\u2122 Professional, Pro+, and Ultra all include image and video content analysis, which is particularly important for cosmetic procedure advertising. Our AI analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan supports text-based analysis only.',
     },
     {
       question: 'How quickly can I get compliance results?',
-      answer: 'SafePost\u2122 provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA guideline references, and if you\u2019re on the Professional plan, you\u2019ll also receive AI-generated compliant alternatives you can use right away.',
+      answer: 'SafePost\u2122 provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA guideline references, and on paid plans you\u2019ll also receive AI-generated compliant alternatives you can use straight away.',
+    },
+    {
+      question: 'Are prices in Australian dollars and do they include GST?',
+      answer: 'Yes \u2014 all SafePost\u2122 prices are in AUD and include GST.',
     },
   ];
 
@@ -271,11 +275,19 @@ const PricingMedicalPractitioners: React.FC = () => {
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">3 free compliance checks</span>
+                  <span className="text-[14px] text-gray-600">3 compliance checks per month</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                   <span className="text-[14px] text-gray-600">Identify non-compliant content</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">AI-powered compliant content rewrites</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">Text-based analysis only (no image upload)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -303,23 +315,26 @@ const PricingMedicalPractitioners: React.FC = () => {
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$16' : '$20'}</span>
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '~$16' : '$20'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
                   {isYearly && (
                     <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
-                      Save 20%
+                      2 months free
                     </span>
                   )}
                 </div>
+                {isYearly && (
+                  <p className="text-[12px] text-gray-400 mt-1.5">billed as $200/year</p>
+                )}
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Unlimited compliance checks</span>
+                  <span className="text-[14px] text-gray-600">30 compliance checks per month</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliant content rewrites (AI-generated alternatives)</span>
+                  <span className="text-[14px] text-gray-600">AI-powered compliant content rewrites</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
@@ -327,7 +342,11 @@ const PricingMedicalPractitioners: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliance history tracking</span>
+                  <span className="text-[14px] text-gray-600">Compliance history (last 30 checks)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">Email support</span>
                 </li>
               </ul>
               <button

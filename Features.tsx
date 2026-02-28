@@ -39,7 +39,7 @@ const Features: React.FC = () => {
     {
       icon: <Image className="w-7 h-7 text-blue-500/80" />,
       heading: 'Image and video analysis',
-      description: 'Analyze visual content for before/after photo compliance (Professional plans).',
+      description: 'Analyse visual content for before/after photo compliance (paid plans).',
     },
     {
       icon: <BookOpen className="w-7 h-7 text-blue-500/80" />,
