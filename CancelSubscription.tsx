@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 
@@ -18,6 +18,10 @@ const formatDate = (date: Date): string => {
 
 const CancelSubscription: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string })?.from || 'billing';
+  const backLabel = from === 'billing' ? 'Back to Billing' : 'Back to Profile';
+  const backPath = from === 'billing' ? '/billing' : '/profile';
 
   const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
 
@@ -131,13 +135,13 @@ const CancelSubscription: React.FC = () => {
   return (
     <LoggedInLayout>
       <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
-        {/* Back to Profile */}
+        {/* Back link */}
         <button
-          onClick={() => navigate('/profile')}
-          className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
+          onClick={() => navigate(backPath)}
+          className="flex items-center gap-1.5 text-[13px] text-gray-500 hover:text-gray-900 transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Profile
+          {backLabel}
         </button>
 
         {/* Card */}
