@@ -489,7 +489,7 @@ const PrivacyPolicy: React.FC = () => {
               <div className="text-[14px] text-gray-500 leading-relaxed">
                 <p className="font-medium text-gray-700">Privacy Officer</p>
                 <p>{`SafePost\u2122`}</p>
-                <p>Email: privacy@safepost.com.au</p>
+                <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
               </div>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
                 We will respond to access and correction requests within a reasonable timeframe. We may need to verify your identity before providing access to your personal information.
@@ -505,7 +505,7 @@ const PrivacyPolicy: React.FC = () => {
               <div className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 <p className="font-medium text-gray-700">Privacy Officer</p>
                 <p>{`SafePost\u2122`}</p>
-                <p>Email: privacy@safepost.com.au</p>
+                <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
               </div>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We will acknowledge receipt of your complaint promptly and endeavour to resolve it within 30 days. If we are unable to resolve your complaint within this timeframe, we will advise you of the reason for the delay in writing.
@@ -541,8 +541,8 @@ const PrivacyPolicy: React.FC = () => {
               <div className="text-[14px] text-gray-500 leading-relaxed">
                 <p className="font-medium text-gray-700">Privacy Officer</p>
                 <p>{`SafePost\u2122`}</p>
-                <p>Email: privacy@safepost.com.au</p>
-                <p>Website: www.safepost.com.au</p>
+                <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
+                <p>Website: <a href="https://www.safepost.com.au" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">www.safepost.com.au</a></p>
               </div>
             </div>
 

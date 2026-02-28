@@ -499,8 +499,8 @@ const TermsOfUse: React.FC = () => {
               </p>
               <div className="text-[14px] text-gray-500 leading-relaxed">
                 <p className="font-medium text-gray-700">{`SafePost\u2122`}</p>
-                <p>Email: info@safepost.com.au</p>
-                <p>Website: www.safepost.com.au</p>
+                <p>Email: <a href="mailto:info@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">info@safepost.com.au</a></p>
+                <p>Website: <a href="https://www.safepost.com.au" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">www.safepost.com.au</a></p>
               </div>
             </div>
 
