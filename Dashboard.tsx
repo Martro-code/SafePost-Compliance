@@ -391,9 +391,21 @@ const Dashboard: React.FC = () => {
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
+                    onKeyDown={(e) => {
+                      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                        e.preventDefault();
+                        if (content.trim() && !checker.usage.isAtLimit) {
+                          handleCheckCompliance();
+                        }
+                      }
+                    }}
                     placeholder="Paste your social media or online advertising content here..."
                     className="w-full min-h-[200px] px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-y dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                   />
+
+                  <p className="text-[11px] text-gray-400">
+                    Press Ctrl+Enter to check — Shift+Enter for a new line
+                  </p>
 
                   {/* Attached file indicator */}
                   {attachedFile && (

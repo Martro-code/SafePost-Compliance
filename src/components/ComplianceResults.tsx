@@ -334,8 +334,8 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
       )}
 
       {/* ── Original Post — shown first so user sees what was assessed ─────── */}
-      <div className="bg-white rounded-xl border border-gray-100 shadow-sm shadow-black/[0.02] overflow-hidden">
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 bg-gray-50/80">
+      <div className="bg-white rounded-xl border border-gray-100 shadow-sm shadow-black/[0.02]">
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 bg-gray-50/80 overflow-visible">
           <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
             Content Assessed
           </span>
