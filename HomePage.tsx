@@ -214,14 +214,14 @@ const HomePage: React.FC = () => {
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${resourcesDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {resourcesDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                <div className="absolute top-full left-0 mt-1 w-44 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                   {resourceLinks.map((link, i) => (
                     <a
                       key={i}
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
+                      className="flex items-center justify-between px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
                     >
                       {link.label}
                       <ExternalLink className="w-3 h-3 flex-shrink-0 opacity-40" />
@@ -292,7 +292,7 @@ const HomePage: React.FC = () => {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-1 px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors"
+                      className="flex items-center justify-between px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors"
                     >
                       {link.label}
                       <ExternalLink className="w-3 h-3 flex-shrink-0 opacity-40" />
