@@ -207,7 +207,7 @@ const BillingInformation: React.FC = () => {
               </p>
             </div>
             <button
-              onClick={() => navigate('/cancel-subscription')}
+              onClick={() => navigate('/cancel-subscription', { state: { from: 'billing' } })}
               className="px-4 py-2 text-[13px] font-semibold text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-xl transition-colors hover:bg-red-50 flex-shrink-0 ml-4"
             >
               Cancel Plan
