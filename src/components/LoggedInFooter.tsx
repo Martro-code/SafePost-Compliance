@@ -4,14 +4,14 @@ const LoggedInFooter = () => {
   return (
     <footer className="bg-[#f7f7f4] dark:bg-gray-900 border-t border-black/[0.06] dark:border-gray-700 pt-14 pb-10">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[2.5fr_1fr_1fr_1fr_1fr] gap-10 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[3fr_1fr_1fr_1fr_1fr] gap-10 lg:gap-8">
           <div>
             <div className="text-[20px] font-extrabold tracking-tight leading-none">
               <span className="text-gray-900 dark:text-white">Safe</span>
               <span className="text-[#2563EB]">Post</span>
               <span className="text-gray-400 text-[14px] font-medium ml-0.5">™</span>
             </div>
-            <p className="text-[13px] text-gray-500 leading-relaxed mt-2 max-w-[180px]">
+            <p className="text-[13px] text-gray-500 leading-relaxed mt-2 max-w-[240px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.
             </p>
           </div>
@@ -42,7 +42,7 @@ const LoggedInFooter = () => {
 
           <div>
             <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Follow Us</h4>
-            <div className="grid grid-cols-2 gap-3 mt-1">
+            <div className="flex flex-col gap-3 mt-1">
               {/* X / Twitter */}
               <div className="text-gray-400 cursor-not-allowed" title="Coming soon">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" aria-label="X / Twitter">
