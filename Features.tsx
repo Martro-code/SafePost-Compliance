@@ -39,33 +39,39 @@ const Features: React.FC = () => {
   const features = [
     {
       icon: <Zap className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Instant AHPRA analysis',
-      description: 'Get compliance results in seconds with specific guideline references.',
+      heading: 'Instant AHPRA compliance analysis',
+      subtitle: 'Checked against 134 verified rules',
+      description: 'Paste your content and get an immediate compliance assessment against 134 rules drawn from five primary AHPRA regulatory documents — not a summarised guide, not generic AI training data.',
     },
     {
       icon: <FileText className="w-7 h-7 text-blue-500/80" />,
-      heading: 'AI-powered rewrites',
-      description: 'Receive compliant alternatives ready to post immediately.',
+      heading: 'Severity-tiered issue reporting',
+      subtitle: 'Critical and warning flags, not just pass/fail',
+      description: 'Every identified issue is rated Critical or Warning with a plain-English explanation, the specific guideline reference, and a recommended action — so you know exactly what to fix and why.',
     },
     {
       icon: <Globe className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Multi-platform support',
-      description: 'Check content for Instagram, Facebook, LinkedIn, websites, and ads.',
+      heading: 'AI-powered compliant rewrites',
+      subtitle: 'Three alternatives, ready to post',
+      description: 'Where issues are found, SafePost™ generates three compliant rewrite options you can adopt directly or use as a starting point — available on all plans including Starter.',
     },
     {
       icon: <Image className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Image and video analysis',
-      description: 'Analyse visual content for before/after photo compliance (paid plans).',
+      heading: 'Grounded in real enforcement precedent',
+      subtitle: 'VCAT tribunal judgements included',
+      description: 'SafePost™\'s analysis draws on two landmark VCAT enforcement cases — Ellis v Medical Board of Australia and Kok v Medical Board of Australia — giving you real-world context for what AHPRA actually pursues.',
     },
     {
       icon: <BookOpen className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Compliance resource library',
-      description: 'Access curated AHPRA guidelines, case studies, and best practice examples. Stay informed with the latest regulatory updates and guidance.',
+      heading: 'Multi-platform content support',
+      subtitle: 'Social media, websites, ads, and more',
+      description: 'Check Instagram captions, Facebook posts, website copy, Google ads, and any other online advertising content — the same AHPRA rules apply across all platforms and SafePost™ covers all of them.',
     },
     {
       icon: <History className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Compliance history',
-      description: 'Track all your checks and maintain an audit trail for peace of mind.',
+      heading: 'Compliance history and audit trail',
+      subtitle: 'Demonstrate your compliance process',
+      description: 'Every check is saved to your compliance history. Search, filter, and revisit past checks — and demonstrate to your indemnity insurer or AHPRA that you have a documented compliance process.',
     },
   ];
 
@@ -274,9 +280,12 @@ const Features: React.FC = () => {
                 <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
+                <h3 className="text-lg font-bold text-gray-900 mb-0 leading-snug">
                   {feature.heading}
                 </h3>
+                <p className="text-[12px] font-semibold text-blue-600 uppercase tracking-wider mt-1 mb-2">
+                  {feature.subtitle}
+                </p>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
                   {feature.description}
                 </p>
