@@ -273,6 +273,29 @@ const History: React.FC = () => {
     checker.loadHistory();
   }, []);
 
+  // Auto-open a check navigated from Dashboard sidebar
+  useEffect(() => {
+    if (checker.isLoadingHistory) return;
+    const targetId = sessionStorage.getItem('safepost_view_check_id');
+    if (!targetId) return;
+    sessionStorage.removeItem('safepost_view_check_id');
+    const match = checker.history.find((c) => c.id === targetId);
+    if (match) {
+      // Navigate to dashboard with the check result loaded
+      if (match.result_json) {
+        const normalised = {
+          ...match.result_json,
+          overall_status: match.overall_status,
+          summary: match.result_json.summary ?? match.result_json.overallVerdict ?? '',
+          issues: match.result_json.issues ?? [],
+        };
+        sessionStorage.setItem('safepost_last_result', JSON.stringify(normalised));
+      }
+      sessionStorage.setItem('safepost_last_content', match.content_text ?? '');
+      navigate('/dashboard');
+    }
+  }, [checker.isLoadingHistory, checker.history]);
+
   const handleLogOut = async () => {
     sessionStorage.clear();
     await signOut();
