@@ -27,6 +27,7 @@ import CancelSubscription from './CancelSubscription';
 import TwoFactorAuth from './TwoFactorAuth';
 import NotificationPreferences from './NotificationPreferences';
 import NotificationsInbox from './src/pages/NotificationsInbox';
+import Help from './src/pages/Help';
 import EmailPreferences from './EmailPreferences';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsOfUse from './TermsOfUse';
@@ -80,6 +81,7 @@ const App: React.FC = () => {
           <Route path="/two-factor-auth" element={<ProtectedRoute><TwoFactorAuth /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><NotificationsInbox /></ProtectedRoute>} />
           <Route path="/notification-preferences" element={<ProtectedRoute><NotificationPreferences /></ProtectedRoute>} />
+          <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
           <Route path="/email-preferences" element={<ProtectedRoute><EmailPreferences /></ProtectedRoute>} />
           <Route path="/compliance-checker" element={<ProtectedRoute><ComplianceCheckerPage /></ProtectedRoute>} />
           <Route path="*" element={<NotFound />} />

@@ -4,7 +4,7 @@ import {
   ChevronDown, Menu, X, ArrowLeft, LogOut, Clock, Bell,
   CheckCircle2, XCircle, AlertTriangle, Loader2, Search,
   Filter, Trash2, ExternalLink, ChevronRight, FileText, Lock,
-  ChevronLeft
+  ChevronLeft, HelpCircle
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import SafePostLogo from './components/SafePostLogo';
@@ -568,6 +568,10 @@ const History: React.FC = () => {
                   <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">Profile</button>
                   <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">Billing</button>
                   <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">Settings</button>
+                  <button onClick={() => navigate('/help')} className="flex items-center gap-2 block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    <HelpCircle className="w-3.5 h-3.5" />
+                    Help & Support
+                  </button>
                   <div className="border-t border-black/[0.06] my-1" />
                   <button onClick={handleLogOut} className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     <LogOut className="w-3.5 h-3.5" />Log Out
