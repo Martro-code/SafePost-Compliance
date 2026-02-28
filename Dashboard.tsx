@@ -328,8 +328,14 @@ const Dashboard: React.FC = () => {
 
               {/* Active Plan Badge */}
               {planName && (
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-gray-200 bg-gray-50 text-[12px] font-medium text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
-                  SafePost {planDisplayNames[planName.toLowerCase()] || formatPlanName(planName)} &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
+                  <div className="w-2 h-2 rounded-full bg-blue-500" />
+                  <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
+                    SafePost {formatPlanName(planName)}
+                  </span>
+                  <span className="text-[12px] text-blue-400 dark:text-blue-500">
+                    &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
+                  </span>
                 </div>
               )}
 
