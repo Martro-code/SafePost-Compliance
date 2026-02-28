@@ -289,13 +289,13 @@ const ChangePlan: React.FC = () => {
       {/* Main Content */}
       <main className="flex-grow">
         <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
-          {/* Back to Dashboard */}
+          {/* Back to Profile */}
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate('/profile')}
             className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
+            Back to Profile
           </button>
 
           {/* Page Heading */}
@@ -313,10 +313,10 @@ const ChangePlan: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700 p-8 text-center">
               <p className="text-[15px] font-medium text-gray-900 dark:text-white mb-4">You are already on our highest plan.</p>
               <button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/profile')}
                 className="text-[14px] font-semibold text-blue-600 hover:text-blue-700 transition-colors"
               >
-                Back to Dashboard
+                Back to Profile
               </button>
             </div>
           )}
@@ -400,7 +400,7 @@ const ChangePlan: React.FC = () => {
             {/* Bottom Actions */}
             <div className="p-6 md:px-8 flex items-center gap-3">
               <button
-                onClick={() => navigate(isUpgradeMode ? '/dashboard' : '/profile')}
+                onClick={() => navigate('/profile')}
                 className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
               >
                 Cancel

@@ -44,8 +44,8 @@ function invalidateCache(): void {
 export const PLAN_LIMITS: Record<string, number> = {
   free: 3,
   starter: 3,
-  professional: 50,
-  proplus: 200,
+  professional: 30,
+  proplus: 100,
   ultra: Infinity,
 };
 
