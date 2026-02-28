@@ -1,9 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import {
   CheckCircle2, XCircle, AlertTriangle, ChevronDown, ChevronUp,
   Sparkles, Copy, Check, ArrowLeft, Loader2, Shield, ExternalLink,
   AlertCircle, Info, FileText, Lock
 } from 'lucide-react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 // ─── Types (mirror your existing types) ──────────────────────────────────────
 interface ComplianceIssue {
@@ -281,9 +283,10 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
   const [rewrites, setRewrites] = useState<RewrittenPost[] | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [rewriteError, setRewriteError] = useState<string | null>(null);
-  const [pdfExporting, setPdfExporting] = useState(false);
-  const [showPdfToast, setShowPdfToast] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
   const [showPdfTooltip, setShowPdfTooltip] = useState(false);
+
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const isUltra = planName.toLowerCase() === 'ultra';
 
@@ -313,25 +316,49 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
     }
   };
 
-  const handleExportPdf = () => {
-    if (!isUltra) return;
-    setPdfExporting(true);
-    setTimeout(() => {
-      setPdfExporting(false);
-      setShowPdfToast(true);
-      setTimeout(() => setShowPdfToast(false), 3000);
-    }, 1500);
+  const handleExportPDF = async () => {
+    if (!resultsRef.current) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(resultsRef.current, {
+        scale: 2,
+        useCORS: true,
+        backgroundColor: '#ffffff',
+        logging: false,
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4',
+      });
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let heightLeft = pdfHeight;
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - pdfHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
+        heightLeft -= pageHeight;
+      }
+
+      const dateStr = new Date().toISOString().split('T')[0];
+      pdf.save(`SafePost-Compliance-Check-${dateStr}.pdf`);
+    } catch (error) {
+      console.error('PDF export failed:', error);
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   return (
-    <div className="space-y-4">
-
-      {/* ── PDF Toast ──────────────────────────────────────────────────────── */}
-      {showPdfToast && (
-        <div className="fixed top-6 right-6 z-50 px-5 py-3 bg-gray-900 text-white text-[13px] font-medium rounded-xl shadow-lg shadow-black/20 animate-fade-in">
-          Coming soon — this feature is in development
-        </div>
-      )}
+    <div className="space-y-4" ref={resultsRef}>
 
       {/* ── Original Post — shown first so user sees what was assessed ─────── */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm shadow-black/[0.02]">
@@ -341,18 +368,22 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
           </span>
           <div className="relative">
             <button
-              onClick={handleExportPdf}
+              onClick={isUltra ? handleExportPDF : undefined}
               onMouseEnter={() => !isUltra && setShowPdfTooltip(true)}
               onMouseLeave={() => setShowPdfTooltip(false)}
+              disabled={isExporting}
               className={`flex items-center gap-1 text-[11px] transition-colors cursor-pointer ${
                 isUltra
                   ? 'text-gray-400 hover:text-gray-600'
                   : 'text-gray-400 hover:text-gray-600'
-              }`}
+              } ${isExporting ? 'opacity-60 cursor-not-allowed' : ''}`}
             >
               {!isUltra && <Lock className="w-3.5 h-3.5" />}
-              <FileText className="w-3.5 h-3.5" />
-              <span>Export PDF</span>
+              {isExporting ? (
+                <><Loader2 className="w-3.5 h-3.5 animate-spin" /><span>Exporting...</span></>
+              ) : (
+                <><FileText className="w-3.5 h-3.5" /><span>Export PDF</span></>
+              )}
             </button>
             {showPdfTooltip && !isUltra && (
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-lg z-50 pointer-events-none">
