@@ -4,6 +4,8 @@ import { ChevronDown, Menu, X, ArrowRight, Paperclip, Loader2, AlertTriangle, Ch
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 import { useComplianceChecker } from './src/hooks/useComplianceChecker';
+import { ComplianceResults } from './src/components/ComplianceResults';
+import { analyzePost, generateCompliantRewrites } from './services/geminiService';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -11,11 +13,12 @@ const Dashboard: React.FC = () => {
   const [searchParams] = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { userEmail, firstName, signOut } = useAuth();
-  const checker = useComplianceChecker();
-
+  
   // Read plan info from URL params or sessionStorage
   const planName = searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
   const billingPeriod = searchParams.get('billing') || sessionStorage.getItem('safepost_billing') || '';
+
+  const checker = useComplianceChecker(planName);
 
   const hasPaidPlan = planName && !['free', 'starter'].includes(planName.toLowerCase());
 
@@ -35,6 +38,13 @@ const Dashboard: React.FC = () => {
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [view, setView] = useState<'input' | 'loading' | 'results'>('input');
 
+  // Restore results view if a previous result exists in session
+  useEffect(() => {
+    if (checker.result && view === 'input') {
+      setView('results');
+    }
+  }, [checker.result]);
+
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -52,19 +62,15 @@ const Dashboard: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const recentChecks = [
-    { id: 1, status: 'non-compliant', preview: 'My patients give me a 5 star...', time: '2 mins ago' },
-    { id: 2, status: 'compliant', preview: 'Join our wellness workshop...', time: '1 hour ago' },
-    { id: 3, status: 'warning', preview: 'New treatment now available...', time: 'Yesterday' },
-  ];
-
   const getStatusIcon = (status: string) => {
     switch (status) {
+      case 'non_compliant':
       case 'non-compliant':
         return <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />;
       case 'compliant':
         return <CheckCircle2 className="w-4 h-4 text-green-500 flex-shrink-0" />;
       case 'warning':
+      case 'requires_review':
         return <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />;
       default:
         return null;
@@ -82,6 +88,7 @@ const Dashboard: React.FC = () => {
     setContent('');
     setAttachedFile(null);
     setView('input');
+    checker.resetChecker();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -313,16 +320,16 @@ const Dashboard: React.FC = () => {
 
               {/* Active Plan Badge */}
               {planName && (
-                <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-gray-200 bg-gray-50 text-[12px] font-medium text-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-300">
-                  SafePost {formatPlanName(planName)} &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
+                  <div className="w-2 h-2 rounded-full bg-blue-500" />
+                  <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
+                    SafePost {formatPlanName(planName)}
+                  </span>
+                  <span className="text-[12px] text-blue-400 dark:text-blue-500">
+                    &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
+                  </span>
                 </div>
               )}
-
-              {/* Usage badge */}
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-black/[0.08] bg-white text-[12px] font-medium text-gray-500 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400">
-                <Clock className="w-3.5 h-3.5 text-gray-400" />
-                2 of 3 checks used this month
-              </div>
 
               {/* Input / Loading / Results views */}
               {view === 'input' && (
@@ -345,32 +352,51 @@ const Dashboard: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Attach image */}
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-2 text-[13px] text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-300"
-                  >
-                    <Paperclip className="w-4 h-4" />
-                    Attach Image (optional)
-                  </button>
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="hidden"
-                  />
+                  {/* Attach image — paid plans only */}
+                  {hasPaidPlan && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="flex items-center gap-2 text-[13px] text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-300"
+                      >
+                        <Paperclip className="w-4 h-4" />
+                        Attach Image (optional)
+                      </button>
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        className="hidden"
+                      />
+                    </>
+                  )}
 
                   {/* Submit */}
-                  <button
-                    onClick={handleCheckCompliance}
-                    disabled={!content.trim()}
-                    className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
-                  >
-                    Check Compliance
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                  {checker.usage.isAtLimit ? (
+                    <div className="space-y-3">
+                      <div className="w-full h-12 bg-red-50 border border-red-200 rounded-lg flex items-center justify-center">
+                        <p className="text-[13px] font-medium text-red-600">Monthly check limit reached</p>
+                      </div>
+                      <button
+                        onClick={() => navigate('/change-plan?mode=upgrade')}
+                        className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2.5"
+                      >
+                        Upgrade Plan
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleCheckCompliance}
+                      disabled={!content.trim()}
+                      className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
+                    >
+                      Check Compliance
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               )}
 
@@ -382,173 +408,43 @@ const Dashboard: React.FC = () => {
               )}
 
               {view === 'results' && checker.result && (
-                <div className="space-y-4">
-                  {/* Verdict card */}
-                  <div className={`rounded-2xl border p-6 md:p-8 ${
-                    checker.result.overall_status === 'compliant'
-                      ? 'bg-green-50 border-green-200'
-                      : checker.result.overall_status === 'non_compliant'
-                      ? 'bg-red-50 border-red-200'
-                      : 'bg-amber-50 border-amber-200'
-                  }`}>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                        checker.result.overall_status === 'compliant'
-                          ? 'bg-green-100'
-                          : checker.result.overall_status === 'non_compliant'
-                          ? 'bg-red-100'
-                          : 'bg-amber-100'
-                      }`}>
-                        {checker.result.overall_status === 'compliant'
-                          ? <CheckCircle2 className="w-5 h-5 text-green-600" />
-                          : checker.result.overall_status === 'non_compliant'
-                          ? <XCircle className="w-5 h-5 text-red-600" />
-                          : <AlertTriangle className="w-5 h-5 text-amber-600" />
-                        }
-                      </div>
-                      <div>
-                        <p className={`text-[11px] font-semibold uppercase tracking-wider ${
-                          checker.result.overall_status === 'compliant'
-                            ? 'text-green-500'
-                            : checker.result.overall_status === 'non_compliant'
-                            ? 'text-red-500'
-                            : 'text-amber-500'
-                        }`}>Verdict</p>
-                        <h3 className={`text-lg font-bold ${
-                          checker.result.overall_status === 'compliant'
-                            ? 'text-green-700'
-                            : checker.result.overall_status === 'non_compliant'
-                            ? 'text-red-700'
-                            : 'text-amber-700'
-                        }`}>
-                          {checker.result.overall_status === 'compliant'
-                            ? 'Compliant'
-                            : checker.result.overall_status === 'non_compliant'
-                            ? 'Non-Compliant'
-                            : 'Requires Review'
-                          }
-                        </h3>
-                      </div>
-                    </div>
-
-                    <p className={`text-[14px] leading-relaxed mb-5 ${
-                      checker.result.overall_status === 'compliant'
-                        ? 'text-green-700/80'
-                        : checker.result.overall_status === 'non_compliant'
-                        ? 'text-red-700/80'
-                        : 'text-amber-700/80'
-                    }`}>
-                      {checker.result.summary}
-                    </p>
-
-                    {/* Issues list */}
-                    {checker.result.issues.length > 0 && (
-                      <div className="space-y-3">
-                        <h4 className={`text-[12px] font-semibold uppercase tracking-wider ${
-                          checker.result.overall_status === 'compliant'
-                            ? 'text-green-600'
-                            : checker.result.overall_status === 'non_compliant'
-                            ? 'text-red-600'
-                            : 'text-amber-600'
-                        }`}>
-                          Identified Issues ({checker.result.issues.length})
-                        </h4>
-                        <div className="space-y-2">
-                          {checker.result.issues.map((issue, i) => (
-                            <div key={i} className="flex items-start gap-2.5">
-                              {issue.severity === 'critical'
-                                ? <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                                : issue.severity === 'warning'
-                                ? <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 flex-shrink-0" />
-                                : <CheckCircle2 className="w-4 h-4 text-blue-500 mt-0.5 flex-shrink-0" />
-                              }
-                              <div>
-                                 <p className="text-[13px] text-gray-800 font-medium">{issue.finding}</p>
-                                 <p className="text-[12px] text-gray-500 mt-0.5">{issue.recommendation}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Compliant elements */}
-                    {false && (
-                      <div className="mt-4 space-y-2">
-                        <h4 className="text-[12px] font-semibold text-green-600 uppercase tracking-wider">
-                          Compliant Elements
-                        </h4>
-                        {checker.result.compliant_elements.map((el, i) => (
-                          <div key={i} className="flex items-start gap-2.5">
-                            <CheckCircle2 className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                            <p className="text-[13px] text-gray-700">{el}</p>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Revised suggestion */}
-                  {false && (
-                    <div className="bg-white rounded-2xl border border-black/[0.06] p-6">
-                      <div className="flex items-center gap-2 mb-3">
-                        <Sparkles className="w-4 h-4 text-purple-500" />
-                        <h4 className="text-[13px] font-semibold text-gray-800">Suggested Compliant Revision</h4>
-                      </div>
-                      <pre className="text-[13px] text-gray-700 whitespace-pre-wrap font-sans leading-relaxed bg-purple-50 rounded-xl p-4 border border-purple-100">
-                        {checker.result.revised_content_suggestion}
-                      </pre>
-                    </div>
-                  )}
-
-                  {/* Action buttons */}
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <button
-                      onClick={handleNewCheck}
-                      className="flex-1 h-12 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
-                    >
-                      Back to New Check
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {view === 'results' && checker.error && (
-                <div className="bg-red-50 rounded-2xl border border-red-200 p-6">
-                  <div className="flex items-center gap-3 mb-2">
-                    <XCircle className="w-5 h-5 text-red-500" />
-                    <h3 className="text-[14px] font-semibold text-red-700">Analysis Failed</h3>
-                  </div>
-                  <p className="text-[13px] text-red-600">{checker.error}</p>
-                  <button
-                    onClick={handleNewCheck}
-                    className="mt-4 text-[13px] font-medium text-blue-600 hover:text-blue-700"
-                  >
-                    Try Again
-                  </button>
-                </div>
+                <ComplianceResults
+                  result={checker.result}
+                  originalContent={checker.lastContent || content || sessionStorage.getItem('safepost_last_content') || ''}
+                  onNewCheck={handleNewCheck}
+                  onGenerateRewrites={generateCompliantRewrites}
+                />
               )}
 
             </div>
             {/* END LEFT COLUMN */}
 
             {/* RIGHT SIDEBAR */}
-            <div className="space-y-6 order-1 md:order-2">
+            <div className="space-y-6 order-1 md:order-2 md:sticky md:top-20 md:self-start md:max-h-[calc(100vh-6rem)] md:overflow-y-auto">
               {/* Usage Stats */}
               <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6">
                 <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500 mb-4">Your Usage</h3>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="w-4 h-4 text-green-500" />
-                    <span className="text-[14px] text-gray-700 dark:text-gray-300">2 checks used</span>
+                    <span className="text-[14px] text-gray-700 dark:text-gray-300">
+                      {checker.usage.checksUsedThisMonth} {checker.usage.checksUsedThisMonth === 1 ? 'check' : 'checks'} used
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Clock className="w-4 h-4 text-blue-500" />
-                    <span className="text-[14px] text-gray-700 dark:text-gray-300">1 remaining</span>
+                    <Clock className={`w-4 h-4 ${checker.usage.isAtLimit ? 'text-red-400' : 'text-blue-500'}`} />
+                    <span className={`text-[14px] dark:text-gray-300 ${checker.usage.isAtLimit ? 'text-red-600 font-medium' : 'text-gray-700'}`}>
+                      {checker.usage.planLimit === Infinity
+                        ? 'Unlimited remaining'
+                        : checker.usage.isAtLimit
+                        ? 'Limit reached'
+                        : `${checker.usage.checksRemaining} remaining`
+                      }
+                    </span>
                   </div>
                 </div>
                 <div className="border-t border-black/[0.06] dark:border-gray-700 mt-4 pt-4">
-                  <p className="text-[12px] text-gray-400 dark:text-gray-500">Resets: 1 Mar 2026</p>
+                  <p className="text-[12px] text-gray-400 dark:text-gray-500">Resets: {checker.usage.resetDate}</p>
                 </div>
               </div>
 
@@ -590,19 +486,42 @@ const Dashboard: React.FC = () => {
               <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6">
                 <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500 mb-4">Recent Checks</h3>
                 <div className="space-y-1">
-                  {recentChecks.map((check) => (
-                    <button
-                      key={check.id}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-black/[0.03] transition-colors text-left group"
-                    >
-                      {getStatusIcon(check.status)}
-                      <div className="flex-1 min-w-0">
-                        <p className="text-[13px] text-gray-700 truncate dark:text-gray-300">{check.preview}</p>
-                        <p className="text-[11px] text-gray-400 dark:text-gray-500">{check.time}</p>
-                      </div>
-                      <ChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0" />
-                    </button>
-                  ))}
+                  {checker.isLoadingHistory ? (
+                    <div className="flex items-center gap-2 px-3 py-2.5 text-gray-400">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span className="text-[13px]">Loading...</span>
+                    </div>
+                  ) : checker.history.length === 0 ? (
+                    <p className="text-[13px] text-gray-400 px-3 py-2">No checks yet — run your first check above.</p>
+                  ) : (
+                    checker.history.slice(0, 3).map((check) => (
+                      <button
+                        key={check.id}
+                        onClick={() => {
+                          sessionStorage.setItem('safepost_last_result', JSON.stringify(check.result_json));
+                          sessionStorage.setItem('safepost_last_content', check.content_text);
+                          setView('results');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="w-full flex items-start gap-3 px-0 py-2.5 rounded-lg hover:bg-black/[0.03] transition-colors text-left group"
+                      >
+                        <span className="mt-1 flex-shrink-0">
+                        {getStatusIcon(check.overall_status)}
+                      </span>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-[13px] text-gray-700 truncate dark:text-gray-300">
+                            {check.content_text?.slice(0, 50)}...
+                          </p>
+                          <p className="text-[11px] text-gray-400 dark:text-gray-500">
+                            {new Date(check.created_at).toLocaleDateString('en-AU', {
+                              day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+                            })}
+                          </p>
+                        </div>
+                        <ChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover:text-gray-500 transition-colors flex-shrink-0" />
+                      </button>
+                    ))
+                  )}
                 </div>
                 <div className="border-t border-black/[0.06] dark:border-gray-700 mt-3 pt-3">
                   <button onClick={() => navigate('/history')} className="flex items-center gap-1 text-[13px] text-blue-600 hover:text-blue-700 font-medium transition-colors">
