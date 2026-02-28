@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
@@ -33,6 +33,18 @@ const HomePage: React.FC = () => {
   ];
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resourcesDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close Resources dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (resourcesDropdownOpen && resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(event.target as Node)) {
+        setResourcesDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [resourcesDropdownOpen]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -204,10 +216,9 @@ const HomePage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="relative">
+            <div className="relative" ref={resourcesDropdownRef} onMouseLeave={() => setResourcesDropdownOpen(false)}>
               <button
                 onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
-                onBlur={() => setTimeout(() => setResourcesDropdownOpen(false), 150)}
                 className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
               >
                 Resources
@@ -613,7 +624,7 @@ const HomePage: React.FC = () => {
                   Based directly on AHPRA's Social Media Guidance and Advertising Guidelines. All compliance checks reference current regulations.
                 </p>
                 <div className="flex flex-col gap-2">
-                  <p className="text-[13px] text-gray-400">View official AHPRA guidelines for detailed compliance information.</p>
+                  <a href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-blue-600 hover:underline">View official AHPRA guidelines for detailed compliance information.</a>
                 </div>
               </div>
 
@@ -626,7 +637,7 @@ const HomePage: React.FC = () => {
                   Trusted by medical professionals
                 </h3>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
-                  Designed specifically for Australian medical practitioners and practices navigating complex advertising compliance requirements.
+                  Designed specifically for Australian medical practitioners and practices navigating complex social media and advertising compliance requirements.
                 </p>
               </div>
             </div>
