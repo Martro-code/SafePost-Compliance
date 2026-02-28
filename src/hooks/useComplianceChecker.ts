@@ -49,6 +49,20 @@ export const PLAN_LIMITS: Record<string, number> = {
   ultra: Infinity,
 };
 
+// History visibility limits by plan
+export const HISTORY_LIMITS: Record<string, number> = {
+  free: 10,
+  starter: 10,
+  professional: 30,
+  proplus: 100,
+  ultra: 1000,
+};
+
+function getHistoryLimit(planName: string): number {
+  const key = planName?.toLowerCase() ?? 'free';
+  return HISTORY_LIMITS[key] ?? HISTORY_LIMITS.free;
+}
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 export interface SavedComplianceCheck {
   id: string;
@@ -71,13 +85,13 @@ export interface UsageInfo {
   resetDate: string; // Human-readable e.g. "1 Mar 2026"
 }
 
-async function fetchUserComplianceHistory(userId: string): Promise<SavedComplianceCheck[]> {
+async function fetchUserComplianceHistory(userId: string, limit: number = 20): Promise<SavedComplianceCheck[]> {
   const { data, error } = await supabase
     .from('compliance_checks')
     .select('*')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
-    .limit(20);
+    .limit(limit);
   if (error) throw new Error(error.message);
   return data ?? [];
 }
@@ -154,6 +168,7 @@ export function useComplianceChecker(planName: string = 'free') {
   const [isLoadingUsage, setIsLoadingUsage] = useState(false);
 
   const planLimit = getPlanLimit(planName);
+  const historyLimit = getHistoryLimit(planName);
   const checksRemaining = Math.max(0, planLimit - checksUsedThisMonth);
   const isAtLimit = planLimit !== Infinity && checksUsedThisMonth >= planLimit;
 
@@ -204,7 +219,7 @@ export function useComplianceChecker(planName: string = 'free') {
 
         const [count, checks] = await Promise.all([
           fetchMonthlyCheckCount(user.id),
-          fetchUserComplianceHistory(user.id),
+          fetchUserComplianceHistory(user.id, historyLimit),
         ]);
 
         setChecksUsedThisMonth(count);
@@ -294,7 +309,7 @@ export function useComplianceChecker(planName: string = 'free') {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const checks = await fetchUserComplianceHistory(user.id);
+        const checks = await fetchUserComplianceHistory(user.id, historyLimit);
         setHistory(checks);
       }
     } catch (err) {
@@ -302,7 +317,7 @@ export function useComplianceChecker(planName: string = 'free') {
     } finally {
       setIsLoadingHistory(false);
     }
-  }, []);
+  }, [historyLimit]);
 
   // ── Delete a check ─────────────────────────────────────────────────────
   const deleteCheck = useCallback(async (id: string) => {
