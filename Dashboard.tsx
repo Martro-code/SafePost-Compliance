@@ -52,6 +52,7 @@ const Dashboard: React.FC = () => {
   const [inputMode, setInputMode] = useState<'single' | 'bulk'>('single');
   const [bulkFile, setBulkFile] = useState<File | null>(null);
   const [showBulkToast, setShowBulkToast] = useState(false);
+  const [showBulkTooltip, setShowBulkTooltip] = useState(false);
 
   // Restore results view if a previous result exists in session
   useEffect(() => {
@@ -356,45 +357,37 @@ const Dashboard: React.FC = () => {
                 </div>
               )}
 
-              {/* Segmented Control: Single Check / Bulk Upload */}
-              <div className="inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
-                <button
-                  onClick={() => setInputMode('single')}
-                  className={`px-4 py-2 text-[13px] font-semibold rounded-lg transition-all duration-200 ${
-                    inputMode === 'single'
-                      ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white'
-                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
-                  }`}
-                >
-                  Single Check
-                </button>
-                <button
-                  onClick={() => {
-                    if (isUltra) {
-                      setInputMode('bulk');
-                    }
-                  }}
-                  className={`px-4 py-2 text-[13px] font-semibold rounded-lg transition-all duration-200 flex items-center gap-1.5 ${
-                    inputMode === 'bulk'
-                      ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white'
-                      : isUltra
-                        ? 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
-                        : 'text-gray-400 cursor-not-allowed'
-                  }`}
-                >
-                  Bulk Upload
-                  {!isUltra && <Lock className="w-3.5 h-3.5 text-gray-400" />}
-                </button>
-              </div>
-
-              {/* Upgrade prompt for non-Ultra clicking Bulk Upload */}
-              {inputMode === 'single' && !isUltra && (
-                <div id="bulk-upgrade-prompt" />
-              )}
-
               {/* Input / Loading / Results views */}
               {view === 'input' && inputMode === 'single' && (
                 <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6 md:p-8 space-y-4">
+                  {/* Bulk Upload pill — top-right of card */}
+                  <div className="relative flex justify-end -mt-1 -mb-1">
+                    <button
+                      onClick={() => {
+                        if (isUltra) {
+                          setInputMode('bulk');
+                        }
+                      }}
+                      onMouseEnter={() => !isUltra && setShowBulkTooltip(true)}
+                      onMouseLeave={() => setShowBulkTooltip(false)}
+                      className={`border text-[12px] rounded-full px-3 py-1 flex items-center gap-1.5 transition-all duration-200 ${
+                        isUltra
+                          ? 'border-gray-200 text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300'
+                          : 'border-gray-200 text-gray-400 cursor-not-allowed dark:border-gray-600 dark:text-gray-500'
+                      }`}
+                    >
+                      {!isUltra && <Lock className="w-3 h-3" />}
+                      <Upload className="w-3 h-3" />
+                      Bulk Upload
+                    </button>
+                    {showBulkTooltip && !isUltra && (
+                      <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-[12px] rounded-lg whitespace-nowrap shadow-lg z-10">
+                        Bulk upload is available on SafePost™ Ultra
+                        <div className="absolute top-full right-4 -mt-1 w-2 h-2 bg-gray-900 rotate-45" />
+                      </div>
+                    )}
+                  </div>
+
                   <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
@@ -461,31 +454,17 @@ const Dashboard: React.FC = () => {
                 </div>
               )}
 
-              {/* Bulk Upload — Non-Ultra upgrade prompt */}
-              {view === 'input' && inputMode === 'bulk' && !isUltra && (
-                <div className="bg-white rounded-2xl border border-blue-200 shadow-sm dark:bg-gray-800 dark:border-blue-800 p-6 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <Lock className="w-4 h-4 text-blue-500" />
-                    <p className="text-[14px] font-semibold text-gray-800 dark:text-white">
-                      Bulk upload is available on SafePost™ Ultra
-                    </p>
-                  </div>
-                  <p className="text-[13px] text-gray-500 dark:text-gray-400">
-                    Upload multiple posts at once and check them all for compliance in a single batch.
-                  </p>
-                  <button
-                    onClick={() => navigate('/change-plan?mode=upgrade')}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
-                  >
-                    Upgrade to Ultra
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-
               {/* Bulk Upload — Ultra file drop zone */}
               {view === 'input' && inputMode === 'bulk' && isUltra && (
                 <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6 md:p-8 space-y-4">
+                  <div className="flex justify-end -mt-1 -mb-1">
+                    <button
+                      onClick={() => setInputMode('single')}
+                      className="border border-gray-200 text-[12px] text-gray-500 rounded-full px-3 py-1 flex items-center gap-1.5 hover:text-gray-700 hover:border-gray-300 transition-all duration-200 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
+                    >
+                      Single Check
+                    </button>
+                  </div>
                   <div
                     className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 flex flex-col items-center justify-center gap-3 hover:border-blue-400 hover:bg-blue-50/30 transition-all duration-200 cursor-pointer"
                     onClick={() => document.getElementById('bulk-file-input')?.click()}
