@@ -8,6 +8,38 @@ import { supabase } from '../services/supabaseClient';
 const SESSION_KEY_RESULT = 'safepost_last_result';
 const SESSION_KEY_CONTENT = 'safepost_last_content';
 
+// Session storage keys for caching usage and history data
+const CACHE_KEY_USAGE = 'safepost_usage_cache';
+const CACHE_KEY_HISTORY = 'safepost_history_cache';
+const CACHE_MAX_AGE_MS = 60_000; // 60 seconds
+
+interface CacheEntry<T> {
+  timestamp: number;
+  data: T;
+}
+
+function getCache<T>(key: string): T | null {
+  try {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+    const entry: CacheEntry<T> = JSON.parse(raw);
+    if (Date.now() - entry.timestamp > CACHE_MAX_AGE_MS) return null;
+    return entry.data;
+  } catch {
+    return null;
+  }
+}
+
+function setCache<T>(key: string, data: T): void {
+  const entry: CacheEntry<T> = { timestamp: Date.now(), data };
+  sessionStorage.setItem(key, JSON.stringify(entry));
+}
+
+function invalidateCache(): void {
+  sessionStorage.removeItem(CACHE_KEY_USAGE);
+  sessionStorage.removeItem(CACHE_KEY_HISTORY);
+}
+
 // Plan check limits — update these when pricing tiers are finalised
 export const PLAN_LIMITS: Record<string, number> = {
   free: 3,
@@ -149,9 +181,19 @@ export function useComplianceChecker(planName: string = 'free') {
     }
   }, []);
 
-  // ── Load usage count and history on mount ──────────────────────────────
+  // ── Load usage count and history on mount (with sessionStorage cache) ──
   useEffect(() => {
     const initialLoad = async () => {
+      // Check for valid cached data first
+      const cachedUsage = getCache<number>(CACHE_KEY_USAGE);
+      const cachedHistory = getCache<SavedComplianceCheck[]>(CACHE_KEY_HISTORY);
+
+      if (cachedUsage !== null && cachedHistory !== null) {
+        setChecksUsedThisMonth(cachedUsage);
+        setHistory(cachedHistory);
+        return;
+      }
+
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
@@ -167,6 +209,8 @@ export function useComplianceChecker(planName: string = 'free') {
 
         setChecksUsedThisMonth(count);
         setHistory(checks);
+        setCache(CACHE_KEY_USAGE, count);
+        setCache(CACHE_KEY_HISTORY, checks);
       } catch (err) {
         console.error('Failed to load initial data:', err);
       } finally {
@@ -232,6 +276,8 @@ export function useComplianceChecker(planName: string = 'free') {
         if (newRecord) {
           setHistory(prev => [newRecord, ...prev]);
         }
+        // Invalidate cache so next mount fetches fresh data
+        invalidateCache();
       }
 
       setStep('complete');

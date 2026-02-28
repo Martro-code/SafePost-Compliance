@@ -34,10 +34,12 @@ const HomePage: React.FC = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const resourcesDropdownRef = useRef<HTMLDivElement>(null);
+  const resourcesContextMenuRef = useRef(false);
 
   // Close Resources dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      resourcesContextMenuRef.current = false;
       if (resourcesDropdownOpen && resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(event.target as Node)) {
         setResourcesDropdownOpen(false);
       }
@@ -216,7 +218,7 @@ const HomePage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="relative" ref={resourcesDropdownRef} onMouseLeave={() => setResourcesDropdownOpen(false)}>
+            <div className="relative" ref={resourcesDropdownRef} onMouseLeave={() => { if (!resourcesContextMenuRef.current) { setResourcesDropdownOpen(false); } }} onContextMenu={() => { resourcesContextMenuRef.current = true; }} onMouseEnter={() => { resourcesContextMenuRef.current = false; }}>
               <button
                 onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
                 className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
@@ -738,8 +740,8 @@ const HomePage: React.FC = () => {
           <div className="mt-14 pt-6 border-t border-black/[0.06]">
             <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
-              Ahpra and the National Boards do not provide pre-approval for advertising.
-              Registered health practitioners are ultimately responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law.
+              AHPRA and the National Boards do not provide pre-approval for advertising.
+              Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law.
             </p>
             <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>
           </div>
