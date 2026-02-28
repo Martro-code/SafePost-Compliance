@@ -32,6 +32,7 @@ import TermsOfUse from './TermsOfUse';
 import ProtectedRoute from './ProtectedRoute';
 import { ComplianceCheckerPage } from './src/components/ComplianceCheckerPage';
 import NotFound from './NotFound';
+import BackToTop from './src/components/BackToTop';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -82,6 +83,7 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+      <BackToTop />
     </>
   );
 };
