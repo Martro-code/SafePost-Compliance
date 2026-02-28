@@ -55,7 +55,7 @@ const NotificationsInbox: React.FC = () => {
 
   return (
     <LoggedInLayout>
-      <div className="max-w-3xl mx-auto px-6 py-12">
+      <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
         {/* Page header */}
         <div className="mb-8">
           <button
