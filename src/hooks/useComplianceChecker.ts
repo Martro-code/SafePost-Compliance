@@ -286,13 +286,17 @@ export function useComplianceChecker(planName: string = 'free') {
           .select()
           .single();
 
-        // Optimistically update usage count and prepend to history
-        setChecksUsedThisMonth(prev => prev + 1);
-        if (newRecord) {
-          setHistory(prev => [newRecord, ...prev]);
-        }
-        // Invalidate cache so next mount fetches fresh data
+        // Invalidate sessionStorage cache so refetch pulls fresh data
         invalidateCache();
+
+        // Refetch usage and history from Supabase so dashboard
+        // sidebar (Recent Checks) and History page update immediately
+        const [freshCount, freshHistory] = await Promise.all([
+          fetchMonthlyCheckCount(user.id),
+          fetchUserComplianceHistory(user.id, historyLimit),
+        ]);
+        setChecksUsedThisMonth(freshCount);
+        setHistory(freshHistory);
       }
 
       setStep('complete');
@@ -301,7 +305,7 @@ export function useComplianceChecker(planName: string = 'free') {
       setError(message);
       setStep('error');
     }
-  }, [isAtLimit]);
+  }, [isAtLimit, historyLimit]);
 
   // ── Load history manually (for History page) ───────────────────────────
   const loadHistory = useCallback(async () => {
