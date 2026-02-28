@@ -34,10 +34,10 @@ const Profile: React.FC = () => {
         </button>
 
         <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
             Profile
           </h1>
-          <p className="text-[14px] text-gray-500 dark:text-gray-300">
+          <p className="text-[14px] text-gray-500 mt-1 mb-8">
             Manage your personal information
           </p>
         </div>

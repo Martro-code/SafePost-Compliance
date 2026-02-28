@@ -55,7 +55,7 @@ const Help: React.FC = () => {
         {/* Page header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Help & Support</h1>
-          <p className="text-[14px] text-gray-500">Get help with SafePost™ or send us a message.</p>
+          <p className="text-[14px] text-gray-500 mt-1 mb-8">Get help with SafePost™ or send us a message.</p>
         </div>
 
         {/* Section 1 — FAQ accordions */}
