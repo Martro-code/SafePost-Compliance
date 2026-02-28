@@ -195,7 +195,10 @@ const History: React.FC = () => {
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(3);
+  const [notificationCount, setNotificationCount] = useState(() => {
+    const saved = sessionStorage.getItem('safepost_notification_count');
+    return saved !== null ? parseInt(saved, 10) : 3;
+  });
   const notificationRef = useRef<HTMLDivElement>(null);
 
   // Filter/search state
@@ -307,7 +310,7 @@ const History: React.FC = () => {
                 onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
                 className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200"
               >
-                {firstName || 'My Account'}
+                My Account
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accountDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {accountDropdownOpen && (

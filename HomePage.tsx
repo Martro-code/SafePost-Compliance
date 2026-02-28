@@ -36,17 +36,18 @@ const HomePage: React.FC = () => {
   const resourcesDropdownRef = useRef<HTMLDivElement>(null);
   const resourcesContextMenuRef = useRef(false);
 
-  // Close Resources dropdown when clicking outside
+  // Close Resources dropdown when clicking outside (mousedown only fires for left-click here)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      resourcesContextMenuRef.current = false;
-      if (resourcesDropdownOpen && resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(event.target as Node)) {
+      if (event.button !== 0) return; // ignore right-click and middle-click
+      if (resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(event.target as Node)) {
         setResourcesDropdownOpen(false);
+        resourcesContextMenuRef.current = false;
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [resourcesDropdownOpen]);
+  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
