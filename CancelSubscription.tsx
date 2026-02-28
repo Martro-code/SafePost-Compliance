@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, LogOut, CheckCircle, Bell } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowLeft, LogOut, CheckCircle, Bell, HelpCircle } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import LoggedInFooter from './src/components/LoggedInFooter';
 import { useAuth } from './useAuth';
@@ -272,6 +272,10 @@ const CancelSubscription: React.FC = () => {
                   </button>
                   <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
                     Settings
+                  </button>
+                  <button onClick={() => navigate('/help')} className="flex items-center gap-2 block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
+                    <HelpCircle className="w-3.5 h-3.5" />
+                    Help & Support
                   </button>
                   <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
                   <button
