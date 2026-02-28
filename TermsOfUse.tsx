@@ -504,6 +504,19 @@ const TermsOfUse: React.FC = () => {
       {/* Footer */}
       <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
         <div className="max-w-6xl mx-auto px-6">
+          {/* Brand Zone */}
+          <div className="flex flex-col items-start mb-10 pb-10 border-b border-black/[0.06]">
+            <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
+              <span className="text-gray-900">Safe</span>
+              <span className="text-[#2563EB]">Post</span>
+              <span className="text-gray-400 text-[15px] font-medium ml-0.5">™</span>
+            </div>
+            <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
+              Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.
+            </p>
+          </div>
+
+          {/* Footer Columns */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Features</h4>
