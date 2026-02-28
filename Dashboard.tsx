@@ -459,25 +459,29 @@ const Dashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Upgrade CTA - only show if no paid plan and not on Ultra */}
-              {!hasPaidPlan && planName.toLowerCase() !== 'ultra' && (
+              {/* Upgrade CTA - hidden for Ultra users */}
+              {planName.toLowerCase() !== 'ultra' && (
                 <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6 dark:bg-blue-950 dark:border-blue-900">
                   <div className="flex items-center gap-2.5 mb-3">
                     <Rocket className="w-5 h-5 text-blue-600" />
-                    <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider dark:text-blue-400">Upgrade to Pro</h3>
+                    <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider dark:text-blue-400">Upgrade Your Plan</h3>
                   </div>
                   <ul className="space-y-2.5 mb-5">
                     <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                       <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                      Unlimited checks
+                      More monthly compliance checks
                     </li>
                     <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                       <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                      AI-powered rewrites
+                      AI-powered compliant rewrites
                     </li>
                     <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                       <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                      Full history tracking
+                      Full compliance history tracking
+                    </li>
+                    <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
+                      <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                      Image attachment analysis
                     </li>
                     <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                       <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
@@ -488,7 +492,7 @@ const Dashboard: React.FC = () => {
                     onClick={() => navigate('/change-plan?mode=upgrade')}
                     className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
                   >
-                    Upgrade Now
+                    Upgrade Your Plan
                   </button>
                 </div>
               )}
