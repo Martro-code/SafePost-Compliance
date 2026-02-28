@@ -30,6 +30,7 @@ const LoggedInFooter = () => {
             <ul className="space-y-2.5">
               <li><Link to="/terms-of-use" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Terms of Use</Link></li>
               <li><Link to="/privacy-policy" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Privacy Policy</Link></li>
+              <li><Link to="/cookie-policy" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Cookie Policy</Link></li>
             </ul>
           </div>
 

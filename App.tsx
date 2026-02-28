@@ -28,6 +28,7 @@ import TwoFactorAuth from './TwoFactorAuth';
 import NotificationPreferences from './NotificationPreferences';
 import NotificationsInbox from './src/pages/NotificationsInbox';
 import Help from './src/pages/Help';
+import CookiePolicy from './src/pages/CookiePolicy';
 import EmailPreferences from './EmailPreferences';
 import PrivacyPolicy from './PrivacyPolicy';
 import TermsOfUse from './TermsOfUse';
@@ -63,6 +64,7 @@ const App: React.FC = () => {
           <Route path="/about" element={<About />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
+          <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
