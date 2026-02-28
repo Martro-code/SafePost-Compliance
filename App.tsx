@@ -35,6 +35,7 @@ import ProtectedRoute from './ProtectedRoute';
 import { ComplianceCheckerPage } from './src/components/ComplianceCheckerPage';
 import NotFound from './NotFound';
 import BackToTop from './src/components/BackToTop';
+import CookieBanner from './src/components/CookieBanner';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -87,6 +88,7 @@ const App: React.FC = () => {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
+      <CookieBanner />
       <BackToTop />
     </>
   );
