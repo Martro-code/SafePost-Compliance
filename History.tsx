@@ -3,11 +3,12 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import {
   ChevronDown, Menu, X, ArrowLeft, LogOut, Clock, Bell,
   CheckCircle2, XCircle, AlertTriangle, Loader2, Search,
-  Filter, Trash2, ExternalLink, ChevronRight
+  Filter, Trash2, ExternalLink, ChevronRight, FileText, Lock,
+  ChevronLeft
 } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
-import { useComplianceChecker, SavedComplianceCheck } from './src/hooks/useComplianceChecker';
+import { useComplianceChecker, SavedComplianceCheck, HISTORY_LIMITS } from './src/hooks/useComplianceChecker';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const statusConfig: Record<string, {
@@ -73,21 +74,39 @@ function formatDateShort(dateStr: string): string {
   return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
 }
 
+const PAGE_SIZE = 25;
+
 // ─── Check Row Component ──────────────────────────────────────────────────────
 const CheckRow: React.FC<{
   check: SavedComplianceCheck;
   onView: (check: SavedComplianceCheck) => void;
   onDelete: (id: string) => void;
-}> = ({ check, onView, onDelete }) => {
+  isUltra: boolean;
+}> = ({ check, onView, onDelete, isUltra }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [showPdfTooltip, setShowPdfTooltip] = useState(false);
+  const [showPdfToast, setShowPdfToast] = useState(false);
   const cfg = getStatusConfig(check.overall_status);
   const issueCount = check.result_json?.issues?.length ?? 0;
   const criticalCount = check.result_json?.issues?.filter(
     (i: any) => i.severity?.toLowerCase() === 'critical'
   ).length ?? 0;
 
+  const handleExportPdf = () => {
+    if (!isUltra) return;
+    setShowPdfToast(true);
+    setTimeout(() => setShowPdfToast(false), 3000);
+  };
+
   return (
     <div className={`bg-white rounded-xl border border-gray-100 border-l-4 ${cfg.row} shadow-sm shadow-black/[0.02] hover:shadow-md hover:shadow-black/[0.04] transition-all duration-200 overflow-hidden`}>
+      {/* PDF Toast */}
+      {showPdfToast && (
+        <div className="fixed top-6 right-6 z-50 px-5 py-3 bg-gray-900 text-white text-[13px] font-medium rounded-xl shadow-lg shadow-black/20">
+          Coming soon — this feature is in development
+        </div>
+      )}
+
       <div className="flex items-start gap-4 p-4 md:p-5">
 
         {/* Status icon */}
@@ -132,6 +151,29 @@ const CheckRow: React.FC<{
 
         {/* Actions */}
         <div className="flex items-center gap-1 flex-shrink-0">
+          {/* Export PDF icon button */}
+          <div className="relative">
+            <button
+              onClick={handleExportPdf}
+              onMouseEnter={() => !isUltra && setShowPdfTooltip(true)}
+              onMouseLeave={() => setShowPdfTooltip(false)}
+              className={`p-1.5 rounded-lg transition-all duration-150 ${
+                isUltra
+                  ? 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
+                  : 'text-gray-300 cursor-not-allowed'
+              }`}
+            >
+              {!isUltra && <Lock className="w-2.5 h-2.5 absolute -top-0.5 -right-0.5 text-gray-400" />}
+              <FileText className="w-3.5 h-3.5" />
+            </button>
+            {showPdfTooltip && !isUltra && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-lg z-10">
+                PDF export is available on SafePost™ Ultra
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-900 rotate-45" />
+              </div>
+            )}
+          </div>
+
           {/* View button */}
           <button
             onClick={() => onView(check)}
@@ -181,9 +223,13 @@ const History: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { userEmail, firstName, signOut } = useAuth();
-  const checker = useComplianceChecker();
 
   const planName = sessionStorage.getItem('safepost_plan') || '';
+  const checker = useComplianceChecker(planName);
+
+  const isUltra = planName.toLowerCase() === 'ultra';
+  const historyLimit = HISTORY_LIMITS[planName.toLowerCase()] ?? HISTORY_LIMITS.free;
+
   const planDisplayNames: Record<string, string> = {
     professional: 'SafePost Professional',
     proplus: 'SafePost Pro+',
@@ -205,6 +251,12 @@ const History: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [filterOpen, setFilterOpen] = useState(false);
+
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Plan limit banner dismissal
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -251,6 +303,19 @@ const History: React.FC = () => {
     return matchesSearch && matchesStatus;
   });
 
+  // Pagination
+  const totalFiltered = filteredHistory.length;
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / PAGE_SIZE));
+  const safePage = Math.min(currentPage, totalPages);
+  const startIdx = (safePage - 1) * PAGE_SIZE;
+  const endIdx = Math.min(startIdx + PAGE_SIZE, totalFiltered);
+  const paginatedHistory = filteredHistory.slice(startIdx, endIdx);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter]);
+
   // Stats
   const totalChecks = checker.history.length;
   const compliantCount = checker.history.filter(c => c.overall_status === 'compliant').length;
@@ -258,6 +323,9 @@ const History: React.FC = () => {
   const reviewCount = checker.history.filter(c =>
     c.overall_status === 'warning' || c.overall_status === 'requires_review'
   ).length;
+
+  // Show plan limit banner
+  const showLimitBanner = !isUltra && !bannerDismissed && totalChecks >= historyLimit;
 
   const navLinks = [
     { label: 'Dashboard', path: '/dashboard' },
@@ -360,6 +428,30 @@ const History: React.FC = () => {
               A full record of all your AHPRA compliance checks
             </p>
           </div>
+
+          {/* Plan limit banner */}
+          {showLimitBanner && (
+            <div className="mb-6 px-5 py-3.5 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between dark:bg-blue-950 dark:border-blue-800">
+              <p className="text-[13px] text-blue-700 dark:text-blue-300">
+                You're seeing your most recent {historyLimit} checks.{' '}
+                Upgrade to {historyLimit < 100 ? 'Pro+ or Ultra' : 'Ultra'} to access your full history.
+              </p>
+              <div className="flex items-center gap-3 flex-shrink-0 ml-4">
+                <button
+                  onClick={() => navigate('/change-plan?mode=upgrade')}
+                  className="text-[13px] font-semibold text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400"
+                >
+                  Upgrade
+                </button>
+                <button
+                  onClick={() => setBannerDismissed(true)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Stats row */}
           {!checker.isLoadingHistory && totalChecks > 0 && (
@@ -468,18 +560,72 @@ const History: React.FC = () => {
             <div className="space-y-2.5">
               {/* Results count */}
               <p className="text-[12px] text-gray-400 px-1 mb-3">
-                {filteredHistory.length} {filteredHistory.length === 1 ? 'check' : 'checks'}
+                {totalFiltered} {totalFiltered === 1 ? 'check' : 'checks'}
                 {statusFilter !== 'all' || searchQuery ? ' matching your filters' : ' total'}
               </p>
 
-              {filteredHistory.map((check) => (
+              {paginatedHistory.map((check) => (
                 <CheckRow
                   key={check.id}
                   check={check}
                   onView={handleViewCheck}
                   onDelete={checker.deleteCheck}
+                  isUltra={isUltra}
                 />
               ))}
+
+              {/* Pagination bar */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between pt-4 mt-4 border-t border-black/[0.06]">
+                  <p className="text-[13px] text-gray-500">
+                    Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
+                  </p>
+                  <div className="flex items-center gap-1">
+                    {/* Prev button */}
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={safePage === 1}
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                        safePage === 1
+                          ? 'text-gray-300 cursor-not-allowed'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                      Prev
+                    </button>
+
+                    {/* Page number buttons */}
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                          page === safePage
+                            ? 'bg-blue-600 text-white'
+                            : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+
+                    {/* Next button */}
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={safePage === totalPages}
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                        safePage === totalPages
+                          ? 'text-gray-300 cursor-not-allowed'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      Next
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

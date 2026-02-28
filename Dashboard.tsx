@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useSearchParams, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, LogOut, Bell } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, LogOut, Bell, Lock, Upload, Download } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 import { useComplianceChecker } from './src/hooks/useComplianceChecker';
@@ -41,10 +41,17 @@ const Dashboard: React.FC = () => {
   };
   const dropdownPlanName = dropdownPlanDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
 
+  const isUltra = planName.toLowerCase() === 'ultra';
+
   // Form state
   const [content, setContent] = useState('');
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [view, setView] = useState<'input' | 'loading' | 'results'>('input');
+
+  // Bulk upload state
+  const [inputMode, setInputMode] = useState<'single' | 'bulk'>('single');
+  const [bulkFile, setBulkFile] = useState<File | null>(null);
+  const [showBulkToast, setShowBulkToast] = useState(false);
 
   // Restore results view if a previous result exists in session
   useEffect(() => {
@@ -122,6 +129,13 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4] dark:bg-gray-900">
+      {/* Bulk Upload Toast */}
+      {showBulkToast && (
+        <div className="fixed top-6 right-6 z-50 px-5 py-3 bg-gray-900 text-white text-[13px] font-medium rounded-xl shadow-lg shadow-black/20">
+          Coming soon
+        </div>
+      )}
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -342,8 +356,44 @@ const Dashboard: React.FC = () => {
                 </div>
               )}
 
+              {/* Segmented Control: Single Check / Bulk Upload */}
+              <div className="inline-flex items-center bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
+                <button
+                  onClick={() => setInputMode('single')}
+                  className={`px-4 py-2 text-[13px] font-semibold rounded-lg transition-all duration-200 ${
+                    inputMode === 'single'
+                      ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white'
+                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                  }`}
+                >
+                  Single Check
+                </button>
+                <button
+                  onClick={() => {
+                    if (isUltra) {
+                      setInputMode('bulk');
+                    }
+                  }}
+                  className={`px-4 py-2 text-[13px] font-semibold rounded-lg transition-all duration-200 flex items-center gap-1.5 ${
+                    inputMode === 'bulk'
+                      ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-700 dark:text-white'
+                      : isUltra
+                        ? 'text-gray-500 hover:text-gray-700 dark:text-gray-400'
+                        : 'text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  Bulk Upload
+                  {!isUltra && <Lock className="w-3.5 h-3.5 text-gray-400" />}
+                </button>
+              </div>
+
+              {/* Upgrade prompt for non-Ultra clicking Bulk Upload */}
+              {inputMode === 'single' && !isUltra && (
+                <div id="bulk-upgrade-prompt" />
+              )}
+
               {/* Input / Loading / Results views */}
-              {view === 'input' && (
+              {view === 'input' && inputMode === 'single' && (
                 <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6 md:p-8 space-y-4">
                   <textarea
                     value={content}
@@ -411,6 +461,98 @@ const Dashboard: React.FC = () => {
                 </div>
               )}
 
+              {/* Bulk Upload — Non-Ultra upgrade prompt */}
+              {view === 'input' && inputMode === 'bulk' && !isUltra && (
+                <div className="bg-white rounded-2xl border border-blue-200 shadow-sm dark:bg-gray-800 dark:border-blue-800 p-6 space-y-3">
+                  <div className="flex items-center gap-2">
+                    <Lock className="w-4 h-4 text-blue-500" />
+                    <p className="text-[14px] font-semibold text-gray-800 dark:text-white">
+                      Bulk upload is available on SafePost™ Ultra
+                    </p>
+                  </div>
+                  <p className="text-[13px] text-gray-500 dark:text-gray-400">
+                    Upload multiple posts at once and check them all for compliance in a single batch.
+                  </p>
+                  <button
+                    onClick={() => navigate('/change-plan?mode=upgrade')}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+                  >
+                    Upgrade to Ultra
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* Bulk Upload — Ultra file drop zone */}
+              {view === 'input' && inputMode === 'bulk' && isUltra && (
+                <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6 md:p-8 space-y-4">
+                  <div
+                    className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 flex flex-col items-center justify-center gap-3 hover:border-blue-400 hover:bg-blue-50/30 transition-all duration-200 cursor-pointer"
+                    onClick={() => document.getElementById('bulk-file-input')?.click()}
+                    onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const file = e.dataTransfer.files[0];
+                      if (file && (file.name.endsWith('.csv') || file.name.endsWith('.txt'))) {
+                        setBulkFile(file);
+                      }
+                    }}
+                  >
+                    <Upload className="w-8 h-8 text-gray-400" />
+                    <div className="text-center">
+                      <p className="text-[14px] font-semibold text-gray-700 dark:text-gray-300">
+                        {bulkFile ? bulkFile.name : 'Drop your file here, or click to browse'}
+                      </p>
+                      <p className="text-[12px] text-gray-400 mt-1">
+                        Accepts .csv and .txt files
+                      </p>
+                    </div>
+                    <input
+                      id="bulk-file-input"
+                      type="file"
+                      accept=".csv,.txt"
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setBulkFile(e.target.files[0]);
+                        }
+                      }}
+                    />
+                  </div>
+                  <p className="text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed">
+                    Upload a CSV or text file containing multiple posts — one per line. Each will be checked individually.
+                  </p>
+                  <button
+                    onClick={(e) => { e.preventDefault(); }}
+                    className="text-[13px] text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1.5 transition-colors"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    Download template
+                  </button>
+                  {bulkFile && (
+                    <div className="flex items-center gap-2 text-[13px] text-gray-500 dark:text-gray-400">
+                      <Upload className="w-3.5 h-3.5" />
+                      <span className="truncate">{bulkFile.name}</span>
+                      <button onClick={() => setBulkFile(null)} className="text-gray-400 hover:text-gray-600 ml-1">
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => {
+                      setShowBulkToast(true);
+                      setTimeout(() => setShowBulkToast(false), 3000);
+                    }}
+                    disabled={!bulkFile}
+                    className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2.5"
+                  >
+                    Start Bulk Check
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
               {view === 'loading' && (
                 <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-12 flex flex-col items-center justify-center gap-4">
                   <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
@@ -424,6 +566,7 @@ const Dashboard: React.FC = () => {
                   originalContent={checker.lastContent || content || sessionStorage.getItem('safepost_last_content') || ''}
                   onNewCheck={handleNewCheck}
                   onGenerateRewrites={generateCompliantRewrites}
+                  planName={planName}
                 />
               )}
 
