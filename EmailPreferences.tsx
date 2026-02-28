@@ -117,7 +117,7 @@ const EmailPreferences: React.FC = () => {
                   </div>
                   <div className="border-t border-black/[0.06] dark:border-gray-700" />
                   <button
-                    onClick={() => { navigate('/notification-preferences'); setNotificationDropdownOpen(false); }}
+                    onClick={() => { navigate('/notifications'); setNotificationDropdownOpen(false); }}
                     className="block w-full text-center px-4 py-2.5 text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400"
                   >
                     View All Notifications
