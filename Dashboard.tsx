@@ -23,15 +23,15 @@ const Dashboard: React.FC = () => {
   const hasPaidPlan = planName && !['free', 'starter'].includes(planName.toLowerCase());
 
   const formatPlanName = (plan: string) => {
-    return plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase();
-  };
-
-  const planDisplayNames: Record<string, string> = {
-    starter: 'Starter',
-    free: 'Starter',
-    professional: 'Professional',
-    proplus: 'Pro+',
-    ultra: 'Ultra',
+    if (!plan) return '';
+    const displayNames: Record<string, string> = {
+      starter: 'Starter',
+      free: 'Starter',
+      professional: 'Professional',
+      proplus: 'Pro+',
+      ultra: 'Ultra',
+    };
+    return displayNames[plan.toLowerCase()] || plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase();
   };
 
   const isUltra = planName.toLowerCase() === 'ultra';
@@ -158,7 +158,7 @@ const Dashboard: React.FC = () => {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
                 <div className="w-2 h-2 rounded-full bg-blue-500" />
                 <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
-                  SafePost {planDisplayNames[planName.toLowerCase()] || formatPlanName(planName)}
+                  SafePost {formatPlanName(planName)}
                 </span>
                 <span className="text-[12px] text-blue-400 dark:text-blue-500">
                   &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
