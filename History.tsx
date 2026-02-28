@@ -99,7 +99,7 @@ const CheckRow: React.FC<{
   };
 
   return (
-    <div className={`bg-white rounded-xl border border-gray-100 border-l-4 ${cfg.row} shadow-sm shadow-black/[0.02] hover:shadow-md hover:shadow-black/[0.04] transition-all duration-200 overflow-hidden`}>
+    <div className={`bg-white rounded-xl border border-gray-100 border-l-4 ${cfg.row} shadow-sm shadow-black/[0.02] hover:shadow-md hover:shadow-black/[0.04] transition-all duration-200 overflow-visible`}>
       {/* PDF Toast */}
       {showPdfToast && (
         <div className="fixed top-6 right-6 z-50 px-5 py-3 bg-gray-900 text-white text-[13px] font-medium rounded-xl shadow-lg shadow-black/20">
@@ -150,7 +150,7 @@ const CheckRow: React.FC<{
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-1 flex-shrink-0">
+        <div className="flex items-center gap-1 flex-shrink-0 overflow-visible">
           {/* Export PDF icon button */}
           <div className="relative z-10">
             <button
@@ -167,7 +167,7 @@ const CheckRow: React.FC<{
               <FileText className="w-3.5 h-3.5" />
             </button>
             {showPdfTooltip && !isUltra && (
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-lg z-50">
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-lg z-50 pointer-events-none">
                 PDF export is available on SafePost™ Ultra
                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-900 rotate-45" />
               </div>

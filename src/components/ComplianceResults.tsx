@@ -335,10 +335,32 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
 
       {/* ── Original Post — shown first so user sees what was assessed ─────── */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm shadow-black/[0.02] overflow-hidden">
-        <div className="flex items-center gap-2 px-4 py-2.5 border-b border-gray-100 bg-gray-50/80">
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 bg-gray-50/80">
           <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
             Content Assessed
           </span>
+          <div className="relative">
+            <button
+              onClick={handleExportPdf}
+              onMouseEnter={() => !isUltra && setShowPdfTooltip(true)}
+              onMouseLeave={() => setShowPdfTooltip(false)}
+              className={`flex items-center gap-1 text-[11px] transition-colors cursor-pointer ${
+                isUltra
+                  ? 'text-gray-400 hover:text-gray-600'
+                  : 'text-gray-400 hover:text-gray-600'
+              }`}
+            >
+              {!isUltra && <Lock className="w-3.5 h-3.5" />}
+              <FileText className="w-3.5 h-3.5" />
+              <span>Export PDF</span>
+            </button>
+            {showPdfTooltip && !isUltra && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-lg z-50 pointer-events-none">
+                PDF export is available on SafePost™ Ultra
+                <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-900 rotate-45" />
+              </div>
+            )}
+          </div>
         </div>
         <p className="px-4 py-3.5 text-[13px] text-gray-600 leading-relaxed whitespace-pre-wrap">
           {originalContent}
@@ -494,38 +516,6 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
           <ArrowLeft className="w-4 h-4" />
           New Check
         </button>
-        {/* Export PDF — secondary text link */}
-        <div className="relative mt-2">
-          <button
-            onClick={handleExportPdf}
-            onMouseEnter={() => !isUltra && setShowPdfTooltip(true)}
-            onMouseLeave={() => setShowPdfTooltip(false)}
-            disabled={pdfExporting}
-            className={`text-[12px] inline-flex items-center gap-1.5 transition-colors duration-200 ${
-              pdfExporting
-                ? 'text-gray-400'
-                : isUltra
-                  ? 'text-gray-400 hover:text-gray-600'
-                  : 'text-gray-400 hover:text-gray-600 cursor-not-allowed'
-            }`}
-          >
-            {pdfExporting ? (
-              <><Loader2 className="w-3.5 h-3.5 animate-spin" />Generating PDF...</>
-            ) : (
-              <>
-                {!isUltra && <Lock className="w-3 h-3" />}
-                <FileText className="w-3.5 h-3.5" />
-                Export PDF
-              </>
-            )}
-          </button>
-          {showPdfTooltip && !isUltra && (
-            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[12px] rounded-lg whitespace-nowrap shadow-lg z-10">
-              PDF export is available on SafePost™ Ultra
-              <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-900 rotate-45" />
-            </div>
-          )}
-        </div>
       </div>
 
       {/* ── Legal Disclaimer — bottom of every result ─────────────────────── */}
