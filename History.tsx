@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
-  ChevronDown, Menu, X, ArrowLeft, LogOut, Clock, Bell,
+  ArrowLeft, Clock,
   CheckCircle2, XCircle, AlertTriangle, Loader2, Search,
-  Filter, Trash2, ExternalLink, ChevronRight, FileText, Lock,
-  ChevronLeft, HelpCircle
+  Filter, Trash2, ChevronRight, FileText, Lock,
+  ChevronLeft, X
 } from 'lucide-react';
 import jsPDF from 'jspdf';
-import SafePostLogo from './components/SafePostLogo';
-import LoggedInFooter from './src/components/LoggedInFooter';
+import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
 import { useComplianceChecker, SavedComplianceCheck, HISTORY_LIMITS } from './src/hooks/useComplianceChecker';
 
@@ -375,31 +374,13 @@ const CheckRow: React.FC<{
 // ─── Main History Page ─────────────────────────────────────────────────────────
 const History: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { userEmail, firstName, signOut } = useAuth();
+  const { signOut } = useAuth();
 
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const checker = useComplianceChecker(planName);
 
   const isUltra = planName.toLowerCase() === 'ultra';
   const historyLimit = HISTORY_LIMITS[planName.toLowerCase()] ?? HISTORY_LIMITS.free;
-
-  const planDisplayNames: Record<string, string> = {
-    professional: 'SafePost Professional',
-    proplus: 'SafePost Pro+',
-    ultra: 'SafePost Ultra',
-  };
-  const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
-
-  // Header state
-  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(() => {
-    const saved = sessionStorage.getItem('safepost_notification_count');
-    return saved !== null ? parseInt(saved, 10) : 3;
-  });
-  const notificationRef = useRef<HTMLDivElement>(null);
 
   // Filter/search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -411,16 +392,6 @@ const History: React.FC = () => {
 
   // Plan limit banner dismissal
   const [bannerDismissed, setBannerDismissed] = useState(false);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        setNotificationDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   // Load history on mount
   useEffect(() => {
@@ -449,12 +420,6 @@ const History: React.FC = () => {
       navigate('/dashboard');
     }
   }, [checker.isLoadingHistory, checker.history]);
-
-  const handleLogOut = async () => {
-    sessionStorage.clear();
-    await signOut();
-    navigate('/');
-  };
 
   // View a check on the dashboard
   const handleViewCheck = (check: SavedComplianceCheck) => {
@@ -504,364 +469,278 @@ const History: React.FC = () => {
   // Show plan limit banner
   const showLimitBanner = !isUltra && !bannerDismissed && totalChecks >= historyLimit;
 
-  const navLinks = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'History', path: '/history' },
-    { label: 'Settings', path: '/settings' },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#f7f7f4] dark:bg-gray-900">
+    <LoggedInLayout>
+      <div className="max-w-4xl mx-auto px-6 pt-8 pb-16">
 
-      {/* ── Header (same as Dashboard) ──────────────────────────────────────── */}
-      <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <Link to="/dashboard"><SafePostLogo /></Link>
-            <nav className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <button
-                  key={link.path}
-                  onClick={() => navigate(link.path)}
-                  className={`px-3.5 py-2 text-[13px] font-medium rounded-lg transition-colors duration-200 ${
-                    location.pathname === link.path
-                      ? 'text-gray-900 bg-black/[0.04]'
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04]'
-                  }`}
-                >
-                  {link.label}
-                </button>
-              ))}
-            </nav>
-          </div>
+        {/* Back link */}
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </button>
 
-          <div className="hidden md:flex items-center gap-1 justify-end min-w-[180px]">
-            <div className="relative" ref={notificationRef}>
+        {/* Page header */}
+        <div className="mb-8">
+          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
+            Compliance History
+          </h1>
+          <p className="text-[14px] text-gray-500 dark:text-gray-300">
+            A full record of all your AHPRA compliance checks
+          </p>
+        </div>
+
+        {/* Plan limit banner */}
+        {showLimitBanner && (
+          <div className="mb-6 px-5 py-3.5 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between dark:bg-blue-950 dark:border-blue-800">
+            <p className="text-[13px] text-blue-700 dark:text-blue-300">
+              You're seeing your most recent {historyLimit} checks.{' '}
+              Upgrade to {historyLimit < 100 ? 'Pro+ or Ultra' : 'Ultra'} to access your full history.
+            </p>
+            <div className="flex items-center gap-3 flex-shrink-0 ml-4">
               <button
-                onClick={() => { setNotificationDropdownOpen(!notificationDropdownOpen); setAccountDropdownOpen(false); }}
-                className="relative p-2 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200"
+                onClick={() => navigate('/change-plan?mode=upgrade')}
+                className="text-[13px] font-semibold text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400"
               >
-                <Bell className="w-[18px] h-[18px]" />
-                {notificationCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-blue-600 rounded-full flex items-center justify-center">
-                    <span className="text-[9px] font-bold text-white">{notificationCount}</span>
-                  </span>
-                )}
+                Upgrade
+              </button>
+              <button
+                onClick={() => setBannerDismissed(true)}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <X className="w-4 h-4" />
               </button>
             </div>
+          </div>
+        )}
+
+        {/* Stats row */}
+        {!checker.isLoadingHistory && totalChecks > 0 && (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            {[
+              { label: 'Total Checks', value: totalChecks, color: 'text-gray-700', bg: 'bg-white' },
+              { label: 'Compliant', value: compliantCount, color: 'text-emerald-700', bg: 'bg-emerald-50' },
+              { label: 'Non-Compliant', value: nonCompliantCount, color: 'text-red-700', bg: 'bg-red-50' },
+              { label: 'Requires Review', value: reviewCount, color: 'text-amber-700', bg: 'bg-amber-50' },
+            ].map(stat => (
+              <div key={stat.label} className={`${stat.bg} rounded-xl border border-black/[0.06] p-4`}>
+                <p className={`text-2xl font-extrabold ${stat.color}`}>{stat.value}</p>
+                <p className="text-[11px] text-gray-400 mt-0.5 font-medium">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Search and filter bar */}
+        {!checker.isLoadingHistory && totalChecks > 0 && (
+          <div className="flex items-center gap-3 mb-5">
+            {/* Search */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search by content..."
+                className="w-full pl-9 pr-4 py-2.5 text-[13px] bg-white border border-gray-200 rounded-xl outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200 placeholder:text-gray-400"
+              />
+            </div>
+
+            {/* Status filter */}
             <div className="relative">
               <button
-                onClick={() => { setAccountDropdownOpen(!accountDropdownOpen); setNotificationDropdownOpen(false); }}
-                onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
-                className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200"
+                onClick={() => setFilterOpen(!filterOpen)}
+                className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border text-[13px] font-medium transition-all duration-150 ${
+                  statusFilter !== 'all'
+                    ? 'bg-blue-50 border-blue-200 text-blue-700'
+                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
+                }`}
               >
-                My Account
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accountDropdownOpen ? 'rotate-180' : ''}`} />
+                <Filter className="w-3.5 h-3.5" />
+                {statusFilter === 'all' ? 'All' : getStatusConfig(statusFilter).label}
               </button>
-              {accountDropdownOpen && (
-                <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-xl border border-black/[0.06] shadow-lg py-1.5">
-                  <div className="px-4 py-2.5">
-                    <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
-                    <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
-                  </div>
-                  <div className="border-t border-black/[0.06] my-1" />
-                  <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">Profile</button>
-                  <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">Billing</button>
-                  <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">Settings</button>
-                  <button onClick={() => navigate('/help')} className="flex items-center gap-2 block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    <HelpCircle className="w-3.5 h-3.5" />
-                    Help & Support
-                  </button>
-                  <div className="border-t border-black/[0.06] my-1" />
-                  <button onClick={handleLogOut} className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    <LogOut className="w-3.5 h-3.5" />Log Out
-                  </button>
+              {filterOpen && (
+                <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg py-1.5 z-10">
+                  {[
+                    { value: 'all', label: 'All Checks' },
+                    { value: 'compliant', label: 'Compliant' },
+                    { value: 'non_compliant', label: 'Non-Compliant' },
+                    { value: 'requires_review', label: 'Requires Review' },
+                  ].map(option => (
+                    <button
+                      key={option.value}
+                      onClick={() => { setStatusFilter(option.value); setFilterOpen(false); }}
+                      className={`w-full text-left px-4 py-2 text-[13px] transition-colors ${
+                        statusFilter === option.value
+                          ? 'text-blue-600 bg-blue-50 font-medium'
+                          : 'text-gray-600 hover:bg-gray-50'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
                 </div>
               )}
             </div>
           </div>
+        )}
 
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200">
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-      </header>
-
-      {/* ── Main Content ─────────────────────────────────────────────────────── */}
-      <main className="flex-grow">
-        <div className="max-w-4xl mx-auto px-6 pt-8 pb-16">
-
-          {/* Back link */}
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </button>
-
-          {/* Page header */}
-          <div className="mb-8">
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
-              Compliance History
-            </h1>
-            <p className="text-[14px] text-gray-500 dark:text-gray-300">
-              A full record of all your AHPRA compliance checks
+        {/* Content area */}
+        {checker.isLoadingHistory ? (
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center gap-3">
+            <Loader2 className="w-7 h-7 text-blue-500 animate-spin" />
+            <p className="text-[14px] text-gray-400 font-medium">Loading your compliance history...</p>
+          </div>
+        ) : totalChecks === 0 ? (
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
+            <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
+              <Clock className="w-6 h-6 text-gray-400" />
+            </div>
+            <h3 className="text-[15px] font-semibold text-gray-700 mb-2">No checks yet</h3>
+            <p className="text-[13px] text-gray-400 mb-5 max-w-xs">
+              Run your first compliance check on the dashboard and it will appear here.
             </p>
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg transition-colors"
+            >
+              Go to Dashboard
+            </button>
           </div>
+        ) : filteredHistory.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-10 text-center">
+            <p className="text-[14px] text-gray-400">No checks match your search or filter.</p>
+            <button
+              onClick={() => { setSearchQuery(''); setStatusFilter('all'); }}
+              className="mt-3 text-[13px] text-blue-600 hover:text-blue-700 font-medium"
+            >
+              Clear filters
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-2.5">
+            {/* Results count */}
+            <p className="text-[12px] text-gray-400 px-1 mb-3">
+              {totalFiltered} {totalFiltered === 1 ? 'check' : 'checks'}
+              {statusFilter !== 'all' || searchQuery ? ' matching your filters' : ' total'}
+            </p>
 
-          {/* Plan limit banner */}
-          {showLimitBanner && (
-            <div className="mb-6 px-5 py-3.5 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-between dark:bg-blue-950 dark:border-blue-800">
-              <p className="text-[13px] text-blue-700 dark:text-blue-300">
-                You're seeing your most recent {historyLimit} checks.{' '}
-                Upgrade to {historyLimit < 100 ? 'Pro+ or Ultra' : 'Ultra'} to access your full history.
-              </p>
-              <div className="flex items-center gap-3 flex-shrink-0 ml-4">
-                <button
-                  onClick={() => navigate('/change-plan?mode=upgrade')}
-                  className="text-[13px] font-semibold text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400"
-                >
-                  Upgrade
-                </button>
-                <button
-                  onClick={() => setBannerDismissed(true)}
-                  className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Stats row */}
-          {!checker.isLoadingHistory && totalChecks > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
-              {[
-                { label: 'Total Checks', value: totalChecks, color: 'text-gray-700', bg: 'bg-white' },
-                { label: 'Compliant', value: compliantCount, color: 'text-emerald-700', bg: 'bg-emerald-50' },
-                { label: 'Non-Compliant', value: nonCompliantCount, color: 'text-red-700', bg: 'bg-red-50' },
-                { label: 'Requires Review', value: reviewCount, color: 'text-amber-700', bg: 'bg-amber-50' },
-              ].map(stat => (
-                <div key={stat.label} className={`${stat.bg} rounded-xl border border-black/[0.06] p-4`}>
-                  <p className={`text-2xl font-extrabold ${stat.color}`}>{stat.value}</p>
-                  <p className="text-[11px] text-gray-400 mt-0.5 font-medium">{stat.label}</p>
+            {/* Top pagination bar */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between pb-4 mb-4 border-b border-black/[0.06]">
+                <p className="text-[13px] text-gray-500">
+                  Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
+                </p>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={safePage === 1}
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                      safePage === 1
+                        ? 'text-gray-300 cursor-not-allowed'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                    Prev
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <button
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                        page === safePage
+                          ? 'bg-blue-600 text-white'
+                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={safePage === totalPages}
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                      safePage === totalPages
+                        ? 'text-gray-300 cursor-not-allowed'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    Next
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              ))}
-            </div>
-          )}
-
-          {/* Search and filter bar */}
-          {!checker.isLoadingHistory && totalChecks > 0 && (
-            <div className="flex items-center gap-3 mb-5">
-              {/* Search */}
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search by content..."
-                  className="w-full pl-9 pr-4 py-2.5 text-[13px] bg-white border border-gray-200 rounded-xl outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all duration-200 placeholder:text-gray-400"
-                />
               </div>
+            )}
 
-              {/* Status filter */}
-              <div className="relative">
-                <button
-                  onClick={() => setFilterOpen(!filterOpen)}
-                  className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl border text-[13px] font-medium transition-all duration-150 ${
-                    statusFilter !== 'all'
-                      ? 'bg-blue-50 border-blue-200 text-blue-700'
-                      : 'bg-white border-gray-200 text-gray-600 hover:border-gray-300'
-                  }`}
-                >
-                  <Filter className="w-3.5 h-3.5" />
-                  {statusFilter === 'all' ? 'All' : getStatusConfig(statusFilter).label}
-                </button>
-                {filterOpen && (
-                  <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg py-1.5 z-10">
-                    {[
-                      { value: 'all', label: 'All Checks' },
-                      { value: 'compliant', label: 'Compliant' },
-                      { value: 'non_compliant', label: 'Non-Compliant' },
-                      { value: 'requires_review', label: 'Requires Review' },
-                    ].map(option => (
-                      <button
-                        key={option.value}
-                        onClick={() => { setStatusFilter(option.value); setFilterOpen(false); }}
-                        className={`w-full text-left px-4 py-2 text-[13px] transition-colors ${
-                          statusFilter === option.value
-                            ? 'text-blue-600 bg-blue-50 font-medium'
-                            : 'text-gray-600 hover:bg-gray-50'
-                        }`}
-                      >
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+            {paginatedHistory.map((check) => (
+              <CheckRow
+                key={check.id}
+                check={check}
+                onView={handleViewCheck}
+                onDelete={checker.deleteCheck}
+                isUltra={isUltra}
+              />
+            ))}
 
-          {/* Content area */}
-          {checker.isLoadingHistory ? (
-            <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center gap-3">
-              <Loader2 className="w-7 h-7 text-blue-500 animate-spin" />
-              <p className="text-[14px] text-gray-400 font-medium">Loading your compliance history...</p>
-            </div>
-          ) : totalChecks === 0 ? (
-            <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
-              <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
-                <Clock className="w-6 h-6 text-gray-400" />
-              </div>
-              <h3 className="text-[15px] font-semibold text-gray-700 mb-2">No checks yet</h3>
-              <p className="text-[13px] text-gray-400 mb-5 max-w-xs">
-                Run your first compliance check on the dashboard and it will appear here.
-              </p>
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg transition-colors"
-              >
-                Go to Dashboard
-              </button>
-            </div>
-          ) : filteredHistory.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-10 text-center">
-              <p className="text-[14px] text-gray-400">No checks match your search or filter.</p>
-              <button
-                onClick={() => { setSearchQuery(''); setStatusFilter('all'); }}
-                className="mt-3 text-[13px] text-blue-600 hover:text-blue-700 font-medium"
-              >
-                Clear filters
-              </button>
-            </div>
-          ) : (
-            <div className="space-y-2.5">
-              {/* Results count */}
-              <p className="text-[12px] text-gray-400 px-1 mb-3">
-                {totalFiltered} {totalFiltered === 1 ? 'check' : 'checks'}
-                {statusFilter !== 'all' || searchQuery ? ' matching your filters' : ' total'}
-              </p>
+            {/* Pagination bar */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between pt-4 mt-4 border-t border-black/[0.06]">
+                <p className="text-[13px] text-gray-500">
+                  Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
+                </p>
+                <div className="flex items-center gap-1">
+                  {/* Prev button */}
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={safePage === 1}
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                      safePage === 1
+                        ? 'text-gray-300 cursor-not-allowed'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                    Prev
+                  </button>
 
-              {/* Top pagination bar */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-black/[0.06]">
-                  <p className="text-[13px] text-gray-500">
-                    Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
-                  </p>
-                  <div className="flex items-center gap-1">
+                  {/* Page number buttons */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                     <button
-                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                      disabled={safePage === 1}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                        safePage === 1
-                          ? 'text-gray-300 cursor-not-allowed'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      key={page}
+                      onClick={() => setCurrentPage(page)}
+                      className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                        page === safePage
+                          ? 'bg-blue-600 text-white'
+                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
                       }`}
                     >
-                      <ChevronLeft className="w-3.5 h-3.5" />
-                      Prev
+                      {page}
                     </button>
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                      <button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                          page === safePage
-                            ? 'bg-blue-600 text-white'
-                            : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
-                    <button
-                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                      disabled={safePage === totalPages}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                        safePage === totalPages
-                          ? 'text-gray-300 cursor-not-allowed'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                    >
-                      Next
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+                  ))}
+
+                  {/* Next button */}
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={safePage === totalPages}
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                      safePage === totalPages
+                        ? 'text-gray-300 cursor-not-allowed'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    Next
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-              )}
-
-              {paginatedHistory.map((check) => (
-                <CheckRow
-                  key={check.id}
-                  check={check}
-                  onView={handleViewCheck}
-                  onDelete={checker.deleteCheck}
-                  isUltra={isUltra}
-                />
-              ))}
-
-              {/* Pagination bar */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between pt-4 mt-4 border-t border-black/[0.06]">
-                  <p className="text-[13px] text-gray-500">
-                    Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
-                  </p>
-                  <div className="flex items-center gap-1">
-                    {/* Prev button */}
-                    <button
-                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                      disabled={safePage === 1}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                        safePage === 1
-                          ? 'text-gray-300 cursor-not-allowed'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                    >
-                      <ChevronLeft className="w-3.5 h-3.5" />
-                      Prev
-                    </button>
-
-                    {/* Page number buttons */}
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                      <button
-                        key={page}
-                        onClick={() => setCurrentPage(page)}
-                        className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                          page === safePage
-                            ? 'bg-blue-600 text-white'
-                            : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-                        }`}
-                      >
-                        {page}
-                      </button>
-                    ))}
-
-                    {/* Next button */}
-                    <button
-                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                      disabled={safePage === totalPages}
-                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                        safePage === totalPages
-                          ? 'text-gray-300 cursor-not-allowed'
-                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                      }`}
-                    >
-                      Next
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </main>
-
-      <LoggedInFooter />
-    </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </LoggedInLayout>
   );
 };
 
