@@ -39,39 +39,33 @@ const Features: React.FC = () => {
   const features = [
     {
       icon: <Zap className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Instant AHPRA compliance analysis',
-      subtitle: 'Checked against 134 verified rules',
-      description: 'Paste your content and get an immediate compliance assessment against 134 rules drawn from five primary AHPRA regulatory documents — not a summarised guide, not generic AI training data.',
+      heading: 'Instant AHPRA analysis',
+      description: 'Checked against 134 rules from five primary regulatory documents. Not a summarised guide — primary sources only.',
     },
     {
       icon: <FileText className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Severity-tiered issue reporting',
-      subtitle: 'Critical and warning flags, not just pass/fail',
-      description: 'Every identified issue is rated Critical or Warning with a plain-English explanation, the specific guideline reference, and a recommended action — so you know exactly what to fix and why.',
+      heading: 'Severity-tiered issue flags',
+      description: 'Every issue rated Critical or Warning with a plain-English explanation and the specific guideline reference.',
     },
     {
       icon: <Globe className="w-7 h-7 text-blue-500/80" />,
-      heading: 'AI-powered compliant rewrites',
-      subtitle: 'Three alternatives, ready to post',
-      description: 'Where issues are found, SafePost™ generates three compliant rewrite options you can adopt directly or use as a starting point — available on all plans including Starter.',
+      heading: 'AI-powered rewrites',
+      description: 'Three compliant alternatives generated instantly. Available on all plans including Starter.',
     },
     {
       icon: <Image className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Grounded in real enforcement precedent',
-      subtitle: 'VCAT tribunal judgements included',
-      description: 'SafePost™\'s analysis draws on two landmark VCAT enforcement cases — Ellis v Medical Board of Australia and Kok v Medical Board of Australia — giving you real-world context for what AHPRA actually pursues.',
+      heading: 'Real enforcement precedent',
+      description: 'Analysis draws on two landmark VCAT cases — giving you context for what AHPRA actually pursues.',
     },
     {
       icon: <BookOpen className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Multi-platform content support',
-      subtitle: 'Social media, websites, ads, and more',
-      description: 'Check Instagram captions, Facebook posts, website copy, Google ads, and any other online advertising content — the same AHPRA rules apply across all platforms and SafePost™ covers all of them.',
+      heading: 'Multi-platform support',
+      description: 'Check Instagram, Facebook, website copy, Google ads, and any other online advertising content.',
     },
     {
       icon: <History className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Compliance history and audit trail',
-      subtitle: 'Demonstrate your compliance process',
-      description: 'Every check is saved to your compliance history. Search, filter, and revisit past checks — and demonstrate to your indemnity insurer or AHPRA that you have a documented compliance process.',
+      heading: 'Compliance history',
+      description: 'Every check saved automatically. Search and revisit past checks to demonstrate your compliance process.',
     },
   ];
 
@@ -280,12 +274,9 @@ const Features: React.FC = () => {
                 <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
                   {feature.icon}
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-0 leading-snug">
+                <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
                   {feature.heading}
                 </h3>
-                <p className="text-[12px] font-semibold text-blue-600 uppercase tracking-wider mt-1 mb-2">
-                  {feature.subtitle}
-                </p>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
                   {feature.description}
                 </p>
