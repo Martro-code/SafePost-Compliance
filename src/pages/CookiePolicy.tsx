@@ -1,20 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, Menu, X, ExternalLink, ArrowLeft } from 'lucide-react';
-import SafePostLogo from './components/SafePostLogo';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
+import SafePostLogo from '../../components/SafePostLogo';
 
-const ContactUs: React.FC = () => {
+const CookiePolicy: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const [firstName, setFirstName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [message, setMessage] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [success, setSuccess] = useState(false);
-
-  // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
@@ -43,56 +35,15 @@ const ContactUs: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Validation helpers
-  const isValidEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-
-  const getInputClasses = (value: string, isValid: boolean) => {
-    const base = 'w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200 placeholder:text-gray-400';
-    if (!submitted && value.length === 0) return `${base} border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20`;
-    if (isValid) return `${base} border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20`;
-    return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
-  };
-
-  const getTextareaClasses = (value: string, isValid: boolean) => {
-    const base = 'w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200 placeholder:text-gray-400 resize-none';
-    if (!submitted && value.length === 0) return `${base} border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20`;
-    if (isValid) return `${base} border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20`;
-    return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-
-    const isFormValid =
-      firstName.trim().length > 0 &&
-      surname.trim().length > 0 &&
-      isValidEmail(email) &&
-      phone.trim().length > 0 &&
-      message.trim().length > 0;
-
-    if (isFormValid) {
-      setSuccess(true);
-      setFirstName('');
-      setSurname('');
-      setEmail('');
-      setPhone('');
-      setMessage('');
-      setSubmitted(false);
-    }
-  };
-
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Left: Logo */}
           <Link to="/">
             <SafePostLogo />
           </Link>
 
-          {/* Center: Navigation */}
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
             <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Features
@@ -167,7 +118,6 @@ const ContactUs: React.FC = () => {
             </div>
           </nav>
 
-          {/* Right: Auth buttons */}
           <div className="hidden md:flex items-center gap-2.5">
             <button onClick={() => navigate('/login')} className="px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
               Login
@@ -177,7 +127,6 @@ const ContactUs: React.FC = () => {
             </button>
           </div>
 
-          {/* Mobile: Hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
@@ -187,7 +136,6 @@ const ContactUs: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
@@ -204,7 +152,6 @@ const ContactUs: React.FC = () => {
               Company
             </a>
 
-            {/* Mobile Resources Dropdown */}
             <div>
               <button
                 onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
@@ -237,7 +184,6 @@ const ContactUs: React.FC = () => {
               </div>
             </div>
 
-            {/* Mobile Auth Buttons */}
             <div className="pt-3 border-t border-black/[0.06] flex flex-col gap-2">
               <button onClick={() => navigate('/login')} className="w-full px-4 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
                 Login
@@ -250,128 +196,162 @@ const ContactUs: React.FC = () => {
         </div>
       </header>
 
-      {/* Contact Form */}
-      <main className="flex-grow flex items-center justify-center px-6 pt-6 pb-10 md:pt-8 md:pb-16">
-        <div className="w-full max-w-[550px]">
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </button>
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
-            {/* Header */}
-            <div className="text-center mb-8">
+      {/* Main Content */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pt-10 md:pt-14 pb-16 md:pb-24">
+          <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
+
+            {/* Sidebar Navigation */}
+            <nav className="flex md:flex-col gap-4 md:gap-2 md:pt-1">
+              <button
+                onClick={() => navigate('/terms-of-use')}
+                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                  location.pathname === '/terms-of-use' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+                }`}
+              >
+                Terms of Use
+              </button>
+              <button
+                onClick={() => navigate('/privacy-policy')}
+                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                  location.pathname === '/privacy-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+                }`}
+              >
+                Privacy Policy
+              </button>
+              <button
+                onClick={() => navigate('/cookie-policy')}
+                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                  location.pathname === '/cookie-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+                }`}
+              >
+                Cookie Policy
+              </button>
+            </nav>
+
+            {/* Document Content */}
+            <div className="max-w-[800px] space-y-8">
+
+            <div>
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Get in Touch
+                Cookie Policy
               </h1>
               <p className="text-[14px] text-gray-500">
-                We'd love to hear from you! Please fill out the form below
+                Last updated 23 February 2026
               </p>
             </div>
 
-            {/* Success Message */}
-            {success && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-[14px] text-green-700 text-center">
-                  Thank you for contacting us! We'll get back to you within 24 hours.
-                </p>
-              </div>
-            )}
+            {/* Introduction */}
+            <div>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                {`SafePost\u2122 uses cookies and similar tracking technologies to operate our platform, improve your experience, and understand how our platform is used. This Cookie Policy explains what cookies are, what cookies we use, and how you can manage them. This Cookie Policy should be read together with our Privacy Policy, which provides further information about how we handle your personal information.`}
+              </p>
+            </div>
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* First Name */}
-              <div>
-                <label htmlFor="firstName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  First Name
-                </label>
-                <input
-                  id="firstName"
-                  type="text"
-                  placeholder="Enter your first name"
-                  value={firstName}
-                  onChange={(e) => { setFirstName(e.target.value); setSuccess(false); }}
-                  className={getInputClasses(firstName, firstName.trim().length > 0)}
-                />
-              </div>
+            {/* 1. What are cookies? */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">1. What are cookies?</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                Cookies are small text files that are stored on your device when you visit a website or use a web application. They are widely used to make websites and applications work efficiently and to provide information to the site operator.
+              </p>
+            </div>
 
-              {/* Surname */}
-              <div>
-                <label htmlFor="surname" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Last Name
-                </label>
-                <input
-                  id="surname"
-                  type="text"
-                  placeholder="Enter your last name"
-                  value={surname}
-                  onChange={(e) => { setSurname(e.target.value); setSuccess(false); }}
-                  className={getInputClasses(surname, surname.trim().length > 0)}
-                />
-              </div>
+            {/* 2. What cookies does SafePost use? */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">{`2. What cookies does SafePost\u2122 use?`}</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                We use the following categories of cookies:
+              </p>
 
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); setSuccess(false); }}
-                  className={getInputClasses(email, isValidEmail(email))}
-                />
-              </div>
+              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Essential cookies</h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-6">
+                {`These cookies are necessary for the SafePost\u2122 platform to function. They enable core features such as authentication, session management, and security. You cannot opt out of essential cookies as the platform cannot function without them. Examples include cookies used by Supabase to manage your login session and keep you authenticated while you use the platform.`}
+              </p>
 
-              {/* Phone Number */}
-              <div>
-                <label htmlFor="phone" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Phone number
-                </label>
-                <input
-                  id="phone"
-                  type="tel"
-                  placeholder="04XX XXX XXX"
-                  value={phone}
-                  onChange={(e) => { setPhone(e.target.value); setSuccess(false); }}
-                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
-                  className={getInputClasses(phone, phone.trim().length > 0)}
-                />
-              </div>
+              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Preference cookies</h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-6">
+                These cookies remember your settings and preferences to improve your experience. For example, we use localStorage to remember whether you have accepted or declined our cookie consent banner, and to store your notification preferences and session data during your visit.
+              </p>
 
-              {/* Message */}
-              <div>
-                <label htmlFor="message" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  placeholder="Tell us how we can help..."
-                  value={message}
-                  onChange={(e) => { setMessage(e.target.value); setSuccess(false); }}
-                  rows={6}
-                  style={{ height: '150px' }}
-                  className={getTextareaClasses(message, message.trim().length > 0)}
-                />
-              </div>
+              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Analytics cookies</h3>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                {`We may use analytics tools to understand how users interact with SafePost\u2122 \u2014 for example, which pages are visited most frequently and how users navigate through the platform. This information is collected in aggregate and de-identified form and is used solely to improve the platform. We do not currently use third-party advertising or tracking cookies.`}
+              </p>
+            </div>
 
-              {/* Submit Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
-                >
-                  Submit
-                </button>
+            {/* 3. Third-party cookies */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">3. Third-party cookies</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                We use a small number of third-party services that may set their own cookies:
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5 mb-4">
+                <li className="text-[14px] text-gray-500 leading-relaxed">{`Supabase \u2014 our authentication and database provider, which uses cookies to manage secure login sessions.`}</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">{`Stripe \u2014 our payment processor, which may set cookies when you interact with payment-related features of the platform.`}</li>
+              </ul>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                We do not use cookies from advertising networks, social media platforms, or data brokers.
+              </p>
+            </div>
+
+            {/* 4. How long do cookies last? */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">4. How long do cookies last?</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                Session cookies are temporary and are deleted when you close your browser. Persistent cookies remain on your device for a set period or until you delete them. The cookies we use are primarily session-based or tied to your authentication session.
+              </p>
+            </div>
+
+            {/* 5. How to manage cookies */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">5. How to manage cookies</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                You can manage or disable cookies through your browser settings. Most browsers allow you to:
+              </p>
+              <ul className="list-disc pl-5 space-y-1.5 mb-4">
+                <li className="text-[14px] text-gray-500 leading-relaxed">View what cookies are stored and delete them individually</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">Block cookies from specific websites</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">Block all third-party cookies</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">Block all cookies</li>
+              </ul>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                {`Please note that disabling essential cookies will affect the functionality of the SafePost\u2122 platform \u2014 you may not be able to log in or use the compliance checker if essential cookies are blocked. For guidance on managing cookies in your specific browser, visit your browser\u2019s help documentation.`}
+              </p>
+            </div>
+
+            {/* 6. Your consent */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Your consent</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                {`When you first visit SafePost\u2122, you will be shown a cookie consent banner. By clicking Accept All, you consent to our use of all cookies described in this policy. By clicking Decline, only essential cookies required for the platform to function will be used. You can update your cookie preferences at any time by clearing your browser cookies and revisiting the platform, which will re-display the consent banner.`}
+              </p>
+            </div>
+
+            {/* 7. Changes to this Cookie Policy */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Changes to this Cookie Policy</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                {`We may update this Cookie Policy from time to time to reflect changes to our practices or for legal or operational reasons. When we make material changes, we will update the date at the top of this policy. Your continued use of SafePost\u2122 after any changes constitutes your acceptance of the updated policy.`}
+              </p>
+            </div>
+
+            {/* 8. Contact us */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Contact us</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                If you have any questions about this Cookie Policy, please contact us:
+              </p>
+              <div className="text-[14px] text-gray-500 leading-relaxed">
+                <p className="font-medium text-gray-700">{`SafePost\u2122`}</p>
+                <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
+                <p>Website: <a href="https://www.safepost.com.au" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">www.safepost.com.au</a></p>
               </div>
-            </form>
+            </div>
+
+          </div>
           </div>
         </div>
-      </main>
+      </section>
 
       {/* Footer */}
       <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
@@ -390,7 +370,6 @@ const ContactUs: React.FC = () => {
 
           {/* Footer Columns */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
-            {/* Features */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Features</h4>
               <ul className="space-y-2.5">
@@ -400,7 +379,6 @@ const ContactUs: React.FC = () => {
               </ul>
             </div>
 
-            {/* Pricing */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Pricing</h4>
               <ul className="space-y-2.5">
@@ -409,7 +387,6 @@ const ContactUs: React.FC = () => {
               </ul>
             </div>
 
-            {/* Company */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
               <ul className="space-y-2.5">
@@ -418,7 +395,6 @@ const ContactUs: React.FC = () => {
               </ul>
             </div>
 
-            {/* Resources */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Resources</h4>
               <ul className="space-y-2.5">
@@ -428,7 +404,6 @@ const ContactUs: React.FC = () => {
               </ul>
             </div>
 
-            {/* Legal */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Legal</h4>
               <ul className="space-y-2.5">
@@ -438,7 +413,6 @@ const ContactUs: React.FC = () => {
               </ul>
             </div>
 
-            {/* Connect */}
             <div>
               <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Connect</h4>
               <ul className="space-y-2.5">
@@ -473,7 +447,6 @@ const ContactUs: React.FC = () => {
             </div>
           </div>
 
-          {/* Disclaimer + Copyright */}
           <div className="mt-14 pt-6 border-t border-black/[0.06]">
             <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
@@ -488,4 +461,4 @@ const ContactUs: React.FC = () => {
   );
 };
 
-export default ContactUs;
+export default CookiePolicy;

@@ -4,7 +4,7 @@ import { ChevronUp } from 'lucide-react';
 
 const BackToTop: React.FC = () => {
   const location = useLocation();
-  const allowedPaths = ['/terms-of-use', '/privacy-policy'];
+  const allowedPaths = ['/terms-of-use', '/privacy-policy', '/cookie-policy'];
 
   const [visible, setVisible] = useState(false);
 
