@@ -15,7 +15,8 @@ const Dashboard: React.FC = () => {
   const { firstName, signOut } = useAuth();
 
   // Read plan info from URL params or sessionStorage
-  const planName = searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
+  const rawPlan = searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
+  const planName = rawPlan || 'starter';
   const billingPeriod = searchParams.get('billing') || sessionStorage.getItem('safepost_billing') || '';
 
   const checker = useComplianceChecker(planName);
@@ -23,7 +24,7 @@ const Dashboard: React.FC = () => {
   const hasPaidPlan = planName && !['free', 'starter'].includes(planName.toLowerCase());
 
   const formatPlanName = (plan: string) => {
-    if (!plan) return '';
+    if (!plan) return 'Starter';
     const displayNames: Record<string, string> = {
       starter: 'Starter',
       free: 'Starter',
@@ -154,17 +155,15 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Active Plan Badge */}
-            {planName && (
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
-                <div className="w-2 h-2 rounded-full bg-blue-500" />
-                <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
-                  SafePost {formatPlanName(planName)}
-                </span>
-                <span className="text-[12px] text-blue-400 dark:text-blue-500">
-                  &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
-                </span>
-              </div>
-            )}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
+              <div className="w-2 h-2 rounded-full bg-blue-500" />
+              <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
+                SafePost {formatPlanName(planName)}
+              </span>
+              <span className="text-[12px] text-blue-400 dark:text-blue-500">
+                &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
+              </span>
+            </div>
 
             {/* Input / Loading / Results views */}
             {view === 'input' && inputMode === 'single' && (
