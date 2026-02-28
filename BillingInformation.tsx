@@ -90,7 +90,7 @@ const BillingInformation: React.FC = () => {
               </p>
             </div>
             <button
-              onClick={() => navigate('/change-plan?mode=upgrade')}
+              onClick={() => navigate('/change-plan?mode=upgrade', { state: { from: 'billing' } })}
               className="px-4 py-2 text-[13px] font-semibold text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300 rounded-xl transition-colors bg-blue-50 hover:bg-blue-100"
             >
               Change Plan
