@@ -344,7 +344,7 @@ const PrivacyPolicy: React.FC = () => {
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 <strong className="text-gray-700">
-                  {`Important disclaimer: SafePost\u2122 is an AI-powered guidance tool and does not constitute legal or regulatory advice. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners are ultimately responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law.`}
+                  {`Important disclaimer: SafePost\u2122 is an AI-powered guidance tool and does not constitute legal or regulatory advice. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law.`}
                 </strong>
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed">
@@ -585,8 +585,8 @@ const PrivacyPolicy: React.FC = () => {
           <div className="mt-14 pt-6 border-t border-black/[0.06]">
             <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
-              Ahpra and the National Boards do not provide pre-approval for advertising.
-              Registered health practitioners are ultimately responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law.
+              AHPRA and the National Boards do not provide pre-approval for advertising.
+              Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law.
             </p>
             <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>
           </div>
