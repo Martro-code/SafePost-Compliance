@@ -74,7 +74,7 @@ function formatDateShort(dateStr: string): string {
   return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
 }
 
-const PAGE_SIZE = 25;
+const PAGE_SIZE = 10;
 
 // ─── Check Row Component ──────────────────────────────────────────────────────
 const CheckRow: React.FC<{
@@ -152,12 +152,12 @@ const CheckRow: React.FC<{
         {/* Actions */}
         <div className="flex items-center gap-1 flex-shrink-0">
           {/* Export PDF icon button */}
-          <div className="relative">
+          <div className="relative z-10">
             <button
               onClick={handleExportPdf}
               onMouseEnter={() => !isUltra && setShowPdfTooltip(true)}
               onMouseLeave={() => setShowPdfTooltip(false)}
-              className={`p-1.5 rounded-lg transition-all duration-150 ${
+              className={`relative p-1.5 rounded-lg transition-all duration-150 ${
                 isUltra
                   ? 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
                   : 'text-gray-300 cursor-not-allowed'
@@ -167,7 +167,7 @@ const CheckRow: React.FC<{
               <FileText className="w-3.5 h-3.5" />
             </button>
             {showPdfTooltip && !isUltra && (
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-lg z-10">
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-lg z-50">
                 PDF export is available on SafePost™ Ultra
                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-900 rotate-45" />
               </div>
@@ -563,6 +563,54 @@ const History: React.FC = () => {
                 {totalFiltered} {totalFiltered === 1 ? 'check' : 'checks'}
                 {statusFilter !== 'all' || searchQuery ? ' matching your filters' : ' total'}
               </p>
+
+              {/* Top pagination bar */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between pb-4 mb-4 border-b border-black/[0.06]">
+                  <p className="text-[13px] text-gray-500">
+                    Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
+                  </p>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={safePage === 1}
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                        safePage === 1
+                          ? 'text-gray-300 cursor-not-allowed'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                      Prev
+                    </button>
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                          page === safePage
+                            ? 'bg-blue-600 text-white'
+                            : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    <button
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={safePage === totalPages}
+                      className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
+                        safePage === totalPages
+                          ? 'text-gray-300 cursor-not-allowed'
+                          : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                      }`}
+                    >
+                      Next
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              )}
 
               {paginatedHistory.map((check) => (
                 <CheckRow

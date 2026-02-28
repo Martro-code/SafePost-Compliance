@@ -275,7 +275,7 @@ const Profile: React.FC = () => {
             <div className="p-6 md:p-8">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Account Details</h3>
-                <button onClick={() => navigate('/change-plan')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
+                <button type="button" onClick={() => navigate('/change-plan?mode=upgrade')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
                   Change Plan
                 </button>
               </div>
