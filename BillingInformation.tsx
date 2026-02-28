@@ -1,8 +1,7 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ArrowLeft, CreditCard, Mail, CalendarDays, LogOut, Bell, HelpCircle, Receipt } from 'lucide-react';
-import SafePostLogo from './components/SafePostLogo';
-import LoggedInFooter from './src/components/LoggedInFooter';
+import React, { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, CreditCard, Mail, CalendarDays, Receipt } from 'lucide-react';
+import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
 
 const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }> = {
@@ -13,19 +12,11 @@ const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }>
 
 const BillingInformation: React.FC = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { userEmail, firstName, signOut } = useAuth();
+  const { userEmail, signOut } = useAuth();
 
   // Read plan info from sessionStorage
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
-
-  const planDisplayNames: Record<string, string> = {
-    professional: 'SafePost Professional',
-    proplus: 'SafePost Pro+',
-    ultra: 'SafePost Ultra',
-  };
-  const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
 
   const formatPlanName = (plan: string) => {
     return plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase();
@@ -53,389 +44,178 @@ const BillingInformation: React.FC = () => {
   // Billing email state — pre-populate from Supabase session
   const [billingEmail, setBillingEmail] = useState(userEmail);
 
-  // Header state
-  const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
-  const [notificationCount, setNotificationCount] = useState(() => {
-    const saved = sessionStorage.getItem('safepost_notification_count');
-    return saved !== null ? parseInt(saved, 10) : 3;
-  });
-  const notificationRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        setNotificationDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const handleLogOut = async () => {
-    sessionStorage.clear();
-    await signOut();
-    navigate('/');
-  };
-
-  const navLinks = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'History', path: '/history' },
-    { label: 'Settings', path: '/settings' },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#f7f7f4] dark:bg-gray-900">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Left: Logo + Nav */}
-          <div className="flex items-center gap-8">
-            <Link to="/dashboard">
-              <SafePostLogo />
-            </Link>
-            <nav className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <button
-                  key={link.path}
-                  onClick={() => navigate(link.path)}
-                  className={`px-3.5 py-2 text-[13px] font-medium rounded-lg transition-colors duration-200 ${
-                    location.pathname === link.path
-                      ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-gray-900'
-                  }`}
-                >
-                  {link.label}
-                </button>
-              ))}
-            </nav>
-          </div>
-
-          {/* Right: Bell + My Account */}
-          <div className="hidden md:flex items-center gap-1 justify-end min-w-[180px]">
-            {/* Notification Bell */}
-            <div className="relative" ref={notificationRef}>
-              <button
-                onClick={() => { setNotificationDropdownOpen(!notificationDropdownOpen); setAccountDropdownOpen(false); }}
-                className="relative p-2 text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200 dark:text-gray-400 dark:hover:text-white"
-              >
-                <Bell className="w-[18px] h-[18px]" />
-                {notificationCount > 0 && (
-                  <span className="absolute top-1 right-1 w-4 h-4 bg-blue-600 rounded-full flex items-center justify-center">
-                    <span className="text-[9px] font-bold text-white">{notificationCount}</span>
-                  </span>
-                )}
-              </button>
-              {notificationDropdownOpen && (
-                <div className="absolute top-full right-0 mt-1 w-80 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in dark:bg-gray-800 dark:border-gray-700 z-50">
-                  <div className="flex items-center justify-between px-4 py-2.5">
-                    <p className="text-[13px] font-semibold text-gray-900 dark:text-white">Notifications</p>
-                    <button onClick={() => { setNotificationCount(0); sessionStorage.setItem('safepost_notification_count', '0'); }} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium transition-colors dark:text-blue-400">
-                      Mark all as read
-                    </button>
-                  </div>
-                  <div className="border-t border-black/[0.06] dark:border-gray-700" />
-                  <div className="py-1">
-                    <button className="w-full text-left px-4 py-3 hover:bg-black/[0.02] transition-colors dark:hover:bg-white/[0.02]">
-                      <p className="text-[13px] text-gray-900 dark:text-white">Compliance check complete</p>
-                      <p className="text-[12px] text-gray-400 mt-0.5">Your recent post has been analysed — 2 mins ago</p>
-                    </button>
-                    <button className="w-full text-left px-4 py-3 hover:bg-black/[0.02] transition-colors dark:hover:bg-white/[0.02]">
-                      <p className="text-[13px] text-gray-900 dark:text-white">Guideline update</p>
-                      <p className="text-[12px] text-gray-400 mt-0.5">AHPRA advertising guidelines updated — 1 hour ago</p>
-                    </button>
-                    <button className="w-full text-left px-4 py-3 hover:bg-black/[0.02] transition-colors dark:hover:bg-white/[0.02]">
-                      <p className="text-[13px] text-gray-900 dark:text-white">Billing notification</p>
-                      <p className="text-[12px] text-gray-400 mt-0.5">Your next payment is due soon — Yesterday</p>
-                    </button>
-                  </div>
-                  <div className="border-t border-black/[0.06] dark:border-gray-700" />
-                  <button
-                    onClick={() => { navigate('/notifications'); setNotificationDropdownOpen(false); }}
-                    className="block w-full text-center px-4 py-2.5 text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400"
-                  >
-                    View All Notifications
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* My Account dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => { setAccountDropdownOpen(!accountDropdownOpen); setNotificationDropdownOpen(false); }}
-                onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
-                className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200"
-              >
-                My Account
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${accountDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {accountDropdownOpen && (
-                <div className="absolute top-full right-0 mt-1 w-56 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in dark:bg-gray-800 dark:border-gray-700">
-                  <div className="px-4 py-2.5">
-                    <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
-                    <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
-                  </div>
-                  <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
-                  <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
-                    Profile
-                  </button>
-                  <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
-                    Billing
-                  </button>
-                  <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
-                    Settings
-                  </button>
-                  <button onClick={() => navigate('/help')} className="flex items-center gap-2 block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
-                    <HelpCircle className="w-3.5 h-3.5" />
-                    Help & Support
-                  </button>
-                  <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
-                  <button
-                    onClick={handleLogOut}
-                    className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white"
-                  >
-                    <LogOut className="w-3.5 h-3.5" />
-                    Log Out
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile hamburger */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-          }`}
+    <LoggedInLayout>
+      <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
+        {/* Back to Dashboard */}
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
         >
-          <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] dark:border-gray-700 space-y-1">
-            <div className="px-3 py-2.5">
-              <p className="text-[12px] text-gray-400 truncate">{userEmail}</p>
-              <p className="text-[10px] font-medium text-[#2563EB] mt-1">{dropdownPlanName}</p>
-            </div>
-            <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
-            {navLinks.map((link) => (
-              <button
-                key={link.path}
-                onClick={() => { navigate(link.path); setMobileMenuOpen(false); }}
-                className={`block w-full text-left px-3 py-2.5 text-[13px] font-medium rounded-lg transition-colors duration-200 ${
-                  location.pathname === link.path
-                    ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
-                    : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-gray-900'
-                }`}
-              >
-                {link.label}
-              </button>
-            ))}
-            <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
-            <button onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
-              Profile
-            </button>
-            <button onClick={() => { navigate('/billing'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
-              Billing
-            </button>
-            <button onClick={() => { navigate('/settings'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
-              Settings
-            </button>
-            <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
-            <button
-              onClick={handleLogOut}
-              className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white"
-            >
-              <LogOut className="w-3.5 h-3.5" />
-              Log Out
-            </button>
-          </div>
-        </div>
-      </header>
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </button>
 
-      {/* Main Content */}
-      <main className="flex-grow">
-        <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
-          {/* Back to Dashboard */}
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </button>
+        {/* Page Heading */}
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Billing</h1>
+        <p className="text-[14px] text-gray-500 mt-1 mb-8">
+          Manage your subscription, billing details, and payment history.
+        </p>
 
-          {/* Page Heading */}
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Billing</h1>
-          <p className="text-[14px] text-gray-500 mt-1 mb-8">
-            Manage your subscription, billing details, and payment history.
-          </p>
-
-          {/* Section 1: Current Plan */}
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
-            <h2 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
-              Current Plan
-            </h2>
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800 mb-3">
-                  <div className="w-2 h-2 rounded-full bg-blue-500" />
-                  <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
-                    SafePost {formatPlanName(planName)}
-                  </span>
-                  <span className="text-[12px] text-blue-400 dark:text-blue-500">
-                    &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
-                  </span>
-                </div>
-                <p className="text-[13px] text-gray-500">
-                  {planName.toLowerCase() === 'ultra'
-                    ? 'Unlimited compliance checks per month'
-                    : planName.toLowerCase() === 'proplus'
-                    ? '100 compliance checks per month'
-                    : planName.toLowerCase() === 'professional'
-                    ? '30 compliance checks per month'
-                    : '3 compliance checks per month'
-                  }
-                </p>
-              </div>
-              <button
-                onClick={() => navigate('/change-plan?mode=upgrade')}
-                className="px-4 py-2 text-[13px] font-semibold text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300 rounded-xl transition-colors bg-blue-50 hover:bg-blue-100"
-              >
-                Change Plan
-              </button>
-            </div>
-          </div>
-
-          {/* Section 2: Billing Details */}
-          {/* Payment Method */}
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
-                <CreditCard className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Payment Method</h3>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[14px] font-medium text-gray-900 dark:text-white">Visa ending in XXXX</p>
-                <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">Expires 12/2027</p>
-              </div>
-              <button onClick={() => navigate('/update-card')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
-                Edit
-              </button>
-            </div>
-          </div>
-
-          {/* Billing Email */}
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
-                  <Mail className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Billing Email</h3>
-                </div>
-              </div>
-              <button onClick={() => navigate('/update-billing-email')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
-                Edit
-              </button>
-            </div>
-            <input
-              type="email"
-              value={billingEmail}
-              onChange={(e) => setBillingEmail(e.target.value)}
-              placeholder="youremail@example.com.au"
-              className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
-            />
-            <p className="text-[12px] text-gray-400 mt-1.5 dark:text-gray-500">Receipts and invoices will be sent to this address.</p>
-          </div>
-
-          {/* Section 3: Next Payment */}
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
-                <CalendarDays className="w-5 h-5 text-blue-600" />
-              </div>
-              <div className="flex items-center gap-2.5">
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Next Payment</h3>
-                <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full dark:bg-amber-950 dark:border-amber-800 dark:text-amber-400">
-                  Upcoming
+        {/* Section 1: Current Plan */}
+        <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
+          <h2 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
+            Current Plan
+          </h2>
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800 mb-3">
+                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
+                  SafePost {formatPlanName(planName)}
+                </span>
+                <span className="text-[12px] text-blue-400 dark:text-blue-500">
+                  &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
                 </span>
               </div>
-            </div>
-            {planName ? (
-              <div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[14px] font-medium text-gray-900 dark:text-white">
-                      SafePost {formatPlanName(planName)}{billingPeriod ? ` — ${formatPlanName(billingPeriod)}` : ''}
-                    </p>
-                    <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">{nextPaymentDate}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-lg font-extrabold text-gray-900 dark:text-white">
-                      ${nextPaymentAmount}.00 <span className="text-[12px] font-medium text-gray-500">AUD</span>
-                    </p>
-                    <p className="text-[12px] text-gray-400">Incl. GST</p>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <p className="text-[14px] text-gray-500 dark:text-gray-300">No active plan</p>
-            )}
-          </div>
-
-          {/* Section 4: Invoice History */}
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
-            <h2 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
-              Invoice History
-            </h2>
-            <div className="text-center py-8">
-              <Receipt className="w-8 h-8 text-gray-300 mx-auto mb-3" />
-              <p className="text-[14px] font-medium text-gray-500">No invoices yet</p>
-              <p className="text-[13px] text-gray-400 mt-1">
-                Your invoices will appear here once your first payment is processed.
+              <p className="text-[13px] text-gray-500">
+                {planName.toLowerCase() === 'ultra'
+                  ? 'Unlimited compliance checks per month'
+                  : planName.toLowerCase() === 'proplus'
+                  ? '100 compliance checks per month'
+                  : planName.toLowerCase() === 'professional'
+                  ? '30 compliance checks per month'
+                  : '3 compliance checks per month'
+                }
               </p>
             </div>
-          </div>
-
-          {/* Section 5: Danger Zone — Cancel Subscription */}
-          <div className="bg-white rounded-2xl border border-red-100 shadow-sm p-6">
-            <h2 className="text-[11px] font-semibold text-red-400 uppercase tracking-wider mb-4">
-              Danger Zone
-            </h2>
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-[14px] font-semibold text-gray-900">Cancel subscription</p>
-                <p className="text-[13px] text-gray-500 mt-0.5">
-                  Your access will continue until the end of your current billing period.
-                </p>
-              </div>
-              <button
-                onClick={() => navigate('/cancel-subscription')}
-                className="px-4 py-2 text-[13px] font-semibold text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-xl transition-colors hover:bg-red-50 flex-shrink-0 ml-4"
-              >
-                Cancel Plan
-              </button>
-            </div>
+            <button
+              onClick={() => navigate('/change-plan?mode=upgrade')}
+              className="px-4 py-2 text-[13px] font-semibold text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300 rounded-xl transition-colors bg-blue-50 hover:bg-blue-100"
+            >
+              Change Plan
+            </button>
           </div>
         </div>
-      </main>
 
-      <LoggedInFooter />
-    </div>
+        {/* Section 2: Billing Details */}
+        {/* Payment Method */}
+        <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
+              <CreditCard className="w-5 h-5 text-blue-600" />
+            </div>
+            <div>
+              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Payment Method</h3>
+            </div>
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[14px] font-medium text-gray-900 dark:text-white">Visa ending in XXXX</p>
+              <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">Expires 12/2027</p>
+            </div>
+            <button onClick={() => navigate('/update-card')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
+              Edit
+            </button>
+          </div>
+        </div>
+
+        {/* Billing Email */}
+        <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
+                <Mail className="w-5 h-5 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Billing Email</h3>
+              </div>
+            </div>
+            <button onClick={() => navigate('/update-billing-email')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
+              Edit
+            </button>
+          </div>
+          <input
+            type="email"
+            value={billingEmail}
+            onChange={(e) => setBillingEmail(e.target.value)}
+            placeholder="youremail@example.com.au"
+            className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
+          />
+          <p className="text-[12px] text-gray-400 mt-1.5 dark:text-gray-500">Receipts and invoices will be sent to this address.</p>
+        </div>
+
+        {/* Section 3: Next Payment */}
+        <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
+              <CalendarDays className="w-5 h-5 text-blue-600" />
+            </div>
+            <div className="flex items-center gap-2.5">
+              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Next Payment</h3>
+              <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full dark:bg-amber-950 dark:border-amber-800 dark:text-amber-400">
+                Upcoming
+              </span>
+            </div>
+          </div>
+          {planName ? (
+            <div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[14px] font-medium text-gray-900 dark:text-white">
+                    SafePost {formatPlanName(planName)}{billingPeriod ? ` — ${formatPlanName(billingPeriod)}` : ''}
+                  </p>
+                  <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">{nextPaymentDate}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg font-extrabold text-gray-900 dark:text-white">
+                    ${nextPaymentAmount}.00 <span className="text-[12px] font-medium text-gray-500">AUD</span>
+                  </p>
+                  <p className="text-[12px] text-gray-400">Incl. GST</p>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <p className="text-[14px] text-gray-500 dark:text-gray-300">No active plan</p>
+          )}
+        </div>
+
+        {/* Section 4: Invoice History */}
+        <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
+          <h2 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
+            Invoice History
+          </h2>
+          <div className="text-center py-8">
+            <Receipt className="w-8 h-8 text-gray-300 mx-auto mb-3" />
+            <p className="text-[14px] font-medium text-gray-500">No invoices yet</p>
+            <p className="text-[13px] text-gray-400 mt-1">
+              Your invoices will appear here once your first payment is processed.
+            </p>
+          </div>
+        </div>
+
+        {/* Section 5: Danger Zone — Cancel Subscription */}
+        <div className="bg-white rounded-2xl border border-red-100 shadow-sm p-6">
+          <h2 className="text-[11px] font-semibold text-red-400 uppercase tracking-wider mb-4">
+            Danger Zone
+          </h2>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[14px] font-semibold text-gray-900">Cancel subscription</p>
+              <p className="text-[13px] text-gray-500 mt-0.5">
+                Your access will continue until the end of your current billing period.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/cancel-subscription')}
+              className="px-4 py-2 text-[13px] font-semibold text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-xl transition-colors hover:bg-red-50 flex-shrink-0 ml-4"
+            >
+              Cancel Plan
+            </button>
+          </div>
+        </div>
+      </div>
+    </LoggedInLayout>
   );
 };
 
