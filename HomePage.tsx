@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink } from 'lucide-react';
+import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink, Twitter, Instagram, Linkedin, Facebook } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { analyzePost, generateCompliantRewrites } from './services/geminiService';
 import { AnalysisResult, ComplianceStatus, RewrittenPost } from './types';
@@ -720,6 +720,17 @@ const HomePage: React.FC = () => {
               <ul className="space-y-2.5">
                 <li><button onClick={() => navigate('/contact')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Contact us</button></li>
               </ul>
+              <div className="flex items-center gap-3 mt-4">
+                {[Twitter, Instagram, Linkedin, Facebook].map((Icon, i) => (
+                  <div
+                    key={i}
+                    className="w-8 h-8 rounded-lg bg-gray-100 dark:bg-gray-800 flex items-center justify-center cursor-not-allowed"
+                    title="Coming soon"
+                  >
+                    <Icon className="w-4 h-4 text-gray-400 dark:text-gray-600" />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
