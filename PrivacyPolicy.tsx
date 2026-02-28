@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
@@ -18,6 +18,22 @@ const PrivacyPolicy: React.FC = () => {
     { label: 'Code of conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
     { label: 'TGA guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
+
+  const resourcesDropdownRef = useRef<HTMLDivElement>(null);
+  const resourcesContextMenuRef = useRef(false);
+
+  // Close Resources dropdown when clicking outside (ignore right-click so users can copy URLs)
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (event.button !== 0) return;
+      if (resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(event.target as Node)) {
+        setResourcesDropdownOpen(false);
+      }
+      resourcesContextMenuRef.current = false;
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
@@ -75,10 +91,9 @@ const PrivacyPolicy: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="relative">
+            <div className="relative" ref={resourcesDropdownRef} onMouseDown={(e) => { if (e.button === 2) resourcesContextMenuRef.current = true; }} onContextMenu={() => { resourcesContextMenuRef.current = true; }} onMouseLeave={() => { if (!resourcesContextMenuRef.current) { setResourcesDropdownOpen(false); } }}>
               <button
                 onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
-                onBlur={() => setTimeout(() => setResourcesDropdownOpen(false), 150)}
                 className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
               >
                 Resources

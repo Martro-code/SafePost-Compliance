@@ -36,14 +36,14 @@ const HomePage: React.FC = () => {
   const resourcesDropdownRef = useRef<HTMLDivElement>(null);
   const resourcesContextMenuRef = useRef(false);
 
-  // Close Resources dropdown when clicking outside (mousedown only fires for left-click here)
+  // Close Resources dropdown when clicking outside (ignore right-click so users can copy URLs)
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (event.button !== 0) return; // ignore right-click and middle-click
       if (resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(event.target as Node)) {
         setResourcesDropdownOpen(false);
-        resourcesContextMenuRef.current = false;
       }
+      resourcesContextMenuRef.current = false;
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
@@ -219,7 +219,7 @@ const HomePage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="relative" ref={resourcesDropdownRef} onMouseLeave={() => { if (!resourcesContextMenuRef.current) { setResourcesDropdownOpen(false); } }} onContextMenu={() => { resourcesContextMenuRef.current = true; }} onMouseEnter={() => { resourcesContextMenuRef.current = false; }}>
+            <div className="relative" ref={resourcesDropdownRef} onMouseDown={(e) => { if (e.button === 2) resourcesContextMenuRef.current = true; }} onContextMenu={() => { resourcesContextMenuRef.current = true; }} onMouseLeave={() => { if (!resourcesContextMenuRef.current) { setResourcesDropdownOpen(false); } }}>
               <button
                 onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
                 className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
