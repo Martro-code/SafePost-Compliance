@@ -56,19 +56,20 @@ const NotificationsInbox: React.FC = () => {
   return (
     <LoggedInLayout>
       <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
-        {/* Page header */}
+        {/* Back to Dashboard */}
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </button>
+
         <div className="mb-8">
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="flex items-center gap-1.5 text-[13px] text-gray-500 hover:text-gray-900 transition-colors mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Dashboard
-          </button>
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Notifications</h1>
-              <p className="text-[14px] text-gray-500 mt-1 mb-8">Your recent activity and updates from SafePost™</p>
+              <p className="text-[14px] text-gray-500 mt-1">Your recent activity and updates from SafePost™</p>
             </div>
             {hasUnread && (
               <button
