@@ -221,10 +221,10 @@ const HomePage: React.FC = () => {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
+                      className="flex items-center gap-1 px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
                     >
                       {link.label}
-                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
+                      <ExternalLink className="w-3 h-3 flex-shrink-0 opacity-40" />
                     </a>
                   ))}
                 </div>
@@ -292,10 +292,10 @@ const HomePage: React.FC = () => {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors"
+                      className="flex items-center gap-1 px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors"
                     >
                       {link.label}
-                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
+                      <ExternalLink className="w-3 h-3 flex-shrink-0 opacity-40" />
                     </a>
                   ))}
                 </div>
