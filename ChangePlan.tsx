@@ -82,7 +82,7 @@ const ChangePlan: React.FC = () => {
         {/* Back link */}
         <button
           onClick={() => navigate(backPath)}
-          className="flex items-center gap-1.5 text-[13px] text-gray-500 hover:text-gray-900 transition-colors mb-6"
+          className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
         >
           <ArrowLeft className="w-4 h-4" />
           {backLabel}
