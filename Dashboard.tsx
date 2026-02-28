@@ -3,6 +3,7 @@ import { useNavigate, Link, useSearchParams, useLocation } from 'react-router-do
 import { ChevronDown, Menu, X, ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, LogOut, Bell, Lock, Upload, Download } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import LoggedInFooter from './src/components/LoggedInFooter';
+import OnboardingModal from './src/components/OnboardingModal';
 import { useAuth } from './useAuth';
 import { useComplianceChecker } from './src/hooks/useComplianceChecker';
 import { ComplianceResults } from './src/components/ComplianceResults';
@@ -61,6 +62,16 @@ const Dashboard: React.FC = () => {
       setView('results');
     }
   }, [checker.result]);
+
+  // Onboarding modal state
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    return sessionStorage.getItem('safepost_onboarded') == null;
+  });
+
+  const handleOnboardingComplete = () => {
+    sessionStorage.setItem('safepost_onboarded', 'true');
+    setShowOnboarding(false);
+  };
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
@@ -131,6 +142,15 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4] dark:bg-gray-900">
+      {/* Onboarding Modal */}
+      {showOnboarding && (
+        <OnboardingModal
+          firstName={firstName}
+          planName={planName}
+          onComplete={handleOnboardingComplete}
+        />
+      )}
+
       {/* Bulk Upload Toast */}
       {showBulkToast && (
         <div className="fixed top-6 right-6 z-50 px-5 py-3 bg-gray-900 text-white text-[13px] font-medium rounded-xl shadow-lg shadow-black/20">
