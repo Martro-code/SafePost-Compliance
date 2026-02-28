@@ -9,6 +9,7 @@ import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle } from 'lucide-react';
 import SafePostLogo from '../../components/SafePostLogo';
 import LoggedInFooter from './LoggedInFooter';
 import { useAuth } from '../../useAuth';
+import { getDisplayPlanName } from '../utils/planUtils';
 
 interface LoggedInLayoutProps {
   children: React.ReactNode;
@@ -21,12 +22,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
 
   const planName = sessionStorage.getItem('safepost_plan') || '';
 
-  const planDisplayNames: Record<string, string> = {
-    professional: 'SafePost Professional',
-    proplus: 'SafePost Pro+',
-    ultra: 'SafePost Ultra',
-  };
-  const dropdownPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Professional';
+  const dropdownPlanName = getDisplayPlanName(planName);
 
   // Header state
   const [accountDropdownOpen, setAccountDropdownOpen] = useState(false);
