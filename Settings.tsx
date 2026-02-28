@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, ChevronRight, Menu, X, ArrowLeft, LogOut, Bell, ShieldCheck, Moon, Mail, Info, Lock } from 'lucide-react';
+import { ChevronDown, ChevronRight, Menu, X, ArrowLeft, LogOut, Bell, ShieldCheck, Moon, Mail, Info, Lock, Check } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 import { useTheme } from './src/context/ThemeContext';
@@ -92,7 +92,10 @@ const Settings: React.FC = () => {
       newFeatures: notifNewFeatures,
     }));
     setNotifSaved(true);
-    setTimeout(() => setNotifSaved(false), 2000);
+    setTimeout(() => {
+      setNotifExpanded(false);
+      setNotifSaved(false);
+    }, 1500);
   };
 
   const handleEmailMasterToggle = () => {
@@ -120,7 +123,10 @@ const Settings: React.FC = () => {
       tipsEducation: emailTipsEducation,
     }));
     setEmailSaved(true);
-    setTimeout(() => setEmailSaved(false), 2000);
+    setTimeout(() => {
+      setEmailExpanded(false);
+      setEmailSaved(false);
+    }, 1500);
   };
 
   const navLinks = [
@@ -445,9 +451,21 @@ const Settings: React.FC = () => {
                   <div className="pt-4 pl-12">
                     <button
                       onClick={handleNotifSave}
-                      className="h-9 px-5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+                      disabled={notifSaved}
+                      className={`h-9 px-5 text-white text-[13px] font-semibold rounded-lg shadow-sm transition-all duration-200 ${
+                        notifSaved
+                          ? 'bg-green-600 shadow-green-600/25 pointer-events-none'
+                          : 'bg-blue-600 hover:bg-blue-700 shadow-blue-600/25 active:scale-[0.98]'
+                      }`}
                     >
-                      {notifSaved ? 'Saved!' : 'Save Preferences'}
+                      {notifSaved ? (
+                        <span className="flex items-center gap-1.5">
+                          <Check className="w-4 h-4" />
+                          Saved!
+                        </span>
+                      ) : (
+                        'Save Preferences'
+                      )}
                     </button>
                   </div>
                 </div>
@@ -578,9 +596,21 @@ const Settings: React.FC = () => {
                   <div className="pt-4 pl-12">
                     <button
                       onClick={handleEmailSave}
-                      className="h-9 px-5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+                      disabled={emailSaved}
+                      className={`h-9 px-5 text-white text-[13px] font-semibold rounded-lg shadow-sm transition-all duration-200 ${
+                        emailSaved
+                          ? 'bg-green-600 shadow-green-600/25 pointer-events-none'
+                          : 'bg-blue-600 hover:bg-blue-700 shadow-blue-600/25 active:scale-[0.98]'
+                      }`}
                     >
-                      {emailSaved ? 'Saved!' : 'Save Preferences'}
+                      {emailSaved ? (
+                        <span className="flex items-center gap-1.5">
+                          <Check className="w-4 h-4" />
+                          Saved!
+                        </span>
+                      ) : (
+                        'Save Preferences'
+                      )}
                     </button>
                   </div>
                 </div>
