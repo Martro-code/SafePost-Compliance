@@ -184,9 +184,9 @@ const RewriteCard: React.FC<{ rewrite: RewrittenPost; index: number }> = ({ rewr
   }, [rewrite.content]);
 
   const optionColors = [
-    { bg: 'bg-blue-50', border: 'border-blue-200', tag: 'text-blue-600 bg-blue-100', num: 'text-blue-500' },
-    { bg: 'bg-violet-50', border: 'border-violet-200', tag: 'text-violet-600 bg-violet-100', num: 'text-violet-500' },
-    { bg: 'bg-teal-50', border: 'border-teal-200', tag: 'text-teal-600 bg-teal-100', num: 'text-teal-500' },
+    { bg: 'bg-blue-50', border: 'border-blue-200', tag: 'text-blue-700 bg-blue-100', num: 'text-blue-700' },
+    { bg: 'bg-violet-50', border: 'border-violet-200', tag: 'text-violet-700 bg-violet-100', num: 'text-violet-700' },
+    { bg: 'bg-teal-50', border: 'border-teal-200', tag: 'text-teal-700 bg-teal-100', num: 'text-teal-700' },
   ];
   const color = optionColors[index % 3];
 
