@@ -486,31 +486,39 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
       )}
 
       {/* ── Action Buttons ────────────────────────────────────────────────── */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-2">
-        {/* Export PDF button */}
-        <div className="relative flex-1">
+      <div className="flex flex-col items-center pt-2">
+        <button
+          onClick={onNewCheck}
+          className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          New Check
+        </button>
+        {/* Export PDF — secondary text link */}
+        <div className="relative mt-2">
           <button
             onClick={handleExportPdf}
             onMouseEnter={() => !isUltra && setShowPdfTooltip(true)}
             onMouseLeave={() => setShowPdfTooltip(false)}
             disabled={pdfExporting}
-            className={`w-full h-11 text-[13px] font-semibold rounded-xl border transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2 ${
-              isUltra
-                ? 'text-gray-600 hover:text-gray-900 border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02]'
-                : 'text-gray-400 border-gray-200 bg-gray-50 cursor-not-allowed'
+            className={`text-[12px] inline-flex items-center gap-1.5 transition-colors duration-200 ${
+              pdfExporting
+                ? 'text-gray-400'
+                : isUltra
+                  ? 'text-gray-400 hover:text-gray-600'
+                  : 'text-gray-400 hover:text-gray-600 cursor-not-allowed'
             }`}
           >
             {pdfExporting ? (
-              <><Loader2 className="w-4 h-4 animate-spin" />Generating PDF...</>
+              <><Loader2 className="w-3.5 h-3.5 animate-spin" />Generating PDF...</>
             ) : (
               <>
-                {!isUltra && <Lock className="w-3.5 h-3.5" />}
-                <FileText className="w-4 h-4" />
+                {!isUltra && <Lock className="w-3 h-3" />}
+                <FileText className="w-3.5 h-3.5" />
                 Export PDF
               </>
             )}
           </button>
-          {/* Tooltip for non-Ultra */}
           {showPdfTooltip && !isUltra && (
             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[12px] rounded-lg whitespace-nowrap shadow-lg z-10">
               PDF export is available on SafePost™ Ultra
@@ -518,14 +526,6 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
             </div>
           )}
         </div>
-
-        <button
-          onClick={onNewCheck}
-          className="flex-1 h-11 text-[13px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          New Check
-        </button>
       </div>
 
       {/* ── Legal Disclaimer — bottom of every result ─────────────────────── */}
