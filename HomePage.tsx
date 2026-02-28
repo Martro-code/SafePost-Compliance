@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
@@ -33,21 +33,6 @@ const HomePage: React.FC = () => {
   ];
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const resourcesDropdownRef = useRef<HTMLDivElement>(null);
-  const resourcesContextMenuRef = useRef(false);
-
-  // Close Resources dropdown when clicking outside (ignore right-click so users can copy URLs)
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (event.button !== 0) return; // ignore right-click and middle-click
-      if (resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(event.target as Node)) {
-        setResourcesDropdownOpen(false);
-      }
-      resourcesContextMenuRef.current = false;
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -219,16 +204,17 @@ const HomePage: React.FC = () => {
                 </div>
               )}
             </div>
-            <div className="relative" ref={resourcesDropdownRef} onMouseDown={(e) => { if (e.button === 2) resourcesContextMenuRef.current = true; }} onContextMenu={() => { resourcesContextMenuRef.current = true; }} onMouseLeave={() => { if (!resourcesContextMenuRef.current) { setResourcesDropdownOpen(false); } }}>
+            <div className="relative">
               <button
                 onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
+                onBlur={() => setTimeout(() => setResourcesDropdownOpen(false), 150)}
                 className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
               >
                 Resources
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${resourcesDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {resourcesDropdownOpen && (
-                <div className="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                <div className="absolute top-full left-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
                   {resourceLinks.map((link, i) => (
                     <a
                       key={i}
