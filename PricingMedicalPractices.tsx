@@ -24,24 +24,28 @@ const PricingMedicalPractices: React.FC = () => {
 
   const faqs = [
     {
-      question: 'What\u2019s the difference between social media and online advertising compliance checks?',
-      answer: 'Social media compliance focuses on organic posts, stories, and reels on platforms like Instagram, Facebook, LinkedIn, and TikTok. Online advertising compliance covers paid promotional content including Google Ads, Facebook/Instagram Ads, website landing pages, and any therapeutic goods advertising subject to TGA regulations. The Ultra plan provides comprehensive analysis across both categories, which is essential for practices running integrated marketing campaigns.',
+      question: 'What\u2019s the difference between the plans for practices?',
+      answer: 'The key differences are check volume, team size, and history access. Professional suits a solo practitioner posting regularly (30 checks/month). Pro+ suits a small practice with a marketing team (100 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
     },
     {
       question: 'Can multiple staff members use the same SafePost\u2122 account?',
-      answer: 'Yes! The Pro+ plan includes access for up to 3 team members (perfect for a practice manager and 2 practitioners), while the Ultra plan supports up to 10 team members. Each team member gets their own login, and you can track compliance checks by user. This is ideal for practices where multiple people manage social media, marketing materials, or patient communications.',
+      answer: 'Yes \u2014 the Pro+ plan includes access for up to 3 team members, while the Ultra plan supports up to 10 team members. Each team member gets their own login, and all checks appear in a shared compliance history. Team accounts are ideal for practices where a practice manager and multiple practitioners all need compliance checking access.',
     },
     {
-      question: 'Do you offer compliance checks for social media activity and website content?',
-      answer: 'Yes! Both Pro+ and Ultra plans include online advertising compliance analysis, which covers website content, patient information pages, and promotional materials. The Ultra plan includes more comprehensive analysis for complex advertising scenarios, including TGA therapeutic goods advertising requirements, multi-channel campaigns, and bulk content reviews. This ensures your entire digital presence remains compliant.',
+      question: 'Do you offer compliance checks for website content and online advertising?',
+      answer: 'Yes \u2014 all paid plans include analysis of any online content including website copy, social media posts, paid advertising, and email marketing. SafePost\u2122 checks content against AHPRA advertising guidelines, the National Law, and TGA therapeutic goods advertising requirements where relevant.',
     },
     {
       question: 'How does SafePost\u2122 handle compliance for cosmetic procedures?',
-      answer: 'SafePost\u2122 includes specialised analysis for cosmetic procedure advertising, which has particularly strict AHPRA requirements. We check for prohibited before/after photos, testimonial restrictions, claims about outcomes, use of practitioner titles, and cosmetic procedure terminology. The Ultra plan also provides guidance on TGA compliance for therapeutic goods often used in aesthetic practices (prescription medications, medical devices, etc.).',
+      answer: 'SafePost\u2122 includes specialised analysis for cosmetic procedure advertising, which has particularly strict AHPRA requirements. We check for prohibited before/after photos, testimonial restrictions, outcome claims, practitioner title usage, cosmetic procedure terminology, and TGA obligations for therapeutic goods advertising.',
     },
     {
-      question: 'What types of online advertising does SafePost\u2122 check?',
-      answer: 'SafePost\u2122 analyses a wide range of online advertising content including social media posts (Instagram, Facebook, LinkedIn, TikTok), paid social media ads, Google Ads copy, website content and landing pages, email marketing campaigns, online directory listings, and promotional blog posts. The Ultra plan extends coverage to include Google Business Profile content, third-party review site responses, patient newsletter content, and TGA-regulated therapeutic goods advertising across all digital channels.',
+      question: 'Can I download a record of our compliance checks?',
+      answer: 'Yes \u2014 Ultra plan subscribers can export their complete compliance history as a PDF audit log. This is useful for demonstrating a compliance process to insurers, legal advisers, or in the event of an AHPRA inquiry. All plans include in-app compliance history up to their plan limit.',
+    },
+    {
+      question: 'Are prices in Australian dollars and do they include GST?',
+      answer: 'Yes \u2014 all SafePost\u2122 prices are in AUD and include GST.',
     },
   ];
 
@@ -267,14 +271,17 @@ const PricingMedicalPractices: React.FC = () => {
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$39' : '$49'}</span>
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '~$41' : '$49'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
                   {isYearly && (
                     <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
-                      Save 20%
+                      2 months free
                     </span>
                   )}
                 </div>
+                {isYearly && (
+                  <p className="text-[12px] text-gray-400 mt-1.5">billed as $490/year</p>
+                )}
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
@@ -283,15 +290,19 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">100 compliance checks per month</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                   <span className="text-[14px] text-gray-600">Multi-user access (up to 3 team members)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Basic online advertising compliance analysis</span>
+                  <span className="text-[14px] text-gray-600">Compliance history (last 100 checks)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Custom compliance guidelines repository</span>
+                  <span className="text-[14px] text-gray-600">Priority email support</span>
                 </li>
               </ul>
               <button
@@ -315,14 +326,17 @@ const PricingMedicalPractices: React.FC = () => {
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$160' : '$200'}</span>
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '~$124' : '$149'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
                   {isYearly && (
                     <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
-                      Save 20%
+                      2 months free
                     </span>
                   )}
                 </div>
+                {isYearly && (
+                  <p className="text-[12px] text-gray-400 mt-1.5">billed as $1,490/year</p>
+                )}
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
@@ -331,7 +345,7 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Unlimited compliance checks for social media AND online advertising</span>
+                  <span className="text-[14px] text-gray-600">Unlimited compliance checks</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
@@ -339,15 +353,23 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Advanced advertising compliance analysis</span>
+                  <span className="text-[14px] text-gray-600">Unlimited compliance history</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Bulk content review (upload multiple posts/ads at once)</span>
+                  <span className="text-[14px] text-gray-600">PDF compliance audit log export</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">Bulk content review (upload multiple posts at once)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                   <span className="text-[14px] text-gray-600">Proactive notification of guideline changes</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">Priority support + onboarding</span>
                 </li>
               </ul>
               <button

@@ -9,41 +9,45 @@ const plans = [
     key: 'professional',
     name: 'Professional',
     monthlyPrice: 20,
-    yearlyPrice: 192,
-    yearlySaving: 48,
+    yearlyPrice: 200,
+    yearlyMonthlyEquivalent: '~$16',
     features: [
-      'Unlimited compliance checks',
-      'Compliant content rewrites (AI-generated alternatives)',
+      '30 compliance checks per month',
+      'AI-powered compliant content rewrites',
       'Image and video content analysis',
-      'Compliance history tracking',
+      'Compliance history (last 30 checks)',
+      'Email support',
     ],
   },
   {
     key: 'proplus',
     name: 'Pro+',
     monthlyPrice: 49,
-    yearlyPrice: 470,
-    yearlySaving: 118,
+    yearlyPrice: 490,
+    yearlyMonthlyEquivalent: '~$41',
     features: [
       'Everything in Professional, plus:',
+      '100 compliance checks per month',
       'Multi-user access (up to 3 team members)',
-      'Basic online advertising compliance analysis',
-      'Custom compliance guidelines repository',
+      'Compliance history (last 100 checks)',
+      'Priority email support',
     ],
   },
   {
     key: 'ultra',
     name: 'Ultra',
-    monthlyPrice: 200,
-    yearlyPrice: 1920,
-    yearlySaving: 480,
+    monthlyPrice: 149,
+    yearlyPrice: 1490,
+    yearlyMonthlyEquivalent: '~$124',
     features: [
       'Everything in Pro+, plus:',
-      'Unlimited compliance checks for social media AND online advertising',
+      'Unlimited compliance checks',
       'Multi-user access (up to 10 team members)',
-      'Advanced advertising compliance analysis',
-      'Bulk content review (upload multiple posts/ads at once)',
+      'Unlimited compliance history',
+      'PDF compliance audit log export',
+      'Bulk content review (upload multiple posts at once)',
       'Proactive notification of guideline changes',
+      'Priority support + onboarding',
     ],
   },
 ];
@@ -355,7 +359,7 @@ const ChangePlan: React.FC = () => {
                     <p className="text-[14px] font-medium text-gray-900 dark:text-white">{plan.name}</p>
                     <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">
                       {billingCycle === 'yearly'
-                        ? `$${plan.yearlyPrice.toLocaleString()}/year (save $${plan.yearlySaving})`
+                        ? `${plan.yearlyMonthlyEquivalent}/month — billed as $${plan.yearlyPrice.toLocaleString()}/year (2 months free)`
                         : `$${plan.monthlyPrice}/month`}
                     </p>
                   </div>

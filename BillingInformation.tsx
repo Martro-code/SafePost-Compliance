@@ -5,9 +5,9 @@ import SafePostLogo from './components/SafePostLogo';
 import { useAuth } from './useAuth';
 
 const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }> = {
-  professional: { monthlyPrice: 20, yearlyPrice: 192 },
-  proplus: { monthlyPrice: 49, yearlyPrice: 470 },
-  ultra: { monthlyPrice: 200, yearlyPrice: 1920 },
+  professional: { monthlyPrice: 20, yearlyPrice: 200 },
+  proplus: { monthlyPrice: 49, yearlyPrice: 490 },
+  ultra: { monthlyPrice: 149, yearlyPrice: 1490 },
 };
 
 const BillingInformation: React.FC = () => {
