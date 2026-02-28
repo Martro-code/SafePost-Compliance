@@ -402,7 +402,7 @@ const PricingMedicalPractices: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-14 text-center">
-            Frequently Asked Questions
+            Frequently asked questions
           </h2>
 
           <div className="flex flex-col gap-4">
