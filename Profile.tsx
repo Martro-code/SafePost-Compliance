@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
+import { getDisplayPlanName } from './src/utils/planUtils';
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
@@ -11,12 +12,7 @@ const Profile: React.FC = () => {
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
 
-  const planDisplayNames: Record<string, string> = {
-    professional: 'SafePost Professional',
-    proplus: 'SafePost Pro+',
-    ultra: 'SafePost Ultra',
-  };
-  const displayPlanName = planDisplayNames[planName.toLowerCase()] || 'SafePost Free';
+  const displayPlanName = getDisplayPlanName(planName);
 
   // Password visibility toggle
   const [showPassword, setShowPassword] = useState(false);

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, ArrowLeft } from 'lucide-react';
+import { getPlanTierLabel } from '../utils/planUtils';
 
 interface OnboardingModalProps {
   firstName: string;
@@ -17,14 +18,6 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ firstName, planName, 
     if (el) textareaRef.current = el;
   }, []);
 
-  const planDisplayNames: Record<string, string> = {
-    starter: 'Starter',
-    free: 'Starter',
-    professional: 'Professional',
-    proplus: 'Pro+',
-    ultra: 'Ultra',
-  };
-
   const planLimits: Record<string, string> = {
     starter: '3 compliance checks included this month',
     free: '3 compliance checks included this month',
@@ -33,7 +26,7 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ firstName, planName, 
     ultra: 'Unlimited compliance checks this month',
   };
 
-  const displayPlan = planDisplayNames[planName.toLowerCase()] || 'Starter';
+  const displayPlan = getPlanTierLabel(planName);
   const displayLimit = planLimits[planName.toLowerCase()] || '3 compliance checks included this month';
 
   const handleClose = () => {

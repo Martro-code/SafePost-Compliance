@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Mail, CalendarDays, Receipt } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
+import { getDisplayPlanName, getPlanTierLabel } from './src/utils/planUtils';
 
 const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }> = {
   professional: { monthlyPrice: 20, yearlyPrice: 200 },
@@ -18,8 +19,8 @@ const BillingInformation: React.FC = () => {
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
 
-  const formatPlanName = (plan: string) => {
-    return plan.charAt(0).toUpperCase() + plan.slice(1).toLowerCase();
+  const formatBillingPeriod = (period: string) => {
+    return period.charAt(0).toUpperCase() + period.slice(1).toLowerCase();
   };
 
   // Calculate next payment amount and date
@@ -72,10 +73,10 @@ const BillingInformation: React.FC = () => {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800 mb-3">
                 <div className="w-2 h-2 rounded-full bg-blue-500" />
                 <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
-                  SafePost {formatPlanName(planName)}
+                  {getDisplayPlanName(planName)}
                 </span>
                 <span className="text-[12px] text-blue-400 dark:text-blue-500">
-                  &middot; {billingPeriod ? formatPlanName(billingPeriod) : 'Monthly'}
+                  &middot; {billingPeriod ? formatBillingPeriod(billingPeriod) : 'Monthly'}
                 </span>
               </div>
               <p className="text-[13px] text-gray-500">
@@ -163,7 +164,7 @@ const BillingInformation: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-[14px] font-medium text-gray-900 dark:text-white">
-                    SafePost {formatPlanName(planName)}{billingPeriod ? ` — ${formatPlanName(billingPeriod)}` : ''}
+                    {getDisplayPlanName(planName)}{billingPeriod ? ` — ${formatBillingPeriod(billingPeriod)}` : ''}
                   </p>
                   <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">{nextPaymentDate}</p>
                 </div>
