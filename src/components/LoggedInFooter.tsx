@@ -42,7 +42,7 @@ const LoggedInFooter = () => {
 
           <div>
             <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Follow Us</h4>
-            <div className="flex items-center gap-4 mt-1">
+            <div className="flex items-center gap-4 mt-4">
               {/* X / Twitter */}
               <div className="text-gray-400 cursor-not-allowed" title="Coming soon">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" aria-label="X / Twitter">
