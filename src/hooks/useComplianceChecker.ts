@@ -263,43 +263,69 @@ export function useComplianceChecker(planName: string = 'free') {
 
       setResult(normalisedResult as any);
 
-      // Save to Supabase
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: newRecord } = await supabase
-          .from('compliance_checks')
-          .insert({
-            user_id: user.id,
-            content_text: content,
-            content_type: 'social_media_post',
-            platform: 'general',
-            overall_status: normaliseStatus(analysisResult.status),
-            compliance_score: analysisResult.status === ComplianceStatus.COMPLIANT
-              ? 100
-              : analysisResult.status === ComplianceStatus.NON_COMPLIANT
-              ? Math.max(0, 100
-                  - (analysisResult.issues.filter(i => i.severity === 'Critical').length * 25)
-                  - (analysisResult.issues.filter(i => i.severity === 'Warning').length * 10))
-              : 70,
-            result_json: analysisResult,
-          })
-          .select()
-          .single();
+      // Compute compliance score for the record
+      const complianceScore = analysisResult.status === ComplianceStatus.COMPLIANT
+        ? 100
+        : analysisResult.status === ComplianceStatus.NON_COMPLIANT
+        ? Math.max(0, 100
+            - (analysisResult.issues.filter((i: any) => i.severity === 'Critical').length * 25)
+            - (analysisResult.issues.filter((i: any) => i.severity === 'Warning').length * 10))
+        : 70;
 
-        // Invalidate sessionStorage cache so refetch pulls fresh data
-        invalidateCache();
+      // Optimistically update usage counter and history so the sidebar
+      // reflects the new check immediately, before the DB write completes
+      setChecksUsedThisMonth(prev => prev + 1);
+      setHistory(prev => [{
+        id: `pending-${Date.now()}`,
+        created_at: new Date().toISOString(),
+        user_id: '',
+        content_text: content,
+        content_type: 'social_media_post',
+        platform: 'general',
+        overall_status: normaliseStatus(analysisResult.status),
+        compliance_score: complianceScore,
+        result_json: analysisResult,
+      }, ...prev]);
 
-        // Refetch usage and history from Supabase so dashboard
-        // sidebar (Recent Checks) and History page update immediately
-        const [freshCount, freshHistory] = await Promise.all([
-          fetchMonthlyCheckCount(user.id),
-          fetchUserComplianceHistory(user.id, historyLimit),
-        ]);
-        setChecksUsedThisMonth(freshCount);
-        setHistory(freshHistory);
-      }
+      // Invalidate cache so other pages fetch fresh data from Supabase
+      invalidateCache();
 
+      // Signal results are ready — display immediately without waiting for DB
       setStep('complete');
+
+      // Save to Supabase and refresh data in the background (non-blocking)
+      (async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (!user) return;
+
+          await supabase
+            .from('compliance_checks')
+            .insert({
+              user_id: user.id,
+              content_text: content,
+              content_type: 'social_media_post',
+              platform: 'general',
+              overall_status: normaliseStatus(analysisResult.status),
+              compliance_score: complianceScore,
+              result_json: analysisResult,
+            })
+            .select()
+            .single();
+
+          // Refetch to sync with actual DB state and update cache
+          const [freshCount, freshHistory] = await Promise.all([
+            fetchMonthlyCheckCount(user.id),
+            fetchUserComplianceHistory(user.id, historyLimit),
+          ]);
+          setChecksUsedThisMonth(freshCount);
+          setHistory(freshHistory);
+          setCache(CACHE_KEY_USAGE, freshCount);
+          setCache(CACHE_KEY_HISTORY, freshHistory);
+        } catch (err) {
+          console.error('Failed to save compliance check:', err);
+        }
+      })();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred';
       setError(message);
@@ -315,6 +341,7 @@ export function useComplianceChecker(planName: string = 'free') {
       if (user) {
         const checks = await fetchUserComplianceHistory(user.id, historyLimit);
         setHistory(checks);
+        setCache(CACHE_KEY_HISTORY, checks);
       }
     } catch (err) {
       console.error('Failed to load history:', err);
@@ -329,6 +356,7 @@ export function useComplianceChecker(planName: string = 'free') {
     setHistory(prev => prev.filter(c => c.id !== id));
     // Decrement usage count when a check is deleted
     setChecksUsedThisMonth(prev => Math.max(0, prev - 1));
+    invalidateCache();
   }, []);
 
   // ── Reset checker state (new check) ───────────────────────────────────
