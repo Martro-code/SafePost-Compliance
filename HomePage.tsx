@@ -474,31 +474,31 @@ const HomePage: React.FC = () => {
               Activities that trigger AHPRA investigation
             </h2>
             <p className="text-lg text-gray-500">
-              Social media activities that are likely to warrant investigation
+              Social media and online advertising activities most likely to attract AHPRA scrutiny
             </p>
           </div>
 
           <div className="flex flex-col gap-4">
             {[
               {
-                title: 'Political content that calls for inappropriate action',
+                title: 'Patient testimonials and reviews',
                 description:
-                  'A practitioner posts to social media a condemnation of citizens of a country, or a cultural or religious identity. The post includes a call to action, such as signing a petition or attending a protest march, specifically aimed at denigrating or discriminating against a population or group. Depending on the specific circumstances or events being reported, this is potentially discriminatory and could be a breach of the code of conduct and social media guidance.',
+                  'Sharing or endorsing patient testimonials about clinical outcomes is prohibited under Section 133 of the Health Practitioner Regulation National Law Act 2009. This includes reposting Google reviews, featuring patient success stories, and posts that reference treatment results \u2014 even when the patient has given consent.',
               },
               {
-                title: 'Political content that is deliberately biased and not factual',
+                title: 'Before and after images',
                 description:
-                  'A practitioner shares intentionally misleading content about citizens of a country, or a cultural or religious identity that is biased, inflammatory and has the potential to incite racial hatred, intolerance. The content is intended to influence and persuade and is not factual. A member of the public makes a complaint that the content is derogatory, slanderous or offensive, and that it is not factual. Depending on the specific circumstances or events being reported, the content may be a breach of the practitioner\u2019s code of conduct and social media guidance, and a review of the matter reveals that the non-factual material is a repost of private political sentiment that is posted to gain traction against a target group.',
+                  'Publishing before and after photos for cosmetic, surgical, or aesthetic procedures is explicitly prohibited under AHPRA\u2019s advertising guidelines. This applies to all platforms including Instagram, Facebook, and your practice website \u2014 regardless of whether images are anonymised or accompanied by disclaimers.',
               },
               {
-                title: 'Political content that raises concern about unsafe care',
+                title: 'Unsubstantiated claims and superlatives',
                 description:
-                  'A practitioner claims in a social media post that the level of care they provide to a person may be affected by the person\u2019s nationality, racial background or the cultural beliefs of the person. This post has the potential to incite fear, racial hatred and intolerance. It also raises concerns that the practitioner\u2019s personal bias might lead to them not providing culturally safe care and/or providing inadequate care to patients from this background. The practitioner\u2019s activity is captured by a member of the public and reported to Ahpra.',
+                  'Describing yourself or your practice as \u2018the best\u2019, \u2018leading\u2019, \u2018top-rated\u2019, or \u2018most experienced\u2019 without objective evidence constitutes misleading advertising. Claims about treatment outcomes, success rates, or comparative superiority that cannot be independently verified are a common trigger for AHPRA complaints.',
               },
               {
-                title: 'Praise for terrorist actions or groups',
+                title: 'Product and treatment endorsements',
                 description:
-                  'A practitioner creates posts glorifying or supporting violent actions and members of a terrorist organisation. The posts use language like \u2018the resistance\u2019 and other phrasing that makes light of, supports, denies or provides misinformation or propaganda around actions of the group. A colleague sees these posts and is concerned for the safety of the practitioner\u2019s multi-cultural patients so makes a notification to Ahpra. The promotion of misinformation, propaganda and content inciting hatred about another\u2019s country, religion or cultural beliefs could likely result in a National Board taking action in response to the notification.',
+                  'Endorsing specific pharmaceutical products, medical devices, or cosmetic treatments on social media \u2014 including paid partnerships, gifted product posts, and affiliate arrangements \u2014 can breach both AHPRA advertising guidelines and TGA advertising requirements. Practitioners are held to a higher standard than general influencers.',
               },
             ].map((item, index) => {
               const isOpen = openAccordion === index;
