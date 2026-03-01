@@ -35,7 +35,6 @@ import TermsOfUse from './TermsOfUse';
 import ProtectedRoute from './ProtectedRoute';
 import { ComplianceCheckerPage } from './src/components/ComplianceCheckerPage';
 import NotFound from './NotFound';
-import BackToTop from './src/components/BackToTop';
 import CookieBanner from './src/components/CookieBanner';
 
 const ScrollToTop: React.FC = () => {
@@ -91,7 +90,6 @@ const App: React.FC = () => {
         </Routes>
       </div>
       <CookieBanner />
-      <BackToTop />
     </>
   );
 };

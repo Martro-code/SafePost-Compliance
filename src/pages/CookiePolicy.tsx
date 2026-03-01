@@ -3,6 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../../components/SafePostLogo';
 import LoggedInLayout from '../components/LoggedInLayout';
+import BackToTop from '../components/BackToTop';
 import { useAuth } from '../../useAuth';
 
 const CookiePolicy: React.FC = () => {
@@ -201,9 +202,12 @@ const CookiePolicy: React.FC = () => {
 
   if (user) {
     return (
-      <LoggedInLayout>
-        {contentSection}
-      </LoggedInLayout>
+      <>
+        <LoggedInLayout>
+          {contentSection}
+        </LoggedInLayout>
+        <BackToTop />
+      </>
     );
   }
 
@@ -474,6 +478,7 @@ const CookiePolicy: React.FC = () => {
           </div>
         </div>
       </footer>
+      <BackToTop />
     </div>
   );
 
