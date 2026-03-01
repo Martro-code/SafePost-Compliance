@@ -437,7 +437,7 @@ const HomePage: React.FC = () => {
                 Paste your content
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Copy and paste your social media post, ad copy, or marketing content directly into the tool — no sign-up or setup required.
+                Copy and paste your social media post, ad copy, or marketing content directly into the tool — no setup required.
               </p>
             </div>
 
