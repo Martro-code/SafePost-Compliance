@@ -2,9 +2,12 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, Menu, X, ExternalLink, ArrowLeft } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import LoggedInLayout from './src/components/LoggedInLayout';
+import { useAuth } from './useAuth';
 
 const ContactUs: React.FC = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
 
   const [firstName, setFirstName] = useState('');
   const [surname, setSurname] = useState('');
@@ -81,6 +84,141 @@ const ContactUs: React.FC = () => {
       setSubmitted(false);
     }
   };
+
+  if (loading) return null;
+
+  const contentSection = (
+      <main className="flex-grow flex items-center justify-center px-6 pt-6 pb-10 md:pt-8 md:pb-16">
+        <div className="w-full max-w-[550px]">
+          <button
+            onClick={() => navigate(user ? '/dashboard' : '/')}
+            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {user ? 'Back to Dashboard' : 'Back to Home'}
+          </button>
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
+                Get in Touch
+              </h1>
+              <p className="text-[14px] text-gray-500">
+                We'd love to hear from you! Please fill out the form below
+              </p>
+            </div>
+
+            {/* Success Message */}
+            {success && (
+              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+                <p className="text-[14px] text-green-700 text-center">
+                  Thank you for contacting us! We'll get back to you within 24 hours.
+                </p>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* First Name */}
+              <div>
+                <label htmlFor="firstName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  First Name
+                </label>
+                <input
+                  id="firstName"
+                  type="text"
+                  placeholder="Enter your first name"
+                  value={firstName}
+                  onChange={(e) => { setFirstName(e.target.value); setSuccess(false); }}
+                  className={getInputClasses(firstName, firstName.trim().length > 0)}
+                />
+              </div>
+
+              {/* Surname */}
+              <div>
+                <label htmlFor="surname" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Last Name
+                </label>
+                <input
+                  id="surname"
+                  type="text"
+                  placeholder="Enter your last name"
+                  value={surname}
+                  onChange={(e) => { setSurname(e.target.value); setSuccess(false); }}
+                  className={getInputClasses(surname, surname.trim().length > 0)}
+                />
+              </div>
+
+              {/* Email */}
+              <div>
+                <label htmlFor="email" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => { setEmail(e.target.value); setSuccess(false); }}
+                  className={getInputClasses(email, isValidEmail(email))}
+                />
+              </div>
+
+              {/* Phone Number */}
+              <div>
+                <label htmlFor="phone" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Phone number
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  placeholder="04XX XXX XXX"
+                  value={phone}
+                  onChange={(e) => { setPhone(e.target.value); setSuccess(false); }}
+                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
+                  className={getInputClasses(phone, phone.trim().length > 0)}
+                />
+              </div>
+
+              {/* Message */}
+              <div>
+                <label htmlFor="message" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  placeholder="Tell us how we can help..."
+                  value={message}
+                  onChange={(e) => { setMessage(e.target.value); setSuccess(false); }}
+                  rows={6}
+                  style={{ height: '150px' }}
+                  className={getTextareaClasses(message, message.trim().length > 0)}
+                />
+              </div>
+
+              {/* Submit Button */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+
+  );
+
+  if (user) {
+    return (
+      <LoggedInLayout>
+        {contentSection}
+      </LoggedInLayout>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
@@ -250,128 +388,7 @@ const ContactUs: React.FC = () => {
         </div>
       </header>
 
-      {/* Contact Form */}
-      <main className="flex-grow flex items-center justify-center px-6 pt-6 pb-10 md:pt-8 md:pb-16">
-        <div className="w-full max-w-[550px]">
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Home
-          </button>
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Get in Touch
-              </h1>
-              <p className="text-[14px] text-gray-500">
-                We'd love to hear from you! Please fill out the form below
-              </p>
-            </div>
-
-            {/* Success Message */}
-            {success && (
-              <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <p className="text-[14px] text-green-700 text-center">
-                  Thank you for contacting us! We'll get back to you within 24 hours.
-                </p>
-              </div>
-            )}
-
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* First Name */}
-              <div>
-                <label htmlFor="firstName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  First Name
-                </label>
-                <input
-                  id="firstName"
-                  type="text"
-                  placeholder="Enter your first name"
-                  value={firstName}
-                  onChange={(e) => { setFirstName(e.target.value); setSuccess(false); }}
-                  className={getInputClasses(firstName, firstName.trim().length > 0)}
-                />
-              </div>
-
-              {/* Surname */}
-              <div>
-                <label htmlFor="surname" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Last Name
-                </label>
-                <input
-                  id="surname"
-                  type="text"
-                  placeholder="Enter your last name"
-                  value={surname}
-                  onChange={(e) => { setSurname(e.target.value); setSuccess(false); }}
-                  className={getInputClasses(surname, surname.trim().length > 0)}
-                />
-              </div>
-
-              {/* Email */}
-              <div>
-                <label htmlFor="email" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); setSuccess(false); }}
-                  className={getInputClasses(email, isValidEmail(email))}
-                />
-              </div>
-
-              {/* Phone Number */}
-              <div>
-                <label htmlFor="phone" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Phone number
-                </label>
-                <input
-                  id="phone"
-                  type="tel"
-                  placeholder="04XX XXX XXX"
-                  value={phone}
-                  onChange={(e) => { setPhone(e.target.value); setSuccess(false); }}
-                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
-                  className={getInputClasses(phone, phone.trim().length > 0)}
-                />
-              </div>
-
-              {/* Message */}
-              <div>
-                <label htmlFor="message" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  placeholder="Tell us how we can help..."
-                  value={message}
-                  onChange={(e) => { setMessage(e.target.value); setSuccess(false); }}
-                  rows={6}
-                  style={{ height: '150px' }}
-                  className={getTextareaClasses(message, message.trim().length > 0)}
-                />
-              </div>
-
-              {/* Submit Button */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
-                >
-                  Submit
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </main>
+      {contentSection}
 
       {/* Footer */}
       <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
@@ -486,6 +503,7 @@ const ContactUs: React.FC = () => {
       </footer>
     </div>
   );
+
 };
 
 export default ContactUs;
