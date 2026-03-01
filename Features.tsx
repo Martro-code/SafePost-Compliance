@@ -55,7 +55,7 @@ const Features: React.FC = () => {
     {
       icon: <Image className="w-7 h-7 text-blue-500/80" />,
       heading: 'Real enforcement precedent',
-      description: 'Analysis draws on two landmark VCAT cases — giving you context for what AHPRA actually pursues.',
+      description: 'Analysis draws on two tribunal cases — giving you context for what AHPRA actually pursues.',
     },
     {
       icon: <BookOpen className="w-7 h-7 text-blue-500/80" />,

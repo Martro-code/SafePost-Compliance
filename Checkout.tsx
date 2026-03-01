@@ -29,7 +29,7 @@ const planData: Record<string, {
   },
   proplus: {
     name: 'SafePost Pro+',
-    subtitle: 'For practices with small marketing teams',
+    subtitle: 'Best for single-practitioner practices',
     monthlyPrice: 49,
     yearlyPrice: 490,
     yearlyMonthlyEquivalent: '~$41',

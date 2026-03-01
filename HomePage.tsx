@@ -448,7 +448,7 @@ const HomePage: React.FC = () => {
                 Get instant analysis
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Our AI analyses your content against AHPRA compliance guidelines and flags specific issues with direct references to the relevant rules and sections.
+                SafePost's AI analyses your content against AHPRA compliance guidelines and flags specific issues with direct references to the relevant rules and sections.
               </p>
             </div>
 
@@ -569,7 +569,7 @@ const HomePage: React.FC = () => {
                   Watch how SafePost™ identifies AHPRA compliance issues and generates compliant alternatives in seconds.
                 </p>
                 <p className="text-[15px] text-gray-400 leading-relaxed">
-                  Our AI-powered tool analyses your social media posts and advertising content against AHPRA's advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
+                  SafePost's AI-powered tool analyses your social media posts and advertising content against AHPRA's advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
                 </p>
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
                   <button

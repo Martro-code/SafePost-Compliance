@@ -86,7 +86,7 @@ const BillingInformation: React.FC = () => {
                   ? '100 compliance checks per month'
                   : planName.toLowerCase() === 'professional'
                   ? '30 compliance checks per month'
-                  : '3 compliance checks per month'
+                  : '3 compliance checks'
                 }
               </p>
             </div>
