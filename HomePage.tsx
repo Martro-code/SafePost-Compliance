@@ -632,7 +632,7 @@ const HomePage: React.FC = () => {
                   Comprehensive coverage
                 </h3>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
-                  Analyses posts against Section 133 of the National Law, testimonial restrictions, before/after photo regulations, cosmetic procedure advertising rules, and professional conduct standards.
+                  Analyses posts against Section 133 of the Health Practitioner Regulation National Law Act 2009, testimonial restrictions, before/after photo regulations, cosmetic procedure advertising rules, and professional conduct standards.
                 </p>
               </div>
 
