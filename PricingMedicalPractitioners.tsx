@@ -330,16 +330,16 @@ const PricingMedicalPractitioners: React.FC = () => {
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '~$16' : '$20'}</span>
-                  <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">/month</span>
-                  {isYearly && (
-                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none mb-0.5">
-                      2 months free
-                    </span>
-                  )}
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$200' : '$20'}</span>
+                  <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">{isYearly ? '/year' : '/month'}</span>
                 </div>
                 {isYearly && (
-                  <p className="text-[12px] text-gray-400 mt-1.5">billed as $200/year</p>
+                  <p className="text-[12px] text-gray-400 mt-1.5 flex items-center gap-1.5">
+                    $16/month
+                    <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none">
+                      2 months free
+                    </span>
+                  </p>
                 )}
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
