@@ -49,7 +49,7 @@ const PricingMedicalPractices: React.FC = () => {
     },
     {
       question: 'Do you offer compliance checks for website content and online advertising?',
-      answer: 'Yes \u2014 all paid plans include analysis of any online content including website copy, social media posts, paid advertising, and email marketing. SafePost\u2122 checks content against AHPRA advertising guidelines, the National Law, and TGA advertising requirements where relevant.',
+      answer: 'Yes \u2014 all paid plans include analysis of any online content including website copy, social media posts, paid advertising, and email marketing. SafePost\u2122 checks content against AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA advertising requirements where relevant.',
     },
     {
       question: 'How does SafePost\u2122 handle compliance for cosmetic procedures?',
