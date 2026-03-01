@@ -42,6 +42,7 @@ const TermsOfUse: React.FC = () => {
   if (loading) return null;
 
   const contentSection = (
+      <>
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-10 md:pt-14 pb-16 md:pb-24">
           <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
@@ -353,17 +354,16 @@ const TermsOfUse: React.FC = () => {
           </div>
         </div>
       </section>
+      <BackToTop />
+      </>
 
   );
 
   if (user) {
     return (
-      <>
-        <LoggedInLayout>
-          {contentSection}
-        </LoggedInLayout>
-        <BackToTop />
-      </>
+      <LoggedInLayout>
+        {contentSection}
+      </LoggedInLayout>
     );
   }
 
@@ -634,7 +634,6 @@ const TermsOfUse: React.FC = () => {
           </div>
         </div>
       </footer>
-      <BackToTop />
     </div>
   );
 
