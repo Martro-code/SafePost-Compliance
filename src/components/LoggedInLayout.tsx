@@ -10,6 +10,7 @@ import SafePostLogo from '../../components/SafePostLogo';
 import LoggedInFooter from './LoggedInFooter';
 import { useAuth } from '../../useAuth';
 import { getDisplayPlanName } from '../utils/planUtils';
+import { getUnreadCount, markAllNotificationsRead } from '../services/notificationService';
 
 interface LoggedInLayoutProps {
   children: React.ReactNode;
@@ -18,7 +19,7 @@ interface LoggedInLayoutProps {
 const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { userEmail, signOut } = useAuth();
+  const { user, userEmail, signOut } = useAuth();
 
   const planName = sessionStorage.getItem('safepost_plan') || '';
 
@@ -30,7 +31,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
   const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(() => {
     const saved = sessionStorage.getItem('safepost_notification_count');
-    return saved !== null ? parseInt(saved, 10) : 3;
+    return saved !== null ? parseInt(saved, 10) : 0;
   });
   const notificationRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +44,15 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  // Fetch unread count from Supabase on mount/login
+  useEffect(() => {
+    if (!user) return;
+    getUnreadCount(user.id).then(count => {
+      setNotificationCount(count);
+      sessionStorage.setItem('safepost_notification_count', String(count));
+    });
+  }, [user]);
 
   useEffect(() => {
     const handleNotificationUpdate = () => {
@@ -111,7 +121,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                 <div className="absolute top-full right-0 mt-1 w-80 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in dark:bg-gray-800 dark:border-gray-700 z-50">
                   <div className="flex items-center justify-between px-4 py-2.5">
                     <p className="text-[13px] font-semibold text-gray-900 dark:text-white">Notifications</p>
-                    <button onClick={() => { setNotificationCount(0); sessionStorage.setItem('safepost_notification_count', '0'); }} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium transition-colors dark:text-blue-400">
+                    <button onClick={() => { setNotificationCount(0); sessionStorage.setItem('safepost_notification_count', '0'); window.dispatchEvent(new Event('safepost-notifications-updated')); if (user) { markAllNotificationsRead(user.id); } }} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium transition-colors dark:text-blue-400">
                       Mark all as read
                     </button>
                   </div>
