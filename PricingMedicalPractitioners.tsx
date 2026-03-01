@@ -53,7 +53,7 @@ const PricingMedicalPractitioners: React.FC = () => {
     },
     {
       question: 'Can I analyse content that includes images or before/after photos?',
-      answer: 'Yes \u2014 SafePost\u2122 Professional, Pro+, and Ultra all include image and video content analysis, which is particularly important for cosmetic procedure advertising. SafePost\'s AI analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan supports text-based analysis only.',
+      answer: 'Yes \u2014 SafePost\u2122 Professional, Pro+, and Ultra all include image and video content analysis, which is particularly important for cosmetic procedure advertising. SafePost\u2122 analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan supports text-based analysis only.',
     },
     {
       question: 'How quickly can I get compliance results?',

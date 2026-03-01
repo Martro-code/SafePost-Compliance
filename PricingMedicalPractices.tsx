@@ -41,7 +41,7 @@ const PricingMedicalPractices: React.FC = () => {
   const faqs = [
     {
       question: 'What\u2019s the difference between the plans for practices?',
-      answer: 'The key differences are check volume, team size, and history access. Pro+ suits a small practice with a marketing team (100 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
+      answer: 'The key differences are check volume, team size, and history access. Pro+ suits a single-practitioner practice (100 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
     },
     {
       question: 'Can multiple staff members use the same SafePost\u2122 account?',
