@@ -41,14 +41,19 @@ const NotificationsInbox: React.FC = () => {
   const [notifications, setNotifications] = useState(initialNotifications);
 
   const markAsRead = (id: number) => {
-    setNotifications(prev =>
-      prev.map(n => n.id === id ? { ...n, read: true } : n)
-    );
+    setNotifications(prev => {
+      const updated = prev.map(n => n.id === id ? { ...n, read: true } : n);
+      const unreadCount = updated.filter(n => !n.read).length;
+      sessionStorage.setItem('safepost_notification_count', String(unreadCount));
+      window.dispatchEvent(new Event('safepost-notifications-updated'));
+      return updated;
+    });
   };
 
   const markAllAsRead = () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     sessionStorage.setItem('safepost_notification_count', '0');
+    window.dispatchEvent(new Event('safepost-notifications-updated'));
   };
 
   const hasUnread = notifications.some(n => !n.read);
