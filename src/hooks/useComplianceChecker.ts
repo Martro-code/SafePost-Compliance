@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { analyzePost } from '../../services/geminiService';
 import { AnalysisResult, ComplianceStatus } from '../../types';
 import { supabase } from '../services/supabaseClient';
@@ -7,6 +7,7 @@ import { supabase } from '../services/supabaseClient';
 // Session storage keys for persisting last result across navigation
 const SESSION_KEY_RESULT = 'safepost_last_result';
 const SESSION_KEY_CONTENT = 'safepost_last_content';
+const SESSION_KEY_CHECK_ID = 'safepost_last_check_id';
 
 // Session storage keys for caching usage and history data
 const CACHE_KEY_USAGE = 'safepost_usage_cache';
@@ -160,6 +161,9 @@ export function useComplianceChecker(planName: string = 'free') {
   const [lastContent, setLastContent] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
+  // ── Check ID ref (tracks the Supabase ID of the current check) ──────
+  const lastCheckIdRef = useRef<string | null>(null);
+
   // ── History state ───────────────────────────────────────────────────────
   const [history, setHistory] = useState<SavedComplianceCheck[]>([]);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
@@ -186,14 +190,19 @@ export function useComplianceChecker(planName: string = 'free') {
     try {
       const savedResult = sessionStorage.getItem(SESSION_KEY_RESULT);
       const savedContent = sessionStorage.getItem(SESSION_KEY_CONTENT);
+      const savedCheckId = sessionStorage.getItem(SESSION_KEY_CHECK_ID);
       if (savedResult && savedContent) {
         setResult(JSON.parse(savedResult));
         setLastContent(savedContent);
         setStep('complete');
       }
+      if (savedCheckId) {
+        lastCheckIdRef.current = savedCheckId;
+      }
     } catch {
       sessionStorage.removeItem(SESSION_KEY_RESULT);
       sessionStorage.removeItem(SESSION_KEY_CONTENT);
+      sessionStorage.removeItem(SESSION_KEY_CHECK_ID);
     }
   }, []);
 
@@ -316,6 +325,9 @@ export function useComplianceChecker(planName: string = 'free') {
 
           if (insertResult.error) {
             console.error('Failed to save compliance check:', insertResult.error.message);
+          } else if (insertResult.data) {
+            lastCheckIdRef.current = insertResult.data.id;
+            sessionStorage.setItem(SESSION_KEY_CHECK_ID, insertResult.data.id);
           }
 
           // Refetch to sync with actual DB state and update cache
@@ -364,15 +376,55 @@ export function useComplianceChecker(planName: string = 'free') {
     invalidateCache();
   }, []);
 
+  // ── Save rewrite options to sessionStorage + Supabase ─────────────────
+  const saveRewriteOptions = useCallback(async (rewrites: any[]) => {
+    // 1. Update sessionStorage immediately so rewrites survive navigation
+    try {
+      const savedResult = sessionStorage.getItem(SESSION_KEY_RESULT);
+      if (savedResult) {
+        const parsed = JSON.parse(savedResult);
+        parsed.rewrite_options = rewrites;
+        sessionStorage.setItem(SESSION_KEY_RESULT, JSON.stringify(parsed));
+      }
+    } catch {
+      // Ignore sessionStorage errors
+    }
+
+    // 2. Persist to Supabase by merging into result_json
+    const checkId = lastCheckIdRef.current;
+    if (!checkId) return;
+
+    try {
+      const { data: current } = await supabase
+        .from('compliance_checks')
+        .select('result_json')
+        .eq('id', checkId)
+        .single();
+
+      if (current) {
+        await supabase
+          .from('compliance_checks')
+          .update({
+            result_json: { ...current.result_json, rewrite_options: rewrites },
+          })
+          .eq('id', checkId);
+      }
+    } catch (err) {
+      console.error('Failed to save rewrite options:', err);
+    }
+  }, []);
+
   // ── Reset checker state (new check) ───────────────────────────────────
   const resetChecker = useCallback(() => {
     setStep('idle');
     setResult(null);
     setLastContent('');
     setError(null);
+    lastCheckIdRef.current = null;
     // Clear session storage so navigating back shows fresh input
     sessionStorage.removeItem(SESSION_KEY_RESULT);
     sessionStorage.removeItem(SESSION_KEY_CONTENT);
+    sessionStorage.removeItem(SESSION_KEY_CHECK_ID);
   }, []);
 
   return {
@@ -388,5 +440,6 @@ export function useComplianceChecker(planName: string = 'free') {
     loadHistory,
     deleteCheck,
     resetChecker,
+    saveRewriteOptions,
   };
 }
