@@ -44,6 +44,15 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const handleNotificationUpdate = () => {
+      const saved = sessionStorage.getItem('safepost_notification_count');
+      setNotificationCount(saved !== null ? parseInt(saved, 10) : 0);
+    };
+    window.addEventListener('safepost-notifications-updated', handleNotificationUpdate);
+    return () => window.removeEventListener('safepost-notifications-updated', handleNotificationUpdate);
+  }, []);
+
   const handleLogOut = async () => {
     sessionStorage.clear();
     await signOut();
