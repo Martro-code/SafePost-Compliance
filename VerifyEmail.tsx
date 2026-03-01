@@ -13,14 +13,19 @@ const VerifyEmail: React.FC = () => {
   const plan = searchParams.get('plan') || '';
   const billing = searchParams.get('billing') || '';
 
-  // Build the checkout redirect URL with plan params if they exist
-  const checkoutUrl = plan
-    ? `/checkout?plan=${plan}&billing=${billing || 'monthly'}`
-    : '/checkout?plan=professional&billing=monthly';
+  // Starter/free plan users skip checkout and go straight to the dashboard.
+  // Paid plans (professional, proplus, ultra) proceed to checkout as normal.
+  const PAID_PLANS = ['professional', 'proplus', 'ultra'];
+  const isPaidPlan = PAID_PLANS.includes(plan.toLowerCase());
 
   const handleVerified = () => {
     sessionStorage.setItem('safepost_verified', 'true');
-    navigate(checkoutUrl);
+    if (isPaidPlan) {
+      navigate(`/checkout?plan=${plan}&billing=${billing || 'monthly'}`);
+    } else {
+      // Free / Starter / unknown plan → dashboard (no checkout needed)
+      navigate('/dashboard');
+    }
   };
 
   const handleResend = async () => {
