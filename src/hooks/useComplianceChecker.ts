@@ -141,12 +141,12 @@ function getPlanLimit(planName: string): number {
 const STATUS_MAP: Record<string, string> = {
   COMPLIANT: 'compliant',
   NON_COMPLIANT: 'non_compliant',
-  WARNING: 'warning',
-  NOT_HEALTHCARE: 'warning',
+  WARNING: 'requires_review',
+  NOT_HEALTHCARE: 'requires_review',
 };
 
 function normaliseStatus(status: string): string {
-  return STATUS_MAP[status] ?? 'warning';
+  return STATUS_MAP[status] ?? 'requires_review';
 }
 
 // ─── Hook ─────────────────────────────────────────────────────────────────────
