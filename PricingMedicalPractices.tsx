@@ -41,7 +41,7 @@ const PricingMedicalPractices: React.FC = () => {
   const faqs = [
     {
       question: 'What\u2019s the difference between the plans for practices?',
-      answer: 'The key differences are check volume, team size, and history access. Professional suits a solo practitioner posting regularly (30 checks/month). Pro+ suits a small practice with a marketing team (100 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
+      answer: 'The key differences are check volume, team size, and history access. Pro+ suits a small practice with a marketing team (100 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
     },
     {
       question: 'Can multiple staff members use the same SafePost\u2122 account?',
@@ -49,7 +49,7 @@ const PricingMedicalPractices: React.FC = () => {
     },
     {
       question: 'Do you offer compliance checks for website content and online advertising?',
-      answer: 'Yes \u2014 all paid plans include analysis of any online content including website copy, social media posts, paid advertising, and email marketing. SafePost\u2122 checks content against AHPRA advertising guidelines, the National Law, and TGA therapeutic goods advertising requirements where relevant.',
+      answer: 'Yes \u2014 all paid plans include analysis of any online content including website copy, social media posts, paid advertising, and email marketing. SafePost\u2122 checks content against AHPRA advertising guidelines, the National Law, and TGA advertising requirements where relevant.',
     },
     {
       question: 'How does SafePost\u2122 handle compliance for cosmetic procedures?',
@@ -282,7 +282,7 @@ const PricingMedicalPractices: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 md:p-10 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm flex flex-col">
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-1">Pro+</h3>
-                <p className="text-[14px] text-gray-500">For practices with small marketing teams</p>
+                <p className="text-[14px] text-gray-500">Best for single-practitioner practices</p>
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
