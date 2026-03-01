@@ -54,10 +54,10 @@ const TwoFactorAuth: React.FC = () => {
 
         {/* Page Heading */}
         <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
             {is2FAEnabled ? 'Two-Factor Authentication' : 'Set Up Two-Factor Authentication'}
           </h1>
-          <p className="text-[14px] text-gray-500 dark:text-gray-300">
+          <p className="text-[14px] text-gray-500 mt-1 mb-8">
             {is2FAEnabled ? 'Manage your two-factor authentication settings' : 'Add an extra layer of security to your account'}
           </p>
         </div>
