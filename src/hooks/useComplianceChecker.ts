@@ -142,6 +142,7 @@ const STATUS_MAP: Record<string, string> = {
   COMPLIANT: 'compliant',
   NON_COMPLIANT: 'non_compliant',
   WARNING: 'requires_review',
+  REQUIRES_REVIEW: 'requires_review',
   NOT_HEALTHCARE: 'requires_review',
 };
 
