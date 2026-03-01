@@ -2,10 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import LoggedInLayout from './src/components/LoggedInLayout';
+import { useAuth } from './useAuth';
 
 const PrivacyPolicy: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { user, loading } = useAuth();
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
@@ -35,168 +38,9 @@ const PrivacyPolicy: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  return (
-    <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/">
-            <SafePostLogo />
-          </Link>
+  if (loading) return null;
 
-          <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-            <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
-            <div className="relative">
-              <button
-                onClick={() => setPricingDropdownOpen(!pricingDropdownOpen)}
-                onBlur={() => setTimeout(() => setPricingDropdownOpen(false), 150)}
-                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
-              >
-                Pricing
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${pricingDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {pricingDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
-                  <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    Medical Practitioners
-                  </button>
-                  <button onClick={() => navigate('/pricing/medical-practices')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    Medical Practices
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="relative">
-              <button
-                onClick={() => setCompanyDropdownOpen(!companyDropdownOpen)}
-                onBlur={() => setTimeout(() => setCompanyDropdownOpen(false), 150)}
-                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
-              >
-                Company
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${companyDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {companyDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
-                  <button onClick={() => navigate('/about')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    About us
-                  </button>
-                  <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    News
-                  </a>
-                  <button onClick={() => navigate('/contact')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
-                    Contact us
-                  </button>
-                </div>
-              )}
-            </div>
-            <div className="relative" ref={resourcesDropdownRef} onMouseDown={(e) => { if (e.button === 2) resourcesContextMenuRef.current = true; }} onContextMenu={() => { resourcesContextMenuRef.current = true; }} onMouseLeave={() => { if (!resourcesContextMenuRef.current) { setResourcesDropdownOpen(false); } }}>
-              <button
-                onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
-                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
-              >
-                Resources
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${resourcesDropdownOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {resourcesDropdownOpen && (
-                <div className="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
-                  {resourceLinks.map((link, i) => (
-                    <a
-                      key={i}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
-                    >
-                      {link.label}
-                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          </nav>
-
-          <div className="hidden md:flex items-center gap-2.5">
-            <button onClick={() => navigate('/login')} className="px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
-              Login
-            </button>
-            <button onClick={() => navigate('/pricing/medical-practitioners')} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-              Sign Up
-            </button>
-          </div>
-
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-        </div>
-
-        <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
-          }`}
-        >
-          <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
-            <button onClick={() => navigate('/features')} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
-            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Pricing
-            </a>
-            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Company
-            </a>
-
-            <div>
-              <button
-                onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
-                className="w-full flex items-center justify-between px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
-              >
-                Resources
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileResourcesOpen ? 'rotate-180' : ''}`} />
-              </button>
-              <div
-                className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{
-                  maxHeight: mobileResourcesOpen ? '300px' : '0px',
-                  opacity: mobileResourcesOpen ? 1 : 0,
-                }}
-              >
-                <div className="pl-4 space-y-0.5 pt-1">
-                  {resourceLinks.map((link, i) => (
-                    <a
-                      key={i}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors"
-                    >
-                      {link.label}
-                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-3 border-t border-black/[0.06] flex flex-col gap-2">
-              <button onClick={() => navigate('/login')} className="w-full px-4 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
-                Login
-              </button>
-              <button onClick={() => navigate('/pricing/medical-practitioners')} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-                Sign Up
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
+  const contentSection = (
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-10 md:pt-14 pb-16 md:pb-24">
           <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
@@ -551,6 +395,179 @@ const PrivacyPolicy: React.FC = () => {
         </div>
       </section>
 
+  );
+
+  if (user) {
+    return (
+      <LoggedInLayout>
+        {contentSection}
+      </LoggedInLayout>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          <Link to="/">
+            <SafePostLogo />
+          </Link>
+
+          <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+            <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Features
+            </button>
+            <div className="relative">
+              <button
+                onClick={() => setPricingDropdownOpen(!pricingDropdownOpen)}
+                onBlur={() => setTimeout(() => setPricingDropdownOpen(false), 150)}
+                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Pricing
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${pricingDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {pricingDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Medical Practitioners
+                  </button>
+                  <button onClick={() => navigate('/pricing/medical-practices')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Medical Practices
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="relative">
+              <button
+                onClick={() => setCompanyDropdownOpen(!companyDropdownOpen)}
+                onBlur={() => setTimeout(() => setCompanyDropdownOpen(false), 150)}
+                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Company
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${companyDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {companyDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-40 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  <button onClick={() => navigate('/about')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    About us
+                  </button>
+                  <a href="#" onClick={(e) => e.preventDefault()} className="block px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    News
+                  </a>
+                  <button onClick={() => navigate('/contact')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Contact us
+                  </button>
+                </div>
+              )}
+            </div>
+            <div className="relative" ref={resourcesDropdownRef} onMouseDown={(e) => { if (e.button === 2) resourcesContextMenuRef.current = true; }} onContextMenu={() => { resourcesContextMenuRef.current = true; }} onMouseLeave={() => { if (!resourcesContextMenuRef.current) { setResourcesDropdownOpen(false); } }}>
+              <button
+                onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}
+                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Resources
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${resourcesDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {resourcesDropdownOpen && (
+                <div className="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  {resourceLinks.map((link, i) => (
+                    <a
+                      key={i}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors"
+                    >
+                      {link.label}
+                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </nav>
+
+          <div className="hidden md:flex items-center gap-2.5">
+            <button onClick={() => navigate('/login')} className="px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
+              Login
+            </button>
+            <button onClick={() => navigate('/pricing/medical-practitioners')} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
+              Sign Up
+            </button>
+          </div>
+
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
+            aria-label="Toggle menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+          }`}
+        >
+          <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
+            <button onClick={() => navigate('/features')} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Features
+            </button>
+            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Pricing
+            </a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="block px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Company
+            </a>
+
+            <div>
+              <button
+                onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}
+                className="w-full flex items-center justify-between px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Resources
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileResourcesOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{
+                  maxHeight: mobileResourcesOpen ? '300px' : '0px',
+                  opacity: mobileResourcesOpen ? 1 : 0,
+                }}
+              >
+                <div className="pl-4 space-y-0.5 pt-1">
+                  {resourceLinks.map((link, i) => (
+                    <a
+                      key={i}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors"
+                    >
+                      {link.label}
+                      <ExternalLink className="w-3 h-3 flex-shrink-0 ml-2 opacity-40" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-3 border-t border-black/[0.06] flex flex-col gap-2">
+              <button onClick={() => navigate('/login')} className="w-full px-4 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
+                Login
+              </button>
+              <button onClick={() => navigate('/pricing/medical-practitioners')} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
+                Sign Up
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {contentSection}
+
       {/* Footer */}
       <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
         <div className="max-w-6xl mx-auto px-6">
@@ -657,6 +674,7 @@ const PrivacyPolicy: React.FC = () => {
       </footer>
     </div>
   );
+
 };
 
 export default PrivacyPolicy;
