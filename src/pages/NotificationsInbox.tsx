@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bell, CheckCircle2, AlertTriangle } from 'lucide-react';
 import LoggedInLayout from '../components/LoggedInLayout';
+import { useAuth } from '../../useAuth';
+import { fetchReadNotificationIds, markNotificationRead, markAllNotificationsRead } from '../services/notificationService';
 
 const initialNotifications = [
   {
@@ -38,7 +40,22 @@ const initialNotifications = [
 
 const NotificationsInbox: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [notifications, setNotifications] = useState(initialNotifications);
+
+  // Load read state from Supabase on mount
+  useEffect(() => {
+    if (!user) return;
+    fetchReadNotificationIds(user.id).then(readIds => {
+      setNotifications(prev => {
+        const updated = prev.map(n => readIds.includes(n.id) ? { ...n, read: true } : n);
+        const unreadCount = updated.filter(n => !n.read).length;
+        sessionStorage.setItem('safepost_notification_count', String(unreadCount));
+        window.dispatchEvent(new Event('safepost-notifications-updated'));
+        return updated;
+      });
+    });
+  }, [user]);
 
   const markAsRead = (id: number) => {
     setNotifications(prev => {
@@ -48,12 +65,18 @@ const NotificationsInbox: React.FC = () => {
       window.dispatchEvent(new Event('safepost-notifications-updated'));
       return updated;
     });
+    if (user) {
+      markNotificationRead(user.id, id);
+    }
   };
 
   const markAllAsRead = () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     sessionStorage.setItem('safepost_notification_count', '0');
     window.dispatchEvent(new Event('safepost-notifications-updated'));
+    if (user) {
+      markAllNotificationsRead(user.id);
+    }
   };
 
   const hasUnread = notifications.some(n => !n.read);
