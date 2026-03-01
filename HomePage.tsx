@@ -478,7 +478,7 @@ const HomePage: React.FC = () => {
             </p>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="rounded-xl border border-black/[0.06] bg-white overflow-hidden shadow-sm shadow-black/[0.02] divide-y divide-black/[0.06]">
             {[
               {
                 title: 'Patient testimonials and reviews',
@@ -505,15 +505,11 @@ const HomePage: React.FC = () => {
               return (
                 <div
                   key={index}
-                  className={`rounded-xl border bg-white overflow-hidden transition-all duration-200 ${
-                    isOpen
-                      ? 'border-black/[0.08] shadow-md shadow-black/[0.04]'
-                      : 'border-black/[0.06] shadow-sm shadow-black/[0.02] hover:border-black/[0.1] hover:shadow-md hover:shadow-black/[0.04]'
-                  }`}
+                  className="overflow-hidden transition-all duration-200"
                 >
                   <button
                     onClick={() => setOpenAccordion(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between px-6 py-5 text-left cursor-pointer group"
+                    className="w-full flex items-center justify-between px-6 py-4 text-left cursor-pointer group"
                   >
                     <span className="text-[15px] font-semibold text-gray-900 leading-snug pr-4">
                       {item.title}
