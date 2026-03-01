@@ -36,6 +36,7 @@ import ProtectedRoute from './ProtectedRoute';
 import { ComplianceCheckerPage } from './src/components/ComplianceCheckerPage';
 import NotFound from './NotFound';
 import CookieBanner from './src/components/CookieBanner';
+import BackToTop from './src/components/BackToTop';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -90,6 +91,7 @@ const App: React.FC = () => {
         </Routes>
       </div>
       <CookieBanner />
+      <BackToTop />
     </>
   );
 };

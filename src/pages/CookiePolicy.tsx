@@ -3,7 +3,6 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../../components/SafePostLogo';
 import LoggedInLayout from '../components/LoggedInLayout';
-import BackToTop from '../components/BackToTop';
 import { useAuth } from '../../useAuth';
 
 const CookiePolicy: React.FC = () => {
@@ -42,7 +41,6 @@ const CookiePolicy: React.FC = () => {
   if (loading) return null;
 
   const contentSection = (
-      <>
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-10 md:pt-14 pb-16 md:pb-24">
           <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
@@ -198,8 +196,6 @@ const CookiePolicy: React.FC = () => {
           </div>
         </div>
       </section>
-      <BackToTop />
-      </>
 
   );
 
