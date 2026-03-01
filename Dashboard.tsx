@@ -6,7 +6,7 @@ import OnboardingModal from './src/components/OnboardingModal';
 import { useAuth } from './useAuth';
 import { useComplianceChecker } from './src/hooks/useComplianceChecker';
 import { ComplianceResults } from './src/components/ComplianceResults';
-import { analyzePost, generateCompliantRewrites } from './services/geminiService';
+import { generateCompliantRewrites } from './services/geminiService';
 import { getDisplayPlanName } from './src/utils/planUtils';
 
 const Dashboard: React.FC = () => {

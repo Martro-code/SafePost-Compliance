@@ -12,15 +12,42 @@ import {
   Lightbulb,
   Check,
 } from 'lucide-react';
-import type { ComplianceResult, ComplianceIssue } from '../../services/geminiService';
+// Local types matching the actual data shape from useComplianceChecker
+interface ComplianceIssue {
+  guidelineReference: string;
+  finding: string;
+  severity: 'Critical' | 'Warning' | 'critical' | 'warning' | 'info';
+  recommendation: string;
+  category?: string;
+  subcategory?: string;
+  plain_english_summary?: string;
+  excerpt?: string;
+  explanation?: string;
+  source_document?: string;
+  section_reference?: string;
+  rule_text?: string;
+  recommended_action?: string;
+}
+
+interface ComplianceResult {
+  overall_status?: string;
+  status?: string;
+  compliance_score?: number;
+  summary: string;
+  overallVerdict?: string;
+  issues: ComplianceIssue[];
+  compliant_elements?: string[];
+  revised_content_suggestion?: string;
+  checked_at?: string;
+}
 
 interface ComplianceReportProps {
   result: ComplianceResult;
-  savedCheckId: string | null;
+  savedCheckId?: string | null;
   onReset: () => void;
 }
 
-function StatusBadge({ status }: { status: ComplianceResult['overall_status'] }) {
+function StatusBadge({ status }: { status: string }) {
   const config = {
     compliant: {
       icon: CheckCircle,
@@ -46,7 +73,22 @@ function StatusBadge({ status }: { status: ComplianceResult['overall_status'] })
       text: 'text-amber-700',
       iconColor: 'text-amber-500',
     },
-  }[status];
+    warning: {
+      icon: AlertTriangle,
+      label: 'Requires Review',
+      bg: 'bg-amber-50',
+      border: 'border-amber-200',
+      text: 'text-amber-700',
+      iconColor: 'text-amber-500',
+    },
+  }[status] ?? {
+    icon: AlertTriangle,
+    label: 'Unknown',
+    bg: 'bg-gray-50',
+    border: 'border-gray-200',
+    text: 'text-gray-700',
+    iconColor: 'text-gray-500',
+  };
 
   const Icon = config.icon;
 
@@ -92,9 +134,10 @@ function ScoreRing({ score }: { score: number }) {
 }
 
 function IssueSeverityIcon({ severity }: { severity: ComplianceIssue['severity'] }) {
-  if (severity === 'critical')
+  const sev = severity?.toLowerCase();
+  if (sev === 'critical')
     return <XCircle className="w-5 h-5 text-red-500 flex-shrink-0" />;
-  if (severity === 'warning')
+  if (sev === 'warning')
     return <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />;
   return <Info className="w-5 h-5 text-blue-500 flex-shrink-0" />;
 }
@@ -102,7 +145,7 @@ function IssueSeverityIcon({ severity }: { severity: ComplianceIssue['severity']
 function IssueCard({ issue, index }: { issue: ComplianceIssue; index: number }) {
   const [expanded, setExpanded] = useState(index === 0);
 
-  const severityConfig = {
+  const severityMap: Record<string, { bg: string; border: string; badge: string }> = {
     critical: { bg: 'bg-red-50', border: 'border-red-200', badge: 'bg-red-100 text-red-700' },
     warning: {
       bg: 'bg-amber-50',
@@ -110,7 +153,8 @@ function IssueCard({ issue, index }: { issue: ComplianceIssue; index: number }) 
       badge: 'bg-amber-100 text-amber-700',
     },
     info: { bg: 'bg-blue-50', border: 'border-blue-200', badge: 'bg-blue-100 text-blue-700' },
-  }[issue.severity];
+  };
+  const severityConfig = severityMap[issue.severity?.toLowerCase()] ?? severityMap.warning;
 
   return (
     <div className={`border rounded-xl overflow-hidden ${severityConfig.border}`}>
@@ -134,7 +178,7 @@ function IssueCard({ issue, index }: { issue: ComplianceIssue; index: number }) 
               </>
             )}
           </div>
-          <p className="text-sm font-medium text-gray-900">{issue.plain_english_summary}</p>
+          <p className="text-sm font-medium text-gray-900">{issue.plain_english_summary || issue.finding}</p>
         </div>
         {expanded ? (
           <ChevronUp className="w-4 h-4 text-gray-400 flex-shrink-0 mt-1" />
@@ -156,30 +200,36 @@ function IssueCard({ issue, index }: { issue: ComplianceIssue; index: number }) 
             </div>
           )}
 
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-              Why This Is an Issue
-            </p>
-            <p className="text-sm text-gray-700">{issue.explanation}</p>
-          </div>
-
-          <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-              Applicable Rule
-            </p>
-            <div className="bg-gray-50 rounded-lg p-3">
-              <p className="text-xs text-gray-500 mb-1">
-                {issue.source_document} · {issue.section_reference}
+          {(issue.explanation || issue.finding) && (
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                Why This Is an Issue
               </p>
-              <p className="text-sm text-gray-800">{issue.rule_text}</p>
+              <p className="text-sm text-gray-700">{issue.explanation || issue.finding}</p>
             </div>
-          </div>
+          )}
+
+          {(issue.source_document || issue.guidelineReference) && (
+            <div>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
+                Applicable Rule
+              </p>
+              <div className="bg-gray-50 rounded-lg p-3">
+                <p className="text-xs text-gray-500 mb-1">
+                  {issue.source_document && issue.section_reference
+                    ? `${issue.source_document} · ${issue.section_reference}`
+                    : issue.guidelineReference}
+                </p>
+                {issue.rule_text && <p className="text-sm text-gray-800">{issue.rule_text}</p>}
+              </div>
+            </div>
+          )}
 
           <div className="flex gap-2 bg-blue-50 rounded-lg p-3">
             <Lightbulb className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-xs font-semibold text-blue-700 mb-0.5">Recommended Action</p>
-              <p className="text-sm text-blue-800">{issue.recommended_action}</p>
+              <p className="text-sm text-blue-800">{issue.recommended_action || issue.recommendation}</p>
             </div>
           </div>
         </div>
@@ -191,9 +241,9 @@ function IssueCard({ issue, index }: { issue: ComplianceIssue; index: number }) 
 export function ComplianceReport({ result, savedCheckId, onReset }: ComplianceReportProps) {
   const [copied, setCopied] = useState(false);
 
-  const criticalCount = result.issues.filter((i) => i.severity === 'critical').length;
-  const warningCount = result.issues.filter((i) => i.severity === 'warning').length;
-  const infoCount = result.issues.filter((i) => i.severity === 'info').length;
+  const criticalCount = result.issues.filter((i) => i.severity?.toLowerCase() === 'critical').length;
+  const warningCount = result.issues.filter((i) => i.severity?.toLowerCase() === 'warning').length;
+  const infoCount = result.issues.filter((i) => i.severity?.toLowerCase() === 'info').length;
 
   const copyRevision = () => {
     if (result.revised_content_suggestion) {
@@ -208,10 +258,10 @@ export function ComplianceReport({ result, savedCheckId, onReset }: ComplianceRe
       {/* Score card */}
       <div className="bg-white border border-gray-200 rounded-xl p-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
-          <ScoreRing score={result.compliance_score} />
+          <ScoreRing score={result.compliance_score ?? 0} />
           <div className="flex-1">
             <div className="flex flex-wrap items-center gap-3 mb-3">
-              <StatusBadge status={result.overall_status} />
+              <StatusBadge status={result.overall_status ?? result.status ?? 'warning'} />
               {savedCheckId && (
                 <span className="text-xs text-gray-400">Saved · ID {savedCheckId.slice(0, 8)}</span>
               )}
@@ -248,8 +298,8 @@ export function ComplianceReport({ result, savedCheckId, onReset }: ComplianceRe
           <div className="space-y-3">
             {[...result.issues]
               .sort((a, b) => {
-                const order = { critical: 0, warning: 1, info: 2 };
-                return order[a.severity] - order[b.severity];
+                const order: Record<string, number> = { critical: 0, warning: 1, info: 2 };
+                return (order[a.severity?.toLowerCase()] ?? 2) - (order[b.severity?.toLowerCase()] ?? 2);
               })
               .map((issue, i) => (
                 <React.Fragment key={i}>
@@ -261,16 +311,16 @@ export function ComplianceReport({ result, savedCheckId, onReset }: ComplianceRe
       )}
 
       {/* Compliant elements */}
-      {result.compliant_elements.length > 0 && (
+      {(result.compliant_elements ?? []).length > 0 && (
         <div className="bg-green-50 border border-green-200 rounded-xl p-5">
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle className="w-5 h-5 text-green-600" />
             <h3 className="text-sm font-semibold text-green-800">
-              Compliant Elements ({result.compliant_elements.length})
+              Compliant Elements ({(result.compliant_elements ?? []).length})
             </h3>
           </div>
           <ul className="space-y-1.5">
-            {result.compliant_elements.map((el, i) => (
+            {(result.compliant_elements ?? []).map((el, i) => (
               <li key={i} className="flex items-start gap-2">
                 <Check className="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-green-800">{el}</p>
@@ -320,7 +370,7 @@ export function ComplianceReport({ result, savedCheckId, onReset }: ComplianceRe
       {/* Actions */}
       <div className="flex items-center justify-between pt-2">
         <p className="text-xs text-gray-400">
-          Checked {new Date(result.checked_at).toLocaleString('en-AU')}
+          Checked {new Date(result.checked_at ?? Date.now()).toLocaleString('en-AU')}
         </p>
         <button
           onClick={onReset}

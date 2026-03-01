@@ -167,7 +167,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                   <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
                     Settings
                   </button>
-                  <button onClick={() => navigate('/help')} className="flex items-center gap-2 block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
+                  <button onClick={() => navigate('/help')} className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
                     <HelpCircle className="w-3.5 h-3.5" />
                     Help & Support
                   </button>

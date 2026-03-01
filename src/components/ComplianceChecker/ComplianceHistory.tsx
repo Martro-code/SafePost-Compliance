@@ -8,8 +8,7 @@ import {
   Clock,
   ChevronRight,
 } from 'lucide-react';
-import type { SavedComplianceCheck } from '../../services/supabaseService';
-import type { ComplianceResult } from '../../services/geminiService';
+import type { SavedComplianceCheck } from '../../hooks/useComplianceChecker';
 import { ComplianceReport } from './ComplianceReport';
 
 interface ComplianceHistoryProps {
@@ -94,7 +93,7 @@ export function ComplianceHistory({
           </span>
         </div>
         <ComplianceReport
-          result={selectedCheck.result_json as ComplianceResult}
+          result={selectedCheck.result_json}
           savedCheckId={selectedCheck.id}
           onReset={() => setSelectedCheck(null)}
         />

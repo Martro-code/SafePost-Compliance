@@ -13,8 +13,7 @@ export function ComplianceCheckerPage() {
   const checker = useComplianceChecker();
 
   const showForm = checker.step === 'idle' || checker.step === 'error';
-  const showProgress =
-    checker.step === 'fetching_guidelines' || checker.step === 'analyzing';
+  const showProgress = checker.step === 'analyzing';
   const showReport = checker.step === 'complete' && checker.result !== null;
 
   return (
@@ -70,7 +69,7 @@ export function ComplianceCheckerPage() {
             {showReport && checker.result && (
               <ComplianceReport
                 result={checker.result}
-                savedCheckId={checker.savedCheckId}
+                savedCheckId={null}
                 onReset={checker.resetChecker}
               />
             )}
