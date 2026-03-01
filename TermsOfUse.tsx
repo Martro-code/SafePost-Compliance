@@ -3,6 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import LoggedInLayout from './src/components/LoggedInLayout';
+import BackToTop from './src/components/BackToTop';
 import { useAuth } from './useAuth';
 
 const TermsOfUse: React.FC = () => {
@@ -357,9 +358,12 @@ const TermsOfUse: React.FC = () => {
 
   if (user) {
     return (
-      <LoggedInLayout>
-        {contentSection}
-      </LoggedInLayout>
+      <>
+        <LoggedInLayout>
+          {contentSection}
+        </LoggedInLayout>
+        <BackToTop />
+      </>
     );
   }
 
@@ -630,6 +634,7 @@ const TermsOfUse: React.FC = () => {
           </div>
         </div>
       </footer>
+      <BackToTop />
     </div>
   );
 
