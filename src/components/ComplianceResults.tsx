@@ -26,6 +26,7 @@ interface AnalysisResult {
   summary: string;
   overallVerdict?: string;
   issues: ComplianceIssue[];
+  rewrite_options?: RewrittenPost[];
 }
 
 interface ComplianceResultsProps {
@@ -34,6 +35,7 @@ interface ComplianceResultsProps {
   onNewCheck: () => void;
   onGenerateRewrites: (content: string, issues: ComplianceIssue[]) => Promise<RewrittenPost[]>;
   planName?: string;
+  onSaveRewrites?: (rewrites: RewrittenPost[]) => void;
 }
 
 // ─── Severity helpers ─────────────────────────────────────────────────────────
@@ -279,8 +281,11 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
   onNewCheck,
   onGenerateRewrites,
   planName = '',
+  onSaveRewrites,
 }) => {
-  const [rewrites, setRewrites] = useState<RewrittenPost[] | null>(null);
+  const [rewrites, setRewrites] = useState<RewrittenPost[] | null>(
+    result.rewrite_options ?? null
+  );
   const [isGenerating, setIsGenerating] = useState(false);
   const [rewriteError, setRewriteError] = useState<string | null>(null);
   const [isExporting, setIsExporting] = useState(false);
@@ -309,6 +314,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
     try {
       const results = await onGenerateRewrites(originalContent, result.issues);
       setRewrites(results);
+      onSaveRewrites?.(results);
     } catch {
       setRewriteError('Failed to generate rewrites. Please try again.');
     } finally {

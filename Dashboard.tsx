@@ -347,6 +347,7 @@ const Dashboard: React.FC = () => {
                 onNewCheck={handleNewCheck}
                 onGenerateRewrites={generateCompliantRewrites}
                 planName={planName}
+                onSaveRewrites={checker.saveRewriteOptions}
               />
             )}
 

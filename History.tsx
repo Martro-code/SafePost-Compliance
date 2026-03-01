@@ -417,6 +417,7 @@ const History: React.FC = () => {
         sessionStorage.setItem('safepost_last_result', JSON.stringify(normalised));
       }
       sessionStorage.setItem('safepost_last_content', match.content_text ?? '');
+      sessionStorage.setItem('safepost_last_check_id', match.id);
       navigate('/dashboard');
     }
   }, [checker.isLoadingHistory, checker.history]);
@@ -434,6 +435,7 @@ const History: React.FC = () => {
     }
     // Always save content — even if result_json is missing
     sessionStorage.setItem('safepost_last_content', check.content_text ?? '');
+    sessionStorage.setItem('safepost_last_check_id', check.id);
     navigate('/dashboard');
   };
 
