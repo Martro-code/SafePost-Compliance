@@ -293,7 +293,7 @@ const Features: React.FC = () => {
             Ready to get started?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join medical practitioners across Australia using SafePost&trade; for compliance confidence
+            Join medical practitioners across Australia using SafePost for compliance confidence
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -322,7 +322,6 @@ const Features: React.FC = () => {
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
               <span className="text-[#2563EB]">Post</span>
-              <span className="text-gray-400 text-[15px] font-medium ml-0.5">™</span>
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

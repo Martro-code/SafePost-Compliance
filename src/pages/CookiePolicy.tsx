@@ -88,7 +88,7 @@ const CookiePolicy: React.FC = () => {
             {/* Introduction */}
             <div>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`SafePost\u2122 uses cookies and similar tracking technologies to operate our platform, improve your experience, and understand how our platform is used. This Cookie Policy explains what cookies are, what cookies we use, and how you can manage them. This Cookie Policy should be read together with our Privacy Policy, which provides further information about how we handle your personal information.`}
+                {`SafePost uses cookies and similar tracking technologies to operate our platform, improve your experience, and understand how our platform is used. This Cookie Policy explains what cookies are, what cookies we use, and how you can manage them. This Cookie Policy should be read together with our Privacy Policy, which provides further information about how we handle your personal information.`}
               </p>
             </div>
 
@@ -102,14 +102,14 @@ const CookiePolicy: React.FC = () => {
 
             {/* 2. What cookies does SafePost use? */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">{`2. What cookies does SafePost\u2122 use?`}</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">{`2. What cookies does SafePost use?`}</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We use the following categories of cookies:
               </p>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Essential cookies</h3>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-6">
-                {`These cookies are necessary for the SafePost\u2122 platform to function. They enable core features such as authentication, session management, and security. You cannot opt out of essential cookies as the platform cannot function without them. Examples include cookies used by Supabase to manage your login session and keep you authenticated while you use the platform.`}
+                {`These cookies are necessary for the SafePost platform to function. They enable core features such as authentication, session management, and security. You cannot opt out of essential cookies as the platform cannot function without them. Examples include cookies used by Supabase to manage your login session and keep you authenticated while you use the platform.`}
               </p>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Preference cookies</h3>
@@ -119,7 +119,7 @@ const CookiePolicy: React.FC = () => {
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Analytics cookies</h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`We may use analytics tools to understand how users interact with SafePost\u2122 \u2014 for example, which pages are visited most frequently and how users navigate through the platform. This information is collected in aggregate and de-identified form and is used solely to improve the platform. We do not currently use third-party advertising or tracking cookies.`}
+                {`We may use analytics tools to understand how users interact with SafePost \u2014 for example, which pages are visited most frequently and how users navigate through the platform. This information is collected in aggregate and de-identified form and is used solely to improve the platform. We do not currently use third-party advertising or tracking cookies.`}
               </p>
             </div>
 
@@ -159,7 +159,7 @@ const CookiePolicy: React.FC = () => {
                 <li className="text-[14px] text-gray-500 leading-relaxed">Block all cookies</li>
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`Please note that disabling essential cookies will affect the functionality of the SafePost\u2122 platform \u2014 you may not be able to log in or use the compliance checker if essential cookies are blocked. For guidance on managing cookies in your specific browser, visit your browser\u2019s help documentation.`}
+                {`Please note that disabling essential cookies will affect the functionality of the SafePost platform \u2014 you may not be able to log in or use the compliance checker if essential cookies are blocked. For guidance on managing cookies in your specific browser, visit your browser\u2019s help documentation.`}
               </p>
             </div>
 
@@ -167,7 +167,7 @@ const CookiePolicy: React.FC = () => {
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Your consent</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`When you first visit SafePost\u2122, you will be shown a cookie consent banner. By clicking Accept All, you consent to our use of all cookies described in this policy. By clicking Decline, only essential cookies required for the platform to function will be used. You can update your cookie preferences at any time by clearing your browser cookies and revisiting the platform, which will re-display the consent banner.`}
+                {`When you first visit SafePost, you will be shown a cookie consent banner. By clicking Accept All, you consent to our use of all cookies described in this policy. By clicking Decline, only essential cookies required for the platform to function will be used. You can update your cookie preferences at any time by clearing your browser cookies and revisiting the platform, which will re-display the consent banner.`}
               </p>
             </div>
 
@@ -175,7 +175,7 @@ const CookiePolicy: React.FC = () => {
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Changes to this Cookie Policy</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`We may update this Cookie Policy from time to time to reflect changes to our practices or for legal or operational reasons. When we make material changes, we will update the date at the top of this policy. Your continued use of SafePost\u2122 after any changes constitutes your acceptance of the updated policy.`}
+                {`We may update this Cookie Policy from time to time to reflect changes to our practices or for legal or operational reasons. When we make material changes, we will update the date at the top of this policy. Your continued use of SafePost after any changes constitutes your acceptance of the updated policy.`}
               </p>
             </div>
 
@@ -186,7 +186,7 @@ const CookiePolicy: React.FC = () => {
                 If you have any questions about this Cookie Policy, please contact us:
               </p>
               <div className="text-[14px] text-gray-500 leading-relaxed">
-                <p className="font-medium text-gray-700">{`SafePost\u2122`}</p>
+                <p className="font-medium text-gray-700">{`SafePost`}</p>
                 <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
                 <p>Website: <a href="https://www.safepost.com.au" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">www.safepost.com.au</a></p>
               </div>
@@ -378,7 +378,6 @@ const CookiePolicy: React.FC = () => {
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
               <span className="text-[#2563EB]">Post</span>
-              <span className="text-gray-400 text-[15px] font-medium ml-0.5">™</span>
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

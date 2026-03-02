@@ -217,7 +217,7 @@ const Dashboard: React.FC = () => {
                   </button>
                   {showBulkTooltip && !isUltra && (
                     <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-[12px] rounded-lg whitespace-nowrap shadow-lg z-10">
-                      Bulk upload is available on SafePost™ Ultra
+                      Bulk upload is available on SafePost Ultra
                       <div className="absolute top-full right-4 -mt-1 w-2 h-2 bg-gray-900 rotate-45" />
                     </div>
                   )}

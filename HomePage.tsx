@@ -321,7 +321,7 @@ const HomePage: React.FC = () => {
                 Get instant analysis
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                SafePost™ analyses your content against AHPRA compliance guidelines and flags specific issues with direct references to the relevant rules and sections.
+                SafePost analyses your content against AHPRA compliance guidelines and flags specific issues with direct references to the relevant rules and sections.
               </p>
             </div>
 
@@ -432,13 +432,13 @@ const HomePage: React.FC = () => {
                   See it in action
                 </span>
                 <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
-                  See SafePost™ in action
+                  See SafePost in action
                 </h2>
                 <p className="text-lg text-gray-500 leading-relaxed">
-                  Watch how SafePost™ identifies AHPRA compliance issues and generates compliant alternatives in seconds.
+                  Watch how SafePost identifies AHPRA compliance issues and generates compliant alternatives in seconds.
                 </p>
                 <p className="text-[15px] text-gray-400 leading-relaxed">
-                  SafePost™ analyses your social media posts and advertising content against AHPRA's advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
+                  SafePost analyses your social media posts and advertising content against AHPRA's advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
                 </p>
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
                   <button
@@ -541,7 +541,7 @@ const HomePage: React.FC = () => {
         <section className="w-full bg-white">
           <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Try SafePost™ Now
+              Try SafePost Now
             </h2>
             <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
               Protect your practice with instant AHPRA social media activities and advertising compliance checks
@@ -574,7 +574,6 @@ const HomePage: React.FC = () => {
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
               <span className="text-[#2563EB]">Post</span>
-              <span className="text-gray-400 text-[15px] font-medium ml-0.5">™</span>
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

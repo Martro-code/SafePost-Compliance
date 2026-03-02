@@ -28,8 +28,8 @@ const CookieBanner: React.FC = () => {
         {/* Left — text */}
         <div className="flex-1">
           <p className="text-[13px] text-gray-700 leading-relaxed">
-            <span className="font-semibold text-gray-900">SafePost™ uses cookies</span> to improve your experience and analyse site usage.
-            By continuing to use SafePost™ you agree to our{' '}
+            <span className="font-semibold text-gray-900">SafePost uses cookies</span> to improve your experience and analyse site usage.
+            By continuing to use SafePost you agree to our{' '}
             <Link to="/privacy-policy" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
               Privacy Policy
             </Link>

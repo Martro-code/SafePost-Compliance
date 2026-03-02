@@ -104,7 +104,7 @@ const CancelSubscription: React.FC = () => {
     if (selectedReason === 'Missing a feature I need') {
       return {
         heading: 'Tell us what you need',
-        body: "We're constantly improving SafePost\u2122 based on user feedback. Your input directly shapes our roadmap.",
+        body: "We're constantly improving SafePost based on user feedback. Your input directly shapes our roadmap.",
         buttonLabel: 'Submit Feedback & Keep Subscription',
         onButtonClick: () => navigate('/dashboard'),
         showTextArea: true,
@@ -113,7 +113,7 @@ const CancelSubscription: React.FC = () => {
 
     if (selectedReason === 'Switching to a competitor') {
       return {
-        heading: 'SafePost\u2122 is built specifically for Australian practitioners',
+        heading: 'SafePost is built specifically for Australian practitioners',
         body: 'Our compliance database is built on AHPRA guidelines, the Health Practitioner Regulation National Law Act 2009 and TGA requirements — specific to Australian healthcare. No generic AI tool offers this level of Australian regulatory precision.',
         buttonLabel: 'Keep My Subscription',
         onButtonClick: () => navigate('/dashboard'),

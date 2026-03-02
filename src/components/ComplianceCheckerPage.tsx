@@ -27,7 +27,7 @@ export function ComplianceCheckerPage() {
                 <Shield className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-semibold text-gray-900">SafePost™</h1>
+                <h1 className="text-lg font-semibold text-gray-900">SafePost</h1>
                 <p className="text-xs text-gray-500">AHPRA Compliance Checker</p>
               </div>
             </div>

@@ -19,7 +19,6 @@ const NotFound: React.FC = () => {
         <div className="flex items-center gap-0 mt-2 mb-6">
           <span className="text-[24px] font-extrabold tracking-tight text-gray-900">Safe</span>
           <span className="text-[24px] font-extrabold tracking-tight text-[#2563EB]">Post</span>
-          <span className="text-[12px] font-medium text-gray-400 ml-0.5 -mt-2">™</span>
         </div>
 
         {/* Headline and subtext */}
