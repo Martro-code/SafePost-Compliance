@@ -47,7 +47,7 @@ const UpgradeConfirmation: React.FC = () => {
         {/* Page Heading */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            Confirm Your Upgrade
+            Confirm your upgrade
           </h1>
           <p className="text-[14px] text-gray-500 mt-1 mb-8">
             Review your new plan before confirming
@@ -58,11 +58,11 @@ const UpgradeConfirmation: React.FC = () => {
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
           {!upgraded ? (
             <>
-              {/* Order Summary */}
+              {/* Order summary */}
               <div className="p-6 md:p-8">
                 <div className="flex items-center justify-between mb-1">
                   <p className="text-[14px] font-semibold text-gray-900 dark:text-white">
-                    {selectedPlan?.name || 'Unknown Plan'}
+                    {selectedPlan?.name || 'Unknown plan'}
                   </p>
                   <p className="text-[14px] font-medium text-gray-900 dark:text-white">{formattedPrice}</p>
                 </div>
@@ -83,9 +83,9 @@ const UpgradeConfirmation: React.FC = () => {
 
               <div className="border-t border-black/[0.06] dark:border-gray-700" />
 
-              {/* Payment Method */}
+              {/* Payment method */}
               <div className="p-6 md:p-8">
-                <p className="text-[11px] font-semibold text-gray-400 tracking-wider uppercase mb-3 dark:text-gray-500">Payment Method</p>
+                <p className="text-[11px] font-semibold text-gray-400 tracking-wider uppercase mb-3 dark:text-gray-500">Payment method</p>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <CreditCard className="w-5 h-5 text-gray-400 dark:text-gray-500" />
@@ -129,7 +129,7 @@ const UpgradeConfirmation: React.FC = () => {
                   onClick={handleConfirmUpgrade}
                   className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
                 >
-                  Confirm Upgrade
+                  Confirm upgrade
                 </button>
               </div>
             </>
@@ -140,7 +140,7 @@ const UpgradeConfirmation: React.FC = () => {
                 <CheckCircle className="w-12 h-12 text-green-500" />
               </div>
               <h2 className="text-xl font-bold text-gray-900 mb-2 dark:text-white">
-                Plan Upgraded Successfully!
+                Plan upgraded successfully!
               </h2>
               <p className="text-[14px] text-gray-500 mb-6 dark:text-gray-300">
                 Your plan has been upgraded to {selectedPlan?.name || 'your new plan'}. Your new features are now active.

@@ -156,7 +156,7 @@ const PricingMedicalPractices: React.FC = () => {
               Login
             </button>
             <button onClick={() => navigate('/pricing/medical-practitioners')} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-              Sign Up
+              Sign up
             </button>
           </div>
 
@@ -226,7 +226,7 @@ const PricingMedicalPractices: React.FC = () => {
                 Login
               </button>
               <button onClick={() => navigate('/pricing/medical-practitioners')} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-                Sign Up
+                Sign up
               </button>
             </div>
           </div>
@@ -237,7 +237,7 @@ const PricingMedicalPractices: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-10 md:pb-12 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Pricing for Medical Practices
+            Pricing for medical practices
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
             Choose the right plan for your practice
@@ -268,7 +268,7 @@ const PricingMedicalPractices: React.FC = () => {
           </div>
           <div className="flex items-center justify-center mt-4">
             <button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[12px] text-gray-400 hover:text-gray-600 transition-colors duration-200">
-              &larr; Pricing for Medical Practitioners
+              &larr; Pricing for medical practitioners
             </button>
           </div>
         </div>
@@ -332,7 +332,7 @@ const PricingMedicalPractices: React.FC = () => {
             <div className="relative bg-white rounded-2xl border-2 border-blue-200 p-8 md:p-10 shadow-lg shadow-blue-600/[0.06] flex flex-col">
               <div className="absolute -top-3 right-6">
                 <span className="text-[11px] font-semibold text-white bg-blue-600 px-3 py-1 rounded-full shadow-sm">
-                  Most Popular
+                  Most popular
                 </span>
               </div>
               <div className="mb-6">
@@ -472,7 +472,7 @@ const PricingMedicalPractices: React.FC = () => {
               onClick={() => navigate('/signup')}
               className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
             >
-              Get Started
+              Get started
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
@@ -493,7 +493,7 @@ const PricingMedicalPractices: React.FC = () => {
           <div className="flex flex-col items-start mb-10 pb-10 border-b border-black/[0.06]">
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
-              <span className="text-[#2563EB]">Post</span>
+              <span className="text-[#2563EB]">Post</span>™
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

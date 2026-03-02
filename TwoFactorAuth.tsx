@@ -55,7 +55,7 @@ const TwoFactorAuth: React.FC = () => {
         {/* Page Heading */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {is2FAEnabled ? 'Two-Factor Authentication' : 'Set Up Two-Factor Authentication'}
+            {is2FAEnabled ? 'Two-factor authentication' : 'Set up two-factor authentication'}
           </h1>
           <p className="text-[14px] text-gray-500 mt-1 mb-8">
             {is2FAEnabled ? 'Manage your two-factor authentication settings' : 'Add an extra layer of security to your account'}
@@ -69,7 +69,7 @@ const TwoFactorAuth: React.FC = () => {
           {is2FAEnabled && step === 1 && (
             <div className="p-6 md:p-8">
               <div className="flex items-center gap-2.5 mb-4">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Two-Factor Authentication</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Two-factor authentication</h2>
                 <span className="text-[11px] font-semibold text-green-700 bg-green-50 border border-green-200 px-2.5 py-0.5 rounded-full dark:bg-green-900/30 dark:border-green-800 dark:text-green-400">
                   Active
                 </span>
@@ -83,7 +83,7 @@ const TwoFactorAuth: React.FC = () => {
                 onClick={() => {}}
                 className="w-full h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
               >
-                View Backup Codes
+                View backup codes
               </button>
 
               <div className="border-t border-black/[0.06] dark:border-gray-700 mt-6 pt-6" />
@@ -94,7 +94,7 @@ const TwoFactorAuth: React.FC = () => {
                     onClick={() => setShowDisableConfirm(true)}
                     className="text-[13px] text-red-500 hover:text-red-600 transition-colors"
                   >
-                    Disable Two-Factor Authentication
+                    Disable two-factor authentication
                   </button>
                 </div>
               ) : (
@@ -107,7 +107,7 @@ const TwoFactorAuth: React.FC = () => {
                       onClick={() => setShowDisableConfirm(false)}
                       className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
                     >
-                      Keep Enabled
+                      Keep enabled
                     </button>
                     <button
                       onClick={handleDisable}
@@ -144,7 +144,7 @@ const TwoFactorAuth: React.FC = () => {
                 onClick={() => setStep(2)}
                 className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
               >
-                Get Started
+                Get started
               </button>
             </div>
           )}
@@ -152,7 +152,7 @@ const TwoFactorAuth: React.FC = () => {
           {/* ===== SETUP STEP 2 — QR Code ===== */}
           {!is2FAEnabled && step === 2 && (
             <div className="p-6 md:p-8">
-              <h2 className="text-lg font-bold text-gray-900 mb-2 dark:text-white">Scan the QR Code</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-2 dark:text-white">Scan the QR code</h2>
               <p className="text-[14px] text-gray-500 mb-6 dark:text-gray-300">
                 Open your authenticator app, tap the + button, and scan the QR code below
               </p>
@@ -186,7 +186,7 @@ const TwoFactorAuth: React.FC = () => {
           {/* ===== SETUP STEP 3 — Verification ===== */}
           {!is2FAEnabled && step === 3 && (
             <div className="p-6 md:p-8">
-              <h2 className="text-lg font-bold text-gray-900 mb-2 dark:text-white">Enter Verification Code</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-2 dark:text-white">Enter verification code</h2>
               <p className="text-[14px] text-gray-500 mb-6 dark:text-gray-300">
                 Enter the 6-digit code from your authenticator app
               </p>
@@ -214,7 +214,7 @@ const TwoFactorAuth: React.FC = () => {
                     : 'bg-blue-600/50 text-white/70 cursor-not-allowed'
                 }`}
               >
-                Verify & Enable 2FA
+                Verify & enable 2FA
               </button>
 
               <div className="text-center mt-4">
@@ -233,7 +233,7 @@ const TwoFactorAuth: React.FC = () => {
             <div className="p-6 md:p-8">
               <div className="text-center mb-5">
                 <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
-                <h2 className="text-xl font-bold text-gray-900 mb-1 dark:text-white">Two-Factor Authentication Enabled</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-1 dark:text-white">Two-factor authentication enabled</h2>
                 <p className="text-[14px] text-gray-500 dark:text-gray-300">Save your backup codes in a safe place</p>
               </div>
 
@@ -261,7 +261,7 @@ const TwoFactorAuth: React.FC = () => {
                 className="w-full h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] mb-3 flex items-center justify-center gap-2 dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
               >
                 <Download className="w-4 h-4" />
-                Download Backup Codes
+                Download backup codes
               </button>
 
               <button

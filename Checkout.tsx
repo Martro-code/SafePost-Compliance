@@ -169,7 +169,7 @@ const Checkout: React.FC = () => {
               {/* Heading */}
               <div>
                 <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                  Complete Purchase
+                  Complete purchase
                 </h1>
                 <p className="text-[14px] text-gray-500">
                   Cancel anytime
@@ -189,11 +189,11 @@ const Checkout: React.FC = () => {
                 <p className="text-[12px] text-gray-400 mt-1.5">{"We\u2019ll send your receipt and account details here"}</p>
               </div>
 
-              {/* Payment Information */}
+              {/* Payment information */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Payment Information</label>
+                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Payment information</label>
                 <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                  {/* Card Number */}
+                  {/* Card number */}
                   <div className="relative border-b border-gray-200">
                     <input
                       type="text"
@@ -264,9 +264,9 @@ const Checkout: React.FC = () => {
                 </div>
               </div>
 
-              {/* Billing Address */}
+              {/* Billing address */}
               <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Billing Address</label>
+                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Billing address</label>
                 <div className="space-y-3">
                   <input
                     type="text"
@@ -351,7 +351,7 @@ const Checkout: React.FC = () => {
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
                 >
                   <Lock className="w-4 h-4" />
-                  Complete Purchase
+                  Complete purchase
                 </button>
               </div>
 
@@ -372,7 +372,7 @@ const Checkout: React.FC = () => {
               </div>
             </div>
 
-            {/* RIGHT COLUMN - Order Summary */}
+            {/* RIGHT COLUMN - Order summary */}
             <div className="order-1 md:order-2">
               <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 md:p-8 md:sticky md:top-24">
                 {/* Plan Info */}

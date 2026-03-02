@@ -147,7 +147,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                     onClick={() => { navigate('/notifications'); setNotificationDropdownOpen(false); }}
                     className="block w-full text-center px-4 py-2.5 text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400"
                   >
-                    View All Notifications
+                    View all notifications
                   </button>
                 </div>
               )}
@@ -189,7 +189,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                     className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white"
                   >
                     <LogOut className="w-3.5 h-3.5" />
-                    Log Out
+                    Log out
                   </button>
                 </div>
               )}
@@ -247,7 +247,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
               className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white"
             >
               <LogOut className="w-3.5 h-3.5" />
-              Log Out
+              Log out
             </button>
           </div>
         </div>

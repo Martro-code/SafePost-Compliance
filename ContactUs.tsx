@@ -101,7 +101,7 @@ const ContactUs: React.FC = () => {
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Get in Touch
+                Get in touch
               </h1>
               <p className="text-[14px] text-gray-500">
                 We'd love to hear from you! Please fill out the form below
@@ -119,10 +119,10 @@ const ContactUs: React.FC = () => {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* First Name */}
+              {/* First name */}
               <div>
                 <label htmlFor="firstName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  First Name
+                  First name
                 </label>
                 <input
                   id="firstName"
@@ -137,7 +137,7 @@ const ContactUs: React.FC = () => {
               {/* Surname */}
               <div>
                 <label htmlFor="surname" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Last Name
+                  Last name
                 </label>
                 <input
                   id="surname"
@@ -164,7 +164,7 @@ const ContactUs: React.FC = () => {
                 />
               </div>
 
-              {/* Phone Number */}
+              {/* Phone number */}
               <div>
                 <label htmlFor="phone" className="block text-[13px] font-medium text-gray-700 mb-1.5">
                   Phone number
@@ -311,7 +311,7 @@ const ContactUs: React.FC = () => {
               Login
             </button>
             <button onClick={() => navigate('/pricing/medical-practitioners')} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-              Sign Up
+              Sign up
             </button>
           </div>
 
@@ -381,7 +381,7 @@ const ContactUs: React.FC = () => {
                 Login
               </button>
               <button onClick={() => navigate('/pricing/medical-practitioners')} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-                Sign Up
+                Sign up
               </button>
             </div>
           </div>
@@ -397,7 +397,7 @@ const ContactUs: React.FC = () => {
           <div className="flex flex-col items-start mb-10 pb-10 border-b border-black/[0.06]">
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
-              <span className="text-[#2563EB]">Post</span>
+              <span className="text-[#2563EB]">Post</span>™
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

@@ -99,14 +99,14 @@ const VerifyEmail: React.FC = () => {
               )}
             </div>
 
-            {/* Back to Sign In */}
+            {/* Back to sign in */}
             <div className="mt-6 pt-6 border-t border-black/[0.06]">
               <button
                 onClick={() => navigate('/login')}
                 className="flex items-center justify-center gap-2 text-[13px] text-gray-500 hover:text-gray-900 font-medium transition-colors mx-auto"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
-                Back to Sign In
+                Back to sign in
               </button>
             </div>
           </div>

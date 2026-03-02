@@ -18,11 +18,11 @@ const faqs = [
   },
   {
     question: "Can I use SafePost to check image or video content?",
-    answer: "Image attachment for analysis is available on paid plans — Professional, Pro+, and Ultra. You can attach an image to your compliance check using the Attach Image button in the compliance checker. Video content analysis is not currently supported."
+    answer: "Image attachment for analysis is available on paid plans — Professional, Pro+, and Ultra. You can attach an image to your compliance check using the Attach image button in the compliance checker. Video content analysis is not currently supported."
   },
   {
     question: "How do I upgrade or change my plan?",
-    answer: "You can change your plan at any time by going to My Account → Profile → Change Plan, or by clicking the Upgrade Your Plan button in the Dashboard sidebar. Changes take effect immediately and your billing will be adjusted accordingly."
+    answer: "You can change your plan at any time by going to My Account → Profile → Change plan, or by clicking the Upgrade your plan button in the Dashboard sidebar. Changes take effect immediately and your billing will be adjusted accordingly."
   },
 ];
 
@@ -127,7 +127,7 @@ const Help: React.FC = () => {
                 ? <><Check className="w-4 h-4" />Message sent — we'll be in touch soon</>
                 : isSubmitting
                 ? <><Loader2 className="w-4 h-4 animate-spin" />Sending...</>
-                : <>Send Message</>
+                : <>Send message</>
               }
             </button>
           </div>

@@ -85,7 +85,7 @@ const CancelSubscription: React.FC = () => {
       return {
         heading: selectedReason === 'Too expensive' ? 'What if you could pause instead?' : 'Take a break instead',
         body: 'Put your subscription on hold for 30 days at no charge. Your account and compliance check history will be fully preserved and your subscription resumes automatically after 30 days.',
-        buttonLabel: 'Pause My Subscription for 30 Days',
+        buttonLabel: 'Pause my subscription for 30 days',
         onButtonClick: handlePause,
         showTextArea: false,
       };
@@ -95,7 +95,7 @@ const CancelSubscription: React.FC = () => {
       return {
         heading: "Here's the value you've already received",
         body: 'Every compliance check protects your AHPRA registration. Missing just one non-compliant post could trigger an investigation.',
-        buttonLabel: 'Keep My Subscription',
+        buttonLabel: 'Keep my subscription',
         onButtonClick: () => navigate('/dashboard'),
         showTextArea: false,
       };
@@ -105,7 +105,7 @@ const CancelSubscription: React.FC = () => {
       return {
         heading: 'Tell us what you need',
         body: "We're constantly improving SafePost based on user feedback. Your input directly shapes our roadmap.",
-        buttonLabel: 'Submit Feedback & Keep Subscription',
+        buttonLabel: 'Submit feedback & keep subscription',
         onButtonClick: () => navigate('/dashboard'),
         showTextArea: true,
       };
@@ -115,7 +115,7 @@ const CancelSubscription: React.FC = () => {
       return {
         heading: 'SafePost is built specifically for Australian practitioners',
         body: 'Our compliance database is built on AHPRA guidelines, the Health Practitioner Regulation National Law Act 2009 and TGA requirements — specific to Australian healthcare. No generic AI tool offers this level of Australian regulatory precision.',
-        buttonLabel: 'Keep My Subscription',
+        buttonLabel: 'Keep my subscription',
         onButtonClick: () => navigate('/dashboard'),
         showTextArea: false,
       };
@@ -125,7 +125,7 @@ const CancelSubscription: React.FC = () => {
     return {
       heading: "We'd love to help",
       body: 'If there\'s anything we can do to improve your experience, please reach out before you go.',
-      buttonLabel: 'Keep My Subscription',
+      buttonLabel: 'Keep my subscription',
       onButtonClick: () => navigate('/dashboard'),
       showTextArea: false,
       showContact: true,
@@ -154,7 +154,7 @@ const CancelSubscription: React.FC = () => {
                 <CheckCircle className="w-12 h-12 text-green-500 mx-auto" />
               </div>
               <h2 className="text-xl font-bold text-gray-900 mb-2 dark:text-white">
-                Subscription Paused
+                Subscription paused
               </h2>
               <p className="text-[14px] text-gray-500 mb-6 leading-relaxed dark:text-gray-300">
                 Your subscription is on hold for 30 days. No charge will be made during this period. Your subscription will resume automatically on {pauseResumeDate}.
@@ -241,7 +241,7 @@ const CancelSubscription: React.FC = () => {
                   onClick={() => navigate('/dashboard')}
                   className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
                 >
-                  Keep My Subscription
+                  Keep my subscription
                 </button>
                 <button
                   disabled={!selectedReason}
@@ -314,7 +314,7 @@ const CancelSubscription: React.FC = () => {
               <StepIndicator />
 
               <h2 className="text-xl font-bold text-gray-900 mb-2 dark:text-white">
-                Confirm Cancellation
+                Confirm cancellation
               </h2>
               <p className="text-[14px] text-gray-500 mb-6 dark:text-gray-300">
                 Please read the following before confirming
@@ -346,7 +346,7 @@ const CancelSubscription: React.FC = () => {
                 onClick={() => navigate('/dashboard')}
                 className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
               >
-                Keep My Subscription
+                Keep my subscription
               </button>
 
               <div className="text-center mt-4">
@@ -354,7 +354,7 @@ const CancelSubscription: React.FC = () => {
                   onClick={handleConfirmCancel}
                   className="text-[13px] text-red-500 hover:text-red-600 transition-colors"
                 >
-                  Confirm Cancellation
+                  Confirm cancellation
                 </button>
               </div>
             </div>

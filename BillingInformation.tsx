@@ -63,10 +63,10 @@ const BillingInformation: React.FC = () => {
           Manage your subscription, billing details, and payment history.
         </p>
 
-        {/* Section 1: Current Plan */}
+        {/* Section 1: Current plan */}
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
           <h2 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
-            Current Plan
+            Current plan
           </h2>
           <div className="flex items-center justify-between">
             <div>
@@ -94,20 +94,20 @@ const BillingInformation: React.FC = () => {
               onClick={() => navigate('/change-plan?mode=upgrade', { state: { from: 'billing' } })}
               className="px-4 py-2 text-[13px] font-semibold text-blue-600 hover:text-blue-700 border border-blue-200 hover:border-blue-300 rounded-xl transition-colors bg-blue-50 hover:bg-blue-100"
             >
-              Change Plan
+              Change plan
             </button>
           </div>
         </div>
 
         {/* Section 2: Billing Details */}
-        {/* Payment Method */}
+        {/* Payment method */}
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
               <CreditCard className="w-5 h-5 text-blue-600" />
             </div>
             <div>
-              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Payment Method</h3>
+              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Payment method</h3>
             </div>
           </div>
           <div className="flex items-center justify-between">
@@ -121,7 +121,7 @@ const BillingInformation: React.FC = () => {
           </div>
         </div>
 
-        {/* Billing Email */}
+        {/* Billing email */}
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
@@ -129,7 +129,7 @@ const BillingInformation: React.FC = () => {
                 <Mail className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Billing Email</h3>
+                <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Billing email</h3>
               </div>
             </div>
             <button onClick={() => navigate('/update-billing-email')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
@@ -146,14 +146,14 @@ const BillingInformation: React.FC = () => {
           <p className="text-[12px] text-gray-400 mt-1.5 dark:text-gray-500">Receipts and invoices will be sent to this address.</p>
         </div>
 
-        {/* Section 3: Next Payment */}
+        {/* Section 3: Next payment */}
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center dark:bg-blue-950">
               <CalendarDays className="w-5 h-5 text-blue-600" />
             </div>
             <div className="flex items-center gap-2.5">
-              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Next Payment</h3>
+              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Next payment</h3>
               <span className="text-[10px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full dark:bg-amber-950 dark:border-amber-800 dark:text-amber-400">
                 Upcoming
               </span>
@@ -181,10 +181,10 @@ const BillingInformation: React.FC = () => {
           )}
         </div>
 
-        {/* Section 4: Invoice History */}
+        {/* Section 4: Invoice history */}
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 mb-6">
           <h2 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-4">
-            Invoice History
+            Invoice history
           </h2>
           <div className="text-center py-8">
             <Receipt className="w-8 h-8 text-gray-300 mx-auto mb-3" />
@@ -195,10 +195,10 @@ const BillingInformation: React.FC = () => {
           </div>
         </div>
 
-        {/* Section 5: Danger Zone — Cancel Subscription */}
+        {/* Section 5: Danger zone — Cancel subscription */}
         <div className="bg-white rounded-2xl border border-red-100 shadow-sm p-6">
           <h2 className="text-[11px] font-semibold text-red-400 uppercase tracking-wider mb-4">
-            Danger Zone
+            Danger zone
           </h2>
           <div className="flex items-center justify-between">
             <div>
@@ -211,7 +211,7 @@ const BillingInformation: React.FC = () => {
               onClick={() => navigate('/cancel-subscription', { state: { from: 'billing' } })}
               className="px-4 py-2 text-[13px] font-semibold text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-xl transition-colors hover:bg-red-50 flex-shrink-0 ml-4"
             >
-              Cancel Plan
+              Cancel plan
             </button>
           </div>
         </div>

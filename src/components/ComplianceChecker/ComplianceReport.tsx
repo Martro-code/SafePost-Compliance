@@ -59,7 +59,7 @@ function StatusBadge({ status }: { status: string }) {
     },
     non_compliant: {
       icon: XCircle,
-      label: 'Non-Compliant',
+      label: 'Non-compliant',
       bg: 'bg-red-50',
       border: 'border-red-200',
       text: 'text-red-700',
@@ -67,7 +67,7 @@ function StatusBadge({ status }: { status: string }) {
     },
     requires_review: {
       icon: AlertTriangle,
-      label: 'Requires Review',
+      label: 'Requires review',
       bg: 'bg-amber-50',
       border: 'border-amber-200',
       text: 'text-amber-700',
@@ -75,7 +75,7 @@ function StatusBadge({ status }: { status: string }) {
     },
     warning: {
       icon: AlertTriangle,
-      label: 'Requires Review',
+      label: 'Requires review',
       bg: 'bg-amber-50',
       border: 'border-amber-200',
       text: 'text-amber-700',
@@ -192,7 +192,7 @@ function IssueCard({ issue, index }: { issue: ComplianceIssue; index: number }) 
           {issue.excerpt && (
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-                Flagged Content
+                Flagged content
               </p>
               <blockquote className="border-l-4 border-gray-300 pl-3 py-1 bg-gray-50 rounded-r-lg">
                 <p className="text-sm text-gray-700 italic">"{issue.excerpt}"</p>
@@ -203,7 +203,7 @@ function IssueCard({ issue, index }: { issue: ComplianceIssue; index: number }) 
           {(issue.explanation || issue.finding) && (
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-                Why This Is an Issue
+                Why this is an issue
               </p>
               <p className="text-sm text-gray-700">{issue.explanation || issue.finding}</p>
             </div>
@@ -212,7 +212,7 @@ function IssueCard({ issue, index }: { issue: ComplianceIssue; index: number }) 
           {(issue.source_document || issue.guidelineReference) && (
             <div>
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-                Applicable Rule
+                Applicable rule
               </p>
               <div className="bg-gray-50 rounded-lg p-3">
                 <p className="text-xs text-gray-500 mb-1">
@@ -228,7 +228,7 @@ function IssueCard({ issue, index }: { issue: ComplianceIssue; index: number }) 
           <div className="flex gap-2 bg-blue-50 rounded-lg p-3">
             <Lightbulb className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-xs font-semibold text-blue-700 mb-0.5">Recommended Action</p>
+              <p className="text-xs font-semibold text-blue-700 mb-0.5">Recommended action</p>
               <p className="text-sm text-blue-800">{issue.recommended_action || issue.recommendation}</p>
             </div>
           </div>
@@ -293,7 +293,7 @@ export function ComplianceReport({ result, savedCheckId, onReset }: ComplianceRe
       {result.issues.length > 0 && (
         <div>
           <h3 className="text-base font-semibold text-gray-900 mb-3">
-            Issues Found ({result.issues.length})
+            Issues found ({result.issues.length})
           </h3>
           <div className="space-y-3">
             {[...result.issues]
@@ -316,7 +316,7 @@ export function ComplianceReport({ result, savedCheckId, onReset }: ComplianceRe
           <div className="flex items-center gap-2 mb-3">
             <CheckCircle className="w-5 h-5 text-green-600" />
             <h3 className="text-sm font-semibold text-green-800">
-              Compliant Elements ({(result.compliant_elements ?? []).length})
+              Compliant elements ({(result.compliant_elements ?? []).length})
             </h3>
           </div>
           <ul className="space-y-1.5">
@@ -336,7 +336,7 @@ export function ComplianceReport({ result, savedCheckId, onReset }: ComplianceRe
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <BookOpen className="w-5 h-5 text-purple-600" />
-              <h3 className="text-sm font-semibold text-gray-800">Suggested Revision</h3>
+              <h3 className="text-sm font-semibold text-gray-800">Suggested revision</h3>
             </div>
             <button
               onClick={copyRevision}
@@ -377,7 +377,7 @@ export function ComplianceReport({ result, savedCheckId, onReset }: ComplianceRe
           className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800 border border-blue-200 rounded-lg px-4 py-2 hover:bg-blue-50 transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
-          Check New Content
+          Check new content
         </button>
       </div>
     </div>

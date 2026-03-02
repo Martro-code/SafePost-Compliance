@@ -209,7 +209,7 @@ const SignUp: React.FC = () => {
               Login
             </button>
             <button onClick={() => navigate('/pricing/medical-practitioners')} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-              Sign Up
+              Sign up
             </button>
           </div>
 
@@ -279,14 +279,14 @@ const SignUp: React.FC = () => {
                 Login
               </button>
               <button onClick={() => navigate('/pricing/medical-practitioners')} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-                Sign Up
+                Sign up
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Sign Up Form */}
+      {/* Sign up Form */}
       <main className="flex-grow flex items-center justify-center px-6 pt-6 pb-10 md:pt-8 md:pb-16">
         <div className="w-full max-w-[450px]">
           <button
@@ -300,7 +300,7 @@ const SignUp: React.FC = () => {
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Create Account
+                Create account
               </h1>
               <p className="text-[14px] text-gray-500">
                 Enter your information to create a new account
@@ -309,10 +309,10 @@ const SignUp: React.FC = () => {
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
-              {/* First Name */}
+              {/* First name */}
               <div>
                 <label htmlFor="firstName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  First Name
+                  First name
                 </label>
                 <input
                   id="firstName"
@@ -327,7 +327,7 @@ const SignUp: React.FC = () => {
               {/* Surname */}
               <div>
                 <label htmlFor="surname" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Last Name
+                  Last name
                 </label>
                 <input
                   id="surname"
@@ -354,10 +354,10 @@ const SignUp: React.FC = () => {
                 />
               </div>
 
-              {/* Mobile Number */}
+              {/* Mobile number */}
               <div>
                 <label htmlFor="mobileNumber" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Mobile Number
+                  Mobile number
                 </label>
                 <input
                   id="mobileNumber"
@@ -370,10 +370,10 @@ const SignUp: React.FC = () => {
                 />
               </div>
 
-              {/* Practice Name */}
+              {/* Practice name */}
               <div>
                 <label htmlFor="practiceName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Practice Name
+                  Practice name
                 </label>
                 <input
                   id="practiceName"
@@ -385,10 +385,10 @@ const SignUp: React.FC = () => {
                 />
               </div>
 
-              {/* Street Address */}
+              {/* Street address */}
               <div>
                 <label htmlFor="streetAddress" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Street Address
+                  Street address
                 </label>
                 <input
                   id="streetAddress"
@@ -483,10 +483,10 @@ const SignUp: React.FC = () => {
                 </div>
               </div>
 
-              {/* Confirm Password */}
+              {/* Confirm password */}
               <div>
                 <label htmlFor="confirmPassword" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Confirm Password
+                  Confirm password
                 </label>
                 <div className="relative">
                   <input
@@ -541,7 +541,7 @@ const SignUp: React.FC = () => {
                   disabled={isSubmitting}
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  {isSubmitting ? 'Creating Account...' : 'Create Account'}
+                  {isSubmitting ? 'Creating account...' : 'Create account'}
                 </button>
               </div>
             </form>
@@ -550,7 +550,7 @@ const SignUp: React.FC = () => {
             <p className="text-center text-[13px] text-gray-500 mt-6">
               Already have an account?{' '}
               <a onClick={() => navigate('/login')} className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-2 cursor-pointer">
-                Sign In
+                Sign in
               </a>
             </p>
           </div>
@@ -564,7 +564,7 @@ const SignUp: React.FC = () => {
           <div className="flex flex-col items-start mb-10 pb-10 border-b border-black/[0.06]">
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
-              <span className="text-[#2563EB]">Post</span>
+              <span className="text-[#2563EB]">Post</span>™
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

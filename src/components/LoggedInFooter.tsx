@@ -8,7 +8,7 @@ const LoggedInFooter = () => {
           <div>
             <div className="text-[20px] font-extrabold tracking-tight leading-none">
               <span className="text-gray-900 dark:text-white">Safe</span>
-              <span className="text-[#2563EB]">Post</span>
+              <span className="text-[#2563EB]">Post</span>™
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed mt-2 max-w-[200px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.
@@ -41,7 +41,7 @@ const LoggedInFooter = () => {
           </div>
 
           <div>
-            <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Follow Us</h4>
+            <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Follow us</h4>
             <div className="flex items-center gap-4 mt-4">
               {/* X / Twitter */}
               <div className="text-gray-400 cursor-not-allowed" title="Coming soon">
