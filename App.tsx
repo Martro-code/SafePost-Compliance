@@ -34,6 +34,8 @@ import PrivacyPolicy from './PrivacyPolicy';
 import TermsOfUse from './TermsOfUse';
 import ProtectedRoute from './ProtectedRoute';
 import { ComplianceCheckerPage } from './src/components/ComplianceCheckerPage';
+import TeamMembers from './TeamMembers';
+import AcceptInvitation from './AcceptInvitation';
 import NotFound from './NotFound';
 import CookieBanner from './src/components/CookieBanner';
 import BackToTop from './src/components/BackToTop';
@@ -73,6 +75,7 @@ const App: React.FC = () => {
           <Route path="/billing" element={<ProtectedRoute><BillingInformation /></ProtectedRoute>} />
           <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/settings/team" element={<ProtectedRoute><TeamMembers /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
           <Route path="/change-plan" element={<ProtectedRoute><ChangePlan /></ProtectedRoute>} />
           <Route path="/update-card" element={<ProtectedRoute><UpdateCard /></ProtectedRoute>} />
@@ -87,6 +90,7 @@ const App: React.FC = () => {
           <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
           <Route path="/email-preferences" element={<ProtectedRoute><EmailPreferences /></ProtectedRoute>} />
           <Route path="/compliance-checker" element={<ProtectedRoute><ComplianceCheckerPage /></ProtectedRoute>} />
+          <Route path="/accept-invitation" element={<AcceptInvitation />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
