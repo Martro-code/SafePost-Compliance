@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import FAQSection from './components/FAQSection';
 
 const socialIcons = [
   {
@@ -46,7 +47,6 @@ const HomePage: React.FC = () => {
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
-  const [openAccordion, setOpenAccordion] = useState<number | null>(null);
 
   const resourceLinks = [
     { label: 'Advertising hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
@@ -340,86 +340,32 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Activities That Trigger Ahpra Investigation */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Activities that trigger AHPRA investigation
-            </h2>
-            <p className="text-lg text-gray-500">
-              Social media and online advertising activities most likely to attract AHPRA scrutiny
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-black/[0.06] bg-white overflow-hidden shadow-sm shadow-black/[0.02] divide-y divide-black/[0.06]">
-            {[
-              {
-                title: 'Patient testimonials and reviews',
-                description:
-                  'Sharing or endorsing patient testimonials about clinical outcomes is prohibited under Section 133 of the Health Practitioner Regulation National Law Act 2009. This includes reposting Google reviews, featuring patient success stories, and posts that reference treatment results \u2014 even when the patient has given consent.',
-              },
-              {
-                title: 'Before and after images',
-                description:
-                  'Publishing before and after photos for cosmetic, surgical, or aesthetic procedures is explicitly prohibited under AHPRA\u2019s advertising guidelines. This applies to all platforms including Instagram, Facebook, and your practice website \u2014 regardless of whether images are anonymised or accompanied by disclaimers.',
-              },
-              {
-                title: 'Unsubstantiated claims and superlatives',
-                description:
-                  'Describing yourself or your practice as \u2018the best\u2019, \u2018leading\u2019, \u2018top-rated\u2019, or \u2018most experienced\u2019 without objective evidence constitutes misleading advertising. Claims about treatment outcomes, success rates, or comparative superiority that cannot be independently verified are a common trigger for AHPRA complaints.',
-              },
-              {
-                title: 'Product and treatment endorsements',
-                description:
-                  'Endorsing specific pharmaceutical products, medical devices, or cosmetic treatments on social media \u2014 including paid partnerships, gifted product posts, and affiliate arrangements \u2014 can breach both AHPRA advertising guidelines and TGA advertising requirements. Practitioners are held to a higher standard than general influencers.',
-              },
-            ].map((item, index) => {
-              const isOpen = openAccordion === index;
-              return (
-                <div
-                  key={index}
-                  className="overflow-hidden transition-all duration-200"
-                >
-                  <button
-                    onClick={() => setOpenAccordion(isOpen ? null : index)}
-                    className="w-full flex items-center justify-between px-6 py-4 text-left cursor-pointer group"
-                  >
-                    <span className="text-[15px] font-semibold text-gray-900 leading-snug pr-4">
-                      {item.title}
-                    </span>
-                    <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-colors duration-200 ${
-                        isOpen ? 'bg-gray-100' : 'bg-gray-50 group-hover:bg-gray-100'
-                      }`}
-                    >
-                      <ChevronDown
-                        className={`w-4 h-4 text-gray-500 transition-transform duration-300 ease-in-out ${
-                          isOpen ? 'rotate-180' : ''
-                        }`}
-                      />
-                    </div>
-                  </button>
-                  <div
-                    className="transition-all duration-300 ease-in-out"
-                    style={{
-                      maxHeight: isOpen ? '500px' : '0px',
-                      opacity: isOpen ? 1 : 0,
-                    }}
-                  >
-                    <div className="px-6 pb-6 pt-0">
-                      <div className="border-t border-gray-100 pt-4">
-                        <p className="text-[14px] text-gray-500 leading-relaxed">
-                          {item.description}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+      <FAQSection
+        title="Activities that trigger AHPRA investigation"
+        subtitle="Social media and online advertising activities most likely to attract AHPRA scrutiny"
+        items={[
+          {
+            question: 'Patient testimonials and reviews',
+            answer:
+              'Sharing or endorsing patient testimonials about clinical outcomes is prohibited under Section 133 of the Health Practitioner Regulation National Law Act 2009. This includes reposting Google reviews, featuring patient success stories, and posts that reference treatment results \u2014 even when the patient has given consent.',
+          },
+          {
+            question: 'Before and after images',
+            answer:
+              'Publishing before and after photos for cosmetic, surgical, or aesthetic procedures is explicitly prohibited under AHPRA\u2019s advertising guidelines. This applies to all platforms including Instagram, Facebook, and your practice website \u2014 regardless of whether images are anonymised or accompanied by disclaimers.',
+          },
+          {
+            question: 'Unsubstantiated claims and superlatives',
+            answer:
+              'Describing yourself or your practice as \u2018the best\u2019, \u2018leading\u2019, \u2018top-rated\u2019, or \u2018most experienced\u2019 without objective evidence constitutes misleading advertising. Claims about treatment outcomes, success rates, or comparative superiority that cannot be independently verified are a common trigger for AHPRA complaints.',
+          },
+          {
+            question: 'Product and treatment endorsements',
+            answer:
+              'Endorsing specific pharmaceutical products, medical devices, or cosmetic treatments on social media \u2014 including paid partnerships, gifted product posts, and affiliate arrangements \u2014 can breach both AHPRA advertising guidelines and TGA advertising requirements. Practitioners are held to a higher standard than general influencers.',
+          },
+        ]}
+      />
 
       <main className="flex-grow flex flex-col items-center">
         {/* How It Works — Video Demo */}
