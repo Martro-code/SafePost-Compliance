@@ -144,7 +144,7 @@ const ForgotPassword: React.FC = () => {
               Login
             </button>
             <button onClick={() => navigate('/pricing/medical-practitioners')} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-              Sign Up
+              Sign up
             </button>
           </div>
 
@@ -214,21 +214,21 @@ const ForgotPassword: React.FC = () => {
                 Login
               </button>
               <button onClick={() => navigate('/pricing/medical-practitioners')} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-                Sign Up
+                Sign up
               </button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Forgot Password Form */}
+      {/* Forgot password Form */}
       <main className="flex-grow flex items-center justify-center px-6 py-16 md:py-24">
         <div className="w-full max-w-[450px]">
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-8 md:p-10">
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Reset Password
+                Reset password
               </h1>
               <p className="text-[14px] text-gray-500">
                 Enter your email address and we'll send you a link to reset your password
@@ -267,7 +267,7 @@ const ForgotPassword: React.FC = () => {
             <p className="text-center text-[13px] text-gray-500 mt-6">
               Back to{' '}
               <a onClick={() => navigate('/login')} className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-2 cursor-pointer">
-                Sign In
+                Sign in
               </a>
             </p>
           </div>

@@ -138,7 +138,7 @@ const Dashboard: React.FC = () => {
         />
       )}
 
-      {/* Bulk Upload Toast */}
+      {/* Bulk upload Toast */}
       {showBulkToast && (
         <div className="fixed top-6 right-6 z-50 px-5 py-3 bg-gray-900 text-white text-[13px] font-medium rounded-xl shadow-lg shadow-black/20">
           Coming soon
@@ -174,7 +174,7 @@ const Dashboard: React.FC = () => {
             {/* Welcome */}
             <div>
               <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
-                {firstName ? `Welcome Back, ${firstName}!` : 'Welcome Back!'}
+                {firstName ? `Welcome back, ${firstName}!` : 'Welcome back!'}
               </h2>
               <p className="text-[14px] text-gray-500 dark:text-gray-300">
                 Instant AHPRA compliance check for medical practitioners and practices
@@ -195,7 +195,7 @@ const Dashboard: React.FC = () => {
             {/* Input / Loading / Results views */}
             {view === 'input' && inputMode === 'single' && (
               <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6 md:p-8 space-y-4">
-                {/* Bulk Upload pill — top-right of card */}
+                {/* Bulk upload pill — top-right of card */}
                 <div className="relative flex justify-end -mt-1 -mb-1">
                   <button
                     onClick={() => {
@@ -213,7 +213,7 @@ const Dashboard: React.FC = () => {
                   >
                     {!isUltra && <Lock className="w-3 h-3" />}
                     <Upload className="w-3 h-3" />
-                    Bulk Upload
+                    Bulk upload
                   </button>
                   {showBulkTooltip && !isUltra && (
                     <div className="absolute bottom-full right-0 mb-2 px-3 py-2 bg-gray-900 text-white text-[12px] rounded-lg whitespace-nowrap shadow-lg z-10">
@@ -250,7 +250,7 @@ const Dashboard: React.FC = () => {
                       className="flex items-center gap-2 text-[13px] text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-300"
                     >
                       <Paperclip className="w-4 h-4" />
-                      Attach Image (optional)
+                      Attach image (optional)
                     </button>
                     <input
                       ref={fileInputRef}
@@ -272,7 +272,7 @@ const Dashboard: React.FC = () => {
                       onClick={() => navigate('/change-plan?mode=upgrade')}
                       className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2.5"
                     >
-                      Upgrade Plan
+                      Upgrade plan
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
@@ -282,14 +282,14 @@ const Dashboard: React.FC = () => {
                     disabled={!content.trim()}
                     className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
                   >
-                    Check Compliance
+                    Check compliance
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 )}
               </div>
             )}
 
-            {/* Bulk Upload — Ultra file drop zone */}
+            {/* Bulk upload — Ultra file drop zone */}
             {view === 'input' && inputMode === 'bulk' && isUltra && (
               <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6 md:p-8 space-y-4">
                 <div className="flex justify-end -mt-1 -mb-1">
@@ -297,7 +297,7 @@ const Dashboard: React.FC = () => {
                     onClick={() => setInputMode('single')}
                     className="border border-gray-200 text-[12px] text-gray-500 rounded-full px-3 py-1 flex items-center gap-1.5 hover:text-gray-700 hover:border-gray-300 transition-all duration-200 dark:border-gray-600 dark:text-gray-400 dark:hover:text-gray-300"
                   >
-                    Single Check
+                    Single check
                   </button>
                 </div>
                 <div
@@ -361,7 +361,7 @@ const Dashboard: React.FC = () => {
                   disabled={!bulkFile}
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2.5"
                 >
-                  Start Bulk Check
+                  Start bulk check
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
@@ -422,7 +422,7 @@ const Dashboard: React.FC = () => {
               <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6 dark:bg-blue-950 dark:border-blue-900">
                 <div className="flex items-center gap-2.5 mb-3">
                   <Rocket className="w-5 h-5 text-blue-600" />
-                  <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider dark:text-blue-400">Upgrade Your Plan</h3>
+                  <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider dark:text-blue-400">Upgrade your plan</h3>
                 </div>
                 <ul className="space-y-2.5 mb-5">
                   <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
@@ -450,7 +450,7 @@ const Dashboard: React.FC = () => {
                   onClick={() => navigate('/change-plan?mode=upgrade')}
                   className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
                 >
-                  Upgrade Your Plan
+                  Upgrade your plan
                 </button>
               </div>
             )}
@@ -496,7 +496,7 @@ const Dashboard: React.FC = () => {
               </div>
               <div className="border-t border-black/[0.06] dark:border-gray-700 mt-3 pt-3">
                 <button onClick={() => navigate('/history')} className="flex items-center gap-1 text-[13px] text-blue-600 hover:text-blue-700 font-medium transition-colors">
-                  View All
+                  View all
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>

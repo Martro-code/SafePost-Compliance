@@ -123,7 +123,7 @@ const About: React.FC = () => {
               Login
             </button>
             <button onClick={() => navigate('/pricing/medical-practitioners')} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-              Sign Up
+              Sign up
             </button>
           </div>
 
@@ -189,7 +189,7 @@ const About: React.FC = () => {
                 Login
               </button>
               <button onClick={() => navigate('/pricing/medical-practitioners')} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-                Sign Up
+                Sign up
               </button>
             </div>
           </div>
@@ -297,14 +297,14 @@ const About: React.FC = () => {
               onClick={() => navigate('/signup')}
               className="bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
             >
-              Get Started
+              Get started
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
               onClick={() => navigate('/contact')}
               className="px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
             >
-              Contact Us
+              Contact us
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>

@@ -75,7 +75,7 @@ const verdictConfig = {
     border: 'border-red-200',
     iconBg: 'bg-red-100',
     icon: <XCircle className="w-6 h-6 text-red-600" />,
-    label: 'Non-Compliant',
+    label: 'Non-compliant',
     labelColor: 'text-red-700',
     tagColor: 'text-red-500',
     summaryColor: 'text-red-800/75',
@@ -86,7 +86,7 @@ const verdictConfig = {
     border: 'border-amber-200',
     iconBg: 'bg-amber-100',
     icon: <AlertTriangle className="w-6 h-6 text-amber-600" />,
-    label: 'Requires Review',
+    label: 'Requires review',
     labelColor: 'text-amber-700',
     tagColor: 'text-amber-500',
     summaryColor: 'text-amber-800/75',
@@ -154,7 +154,7 @@ const IssueCard: React.FC<{ issue: ComplianceIssue; defaultOpen: boolean; index:
             <div className="pt-3">
               <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-gray-400">
                 <Info className="w-3 h-3" />
-                Guideline Reference
+                Guideline reference
               </span>
               <p className="text-[12px] text-gray-500 font-mono mt-1 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
                 {issue.guidelineReference}
@@ -166,7 +166,7 @@ const IssueCard: React.FC<{ issue: ComplianceIssue; defaultOpen: boolean; index:
           <div>
             <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-widest text-blue-500">
               <Shield className="w-3 h-3" />
-              Recommended Action
+              Recommended action
             </span>
             <p className="text-[13px] text-gray-600 leading-relaxed mt-1.5">
               {issue.recommendation}
@@ -234,14 +234,14 @@ const RewriteCard: React.FC<{ rewrite: RewrittenPost; index: number }> = ({ rewr
   );
 };
 
-// ─── Legal Disclaimer ─────────────────────────────────────────────────────────
+// ─── Legal disclaimer ─────────────────────────────────────────────────────────
 const LegalDisclaimer: React.FC<{ prominent?: boolean }> = ({ prominent = false }) => {
   if (prominent) {
     return (
       <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl p-4">
         <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
         <div>
-          <p className="text-[12px] font-semibold text-amber-800 mb-1">Legal Disclaimer</p>
+          <p className="text-[12px] font-semibold text-amber-800 mb-1">Legal disclaimer</p>
           <p className="text-[12px] text-amber-700 leading-relaxed">
             These rewrite suggestions are AI-generated guidance only and do not constitute legal advice.
             SafePost cannot guarantee that any rewritten content is fully compliant with the Health Practitioner Regulation National Law Act 2009
@@ -370,7 +370,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm shadow-black/[0.02]">
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-gray-100 bg-gray-50/80 overflow-visible">
           <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
-            Content Assessed
+            Content assessed
           </span>
           <div className="relative">
             <button
@@ -451,7 +451,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
         <div className="space-y-3">
           <div className="flex items-center gap-2 px-1">
             <h4 className="text-[11px] font-bold uppercase tracking-[0.1em] text-gray-400">
-              Identified Issues
+              Identified issues
             </h4>
             <span className="text-[11px] font-bold text-gray-300">
               ({sortedIssues.length})
@@ -487,8 +487,8 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
             className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-[13px] font-semibold rounded-xl shadow-sm shadow-blue-600/20 transition-all duration-200 active:scale-[0.98]"
           >
             {isGenerating
-              ? <><Loader2 className="w-4 h-4 animate-spin" />Generating Rewrites...</>
-              : <><Sparkles className="w-4 h-4" />Generate Compliant Rewrites</>
+              ? <><Loader2 className="w-4 h-4 animate-spin" />Generating rewrites...</>
+              : <><Sparkles className="w-4 h-4" />Generate compliant rewrites</>
             }
           </button>
           {rewriteError && (
@@ -504,7 +504,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
           <div className="flex items-center gap-2 px-1">
             <Sparkles className="w-4 h-4 text-blue-500" />
             <h4 className="text-[11px] font-bold uppercase tracking-[0.1em] text-gray-400">
-              Compliant Rewrite Options
+              Compliant rewrite options
             </h4>
           </div>
 
@@ -515,7 +515,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
           <div className="bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
             <div className="flex items-center gap-2 px-4 py-2.5 border-b border-gray-200 bg-gray-100/60">
               <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                Your Original Post
+                Your original post
               </span>
             </div>
             <p className="px-4 py-3.5 text-[13px] text-gray-500 leading-relaxed whitespace-pre-wrap line-through decoration-gray-300">
@@ -551,11 +551,11 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
           className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          New Check
+          New check
         </button>
       </div>
 
-      {/* ── Legal Disclaimer — bottom of every result ─────────────────────── */}
+      {/* ── Legal disclaimer — bottom of every result ─────────────────────── */}
       <LegalDisclaimer />
 
     </div>

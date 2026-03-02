@@ -41,7 +41,7 @@ const LoggedInFooter = () => {
           </div>
 
           <div>
-            <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Follow Us</h4>
+            <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Follow us</h4>
             <div className="flex items-center gap-4 mt-4">
               {/* X / Twitter */}
               <div className="text-gray-400 cursor-not-allowed" title="Coming soon">

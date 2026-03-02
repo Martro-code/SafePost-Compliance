@@ -52,7 +52,7 @@ const CookieBanner: React.FC = () => {
             onClick={handleAccept}
             className="px-4 py-2 text-[13px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm shadow-blue-600/25 transition-colors"
           >
-            Accept All
+            Accept all
           </button>
         </div>
 

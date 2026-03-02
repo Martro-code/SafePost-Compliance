@@ -36,7 +36,7 @@ const UpdatePassword: React.FC = () => {
 
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            Update Password
+            Update password
           </h1>
           <p className="text-[14px] text-gray-500 mt-1 mb-8">
             Choose a strong password for your account
@@ -45,9 +45,9 @@ const UpdatePassword: React.FC = () => {
 
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 md:p-8 space-y-4">
-            {/* Current Password */}
+            {/* Current password */}
             <div>
-              <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Current Password</label>
+              <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Current password</label>
               <div className="relative">
                 <input
                   type={showCurrentPassword ? 'text' : 'password'}
@@ -67,9 +67,9 @@ const UpdatePassword: React.FC = () => {
               </div>
             </div>
 
-            {/* New Password */}
+            {/* New password */}
             <div>
-              <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">New Password</label>
+              <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">New password</label>
               <div className="relative">
                 <input
                   type={showNewPassword ? 'text' : 'password'}
@@ -89,9 +89,9 @@ const UpdatePassword: React.FC = () => {
               </div>
             </div>
 
-            {/* Confirm New Password */}
+            {/* Confirm new password */}
             <div>
-              <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Confirm New Password</label>
+              <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Confirm new password</label>
               <div className="relative">
                 <input
                   type={showConfirmPassword ? 'text' : 'password'}
@@ -132,7 +132,7 @@ const UpdatePassword: React.FC = () => {
               onClick={handleUpdatePassword}
               className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
             >
-              Update Password
+              Update password
             </button>
           </div>
         </div>

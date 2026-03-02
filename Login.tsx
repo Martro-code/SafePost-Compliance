@@ -163,7 +163,7 @@ const Login: React.FC = () => {
               Login
             </button>
             <button onClick={() => navigate('/pricing/medical-practitioners')} className="bg-blue-500 hover:bg-blue-600 px-4 py-2 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-              Sign Up
+              Sign up
             </button>
           </div>
 
@@ -233,7 +233,7 @@ const Login: React.FC = () => {
                 Login
               </button>
               <button onClick={() => navigate('/pricing/medical-practitioners')} className="w-full bg-blue-500 hover:bg-blue-600 px-4 py-2.5 text-[13px] font-medium text-white rounded-lg shadow-sm shadow-blue-500/25 transition-all duration-200">
-                Sign Up
+                Sign up
               </button>
             </div>
           </div>
@@ -254,7 +254,7 @@ const Login: React.FC = () => {
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Welcome Back
+                Welcome back
               </h1>
               <p className="text-[14px] text-gray-500">
                 Sign in to your account to continue
@@ -334,7 +334,7 @@ const Login: React.FC = () => {
                   disabled={isSubmitting}
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  {isSubmitting ? 'Signing In...' : 'Sign In'}
+                  {isSubmitting ? 'Signing in...' : 'Sign in'}
                 </button>
               </div>
             </form>
@@ -343,7 +343,7 @@ const Login: React.FC = () => {
             <p className="text-center text-[13px] text-gray-500 mt-6">
               Don't have an account?{' '}
               <a onClick={() => navigate('/signup')} className="text-blue-600 hover:text-blue-700 font-medium underline underline-offset-2 cursor-pointer">
-                Sign Up
+                Sign up
               </a>
             </p>
           </div>

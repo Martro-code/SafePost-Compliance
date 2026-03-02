@@ -91,7 +91,7 @@ const ChangePlan: React.FC = () => {
         {/* Page Heading */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            {isUpgradeMode ? 'Upgrade your Plan' : 'Change your Plan'}
+            {isUpgradeMode ? 'Upgrade your plan' : 'Change your plan'}
           </h1>
           <p className="text-[14px] text-gray-500 mt-1 mb-8">
             {isUpgradeMode ? 'Choose a higher plan to unlock more features' : 'Pick one of the following plans'}
@@ -208,7 +208,7 @@ const ChangePlan: React.FC = () => {
                   : 'bg-blue-600/50 text-white/70 cursor-not-allowed'
               }`}
             >
-              {isUpgradeMode ? 'Upgrade Plan' : 'Change Plan'}
+              {isUpgradeMode ? 'Upgrade plan' : 'Change plan'}
             </button>
           </div>
         </div>

@@ -121,7 +121,7 @@ const Settings: React.FC = () => {
         </div>
 
         <div className="space-y-3">
-          {/* Setting 1 — Dark Mode */}
+          {/* Setting 1 — Dark mode */}
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700">
             <div className="flex items-center justify-between p-5 md:px-6">
               <div className="flex items-center gap-3">
@@ -129,7 +129,7 @@ const Settings: React.FC = () => {
                   <Moon className="w-4.5 h-4.5 text-purple-600 dark:text-purple-400" />
                 </div>
                 <div>
-                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Dark Mode</span>
+                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Dark mode</span>
                   <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Switch between light and dark themes</p>
                 </div>
               </div>
@@ -142,7 +142,7 @@ const Settings: React.FC = () => {
             </div>
           </div>
 
-          {/* Setting 2 — In-App Notifications */}
+          {/* Setting 2 — In-app notifications */}
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700">
             {/* Master row */}
             <div className="flex items-center justify-between p-5 md:px-6">
@@ -151,7 +151,7 @@ const Settings: React.FC = () => {
                   <Bell className="w-4.5 h-4.5 text-blue-600" />
                 </div>
                 <div>
-                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">In-App Notifications</span>
+                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">In-app notifications</span>
                   <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Manage notification preferences</p>
                 </div>
               </div>
@@ -171,10 +171,10 @@ const Settings: React.FC = () => {
             >
               <div className="border-t border-black/[0.06] dark:border-gray-700" />
               <div className="px-5 md:px-6 py-4 space-y-0">
-                {/* Compliance Check Results */}
+                {/* Compliance check results */}
                 <div className="flex items-center justify-between py-3 pl-12">
                   <div>
-                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Compliance Check Results</span>
+                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Compliance check results</span>
                     <p className="text-[11px] text-gray-400 mt-0.5 dark:text-gray-500">Get notified when your checks are complete</p>
                   </div>
                   <button
@@ -187,10 +187,10 @@ const Settings: React.FC = () => {
 
                 <div className="border-t border-black/[0.04] dark:border-gray-700/50 ml-12" />
 
-                {/* Guideline Updates */}
+                {/* Guideline updates */}
                 <div className="flex items-center justify-between py-3 pl-12">
                   <div>
-                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Guideline Updates</span>
+                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Guideline updates</span>
                     <p className="text-[11px] text-gray-400 mt-0.5 dark:text-gray-500">AHPRA and TGA guideline changes</p>
                   </div>
                   <button
@@ -203,10 +203,10 @@ const Settings: React.FC = () => {
 
                 <div className="border-t border-black/[0.04] dark:border-gray-700/50 ml-12" />
 
-                {/* Billing Activity */}
+                {/* Billing activity */}
                 <div className="flex items-center justify-between py-3 pl-12">
                   <div>
-                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Billing Activity</span>
+                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Billing activity</span>
                     <p className="text-[11px] text-gray-400 mt-0.5 dark:text-gray-500">Payment confirmations and reminders</p>
                   </div>
                   <button
@@ -219,10 +219,10 @@ const Settings: React.FC = () => {
 
                 <div className="border-t border-black/[0.04] dark:border-gray-700/50 ml-12" />
 
-                {/* New Features */}
+                {/* New features */}
                 <div className="flex items-center justify-between py-3 pl-12">
                   <div>
-                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">New Features</span>
+                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">New features</span>
                     <p className="text-[11px] text-gray-400 mt-0.5 dark:text-gray-500">Product updates and new capabilities</p>
                   </div>
                   <button
@@ -233,7 +233,7 @@ const Settings: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Save Preferences */}
+                {/* Save preferences */}
                 <div className="pt-4 pl-12">
                   <button
                     onClick={handleNotifSave}
@@ -250,7 +250,7 @@ const Settings: React.FC = () => {
                         Saved!
                       </span>
                     ) : (
-                      'Save Preferences'
+                      'Save preferences'
                     )}
                   </button>
                 </div>
@@ -258,7 +258,7 @@ const Settings: React.FC = () => {
             </div>
           </div>
 
-          {/* Setting 3 — Email Preferences */}
+          {/* Setting 3 — Email preferences */}
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700">
             {/* Master row */}
             <div className="flex items-center justify-between p-5 md:px-6">
@@ -267,7 +267,7 @@ const Settings: React.FC = () => {
                   <Mail className="w-4.5 h-4.5 text-green-600 dark:text-green-400" />
                 </div>
                 <div>
-                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Email Preferences</span>
+                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Email preferences</span>
                   <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Manage which emails you receive</p>
                 </div>
               </div>
@@ -287,10 +287,10 @@ const Settings: React.FC = () => {
             >
               <div className="border-t border-black/[0.06] dark:border-gray-700" />
               <div className="px-5 md:px-6 py-4 space-y-0">
-                {/* Product Updates */}
+                {/* Product updates */}
                 <div className="flex items-center justify-between py-3 pl-12">
                   <div>
-                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Product Updates</span>
+                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Product updates</span>
                     <p className="text-[11px] text-gray-400 mt-0.5 dark:text-gray-500">New features, improvements, and announcements</p>
                   </div>
                   <button
@@ -303,10 +303,10 @@ const Settings: React.FC = () => {
 
                 <div className="border-t border-black/[0.04] dark:border-gray-700/50 ml-12" />
 
-                {/* Compliance Alerts */}
+                {/* Compliance alerts */}
                 <div className="flex items-center justify-between py-3 pl-12">
                   <div>
-                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Compliance Alerts</span>
+                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Compliance alerts</span>
                     <p className="text-[11px] text-gray-400 mt-0.5 dark:text-gray-500">Regulatory changes that may affect your content</p>
                   </div>
                   <button
@@ -319,11 +319,11 @@ const Settings: React.FC = () => {
 
                 <div className="border-t border-black/[0.04] dark:border-gray-700/50 ml-12" />
 
-                {/* Billing Notifications (locked) */}
+                {/* Billing notifications (locked) */}
                 <div className="flex items-center justify-between py-3 pl-12">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Billing Notifications</span>
+                      <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Billing notifications</span>
                       <Lock className="w-3 h-3 text-gray-400 dark:text-gray-500" />
                     </div>
                     <p className="text-[11px] text-gray-400 mt-0.5 dark:text-gray-500">Payment receipts, reminders, and subscription changes</p>
@@ -338,10 +338,10 @@ const Settings: React.FC = () => {
 
                 <div className="border-t border-black/[0.04] dark:border-gray-700/50 ml-12" />
 
-                {/* Usage Summaries */}
+                {/* Usage summaries */}
                 <div className="flex items-center justify-between py-3 pl-12">
                   <div>
-                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Usage Summaries</span>
+                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Usage summaries</span>
                     <p className="text-[11px] text-gray-400 mt-0.5 dark:text-gray-500">Weekly summary of your compliance check activity</p>
                   </div>
                   <button
@@ -354,10 +354,10 @@ const Settings: React.FC = () => {
 
                 <div className="border-t border-black/[0.04] dark:border-gray-700/50 ml-12" />
 
-                {/* Tips & Education */}
+                {/* Tips & education */}
                 <div className="flex items-center justify-between py-3 pl-12">
                   <div>
-                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Tips & Education</span>
+                    <span className="text-[13px] font-medium text-gray-600 dark:text-gray-400">Tips & education</span>
                     <p className="text-[11px] text-gray-400 mt-0.5 dark:text-gray-500">Helpful guides and best practices for compliant advertising</p>
                   </div>
                   <button
@@ -378,7 +378,7 @@ const Settings: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Save Preferences */}
+                {/* Save preferences */}
                 <div className="pt-4 pl-12">
                   <button
                     onClick={handleEmailSave}
@@ -395,7 +395,7 @@ const Settings: React.FC = () => {
                         Saved!
                       </span>
                     ) : (
-                      'Save Preferences'
+                      'Save preferences'
                     )}
                   </button>
                 </div>
@@ -403,7 +403,7 @@ const Settings: React.FC = () => {
             </div>
           </div>
 
-          {/* Setting 4 — Two-Factor Authentication */}
+          {/* Setting 4 — Two-factor authentication */}
           <button
             onClick={() => navigate('/two-factor-auth')}
             className="w-full bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 hover:border-black/[0.12] dark:hover:border-gray-600 transition-[border-color] duration-200"
@@ -414,7 +414,7 @@ const Settings: React.FC = () => {
                   <ShieldCheck className="w-4.5 h-4.5 text-amber-600 dark:text-amber-400" />
                 </div>
                 <div className="text-left">
-                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Two-Factor Authentication</span>
+                  <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Two-factor authentication</span>
                   <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Add an extra layer of security to your account</p>
                 </div>
               </div>

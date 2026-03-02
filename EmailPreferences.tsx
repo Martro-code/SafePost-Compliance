@@ -20,7 +20,7 @@ const EmailPreferences: React.FC = () => {
 
         <div className="mb-8">
           <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
-            Email Preferences
+            Email preferences
           </h1>
         </div>
 

@@ -39,21 +39,21 @@ const Profile: React.FC = () => {
         </div>
 
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
-          {/* Section 1: Personal Details */}
+          {/* Section 1: Personal details */}
           <div className="p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Personal Details</h3>
+              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Personal details</h3>
               <button onClick={() => navigate('/update-personal-details')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
                 Edit
               </button>
             </div>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-[13px] text-gray-500 dark:text-gray-400">First Name</span>
+                <span className="text-[13px] text-gray-500 dark:text-gray-400">First name</span>
                 <span className="text-[14px] font-medium text-gray-900 dark:text-white">{firstName || '—'}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[13px] text-gray-500 dark:text-gray-400">Last Name</span>
+                <span className="text-[13px] text-gray-500 dark:text-gray-400">Last name</span>
                 <span className="text-[14px] font-medium text-gray-900 dark:text-white">{surname || '—'}</span>
               </div>
             </div>
@@ -61,12 +61,12 @@ const Profile: React.FC = () => {
 
           <div className="border-t border-black/[0.06] dark:border-gray-700" />
 
-          {/* Section: Account Details */}
+          {/* Section: Account details */}
           <div className="p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Account Details</h3>
+              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Account details</h3>
               <button type="button" onClick={() => navigate('/change-plan?mode=upgrade', { state: { from: 'profile' } })} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
-                Change Plan
+                Change plan
               </button>
             </div>
             <div>
@@ -77,10 +77,10 @@ const Profile: React.FC = () => {
 
           <div className="border-t border-black/[0.06] dark:border-gray-700" />
 
-          {/* Section 2: Contact Details */}
+          {/* Section 2: Contact details */}
           <div className="p-6 md:p-8">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Contact Details</h3>
+              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Contact details</h3>
               <button onClick={() => navigate('/update-contact-details')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
                 Edit
               </button>
@@ -91,15 +91,15 @@ const Profile: React.FC = () => {
                 <span className="text-[14px] font-medium text-gray-900 dark:text-white">{userEmail}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[13px] text-gray-500 dark:text-gray-400">Mobile Number</span>
+                <span className="text-[13px] text-gray-500 dark:text-gray-400">Mobile number</span>
                 <span className={`text-[14px] ${mobileNumber ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{mobileNumber || 'Not provided'}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[13px] text-gray-500 dark:text-gray-400">Practice Name</span>
+                <span className="text-[13px] text-gray-500 dark:text-gray-400">Practice name</span>
                 <span className={`text-[14px] ${practiceName ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{practiceName || 'Not provided'}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-[13px] text-gray-500 dark:text-gray-400">Street Address</span>
+                <span className="text-[13px] text-gray-500 dark:text-gray-400">Street address</span>
                 <span className={`text-[14px] ${streetAddress ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{streetAddress || 'Not provided'}</span>
               </div>
               <div className="flex items-center justify-between">

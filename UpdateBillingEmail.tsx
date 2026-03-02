@@ -26,19 +26,19 @@ const UpdateBillingEmail: React.FC = () => {
         {/* Page Heading */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            Update Billing Email
+            Update billing email
           </h1>
           <p className="text-[14px] text-gray-500 mt-1 mb-8">
             Your receipts and invoices will be sent to this address
           </p>
         </div>
 
-        {/* Update Billing Email Form */}
+        {/* Update Billing email Form */}
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 md:p-8 space-y-5">
-            {/* Billing Email */}
+            {/* Billing email */}
             <div>
-              <label className="block text-[13px] font-semibold text-gray-700 mb-2 dark:text-gray-300">Billing Email</label>
+              <label className="block text-[13px] font-semibold text-gray-700 mb-2 dark:text-gray-300">Billing email</label>
               <input
                 type="email"
                 value={billingEmail}
@@ -61,7 +61,7 @@ const UpdateBillingEmail: React.FC = () => {
               Cancel
             </button>
             <button className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]">
-              Save Changes
+              Save changes
             </button>
           </div>
         </div>

@@ -23,19 +23,19 @@ const statusConfig: Record<string, {
     row: 'border-l-emerald-400',
   },
   non_compliant: {
-    label: 'Non-Compliant',
+    label: 'Non-compliant',
     icon: <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />,
     badge: 'bg-red-50 text-red-700 border border-red-200',
     row: 'border-l-red-400',
   },
   requires_review: {
-    label: 'Requires Review',
+    label: 'Requires review',
     icon: <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />,
     badge: 'bg-amber-50 text-amber-700 border border-amber-200',
     row: 'border-l-amber-400',
   },
   warning: {
-    label: 'Requires Review',
+    label: 'Requires review',
     icon: <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />,
     badge: 'bg-amber-50 text-amber-700 border border-amber-200',
     row: 'border-l-amber-400',
@@ -295,10 +295,10 @@ const History: React.FC = () => {
         {!checker.isLoadingHistory && totalChecks > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
             {[
-              { label: 'Total Checks', value: totalChecks, color: 'text-gray-700', bg: 'bg-white' },
+              { label: 'Total checks', value: totalChecks, color: 'text-gray-700', bg: 'bg-white' },
               { label: 'Compliant', value: compliantCount, color: 'text-emerald-700', bg: 'bg-emerald-50' },
-              { label: 'Non-Compliant', value: nonCompliantCount, color: 'text-red-700', bg: 'bg-red-50' },
-              { label: 'Requires Review', value: reviewCount, color: 'text-amber-700', bg: 'bg-amber-50' },
+              { label: 'Non-compliant', value: nonCompliantCount, color: 'text-red-700', bg: 'bg-red-50' },
+              { label: 'Requires review', value: reviewCount, color: 'text-amber-700', bg: 'bg-amber-50' },
             ].map(stat => (
               <div key={stat.label} className={`${stat.bg} rounded-xl border border-black/[0.06] p-4`}>
                 <p className={`text-2xl font-extrabold ${stat.color}`}>{stat.value}</p>
@@ -339,10 +339,10 @@ const History: React.FC = () => {
               {filterOpen && (
                 <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg py-1.5 z-10">
                   {[
-                    { value: 'all', label: 'All Checks' },
+                    { value: 'all', label: 'All checks' },
                     { value: 'compliant', label: 'Compliant' },
-                    { value: 'non_compliant', label: 'Non-Compliant' },
-                    { value: 'requires_review', label: 'Requires Review' },
+                    { value: 'non_compliant', label: 'Non-compliant' },
+                    { value: 'requires_review', label: 'Requires review' },
                   ].map(option => (
                     <button
                       key={option.value}

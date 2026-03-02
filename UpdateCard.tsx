@@ -28,19 +28,19 @@ const UpdateCard: React.FC = () => {
         {/* Page Heading */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            Update your Card
+            Update your card
           </h1>
           <p className="text-[14px] text-gray-500 mt-1 mb-8">
             Your new card will replace your current card
           </p>
         </div>
 
-        {/* Update Card Form */}
+        {/* Update card Form */}
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 md:p-8 space-y-5">
-            {/* Name on Card */}
+            {/* Name on card */}
             <div>
-              <label className="block text-[13px] font-semibold text-gray-700 mb-2 dark:text-gray-300">Name on Card</label>
+              <label className="block text-[13px] font-semibold text-gray-700 mb-2 dark:text-gray-300">Name on card</label>
               <input
                 type="text"
                 value={nameOnCard}
@@ -50,9 +50,9 @@ const UpdateCard: React.FC = () => {
               />
             </div>
 
-            {/* Card Number */}
+            {/* Card number */}
             <div>
-              <label className="block text-[13px] font-semibold text-gray-700 mb-2 dark:text-gray-300">Card Number</label>
+              <label className="block text-[13px] font-semibold text-gray-700 mb-2 dark:text-gray-300">Card number</label>
               <div className="relative">
                 <input
                   type="text"
@@ -73,7 +73,7 @@ const UpdateCard: React.FC = () => {
             {/* Expiry + CVC */}
             <div className="flex gap-4">
               <div className="flex-1">
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2 dark:text-gray-300">Expiry Date</label>
+                <label className="block text-[13px] font-semibold text-gray-700 mb-2 dark:text-gray-300">Expiry date</label>
                 <input
                   type="text"
                   value={expiry}
@@ -132,7 +132,7 @@ const UpdateCard: React.FC = () => {
               Cancel
             </button>
             <button className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]">
-              Update Card
+              Update card
             </button>
           </div>
         </div>

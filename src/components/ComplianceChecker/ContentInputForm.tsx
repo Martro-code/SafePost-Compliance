@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { AlertCircle, ChevronDown, Sparkles, Shield } from 'lucide-react';
 
 const CONTENT_TYPES = [
-  { value: 'social_media_post', label: 'Social Media Post' },
-  { value: 'website_content', label: 'Website / Landing Page Content' },
-  { value: 'google_ad', label: 'Google Ad' },
-  { value: 'email_marketing', label: 'Email / Newsletter' },
-  { value: 'blog_article', label: 'Blog Article' },
-  { value: 'print_ad', label: 'Print / Brochure' },
+  { value: 'social_media_post', label: 'Social media post' },
+  { value: 'website_content', label: 'Website / landing page content' },
+  { value: 'google_ad', label: 'Google ad' },
+  { value: 'email_marketing', label: 'Email / newsletter' },
+  { value: 'blog_article', label: 'Blog article' },
+  { value: 'print_ad', label: 'Print / brochure' },
   { value: 'other', label: 'Other' },
 ];
 
@@ -20,7 +20,7 @@ const PLATFORMS = [
   { value: 'google', label: 'Google Ads' },
   { value: 'website', label: 'Website' },
   { value: 'email', label: 'Email' },
-  { value: 'other', label: 'Other / Not Applicable' },
+  { value: 'other', label: 'Other / not applicable' },
 ];
 
 const EXAMPLE_CONTENT = `✨ Transform Your Smile at Sydney CBD Dental! ✨
@@ -85,7 +85,7 @@ export function ContentInputForm({ onSubmit, error }: ContentInputFormProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
-            Content Type
+            Content type
           </label>
           <div className="relative">
             <select
@@ -126,7 +126,7 @@ export function ContentInputForm({ onSubmit, error }: ContentInputFormProps) {
       <div>
         <div className="flex items-center justify-between mb-1.5">
           <label className="block text-sm font-medium text-gray-700">
-            Content to Check
+            Content to check
           </label>
           <button
             type="button"
@@ -175,7 +175,7 @@ export function ContentInputForm({ onSubmit, error }: ContentInputFormProps) {
           className="flex-shrink-0 flex items-center gap-2 bg-blue-600 text-white px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
         >
           <Shield className="w-4 h-4" />
-          Check Compliance
+          Check compliance
         </button>
       </div>
     </form>
