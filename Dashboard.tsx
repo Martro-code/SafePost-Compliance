@@ -5,6 +5,7 @@ import LoggedInLayout from './src/components/LoggedInLayout';
 import OnboardingModal from './src/components/OnboardingModal';
 import { useAuth } from './useAuth';
 import { useComplianceChecker } from './src/hooks/useComplianceChecker';
+import { supabase } from './src/services/supabaseClient';
 import { ComplianceResults } from './src/components/ComplianceResults';
 import { generateCompliantRewrites } from './services/geminiService';
 import { getDisplayPlanName } from './src/utils/planUtils';
@@ -48,14 +49,47 @@ const Dashboard: React.FC = () => {
     }
   }, [checker.result]);
 
-  // Onboarding modal state
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    return sessionStorage.getItem('safepost_onboarded') == null;
-  });
+  // Onboarding modal state — driven by Supabase user metadata
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
-  const handleOnboardingComplete = () => {
-    sessionStorage.setItem('safepost_onboarded', 'true');
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        // Check Supabase user metadata flag
+        if (user.user_metadata?.onboarding_completed === true) return;
+
+        // Secondary check: if user has existing compliance checks, treat as onboarded
+        const { count, error } = await supabase
+          .from('compliance_checks')
+          .select('*', { count: 'exact', head: true })
+          .eq('user_id', user.id);
+
+        if (!error && count && count > 0) {
+          // Backfill the metadata flag so we skip the DB query next time
+          await supabase.auth.updateUser({ data: { onboarding_completed: true } });
+          return;
+        }
+
+        // No flag and no existing checks — show the modal
+        setShowOnboarding(true);
+      } catch (err) {
+        console.error('Failed to check onboarding status:', err);
+      }
+    };
+
+    checkOnboardingStatus();
+  }, []);
+
+  const handleOnboardingComplete = async () => {
     setShowOnboarding(false);
+    try {
+      await supabase.auth.updateUser({ data: { onboarding_completed: true } });
+    } catch (err) {
+      console.error('Failed to save onboarding status:', err);
+    }
   };
 
   const getStatusIcon = (status: string) => {
