@@ -45,11 +45,11 @@ const UpgradeConfirmation: React.FC = () => {
         </button>
 
         {/* Page Heading */}
-        <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
             Confirm Your Upgrade
           </h1>
-          <p className="text-[14px] text-gray-500 dark:text-gray-300">
+          <p className="text-[14px] text-gray-500 mt-1 mb-8">
             Review your new plan before confirming
           </p>
         </div>
