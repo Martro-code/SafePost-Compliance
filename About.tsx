@@ -290,7 +290,7 @@ const About: React.FC = () => {
             Ready to experience compliance confidence?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join medical practitioners across Australia using SafePost to communicate with confidence
+            Join medical practitioners and practices across Australia using SafePost to communicate with confidence
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
