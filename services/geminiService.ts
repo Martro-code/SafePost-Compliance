@@ -2,13 +2,16 @@ import Anthropic from '@anthropic-ai/sdk';
 import { AnalysisResult, ComplianceStatus, ComplianceIssue, RewrittenPost } from '../types';
 import { FAQ_CONTEXT } from './safepost_faq_prompt_context';
 
+// TODO: Move API calls to a backend proxy to avoid exposing the API key in the
+// client bundle. `dangerouslyAllowBrowser` is a temporary workaround — the key
+// is visible in network requests and the JS bundle served to users.
 const client = new Anthropic({
   apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
   dangerouslyAllowBrowser: true,
 });
 
-const SYSTEM_INSTRUCTION = `You are an expert Australian medical compliance officer specialising in Ahpra (Australian Health Practitioner Regulation Agency) guidelines and National Law. 
-Your task is to analyse social media post drafts for compliance with the Australian Health Practitioner Regulation National Law and relevant guidelines.
+const SYSTEM_INSTRUCTION = `You are an expert Australian medical compliance officer specialising in Ahpra (Australian Health Practitioner Regulation Agency) guidelines and Health Practitioner Regulation National Law Act 2009. 
+Your task is to analyse social media post drafts for compliance with the Australian Health Practitioner Regulation National Law Act 2009 and relevant guidelines.
 
 IMPORTANT: You must use Australian/UK English spelling (e.g., 'recognise', 'analyse', 'programme', 'colour') in all your generated responses, findings, and summaries.
 
@@ -51,7 +54,7 @@ F. NON-HEALTHCARE CONTENT:
 
 VERDICT ASSIGNMENT RULES — YOU MUST FOLLOW THESE EXACTLY:
 - Return "COMPLIANT" when NO issues are found. If your issues array is empty, status MUST be "COMPLIANT". Never return "WARNING" when no issues are found.
-- Return "NON_COMPLIANT" when one or more issues have severity "Critical" — meaning a clear, identifiable breach of the National Law or TGA legislation is present.
+- Return "NON_COMPLIANT" when one or more issues have severity "Critical" — meaning a clear, identifiable breach of the Health Practitioner Regulation National Law Act 2009 or TGA legislation is present.
 - Return "WARNING" only when issues exist but none rise to the level of a clear breach — grey areas, advisory guidance, or best practice recommendations only.
 - Return "NOT_HEALTHCARE" when the content is unrelated to healthcare services.
 

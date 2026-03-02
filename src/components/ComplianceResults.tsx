@@ -244,7 +244,7 @@ const LegalDisclaimer: React.FC<{ prominent?: boolean }> = ({ prominent = false 
           <p className="text-[12px] font-semibold text-amber-800 mb-1">Legal Disclaimer</p>
           <p className="text-[12px] text-amber-700 leading-relaxed">
             These rewrite suggestions are AI-generated guidance only and do not constitute legal advice.
-            SafePost™ cannot guarantee that any rewritten content is fully compliant with the National Law
+            SafePost™ cannot guarantee that any rewritten content is fully compliant with the Health Practitioner Regulation National Law Act 2009
             or AHPRA guidelines. Registered health practitioners remain solely responsible for ensuring
             their advertising complies with all applicable laws. If in doubt, seek independent legal advice
             before publishing.
@@ -259,7 +259,7 @@ const LegalDisclaimer: React.FC<{ prominent?: boolean }> = ({ prominent = false 
       <Shield className="w-3 h-3 text-gray-300 flex-shrink-0 mt-0.5" />
       <p className="text-[11px] text-gray-400 leading-relaxed">
         SafePost™ provides AI-powered guidance only and does not constitute legal advice. Practitioners
-        are solely responsible for ensuring their advertising complies with the National Law and AHPRA
+        are solely responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law Act 2009 and AHPRA
         guidelines.{' '}
         <a
           href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx"

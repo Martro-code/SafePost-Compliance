@@ -1,9 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, CheckCircle2, AlertCircle, AlertTriangle, Info, Menu, X, ExternalLink } from 'lucide-react';
+import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
-import { analyzePost, generateCompliantRewrites } from './services/geminiService';
-import { AnalysisResult, ComplianceStatus, RewrittenPost } from './types';
 
 const socialIcons = [
   {
@@ -43,17 +41,6 @@ const socialIcons = [
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
-  const [input, setInput] = useState('');
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<AnalysisResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  // Suggestion State
-  const [suggestions, setSuggestions] = useState<RewrittenPost[] | null>(null);
-  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
-  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
-
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [customersDropdownOpen, setCustomersDropdownOpen] = useState(false);
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
@@ -66,120 +53,6 @@ const HomePage: React.FC = () => {
     { label: 'Code of conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
     { label: 'TGA guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      setError("Please upload an image file (JPEG or PNG).");
-      return;
-    }
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setSelectedImage(reader.result as string);
-      setError(null);
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const removeImage = () => {
-    setSelectedImage(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  const handleAnalyze = async () => {
-    if (!input.trim() && !selectedImage) return;
-
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    setSuggestions(null);
-
-    try {
-      let imageData = undefined;
-      if (selectedImage) {
-        const matches = selectedImage.match(/^data:(.+);base64,(.+)$/);
-        if (matches) {
-          imageData = { mimeType: matches[1], base64: matches[2] };
-        }
-      }
-      const analysis = await analyzePost(input, imageData);
-      setResult(analysis);
-      setTimeout(() => {
-        document.getElementById('results-section')?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGenerateSuggestions = async () => {
-    if (!result || !input) return;
-
-    setSuggestionsLoading(true);
-    try {
-      const rewrites = await generateCompliantRewrites(input, result.issues);
-      setSuggestions(rewrites);
-      setTimeout(() => {
-        document.getElementById('suggestions-section')?.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } catch (err: any) {
-      setError("Could not generate suggestions. Please try again.");
-    } finally {
-      setSuggestionsLoading(false);
-    }
-  };
-
-  const copyToClipboard = (text: string, index: number) => {
-    navigator.clipboard.writeText(text);
-    setCopiedIndex(index);
-    setTimeout(() => setCopiedIndex(null), 2000);
-  };
-
-  const handleReset = () => {
-    setResult(null);
-    setSuggestions(null);
-    setInput('');
-    setSelectedImage(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-    setError(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      if (!loading && (input.trim() || selectedImage) && !result) {
-        handleAnalyze();
-      }
-    }
-  };
-
-  const getStatusColor = (status: ComplianceStatus) => {
-    switch (status) {
-      case ComplianceStatus.COMPLIANT: return 'text-green-600 bg-green-50 border-green-200';
-      case ComplianceStatus.NON_COMPLIANT: return 'text-red-600 bg-red-50 border-red-200';
-      case ComplianceStatus.WARNING: return 'text-amber-600 bg-amber-50 border-amber-200';
-      default: return 'text-gray-600 bg-gray-50 border-gray-200';
-    }
-  };
-
-  const getStatusIcon = (status: ComplianceStatus) => {
-    switch (status) {
-      case ComplianceStatus.COMPLIANT: return <CheckCircle2 className="w-12 h-12 text-green-600 flex-shrink-0" />;
-      case ComplianceStatus.NON_COMPLIANT: return <AlertCircle className="w-12 h-12 text-red-600 flex-shrink-0" />;
-      case ComplianceStatus.WARNING: return <AlertTriangle className="w-12 h-12 text-amber-600 flex-shrink-0" />;
-      default: return <Info className="w-12 h-12 text-gray-400 flex-shrink-0" />;
-    }
-  };
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
@@ -783,7 +656,7 @@ const HomePage: React.FC = () => {
             <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
               AHPRA and the National Boards do not provide pre-approval for advertising.
-              Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law.
+              Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009.
             </p>
             <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>
           </div>

@@ -245,7 +245,7 @@ export function useComplianceChecker(planName: string = 'free') {
     };
 
     initialLoad();
-  }, []);
+  }, [historyLimit]);
 
   // ── Run a compliance check ─────────────────────────────────────────────
   const runCheck = useCallback(async (content: string, contentType: string = 'social_media_post', platform: string = 'general') => {
@@ -369,12 +369,23 @@ export function useComplianceChecker(planName: string = 'free') {
 
   // ── Delete a check ─────────────────────────────────────────────────────
   const deleteCheck = useCallback(async (id: string) => {
+    // Check if the deleted item is from the current month before decrementing
+    const deletedCheck = history.find(c => c.id === id);
     await deleteComplianceCheck(id);
     setHistory(prev => prev.filter(c => c.id !== id));
-    // Decrement usage count when a check is deleted
-    setChecksUsedThisMonth(prev => Math.max(0, prev - 1));
+
+    if (deletedCheck) {
+      const checkDate = new Date(deletedCheck.created_at);
+      const now = new Date();
+      const isCurrentMonth = checkDate.getFullYear() === now.getFullYear()
+        && checkDate.getMonth() === now.getMonth();
+      if (isCurrentMonth) {
+        setChecksUsedThisMonth(prev => Math.max(0, prev - 1));
+      }
+    }
+
     invalidateCache();
-  }, []);
+  }, [history]);
 
   // ── Save rewrite options to sessionStorage + Supabase ─────────────────
   const saveRewriteOptions = useCallback(async (rewrites: any[]) => {

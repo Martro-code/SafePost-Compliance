@@ -107,7 +107,6 @@ const SignUp: React.FC = () => {
         return;
       }
 
-      sessionStorage.setItem('safepost_password', password);
       if (plan) sessionStorage.setItem('safepost_plan', plan);
       if (billing) sessionStorage.setItem('safepost_billing', billing);
 
@@ -366,7 +365,7 @@ const SignUp: React.FC = () => {
                   placeholder="Enter your mobile number"
                   value={mobileNumber}
                   onChange={(e) => setMobileNumber(e.target.value)}
-                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
+                  onKeyDown={(e) => { if (e.key.length === 1 && !/[0-9]/.test(e.key)) e.preventDefault(); }}
                   className={getInputClasses(mobileNumber, mobileNumber.trim().length > 0)}
                 />
               </div>
@@ -453,7 +452,7 @@ const SignUp: React.FC = () => {
                   placeholder="Enter your postcode"
                   value={postcode}
                   onChange={(e) => setPostcode(e.target.value.slice(0, 4))}
-                  onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
+                  onKeyDown={(e) => { if (e.key.length === 1 && !/[0-9]/.test(e.key)) e.preventDefault(); }}
                   maxLength={4}
                   className={getInputClasses(postcode, postcode.trim().length > 0)}
                 />
@@ -663,7 +662,7 @@ const SignUp: React.FC = () => {
             <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
               AHPRA and the National Boards do not provide pre-approval for advertising.
-              Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law.
+              Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009.
             </p>
             <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>
           </div>

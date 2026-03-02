@@ -11,7 +11,7 @@ const STEPS = [
     id: 'fetching_guidelines',
     icon: Database,
     label: 'Loading guidelines',
-    description: 'Fetching AHPRA, National Law, and TGA guidelines from the database…',
+    description: 'Fetching AHPRA, Health Practitioner Regulation National Law Act 2009, and TGA guidelines from the database…',
   },
   {
     id: 'analyzing',

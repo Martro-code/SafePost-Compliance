@@ -77,7 +77,7 @@ export function ContentInputForm({ onSubmit, error }: ContentInputFormProps) {
         </h2>
         <p className="text-sm text-blue-700">
           Paste your social media post, advertisement, or online content below. SafePost™ will
-          analyse it against AHPRA advertising guidelines, the National Law, and TGA requirements.
+          analyse it against AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA requirements.
         </p>
       </div>
 
