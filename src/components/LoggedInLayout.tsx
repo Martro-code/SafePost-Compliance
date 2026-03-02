@@ -71,10 +71,13 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
     navigate('/');
   };
 
+  const isUltra = planName.toLowerCase() === 'ultra';
+
   const navLinks = [
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'History', path: '/history' },
     { label: 'Settings', path: '/settings' },
+    ...(isUltra ? [{ label: 'Team', path: '/settings/team' }] : []),
   ];
 
   return (
