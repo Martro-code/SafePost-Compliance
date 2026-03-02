@@ -102,7 +102,7 @@ const TermsOfUse: React.FC = () => {
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">{`1. About SafePost\u2122`}</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`SafePost\u2122 is an AI-powered compliance checking platform designed to assist Australian medical practitioners and healthcare practices in assessing whether their social media posts and online advertising content comply with AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009 (Health Practitioner Regulation National Law Act 2009), and Therapeutic Goods Administration (TGA) requirements.`}
+                {`SafePost\u2122 is an AI-powered compliance checking platform designed to assist Australian medical practitioners and healthcare practices in assessing whether their social media posts and online advertising content comply with AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and Therapeutic Goods Administration (TGA) requirements.`}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
                 {`SafePost\u2122 is operated by SafePost Pty Ltd. In these Terms of Use, \u201CSafePost\u201D, \u201Cwe\u201D, \u201Cour\u201D and \u201Cus\u201D refers to the entity operating the Platform.`}
