@@ -203,7 +203,7 @@ const About: React.FC = () => {
             About SafePost
           </h1>
           <p className="text-lg text-gray-500">
-            Supporting Australian medical practitioners with compliance confidence
+            Supporting Australian medical practitioners and practices with compliance confidence
           </p>
         </div>
       </section>
