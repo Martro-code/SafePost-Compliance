@@ -293,7 +293,7 @@ const Features: React.FC = () => {
             Ready to get started?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join medical practitioners across Australia using SafePost for compliance confidence
+            Join practitioners and practices across Australia using SafePost for compliance confidence
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
