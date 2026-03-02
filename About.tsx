@@ -275,8 +275,8 @@ const About: React.FC = () => {
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
                 {"It\u2019s a design that says compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
               </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                <strong className="text-gray-900">{"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}</strong>
+              <p className="text-lg font-bold text-gray-900 leading-snug mt-4">
+                {"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}
               </p>
             </div>
           </div>
