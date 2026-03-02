@@ -573,7 +573,7 @@ const HomePage: React.FC = () => {
           <div className="flex flex-col items-start mb-10 pb-10 border-b border-black/[0.06]">
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
-              <span className="text-[#2563EB]">Post</span>
+              <span className="text-[#2563EB]">Post</span>™
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.
