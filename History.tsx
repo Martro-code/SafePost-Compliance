@@ -96,7 +96,7 @@ const CheckRow: React.FC<{
         </p>
 
         {/* Status badge */}
-        <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold whitespace-nowrap flex-shrink-0 ${cfg.badge}`}>
+        <span className={`inline-flex items-center justify-center min-w-[140px] px-2 py-0.5 rounded-md text-[11px] font-semibold whitespace-nowrap flex-shrink-0 ${cfg.badge}`}>
           {cfg.label}
         </span>
 
