@@ -6,11 +6,11 @@
 
 /** Full display names including the "SafePost" prefix */
 const PLAN_DISPLAY_NAMES: Record<string, string> = {
-  starter: 'SafePost Starter',
-  free: 'SafePost Starter',
-  professional: 'SafePost Professional',
-  proplus: 'SafePost Pro+',
-  ultra: 'SafePost Ultra',
+  starter: 'SafePost\u2122 Starter',
+  free: 'SafePost\u2122 Starter',
+  professional: 'SafePost\u2122 Professional',
+  proplus: 'SafePost\u2122 Pro+',
+  ultra: 'SafePost\u2122 Ultra',
 };
 
 /** Short tier labels without the "SafePost" prefix */
