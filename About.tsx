@@ -200,7 +200,7 @@ const About: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            About SafePost&trade;
+            About SafePost
           </h1>
           <p className="text-lg text-gray-500">
             Supporting Australian medical practitioners with compliance confidence
@@ -225,7 +225,7 @@ const About: React.FC = () => {
             {/* Section 2 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We founded SafePost\u2122 because compliance shouldn\u2019t hold you back from connecting with patients"}
+                {"We founded SafePost because compliance shouldn\u2019t hold you back from connecting with patients"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 {"Social media and digital marketing are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post can put your registration at risk."}
@@ -238,7 +238,7 @@ const About: React.FC = () => {
                 Our mission is to help Australian medical practitioners and practices communicate confidently, compliantly and authentically
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost\u2122 provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations."}
+                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations."}
               </p>
             </div>
 
@@ -248,7 +248,7 @@ const About: React.FC = () => {
                 {"We\u2019re not lawyers. We\u2019re your compliance partner"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"SafePost\u2122 doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns, we\u2019re here to support you at every step."}
+                {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns, we\u2019re here to support you at every step."}
               </p>
             </div>
 
@@ -264,10 +264,10 @@ const About: React.FC = () => {
             {/* Section 6 - Our Design Story */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"Every detail of SafePost\u2122 was built with purpose"}
+                {"Every detail of SafePost was built with purpose"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Even our logo tells the story of what we stand for. The three horizontal bars represent the journey every piece of your content takes \u2014 from the regulatory framework at the top, through SafePost\u2019s\u2122 intelligent compliance layer in the middle, to your approved, ready-to-publish content at the bottom."}
+                {"Even our logo tells the story of what we stand for. The three horizontal bars represent the journey every piece of your content takes \u2014 from the regulatory framework at the top, through SafePost\u2019s intelligent compliance layer in the middle, to your approved, ready-to-publish content at the bottom."}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
                 {"But look closer. The staggered alignment of these bars creates something subtle yet intentional: a phantom \u201CS\u201D in the negative space. This hidden letter represents both Safe and Social \u2014 a visual reminder that compliance and communication aren\u2019t opposing forces. They\u2019re integrated, flowing together naturally."}
@@ -276,7 +276,7 @@ const About: React.FC = () => {
                 {"It\u2019s a design that says compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                <strong className="text-gray-900">{"We built SafePost\u2122 to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}</strong>
+                <strong className="text-gray-900">{"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}</strong>
               </p>
             </div>
           </div>
@@ -290,7 +290,7 @@ const About: React.FC = () => {
             Ready to experience compliance confidence?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join medical practitioners across Australia using SafePost&trade; to communicate with confidence
+            Join medical practitioners across Australia using SafePost to communicate with confidence
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -319,7 +319,6 @@ const About: React.FC = () => {
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
               <span className="text-[#2563EB]">Post</span>
-              <span className="text-gray-400 text-[15px] font-medium ml-0.5">™</span>
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

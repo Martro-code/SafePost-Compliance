@@ -5,19 +5,19 @@ import LoggedInLayout from '../components/LoggedInLayout';
 
 const faqs = [
   {
-    question: "What does SafePost™ check my content against?",
-    answer: "SafePost™ checks your content against 134 verified rules drawn from five primary AHPRA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, and guidelines for cosmetic procedures and cosmetic surgery advertising."
+    question: "What does SafePost check my content against?",
+    answer: "SafePost checks your content against 134 verified rules drawn from five primary AHPRA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, and guidelines for cosmetic procedures and cosmetic surgery advertising."
   },
   {
     question: "Does a 'Compliant' result mean I am guaranteed to be compliant?",
-    answer: "No. A compliant result from SafePost™ means no issues were identified based on our current knowledge base — it does not constitute legal advice or guarantee compliance with all applicable laws and regulations. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain solely responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009 and AHPRA guidelines. If in doubt, seek independent legal advice before publishing."
+    answer: "No. A compliant result from SafePost means no issues were identified based on our current knowledge base — it does not constitute legal advice or guarantee compliance with all applicable laws and regulations. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain solely responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009 and AHPRA guidelines. If in doubt, seek independent legal advice before publishing."
   },
   {
     question: "How many compliance checks do I get per month?",
     answer: "Your monthly check limit depends on your plan. Starter includes 3 checks per month, Professional includes 30, Pro+ includes 100, and Ultra includes unlimited checks. Your usage resets on the 1st of each month. You can view your current usage in the sidebar on your Dashboard."
   },
   {
-    question: "Can I use SafePost™ to check image or video content?",
+    question: "Can I use SafePost to check image or video content?",
     answer: "Image attachment for analysis is available on paid plans — Professional, Pro+, and Ultra. You can attach an image to your compliance check using the Attach Image button in the compliance checker. Video content analysis is not currently supported."
   },
   {
@@ -55,7 +55,7 @@ const Help: React.FC = () => {
         {/* Page header */}
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Help & Support</h1>
-          <p className="text-[14px] text-gray-500 mt-1 mb-8">Get help with SafePost™ or send us a message.</p>
+          <p className="text-[14px] text-gray-500 mt-1 mb-8">Get help with SafePost or send us a message.</p>
         </div>
 
         {/* Section 1 — FAQ accordions */}

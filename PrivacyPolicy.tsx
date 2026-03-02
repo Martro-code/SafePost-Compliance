@@ -88,7 +88,7 @@ const PrivacyPolicy: React.FC = () => {
             {/* Introduction */}
             <div>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`SafePost\u2122 (\u201Cwe\u201D, \u201Cour\u201D, \u201Cus\u201D) is committed to protecting the privacy of our users and handling personal information responsibly and transparently. This Privacy Policy explains how we collect, use, store, and disclose your personal information when you use the SafePost\u2122 platform, including our website and compliance checking tools.`}
+                {`SafePost (\u201Cwe\u201D, \u201Cour\u201D, \u201Cus\u201D) is committed to protecting the privacy of our users and handling personal information responsibly and transparently. This Privacy Policy explains how we collect, use, store, and disclose your personal information when you use the SafePost platform, including our website and compliance checking tools.`}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
                 We handle personal information in accordance with the Privacy Act 1988 (Cth) and the Australian Privacy Principles (APPs). This Privacy Policy may be updated from time to time.
@@ -99,10 +99,10 @@ const PrivacyPolicy: React.FC = () => {
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">1. Who We Are</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`SafePost\u2122 is an AI-powered compliance checking platform designed specifically for Australian medical practitioners and healthcare practices. Our platform helps users assess whether their social media posts and online advertising content comply with AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA requirements.`}
+                {`SafePost is an AI-powered compliance checking platform designed specifically for Australian medical practitioners and healthcare practices. Our platform helps users assess whether their social media posts and online advertising content comply with AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA requirements.`}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                {`In this Privacy Policy, \u201CSafePost\u201D refers to the entity operating the SafePost\u2122 platform. If you have any questions about this Privacy Policy or our privacy practices, please contact us at privacy@safepost.com.au.`}
+                {`In this Privacy Policy, \u201CSafePost\u201D refers to the entity operating the SafePost platform. If you have any questions about this Privacy Policy or our privacy practices, please contact us at privacy@safepost.com.au.`}
               </p>
             </div>
 
@@ -130,7 +130,7 @@ const PrivacyPolicy: React.FC = () => {
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.3 Compliance Check Content</h3>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-2">
-                {`When you use the SafePost\u2122 compliance checker, we collect and process:`}
+                {`When you use the SafePost compliance checker, we collect and process:`}
               </p>
               <ul className="list-disc pl-5 space-y-1.5 mb-6">
                 <li className="text-[14px] text-gray-500 leading-relaxed">The social media or advertising content you submit for compliance checking</li>
@@ -172,7 +172,7 @@ const PrivacyPolicy: React.FC = () => {
                 <li className="text-[14px] text-gray-500 leading-relaxed">From Stripe, our payment processor, in relation to billing and subscription management</li>
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`You are not required to provide your personal information. However, if you choose not to, we may not be able to provide you with access to the SafePost\u2122 platform or its features.`}
+                {`You are not required to provide your personal information. However, if you choose not to, we may not be able to provide you with access to the SafePost platform or its features.`}
               </p>
             </div>
 
@@ -183,12 +183,12 @@ const PrivacyPolicy: React.FC = () => {
                 We use your personal information for the following purposes:
               </p>
               <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`To create and manage your SafePost\u2122 account`}</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">{`To create and manage your SafePost account`}</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">To provide and operate the compliance checking service</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">To store and display your compliance check history in your dashboard</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">To process your subscription payments and manage your billing</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">To send you service-related communications including receipts, account notifications and product updates</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`To improve and develop the SafePost\u2122 platform and our AI compliance models`}</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">{`To improve and develop the SafePost platform and our AI compliance models`}</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">To respond to your enquiries and provide customer support</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">To comply with our legal and regulatory obligations</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">To conduct research and statistical analysis in de-identified form</li>
@@ -202,7 +202,7 @@ const PrivacyPolicy: React.FC = () => {
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">5. AI Processing and Compliance Content</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                {`SafePost\u2122 uses artificial intelligence to analyse content submitted through the compliance checker. When you submit content for a compliance check:`}
+                {`SafePost uses artificial intelligence to analyse content submitted through the compliance checker. When you submit content for a compliance check:`}
               </p>
               <ul className="list-disc pl-5 space-y-1.5 mb-4">
                 <li className="text-[14px] text-gray-500 leading-relaxed">Your content is processed by our AI model and assessed against AHPRA guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA requirements stored in our compliance database</li>
@@ -211,7 +211,7 @@ const PrivacyPolicy: React.FC = () => {
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 <strong className="text-gray-700">
-                  {`Important disclaimer: SafePost\u2122 is an AI-powered guidance tool and does not constitute legal or regulatory advice. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009.`}
+                  {`Important disclaimer: SafePost is an AI-powered guidance tool and does not constitute legal or regulatory advice. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009.`}
                 </strong>
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed">
@@ -229,7 +229,7 @@ const PrivacyPolicy: React.FC = () => {
                 <li className="text-[14px] text-gray-500 leading-relaxed">{`Stripe \u2014 our payment processor, for the purpose of processing subscription payments and managing billing`}</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">{`Supabase \u2014 our database and authentication provider, for secure storage of your account information and compliance check history`}</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">{`AI model providers \u2014 for the purpose of processing content submitted through the compliance checker`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Technology and infrastructure service providers who assist us in operating the SafePost\u2122 platform`}</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">{`Technology and infrastructure service providers who assist us in operating the SafePost platform`}</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Professional advisers including legal practitioners, accountants and auditors, on a confidential basis</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Government agencies, regulators or law enforcement bodies where required or authorised by law</li>
               </ul>
@@ -248,7 +248,7 @@ const PrivacyPolicy: React.FC = () => {
                 Some of our third-party service providers are located overseas, including in the United States of America. For example, Supabase stores data in cloud infrastructure that may be located internationally, and our AI processing providers may operate outside Australia.
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`Where we disclose personal information to overseas recipients, we take reasonable steps to ensure those recipients handle your personal information in a manner consistent with the Australian Privacy Principles. By using SafePost\u2122, you consent to the transfer of your personal information to our overseas service providers for the purposes described in this Privacy Policy.`}
+                {`Where we disclose personal information to overseas recipients, we take reasonable steps to ensure those recipients handle your personal information in a manner consistent with the Australian Privacy Principles. By using SafePost, you consent to the transfer of your personal information to our overseas service providers for the purposes described in this Privacy Policy.`}
               </p>
             </div>
 
@@ -267,7 +267,7 @@ const PrivacyPolicy: React.FC = () => {
                 <li className="text-[14px] text-gray-500 leading-relaxed">{`Preference cookies \u2014 to remember your settings and preferences`}</li>
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`You can manage your cookie preferences through your browser settings. Disabling certain cookies may affect the functionality of the SafePost\u2122 platform.`}
+                {`You can manage your cookie preferences through your browser settings. Disabling certain cookies may affect the functionality of the SafePost platform.`}
               </p>
             </div>
 
@@ -304,7 +304,7 @@ const PrivacyPolicy: React.FC = () => {
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">11. Marketing Communications</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                {`We may send you marketing communications about SafePost\u2122 products, features and updates by email. You may opt out of marketing communications at any time by:`}
+                {`We may send you marketing communications about SafePost products, features and updates by email. You may opt out of marketing communications at any time by:`}
               </p>
               <ul className="list-disc pl-5 space-y-1.5 mb-4">
                 <li className="text-[14px] text-gray-500 leading-relaxed">Clicking the unsubscribe link in any marketing email we send you</li>
@@ -320,7 +320,7 @@ const PrivacyPolicy: React.FC = () => {
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">12. Accessing, Updating and Correcting Your Information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                {`You have the right to access, update and correct the personal information we hold about you. You can manage most of your personal information directly through your SafePost\u2122 account, including:`}
+                {`You have the right to access, update and correct the personal information we hold about you. You can manage most of your personal information directly through your SafePost account, including:`}
               </p>
               <ul className="list-disc pl-5 space-y-1.5 mb-4">
                 <li className="text-[14px] text-gray-500 leading-relaxed">Updating your personal details through the Profile section of your dashboard</li>
@@ -332,7 +332,7 @@ const PrivacyPolicy: React.FC = () => {
               </p>
               <div className="text-[14px] text-gray-500 leading-relaxed">
                 <p className="font-medium text-gray-700">Privacy Officer</p>
-                <p>{`SafePost\u2122`}</p>
+                <p>{`SafePost`}</p>
                 <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
               </div>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
@@ -348,7 +348,7 @@ const PrivacyPolicy: React.FC = () => {
               </p>
               <div className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 <p className="font-medium text-gray-700">Privacy Officer</p>
-                <p>{`SafePost\u2122`}</p>
+                <p>{`SafePost`}</p>
                 <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
               </div>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
@@ -372,7 +372,7 @@ const PrivacyPolicy: React.FC = () => {
                 We reserve the right to update this Privacy Policy from time to time to reflect changes to our practices, technology or legal requirements. When we make material changes, we will notify you by posting an updated version on our website and, where appropriate, by sending you an email notification.
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`Your continued use of SafePost\u2122 after the effective date of the updated Privacy Policy constitutes your acceptance of the changes.`}
+                {`Your continued use of SafePost after the effective date of the updated Privacy Policy constitutes your acceptance of the changes.`}
               </p>
             </div>
 
@@ -384,7 +384,7 @@ const PrivacyPolicy: React.FC = () => {
               </p>
               <div className="text-[14px] text-gray-500 leading-relaxed">
                 <p className="font-medium text-gray-700">Privacy Officer</p>
-                <p>{`SafePost\u2122`}</p>
+                <p>{`SafePost`}</p>
                 <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
                 <p>Website: <a href="https://www.safepost.com.au" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">www.safepost.com.au</a></p>
               </div>
@@ -576,7 +576,6 @@ const PrivacyPolicy: React.FC = () => {
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
               <span className="text-[#2563EB]">Post</span>
-              <span className="text-gray-400 text-[15px] font-medium ml-0.5">™</span>
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

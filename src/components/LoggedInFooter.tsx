@@ -9,7 +9,6 @@ const LoggedInFooter = () => {
             <div className="text-[20px] font-extrabold tracking-tight leading-none">
               <span className="text-gray-900 dark:text-white">Safe</span>
               <span className="text-[#2563EB]">Post</span>
-              <span className="text-gray-400 text-[14px] font-medium ml-0.5">™</span>
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed mt-2 max-w-[200px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

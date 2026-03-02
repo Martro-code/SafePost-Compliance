@@ -1,5 +1,5 @@
 /**
- * SafePost™ — AHPRA FAQ Context Block
+ * SafePost — AHPRA FAQ Context Block
  * Source: Ahpra Advertising Hub Frequently Asked Questions
  *
  * PURPOSE:

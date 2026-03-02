@@ -244,7 +244,7 @@ const LegalDisclaimer: React.FC<{ prominent?: boolean }> = ({ prominent = false 
           <p className="text-[12px] font-semibold text-amber-800 mb-1">Legal Disclaimer</p>
           <p className="text-[12px] text-amber-700 leading-relaxed">
             These rewrite suggestions are AI-generated guidance only and do not constitute legal advice.
-            SafePost™ cannot guarantee that any rewritten content is fully compliant with the Health Practitioner Regulation National Law Act 2009
+            SafePost cannot guarantee that any rewritten content is fully compliant with the Health Practitioner Regulation National Law Act 2009
             or AHPRA guidelines. Registered health practitioners remain solely responsible for ensuring
             their advertising complies with all applicable laws. If in doubt, seek independent legal advice
             before publishing.
@@ -258,7 +258,7 @@ const LegalDisclaimer: React.FC<{ prominent?: boolean }> = ({ prominent = false 
     <div className="flex items-start gap-2 pt-2">
       <Shield className="w-3 h-3 text-gray-300 flex-shrink-0 mt-0.5" />
       <p className="text-[11px] text-gray-400 leading-relaxed">
-        SafePost™ provides AI-powered guidance only and does not constitute legal advice. Practitioners
+        SafePost provides AI-powered guidance only and does not constitute legal advice. Practitioners
         are solely responsible for ensuring their advertising complies with the Health Practitioner Regulation National Law Act 2009 and AHPRA
         guidelines.{' '}
         <a
@@ -393,7 +393,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
             </button>
             {showPdfTooltip && !isUltra && (
               <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-[11px] rounded-lg whitespace-nowrap shadow-lg z-50 pointer-events-none">
-                PDF export is available on SafePost™ Ultra
+                PDF export is available on SafePost Ultra
                 <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 w-2 h-2 bg-gray-900 rotate-45" />
               </div>
             )}
@@ -479,7 +479,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
             <p className="text-[14px] font-semibold">Want to fix these issues automatically?</p>
           </div>
           <p className="text-[13px] text-gray-400 max-w-sm mx-auto">
-            SafePost™ will generate 3 compliant rewrite options based on the issues identified above.
+            SafePost will generate 3 compliant rewrite options based on the issues identified above.
           </p>
           <button
             onClick={handleGenerateRewrites}

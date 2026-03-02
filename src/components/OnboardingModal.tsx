@@ -62,12 +62,11 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ firstName, planName, 
             <div className="flex items-center justify-center gap-0">
               <span className="text-[28px] font-extrabold tracking-tight text-gray-900">Safe</span>
               <span className="text-[28px] font-extrabold tracking-tight text-[#2563EB]">Post</span>
-              <span className="text-[14px] font-medium text-gray-400 ml-0.5 -mt-2">™</span>
             </div>
 
             <div className="space-y-2">
               <h2 className="text-2xl font-bold text-gray-900">
-                Welcome to SafePost™{firstName ? `, ${firstName}` : ''}!
+                Welcome to SafePost{firstName ? `, ${firstName}` : ''}!
               </h2>
               <p className="text-[14px] text-gray-500">
                 You're seconds away from your first AHPRA compliance check.
@@ -148,7 +147,7 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ firstName, planName, 
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50">
               <div className="w-2 h-2 rounded-full bg-blue-500" />
               <span className="text-[13px] font-semibold text-blue-700">
-                You're on SafePost™ {displayPlan}
+                You're on SafePost {displayPlan}
               </span>
             </div>
 

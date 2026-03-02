@@ -76,7 +76,7 @@ export function ContentInputForm({ onSubmit, error }: ContentInputFormProps) {
           Check your content for AHPRA compliance
         </h2>
         <p className="text-sm text-blue-700">
-          Paste your social media post, advertisement, or online content below. SafePost™ will
+          Paste your social media post, advertisement, or online content below. SafePost will
           analyse it against AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA requirements.
         </p>
       </div>
@@ -166,7 +166,7 @@ export function ContentInputForm({ onSubmit, error }: ContentInputFormProps) {
       {/* Disclaimer + submit */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
         <p className="text-xs text-gray-400 flex-1">
-          ⚖️ SafePost™ provides AI-assisted guidance only and does not constitute legal advice.
+          ⚖️ SafePost provides AI-assisted guidance only and does not constitute legal advice.
           Always consult a qualified compliance professional for final review.
         </p>
         <button

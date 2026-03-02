@@ -40,12 +40,12 @@ const PricingMedicalPractitioners: React.FC = () => {
 
   const faqs = [
     {
-      question: 'Do I need to be AHPRA-registered to use SafePost\u2122?',
-      answer: 'Yes, SafePost\u2122 is designed specifically for AHPRA-registered medical practitioners in Australia. Our compliance checks are based on Australian health practitioner advertising regulations and may not be applicable to practitioners in other jurisdictions.',
+      question: 'Do I need to be AHPRA-registered to use SafePost?',
+      answer: 'Yes, SafePost is designed specifically for AHPRA-registered medical practitioners in Australia. Our compliance checks are based on Australian health practitioner advertising regulations and may not be applicable to practitioners in other jurisdictions.',
     },
     {
-      question: 'Can SafePost\u2122 guarantee my content will be compliant?',
-      answer: 'SafePost\u2122 is a guidance tool that helps identify potential compliance issues based on AHPRA\u2019s advertising guidelines and social media guidance. While we provide comprehensive analysis and compliant alternatives, AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain ultimately responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009.',
+      question: 'Can SafePost guarantee my content will be compliant?',
+      answer: 'SafePost is a guidance tool that helps identify potential compliance issues based on AHPRA\u2019s advertising guidelines and social media guidance. While we provide comprehensive analysis and compliant alternatives, AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain ultimately responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009.',
     },
     {
       question: 'What happens if I exceed my monthly check limit?',
@@ -53,15 +53,15 @@ const PricingMedicalPractitioners: React.FC = () => {
     },
     {
       question: 'Can I analyse content that includes images or before/after photos?',
-      answer: 'Yes \u2014 SafePost\u2122 Professional, Pro+, and Ultra all include image and video content analysis, which is particularly important for cosmetic procedure advertising. SafePost\u2122 analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan supports text-based analysis only.',
+      answer: 'Yes \u2014 SafePost Professional, Pro+, and Ultra all include image and video content analysis, which is particularly important for cosmetic procedure advertising. SafePost analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan supports text-based analysis only.',
     },
     {
       question: 'How quickly can I get compliance results?',
-      answer: 'SafePost\u2122 provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA guideline references, and on paid plans you\u2019ll also receive AI-generated compliant alternatives you can use straight away.',
+      answer: 'SafePost provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA guideline references, and on paid plans you\u2019ll also receive AI-generated compliant alternatives you can use straight away.',
     },
     {
       question: 'Are prices in Australian dollars and do they include GST?',
-      answer: 'Yes \u2014 all SafePost\u2122 prices are in AUD and include GST.',
+      answer: 'Yes \u2014 all SafePost prices are in AUD and include GST.',
     },
   ];
 
@@ -282,7 +282,7 @@ const PricingMedicalPractitioners: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 md:p-10 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm flex flex-col">
               <div className="mb-6">
                 <h3 className="text-lg font-bold text-gray-900 mb-1">Starter</h3>
-                <p className="text-[14px] text-gray-500">Perfect for trying out SafePost&trade;</p>
+                <p className="text-[14px] text-gray-500">Perfect for trying out SafePost</p>
               </div>
               <div className="mb-8">
                 <span className="text-4xl md:text-5xl font-extrabold text-gray-900">Free</span>
@@ -442,7 +442,7 @@ const PricingMedicalPractitioners: React.FC = () => {
             Ready to stay compliant?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Start with 3 free compliance checks and see how SafePost&trade; can protect your practice
+            Start with 3 free compliance checks and see how SafePost can protect your practice
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -471,7 +471,6 @@ const PricingMedicalPractitioners: React.FC = () => {
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
               <span className="text-[#2563EB]">Post</span>
-              <span className="text-gray-400 text-[15px] font-medium ml-0.5">™</span>
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.

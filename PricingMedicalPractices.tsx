@@ -44,16 +44,16 @@ const PricingMedicalPractices: React.FC = () => {
       answer: 'The key differences are check volume, team size, and history access. Pro+ suits a single-practitioner practice (100 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
     },
     {
-      question: 'Can multiple staff members use the same SafePost\u2122 account?',
+      question: 'Can multiple staff members use the same SafePost account?',
       answer: 'Yes \u2014 the Pro+ plan includes access for up to 3 team members, while the Ultra plan supports up to 10 team members. Each team member gets their own login, and all checks appear in a shared compliance history. Team accounts are ideal for practices where a practice manager and multiple practitioners all need compliance checking access.',
     },
     {
       question: 'Do you offer compliance checks for website content and online advertising?',
-      answer: 'Yes \u2014 all paid plans include analysis of any online content including website copy, social media posts, paid advertising, and email marketing. SafePost\u2122 checks content against AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA advertising requirements where relevant.',
+      answer: 'Yes \u2014 all paid plans include analysis of any online content including website copy, social media posts, paid advertising, and email marketing. SafePost checks content against AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA advertising requirements where relevant.',
     },
     {
-      question: 'How does SafePost\u2122 handle compliance for cosmetic procedures?',
-      answer: 'SafePost\u2122 includes specialised analysis for cosmetic procedure advertising, which has particularly strict AHPRA requirements. We check for prohibited before/after photos, testimonial restrictions, outcome claims, practitioner title usage, cosmetic procedure terminology, and TGA obligations for therapeutic goods advertising.',
+      question: 'How does SafePost handle compliance for cosmetic procedures?',
+      answer: 'SafePost includes specialised analysis for cosmetic procedure advertising, which has particularly strict AHPRA requirements. We check for prohibited before/after photos, testimonial restrictions, outcome claims, practitioner title usage, cosmetic procedure terminology, and TGA obligations for therapeutic goods advertising.',
     },
     {
       question: 'Can I download a record of our compliance checks?',
@@ -61,7 +61,7 @@ const PricingMedicalPractices: React.FC = () => {
     },
     {
       question: 'Are prices in Australian dollars and do they include GST?',
-      answer: 'Yes \u2014 all SafePost\u2122 prices are in AUD and include GST.',
+      answer: 'Yes \u2014 all SafePost prices are in AUD and include GST.',
     },
   ];
 
@@ -465,7 +465,7 @@ const PricingMedicalPractices: React.FC = () => {
             Ready to stay compliant?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Get your practice set up with SafePost&trade; and keep your entire team compliant
+            Get your practice set up with SafePost and keep your entire team compliant
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -494,7 +494,6 @@ const PricingMedicalPractices: React.FC = () => {
             <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
               <span className="text-gray-900">Safe</span>
               <span className="text-[#2563EB]">Post</span>
-              <span className="text-gray-400 text-[15px] font-medium ml-0.5">™</span>
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
               Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.
