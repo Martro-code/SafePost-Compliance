@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Clock,
   CheckCircle2, XCircle, AlertTriangle, Loader2, Search,
@@ -7,7 +7,6 @@ import {
   ChevronLeft, X
 } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
-import { useAuth } from './useAuth';
 import { useComplianceChecker, SavedComplianceCheck, HISTORY_LIMITS } from './src/hooks/useComplianceChecker';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -166,7 +165,6 @@ const CheckRow: React.FC<{
 // ─── Main History Page ─────────────────────────────────────────────────────────
 const History: React.FC = () => {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
 
   const planName = sessionStorage.getItem('safepost_plan') || '';
   const checker = useComplianceChecker(planName);

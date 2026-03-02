@@ -99,7 +99,7 @@ const PrivacyPolicy: React.FC = () => {
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">1. Who We Are</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`SafePost\u2122 is an AI-powered compliance checking platform designed specifically for Australian medical practitioners and healthcare practices. Our platform helps users assess whether their social media posts and online advertising content comply with AHPRA advertising guidelines, the National Law, and TGA requirements.`}
+                {`SafePost\u2122 is an AI-powered compliance checking platform designed specifically for Australian medical practitioners and healthcare practices. Our platform helps users assess whether their social media posts and online advertising content comply with AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA requirements.`}
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
                 {`In this Privacy Policy, \u201CSafePost\u201D refers to the entity operating the SafePost\u2122 platform. If you have any questions about this Privacy Policy or our privacy practices, please contact us at privacy@safepost.com.au.`}
@@ -205,13 +205,13 @@ const PrivacyPolicy: React.FC = () => {
                 {`SafePost\u2122 uses artificial intelligence to analyse content submitted through the compliance checker. When you submit content for a compliance check:`}
               </p>
               <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">Your content is processed by our AI model and assessed against AHPRA guidelines, the National Law, and TGA requirements stored in our compliance database</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">Your content is processed by our AI model and assessed against AHPRA guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA requirements stored in our compliance database</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">The results of your compliance check are stored in our database and linked to your account to power the History feature</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Content submitted through the compliance checker may be used in de-identified form to improve the accuracy of our compliance models</li>
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 <strong className="text-gray-700">
-                  {`Important disclaimer: SafePost\u2122 is an AI-powered guidance tool and does not constitute legal or regulatory advice. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law.`}
+                  {`Important disclaimer: SafePost\u2122 is an AI-powered guidance tool and does not constitute legal or regulatory advice. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009.`}
                 </strong>
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed">
@@ -666,7 +666,7 @@ const PrivacyPolicy: React.FC = () => {
             <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
               Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
               AHPRA and the National Boards do not provide pre-approval for advertising.
-              Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law.
+              Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009.
             </p>
             <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>
           </div>

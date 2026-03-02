@@ -47,9 +47,14 @@ export function ComplianceHistory({
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);
-    await onDelete(id);
-    setDeletingId(null);
-    if (selectedCheck?.id === id) setSelectedCheck(null);
+    try {
+      await onDelete(id);
+      if (selectedCheck?.id === id) setSelectedCheck(null);
+    } catch (err) {
+      console.error('Failed to delete check:', err);
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   if (isLoading) {

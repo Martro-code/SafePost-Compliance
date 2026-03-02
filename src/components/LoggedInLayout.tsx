@@ -51,6 +51,8 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
     getUnreadCount(user.id).then(count => {
       setNotificationCount(count);
       sessionStorage.setItem('safepost_notification_count', String(count));
+    }).catch(err => {
+      console.error('Failed to fetch notification count:', err);
     });
   }, [user]);
 

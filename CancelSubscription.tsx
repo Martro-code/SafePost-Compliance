@@ -114,7 +114,7 @@ const CancelSubscription: React.FC = () => {
     if (selectedReason === 'Switching to a competitor') {
       return {
         heading: 'SafePost is built specifically for Australian practitioners',
-        body: 'Our compliance database is built on AHPRA guidelines, the National Law and TGA requirements — specific to Australian healthcare. No generic AI tool offers this level of Australian regulatory precision.',
+        body: 'Our compliance database is built on AHPRA guidelines, the Health Practitioner Regulation National Law Act 2009 and TGA requirements — specific to Australian healthcare. No generic AI tool offers this level of Australian regulatory precision.',
         buttonLabel: 'Keep My Subscription',
         onButtonClick: () => navigate('/dashboard'),
         showTextArea: false,

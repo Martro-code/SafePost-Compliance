@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
 import { getDisplayPlanName } from './src/utils/planUtils';
@@ -15,7 +15,7 @@ const Profile: React.FC = () => {
   const displayPlanName = getDisplayPlanName(planName);
 
   // Password visibility toggle
-  const [showPassword, setShowPassword] = useState(false);
+
 
   return (
     <LoggedInLayout>
@@ -129,14 +129,8 @@ const Profile: React.FC = () => {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-[14px] font-medium text-gray-900 dark:text-white">
-                {showPassword ? (sessionStorage.getItem('safepost_password') || '••••••••••••') : '••••••••••••'}
+                ••••••••••••
               </span>
-              <button
-                onClick={() => setShowPassword(!showPassword)}
-                className="p-1.5 text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-              </button>
             </div>
           </div>
         </div>

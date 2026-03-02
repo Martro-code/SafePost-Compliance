@@ -17,7 +17,7 @@
  *   const systemPrompt = `${YOUR_EXISTING_SYSTEM_PROMPT}\n\n${FAQ_CONTEXT}`;
  *
  * This content is sourced directly from the AHPRA Advertising Hub FAQ and
- * represents AHPRA's authoritative interpretation of the National Law.
+ * represents AHPRA's authoritative interpretation of the Health Practitioner Regulation National Law Act 2009.
  * It should be treated with the same weight as the guidelines themselves.
  */
 
@@ -43,7 +43,7 @@ A person or entity is the "advertiser" (and therefore responsible) if they:
 - Have the ability to modify or remove content published by an unrelated publisher.
 
 Key implication: If a practitioner engages a marketing agency to create advertising, 
-the PRACTITIONER is responsible for that content complying with the National Law. 
+the PRACTITIONER is responsible for that content complying with the Health Practitioner Regulation National Law Act 2009. 
 They must check all content produced by others on their behalf before it is published.
 
 A practitioner is NOT responsible for removing testimonials or content on websites 
@@ -57,11 +57,11 @@ The advertising requirements apply to ALL of a practitioner's advertising — no
 the portion relating to their regulated health service.
 
 Example: A physiotherapist who also practises as a naturopath and advertises both 
-services must comply with the National Law advertising requirements for ALL their 
+services must comply with the Health Practitioner Regulation National Law Act 2009 advertising requirements for ALL their 
 advertising — including advertising that is solely about their naturopathic services.
 
 When analysing content: if the person is a registered health practitioner, treat all 
-their advertising as subject to the National Law, even if the specific content 
+their advertising as subject to the Health Practitioner Regulation National Law Act 2009, even if the specific content 
 being reviewed relates to a non-regulated service they also offer.
 
 ---
@@ -99,7 +99,7 @@ This is a commonly misunderstood grey area. Apply this distinction carefully:
 
 PERMITTED: Publishing an award symbol, badge, or rating on your website 
 (e.g. "Winner: Best Clinic 2024" badge from a review platform) is NOT a testimonial 
-and does NOT breach the National Law — provided the badge itself does not 
+and does NOT breach the Health Practitioner Regulation National Law Act 2009 — provided the badge itself does not 
 republish the underlying patient reviews on which the award was based.
 
 NOT PERMITTED: If publishing the award symbol requires republishing or displaying 
@@ -176,7 +176,7 @@ impression.
 Whether a practitioner is responsible for content on third-party websites depends 
 on their level of control. Apply this two-part test:
 
-RESPONSIBLE (National Law applies) if EITHER:
+RESPONSIBLE (Health Practitioner Regulation National Law Act 2009 applies) if EITHER:
 (a) The practitioner authorised the content to be published there, OR
 (b) The practitioner has the ability to modify or remove the content 
     (e.g. they can delete a patient review left on their social media page, 
@@ -199,7 +199,7 @@ clinical services, even if you did not create them and cannot remove them.
 ### 9. BULK PURCHASE DISCOUNTS — PERMITTED WITH RISK
 
 Discounts to specific patient groups (e.g. pensioners, Health Care Card holders) 
-are permitted — there are no National Law restrictions on group discounts, provided 
+are permitted — there are no Health Practitioner Regulation National Law Act 2009 restrictions on group discounts, provided 
 terms and conditions are clearly stated.
 
 Bulk purchase discounts (e.g. pay for 5 sessions, get 1 free) are also not 
@@ -220,7 +220,7 @@ what is typically clinically indicated for the service.
 
 ### 10. "DR" TITLE — NON-MEDICAL PRACTITIONERS
 
-"Doctor" and "Dr" are NOT protected titles under the National Law. However:
+"Doctor" and "Dr" are NOT protected titles under the Health Practitioner Regulation National Law Act 2009. However:
 
 Non-medical practitioners using "Dr" in advertising (e.g. those holding a PhD 
 or doctorate) MUST make their actual registered profession clear to avoid 
@@ -239,7 +239,7 @@ registered medical practitioner when they are not.
 
 There is no ban on using online marketing products, platforms, or tools to 
 advertise health services. Practitioners may use any marketing technology 
-they wish — but the CONTENT of that advertising must comply with the National Law.
+they wish — but the CONTENT of that advertising must comply with the Health Practitioner Regulation National Law Act 2009.
 
 The medium does not affect the compliance obligation.
 
@@ -267,8 +267,8 @@ a potential breach even if the user states the content is in a private group.
 
 ### 13. SOCIAL MEDIA — ALL PLATFORMS ARE IN SCOPE OF S.133
 
-AHPRA's Social Media Policy (March 2014) explicitly confirms that s.133 of the 
-National Law and the Advertising Guidelines apply to ALL social media platforms 
+AHPRA's Social Media Policy (March 2014) explicitly confirms that s.133 of the
+Health Practitioner Regulation National Law Act 2009 and the Advertising Guidelines apply to ALL social media platforms 
 and online channels, including but not limited to:
 
 Facebook, LinkedIn, Twitter/X, Instagram, TikTok, YouTube, Pinterest, Snapchat, 
@@ -277,8 +277,8 @@ forums, message boards, and any other online or mobile tool used to share
 opinions, information, experiences, images, or video/audio content.
 
 There is no platform exemption. A practitioner cannot argue that content posted 
-on a newer or less formal platform (e.g. TikTok, Threads) falls outside the scope 
-of the National Law.
+on a newer or less formal platform (e.g. TikTok, Threads) falls outside the scope
+of the Health Practitioner Regulation National Law Act 2009.
 
 ---
 
@@ -372,7 +372,7 @@ promote, or endorse products on their personal or professional social media acco
 (influencer/sponsorship arrangements) face compliance obligations under TWO 
 separate regulatory frameworks:
 
-(1) AHPRA National Law advertising obligations — if the sponsored content 
+(1) AHPRA Health Practitioner Regulation National Law Act 2009 advertising obligations — if the sponsored content 
 relates to a health product or service, all advertising rules apply including 
 the prohibition on misleading claims and the requirement for evidence-based content.
 

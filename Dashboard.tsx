@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Sparkles, Rocket, ChevronRight, Lock, Upload, Download, X } from 'lucide-react';
+import { ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Rocket, ChevronRight, Lock, Upload, Download, X } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import OnboardingModal from './src/components/OnboardingModal';
 import { useAuth } from './useAuth';

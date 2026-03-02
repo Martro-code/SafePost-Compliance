@@ -34,9 +34,9 @@ const CookieBanner: React.FC = () => {
               Privacy Policy
             </Link>
             {' '}and{' '}
-            <a href="/cookie-policy" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+            <Link to="/cookie-policy" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
               Cookie Policy
-            </a>.
+            </Link>.
           </p>
         </div>
 
