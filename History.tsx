@@ -83,10 +83,6 @@ const CheckRow: React.FC<{
 }> = ({ check, onView, onDelete }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const cfg = getStatusConfig(check.overall_status);
-  const issueCount = check.result_json?.issues?.length ?? 0;
-  const criticalCount = check.result_json?.issues?.filter(
-    (i: any) => i.severity?.toLowerCase() === 'critical'
-  ).length ?? 0;
 
   return (
     <div
@@ -103,19 +99,6 @@ const CheckRow: React.FC<{
         <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold whitespace-nowrap flex-shrink-0 ${cfg.badge}`}>
           {cfg.label}
         </span>
-
-        {/* Issue count */}
-        {issueCount > 0 && (
-          <span className="text-[11px] text-gray-400 whitespace-nowrap flex-shrink-0">
-            {criticalCount > 0 && (
-              <span className="text-red-500 font-medium">{criticalCount} critical</span>
-            )}
-            {criticalCount > 0 && issueCount > criticalCount && ' · '}
-            {issueCount > criticalCount && (
-              <span>{issueCount - criticalCount} warning{issueCount - criticalCount !== 1 ? 's' : ''}</span>
-            )}
-          </span>
-        )}
 
         {/* Relative timestamp with absolute-date tooltip */}
         <span className="relative group/ts text-[11px] text-gray-400 flex items-center gap-1 flex-shrink-0">
