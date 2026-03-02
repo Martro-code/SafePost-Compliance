@@ -4,9 +4,9 @@ import { ArrowLeft, CreditCard, Info, CheckCircle } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 
 const plans: Record<string, { name: string; monthlyPrice: number; yearlyPrice: number }> = {
-  professional: { name: 'SafePost\u2122 Professional', monthlyPrice: 20, yearlyPrice: 200 },
-  proplus: { name: 'SafePost\u2122 Pro+', monthlyPrice: 49, yearlyPrice: 490 },
-  ultra: { name: 'SafePost\u2122 Ultra', monthlyPrice: 149, yearlyPrice: 1490 },
+  professional: { name: 'SafePost Professional', monthlyPrice: 20, yearlyPrice: 200 },
+  proplus: { name: 'SafePost Pro+', monthlyPrice: 49, yearlyPrice: 490 },
+  ultra: { name: 'SafePost Ultra', monthlyPrice: 149, yearlyPrice: 1490 },
 };
 
 const UpgradeConfirmation: React.FC = () => {

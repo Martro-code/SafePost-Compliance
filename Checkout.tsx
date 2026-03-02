@@ -13,7 +13,7 @@ const planData: Record<string, {
   features: string[];
 }> = {
   professional: {
-    name: 'SafePost\u2122 Professional',
+    name: 'SafePost Professional',
     subtitle: 'For practitioners who post regularly',
     monthlyPrice: 20,
     yearlyPrice: 200,
@@ -28,7 +28,7 @@ const planData: Record<string, {
     ],
   },
   proplus: {
-    name: 'SafePost\u2122 Pro+',
+    name: 'SafePost Pro+',
     subtitle: 'Best for single-practitioner practices',
     monthlyPrice: 49,
     yearlyPrice: 490,
@@ -43,7 +43,7 @@ const planData: Record<string, {
     ],
   },
   ultra: {
-    name: 'SafePost\u2122 Ultra',
+    name: 'SafePost Ultra',
     subtitle: 'Best for multi-practitioner practices',
     monthlyPrice: 149,
     yearlyPrice: 1490,
