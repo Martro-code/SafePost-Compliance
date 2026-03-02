@@ -13,7 +13,7 @@ const planData: Record<string, {
   features: string[];
 }> = {
   professional: {
-    name: 'SafePost Professional',
+    name: 'SafePost\u2122 Professional',
     subtitle: 'For practitioners who post regularly',
     monthlyPrice: 20,
     yearlyPrice: 200,
@@ -28,7 +28,7 @@ const planData: Record<string, {
     ],
   },
   proplus: {
-    name: 'SafePost Pro+',
+    name: 'SafePost\u2122 Pro+',
     subtitle: 'Best for single-practitioner practices',
     monthlyPrice: 49,
     yearlyPrice: 490,
@@ -43,7 +43,7 @@ const planData: Record<string, {
     ],
   },
   ultra: {
-    name: 'SafePost Ultra',
+    name: 'SafePost\u2122 Ultra',
     subtitle: 'Best for multi-practitioner practices',
     monthlyPrice: 149,
     yearlyPrice: 1490,
@@ -336,9 +336,9 @@ const Checkout: React.FC = () => {
                   />
                   <span className="text-[13px] text-gray-600 leading-relaxed">
                     I agree to the{' '}
-                    <a href="#" onClick={(e) => e.preventDefault()} className="text-blue-600 hover:text-blue-700 underline">Terms of Use</a>
+                    <Link to="/terms-of-use" className="text-blue-600 hover:text-blue-700 underline">Terms of Use</Link>
                     {' '}and{' '}
-                    <a href="#" onClick={(e) => e.preventDefault()} className="text-blue-600 hover:text-blue-700 underline">Privacy Policy</a>
+                    <Link to="/privacy-policy" className="text-blue-600 hover:text-blue-700 underline">Privacy Policy</Link>
                   </span>
                 </label>
               </div>
