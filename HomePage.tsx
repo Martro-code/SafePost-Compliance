@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import FAQSection from './components/FAQSection';
+import PublicFooter from './components/PublicFooter';
 
 const socialIcons = [
   {
@@ -512,101 +513,7 @@ const HomePage: React.FC = () => {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-[#f7f7f4] border-t border-black/[0.06] pt-14 pb-10">
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Brand Zone */}
-          <div className="flex flex-col items-start mb-10 pb-10 border-b border-black/[0.06]">
-            <div className="text-[22px] font-extrabold tracking-tight leading-none mb-3">
-              <span className="text-gray-900">Safe</span>
-              <span className="text-[#2563EB]">Post</span>™
-            </div>
-            <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
-              Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.
-            </p>
-          </div>
-
-          {/* Footer Columns */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
-            {/* Features */}
-            <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Features</h4>
-              <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/features')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Features</button></li>
-                <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Pricing</button></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Demo</a></li>
-              </ul>
-            </div>
-
-            {/* Pricing */}
-            <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Pricing</h4>
-              <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Practitioners</button></li>
-                <li><button onClick={() => navigate('/pricing/medical-practices')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Practices</button></li>
-              </ul>
-            </div>
-
-            {/* Company */}
-            <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
-              <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About Us</button></li>
-                <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Resources</h4>
-              <ul className="space-y-2.5">
-                <li><a href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Advertising Hub</a></li>
-                <li><a href="https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Code of Conduct</a></li>
-                <li><a href="https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media" target="_blank" rel="noopener noreferrer" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">TGA Guidelines</a></li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Legal</h4>
-              <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/terms-of-use')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Terms of Use</button></li>
-                <li><button onClick={() => navigate('/privacy-policy')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Privacy Policy</button></li>
-                <li><button onClick={() => navigate('/cookie-policy')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Cookie Policy</button></li>
-              </ul>
-            </div>
-
-            {/* Connect */}
-            <div>
-              <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Connect</h4>
-              <ul className="space-y-2.5">
-                <li><button onClick={() => navigate('/contact')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Contact Us</button></li>
-              </ul>
-              <div className="flex items-center gap-4 mt-4">
-                {socialIcons.map((icon) => (
-                  <div
-                    key={icon.label}
-                    className="text-gray-400 cursor-not-allowed"
-                    title="Coming soon"
-                  >
-                    {icon.svg}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Disclaimer + Copyright */}
-          <div className="mt-14 pt-6 border-t border-black/[0.06]">
-            <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
-              Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
-              AHPRA and the National Boards do not provide pre-approval for advertising.
-              Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009.
-            </p>
-            <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>
-          </div>
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 };
