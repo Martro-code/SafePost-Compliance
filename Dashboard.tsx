@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Rocket, ChevronRight, Lock, Upload, Download, X } from 'lucide-react';
+import { ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Rocket, ChevronRight, Lock, Upload, Download, X, FileUp } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import OnboardingModal from './src/components/OnboardingModal';
 import { useAuth } from './useAuth';
@@ -9,6 +9,7 @@ import { supabase } from './src/services/supabaseClient';
 import { ComplianceResults } from './src/components/ComplianceResults';
 import { generateCompliantRewrites } from './services/geminiService';
 import { getDisplayPlanName } from './src/utils/planUtils';
+import { extractTextFromFile } from './src/utils/fileExtraction';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -35,6 +36,13 @@ const Dashboard: React.FC = () => {
   const [content, setContent] = useState('');
   const [attachedFile, setAttachedFile] = useState<File | null>(null);
   const [view, setView] = useState<'input' | 'loading' | 'results'>('input');
+
+  // Document upload state (hybrid file upload)
+  const [documentFile, setDocumentFile] = useState<File | null>(null);
+  const [isExtractingText, setIsExtractingText] = useState(false);
+  const [extractionError, setExtractionError] = useState<string | null>(null);
+  const documentInputRef = useRef<HTMLInputElement>(null);
+  const autoCheckRef = useRef(false);
 
   // Bulk upload state
   const [inputMode, setInputMode] = useState<'single' | 'bulk'>('single');
@@ -114,9 +122,19 @@ const Dashboard: React.FC = () => {
     setView('results');
   };
 
+  // Auto-trigger compliance check after file text extraction populates the textarea
+  useEffect(() => {
+    if (autoCheckRef.current && content.trim()) {
+      autoCheckRef.current = false;
+      handleCheckCompliance();
+    }
+  }, [content]);
+
   const handleNewCheck = () => {
     setContent('');
     setAttachedFile(null);
+    setDocumentFile(null);
+    setExtractionError(null);
     setView('input');
     checker.resetChecker();
   };
@@ -124,6 +142,31 @@ const Dashboard: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setAttachedFile(e.target.files[0]);
+      setDocumentFile(null); // mutual exclusivity
+    }
+  };
+
+  // Document upload: extract text from .txt/.pdf/.docx → populate textarea → auto-check
+  const handleDocumentUpload = async (file: File) => {
+    setDocumentFile(file);
+    setAttachedFile(null); // mutual exclusivity
+    setIsExtractingText(true);
+    setExtractionError(null);
+    try {
+      const text = await extractTextFromFile(file);
+      autoCheckRef.current = true;
+      setContent(text);
+    } catch (err) {
+      console.error('Failed to extract text from file:', err);
+      setExtractionError('Failed to extract text from the uploaded file. Please try a different file.');
+    } finally {
+      setIsExtractingText(false);
+    }
+  };
+
+  const handleDocumentFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      handleDocumentUpload(e.target.files[0]);
     }
   };
 
@@ -230,7 +273,21 @@ const Dashboard: React.FC = () => {
                   className="w-full min-h-[200px] px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-y dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
 
-                {/* Attached file indicator */}
+                {/* Document file indicator */}
+                {documentFile && (
+                  <div className="flex items-center gap-2 text-[13px] text-gray-500 dark:text-gray-400">
+                    <FileUp className="w-3.5 h-3.5" />
+                    <span className="truncate">{documentFile.name}</span>
+                    <button
+                      onClick={() => { setDocumentFile(null); setContent(''); setExtractionError(null); }}
+                      className="text-gray-400 hover:text-gray-600 ml-1"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
+
+                {/* Attached image indicator */}
                 {attachedFile && (
                   <div className="flex items-center gap-2 text-[13px] text-gray-500 dark:text-gray-400">
                     <Paperclip className="w-3.5 h-3.5" />
@@ -241,8 +298,38 @@ const Dashboard: React.FC = () => {
                   </div>
                 )}
 
-                {/* Attach image — paid plans only */}
-                {hasPaidPlan && (
+                {/* Extraction error */}
+                {extractionError && (
+                  <p className="text-[12px] text-red-500">{extractionError}</p>
+                )}
+
+                {/* Upload document — hidden when image is attached */}
+                {!attachedFile && !documentFile && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => documentInputRef.current?.click()}
+                      disabled={isExtractingText}
+                      className="flex items-center gap-2 text-[13px] text-gray-500 hover:text-gray-700 transition-colors dark:text-gray-400 dark:hover:text-gray-300 disabled:opacity-50"
+                    >
+                      {isExtractingText ? (
+                        <><Loader2 className="w-4 h-4 animate-spin" />Extracting text...</>
+                      ) : (
+                        <><FileUp className="w-4 h-4" />Upload document (.txt, .pdf, .docx)</>
+                      )}
+                    </button>
+                    <input
+                      ref={documentInputRef}
+                      type="file"
+                      accept=".txt,.pdf,.docx"
+                      onChange={handleDocumentFileChange}
+                      className="hidden"
+                    />
+                  </>
+                )}
+
+                {/* Attach image — paid plans only, hidden when document is attached */}
+                {hasPaidPlan && !documentFile && !attachedFile && (
                   <>
                     <button
                       type="button"
@@ -308,7 +395,7 @@ const Dashboard: React.FC = () => {
                     e.preventDefault();
                     e.stopPropagation();
                     const file = e.dataTransfer.files[0];
-                    if (file && (file.name.endsWith('.csv') || file.name.endsWith('.txt'))) {
+                    if (file && (file.name.endsWith('.txt') || file.name.endsWith('.pdf') || file.name.endsWith('.docx'))) {
                       setBulkFile(file);
                     }
                   }}
@@ -319,13 +406,13 @@ const Dashboard: React.FC = () => {
                       {bulkFile ? bulkFile.name : 'Drop your file here, or click to browse'}
                     </p>
                     <p className="text-[12px] text-gray-400 mt-1">
-                      Accepts .csv and .txt files
+                      Accepts .txt, .pdf, and .docx files
                     </p>
                   </div>
                   <input
                     id="bulk-file-input"
                     type="file"
-                    accept=".csv,.txt"
+                    accept=".txt,.pdf,.docx"
                     className="hidden"
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
@@ -335,7 +422,7 @@ const Dashboard: React.FC = () => {
                   />
                 </div>
                 <p className="text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed">
-                  Upload a CSV or text file containing multiple posts — one per line. Each will be checked individually.
+                  Upload a text, PDF, or Word document containing multiple posts — one per line. Each will be checked individually.
                 </p>
                 <button
                   onClick={(e) => { e.preventDefault(); }}
