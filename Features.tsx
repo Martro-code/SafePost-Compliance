@@ -273,6 +273,57 @@ const Features: React.FC = () => {
         </div>
       </section>
 
+      {/* What is Social Media Section */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-12 text-center">
+            What is social media?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Left column — definition */}
+            <div>
+              <p className="text-[15px] text-gray-600 leading-relaxed">
+                Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, to advertise or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media.
+              </p>
+              <p className="mt-4 text-[12px] text-gray-400 leading-relaxed">
+                * Not an exhaustive list — adapted from:{' '}
+                <a
+                  href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4103576/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 underline hover:text-gray-500"
+                >
+                  Social Media and Health Care Professionals: Benefits, Risks, and Best Practices
+                </a>
+              </p>
+            </div>
+
+            {/* Right column — categorised list */}
+            <div className="space-y-3">
+              {[
+                { category: 'Social networking', examples: 'Facebook, Twitter, WeChat, Weibo, WhatsApp' },
+                { category: 'Professional networking', examples: 'LinkedIn' },
+                { category: 'Discussion forums', examples: 'Reddit, Whirlpool' },
+                { category: 'Media sharing', examples: 'YouTube, Flickr, Instagram' },
+                { category: 'Content production', examples: 'Tumblr, Blogger, Twitter' },
+                { category: 'Knowledge aggregation', examples: 'Wikipedia' },
+                { category: 'Virtual reality & gaming', examples: 'Second Life' },
+                { category: 'Booking sites & apps', examples: 'HealthEngine, Whitecoat, Podium' },
+              ].map((item, index) => (
+                <div key={index} className="flex items-baseline gap-3">
+                  <span className="inline-block px-2.5 py-0.5 text-[11px] font-bold text-gray-800 bg-gray-200 rounded-full whitespace-nowrap leading-snug">
+                    {item.category}
+                  </span>
+                  <span className="text-[14px] text-gray-500">
+                    {item.examples}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
