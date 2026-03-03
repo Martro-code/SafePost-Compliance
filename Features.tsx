@@ -299,7 +299,7 @@ const Features: React.FC = () => {
             </div>
 
             {/* Right column — categorised list */}
-            <div className="space-y-3">
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 space-y-3">
               {[
                 { category: 'Social networking', examples: 'Facebook, Twitter, WeChat, Weibo, WhatsApp' },
                 { category: 'Professional networking', examples: 'LinkedIn' },
