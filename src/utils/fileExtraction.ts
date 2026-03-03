@@ -1,8 +1,7 @@
 /**
- * Extracts plain text from .txt, .pdf, and .docx files in the browser.
+ * Extracts plain text from .txt and .docx files in the browser.
  *
  * - .txt  → native File.text() API
- * - .pdf  → unpdf (Vite-compatible, bundles its own PDF.js build)
  * - .docx → mammoth (dynamic import)
  */
 
@@ -14,10 +13,9 @@ export async function extractTextFromFile(file: File): Promise<string> {
   }
 
   if (ext === 'pdf') {
-    const { extractText } = await import('unpdf');
-    const arrayBuffer = await file.arrayBuffer();
-    const result = await extractText(new Uint8Array(arrayBuffer), { mergePages: true });
-    return (result.text as string).trim();
+    throw new Error(
+      'PDF files are not supported for direct upload. Please copy and paste your content into the text area, or upload a .txt or .docx file instead.',
+    );
   }
 
   if (ext === 'docx') {
