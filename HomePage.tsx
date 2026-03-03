@@ -344,41 +344,51 @@ const HomePage: React.FC = () => {
       <FAQSection
         title="Activities that may trigger AHPRA investigation"
         subtitle="Social media and online advertising activities most likely to attract AHPRA scrutiny"
-        items={[
+        groups={[
           {
-            question: 'Patient testimonials and reviews',
-            answer:
-              'Sharing or endorsing patient testimonials about clinical outcomes is prohibited under Section 133 of the Health Practitioner Regulation National Law Act 2009. This includes reposting Google reviews, featuring patient success stories, and posts that reference treatment results \u2014 even when the patient has given consent.',
+            label: 'Advertising breaches',
+            items: [
+              {
+                question: 'Patient testimonials and reviews',
+                answer:
+                  'Sharing or endorsing patient testimonials about clinical outcomes is prohibited under Section 133 of the Health Practitioner Regulation National Law Act 2009. This includes reposting Google reviews, featuring patient success stories, and posts that reference treatment results \u2014 even when the patient has given consent.',
+              },
+              {
+                question: 'Before and after images',
+                answer:
+                  'Publishing before and after photos for cosmetic, surgical, or aesthetic procedures is explicitly prohibited under AHPRA\u2019s advertising guidelines. This applies to all platforms including Instagram, Facebook, and your practice website \u2014 regardless of whether images are anonymised or accompanied by disclaimers.',
+              },
+              {
+                question: 'Unsubstantiated claims and superlatives',
+                answer:
+                  'Describing yourself or your practice as \u2018the best\u2019, \u2018leading\u2019, \u2018top-rated\u2019, or \u2018most experienced\u2019 without objective evidence constitutes misleading advertising. Claims about treatment outcomes, success rates, or comparative superiority that cannot be independently verified are a common trigger for AHPRA complaints.',
+              },
+              {
+                question: 'Product and treatment endorsements',
+                answer:
+                  'Endorsing specific pharmaceutical products, medical devices, or cosmetic treatments on social media \u2014 including paid partnerships, gifted product posts, and affiliate arrangements \u2014 can breach both AHPRA advertising guidelines and TGA advertising requirements. Practitioners are held to a higher standard than general influencers.',
+              },
+            ],
           },
           {
-            question: 'Before and after images',
-            answer:
-              'Publishing before and after photos for cosmetic, surgical, or aesthetic procedures is explicitly prohibited under AHPRA\u2019s advertising guidelines. This applies to all platforms including Instagram, Facebook, and your practice website \u2014 regardless of whether images are anonymised or accompanied by disclaimers.',
-          },
-          {
-            question: 'Unsubstantiated claims and superlatives',
-            answer:
-              'Describing yourself or your practice as \u2018the best\u2019, \u2018leading\u2019, \u2018top-rated\u2019, or \u2018most experienced\u2019 without objective evidence constitutes misleading advertising. Claims about treatment outcomes, success rates, or comparative superiority that cannot be independently verified are a common trigger for AHPRA complaints.',
-          },
-          {
-            question: 'Product and treatment endorsements',
-            answer:
-              'Endorsing specific pharmaceutical products, medical devices, or cosmetic treatments on social media \u2014 including paid partnerships, gifted product posts, and affiliate arrangements \u2014 can breach both AHPRA advertising guidelines and TGA advertising requirements. Practitioners are held to a higher standard than general influencers.',
-          },
-          {
-            question: 'Social media conduct and professionalism',
-            answer:
-              "Your professional obligations don\u2019t switch off when you\u2019re online. AHPRA and the National Boards treat social media conduct \u2014 including posts made in a personal capacity \u2014 as subject to the same standards as any other professional behaviour. Publicly venting about colleagues, patients, or your workplace, using language that is disrespectful or unprofessional, or engaging in personal relationships with patients through social platforms can all result in a formal notification being made against you. Even if a post is not directly linked to your role as a registered practitioner, anyone can check your registration status through the public register and make the connection.",
-          },
-          {
-            question: 'Patient confidentiality on social media',
-            answer:
-              "Sharing patient information \u2014 even unintentionally \u2014 through social media is one of the most common and easily overlooked compliance risks for practitioners. A photo taken at work may have identifying information visible in the background. A comment made in response to a public post could inadvertently reveal details about a patient\u2019s condition or treatment. Individual pieces of information that seem harmless in isolation can, when combined, be enough to identify a patient. Breaching patient confidentiality through social media can trigger both an AHPRA notification and a complaint under privacy legislation.",
-          },
-          {
-            question: 'Public health misinformation',
-            answer:
-              "As a registered health practitioner, your views carry authority \u2014 and AHPRA expects you to use that authority responsibly. Posting, sharing, endorsing, or liking content that contradicts established public health guidance or is not supported by the best available scientific evidence can breach your professional obligations under the relevant Code of Conduct. This includes content relating to vaccinations, unproven treatments, and other areas where misinformation can cause genuine public harm. The fact that a post is made on a personal account does not provide protection if it brings the profession into disrepute.",
+            label: 'Social media conduct breaches',
+            items: [
+              {
+                question: 'Social media conduct and professionalism',
+                answer:
+                  'Your professional obligations apply online as much as they do in the clinic. Posts made in a personal capacity \u2014 including complaints about colleagues, patients, or your workplace \u2014 can result in a formal AHPRA notification. Even accounts with no explicit link to your profession can be traced through the public register.',
+              },
+              {
+                question: 'Patient confidentiality on social media',
+                answer:
+                  'Inadvertently disclosing patient information through social media is one of the most common compliance risks practitioners overlook. A photo, a comment, or even a combination of seemingly harmless details can be enough to identify a patient \u2014 triggering both an AHPRA notification and a privacy complaint.',
+              },
+              {
+                question: 'Public health misinformation',
+                answer:
+                  'As a registered practitioner, your views carry authority. Posting, sharing, or endorsing content that contradicts established public health guidance or the best available scientific evidence can breach your Code of Conduct obligations \u2014 even when posted on a personal account.',
+              },
+            ],
           },
         ]}
       />
