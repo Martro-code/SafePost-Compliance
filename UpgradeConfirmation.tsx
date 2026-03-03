@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Info, CheckCircle } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
+import { supabase } from './src/services/supabaseClient';
 
 const plans: Record<string, { name: string; monthlyPrice: number; yearlyPrice: number }> = {
   professional: { name: 'SafePost Professional', monthlyPrice: 20, yearlyPrice: 200 },
@@ -25,9 +26,12 @@ const UpgradeConfirmation: React.FC = () => {
 
   const [upgraded, setUpgraded] = useState(false);
 
-  const handleConfirmUpgrade = () => {
+  const handleConfirmUpgrade = async () => {
     if (planKey) {
       sessionStorage.setItem('safepost_plan', planKey);
+      sessionStorage.setItem('safepost_billing', billing);
+      // Persist plan to Supabase user_metadata so it survives logout/login
+      await supabase.auth.updateUser({ data: { plan: planKey, billing } });
     }
     setUpgraded(true);
   };

@@ -247,19 +247,36 @@ export function useComplianceChecker(planName: string = 'free') {
     initialLoad();
   }, [historyLimit]);
 
+  // ── Guard ref to prevent concurrent checks from bypassing the limit ──
+  const checkInProgressRef = useRef(false);
+
   // ── Run a compliance check ─────────────────────────────────────────────
   const runCheck = useCallback(async (content: string, contentType: string = 'social_media_post', platform: string = 'general') => {
-    if (isAtLimit) {
-      setError('You have reached your monthly check limit. Please upgrade your plan to continue.');
-      return;
-    }
-
-    setStep('analyzing');
-    setError(null);
-    setResult(null);
-    setLastContent(content);
+    // Prevent concurrent checks from bypassing the limit
+    if (checkInProgressRef.current) return;
+    checkInProgressRef.current = true;
 
     try {
+      // Always verify the limit against the actual database count, not stale state
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setError('You must be logged in to run a compliance check.');
+        return;
+      }
+
+      const freshCount = await fetchMonthlyCheckCount(user.id);
+      setChecksUsedThisMonth(freshCount);
+
+      if (planLimit !== Infinity && freshCount >= planLimit) {
+        setError('You have reached your monthly check limit. Please upgrade your plan to continue.');
+        return;
+      }
+
+      setStep('analyzing');
+      setError(null);
+      setResult(null);
+      setLastContent(content);
+
       const analysisResult = await analyzePost(content);
 
       const normalisedResult = {
@@ -284,11 +301,11 @@ export function useComplianceChecker(planName: string = 'free') {
 
       // Optimistically update usage counter and history so the sidebar
       // reflects the new check immediately, before the DB write completes
-      setChecksUsedThisMonth(prev => prev + 1);
+      setChecksUsedThisMonth(freshCount + 1);
       setHistory(prev => [{
         id: `pending-${Date.now()}`,
         created_at: new Date().toISOString(),
-        user_id: '',
+        user_id: user.id,
         content_text: content,
         content_type: contentType,
         platform: platform,
@@ -306,9 +323,6 @@ export function useComplianceChecker(planName: string = 'free') {
       // Save to Supabase and refresh data in the background (non-blocking)
       (async () => {
         try {
-          const { data: { user } } = await supabase.auth.getUser();
-          if (!user) return;
-
           const insertResult = await supabase
             .from('compliance_checks')
             .insert({
@@ -331,14 +345,14 @@ export function useComplianceChecker(planName: string = 'free') {
           }
 
           // Refetch to sync with actual DB state and update cache
-          const [freshCount, freshHistory] = await Promise.all([
+          const [syncedCount, syncedHistory] = await Promise.all([
             fetchMonthlyCheckCount(user.id),
             fetchUserComplianceHistory(user.id, historyLimit),
           ]);
-          setChecksUsedThisMonth(freshCount);
-          setHistory(freshHistory);
-          setCache(CACHE_KEY_USAGE, freshCount);
-          setCache(CACHE_KEY_HISTORY, freshHistory);
+          setChecksUsedThisMonth(syncedCount);
+          setHistory(syncedHistory);
+          setCache(CACHE_KEY_USAGE, syncedCount);
+          setCache(CACHE_KEY_HISTORY, syncedHistory);
         } catch (err) {
           console.error('Background save failed:', err);
         }
@@ -347,8 +361,10 @@ export function useComplianceChecker(planName: string = 'free') {
       const message = err instanceof Error ? err.message : 'An unexpected error occurred';
       setError(message);
       setStep('error');
+    } finally {
+      checkInProgressRef.current = false;
     }
-  }, [isAtLimit, historyLimit]);
+  }, [planLimit, historyLimit]);
 
   // ── Load history manually (for History page) ───────────────────────────
   const loadHistory = useCallback(async () => {
