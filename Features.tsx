@@ -238,7 +238,7 @@ const Features: React.FC = () => {
 
       {/* Hero Image */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-5xl mx-auto px-6 mb-16 md:mb-20">
+        <div className="max-w-2xl mx-auto px-6 mb-16 md:mb-20">
           <img
             src={heroImage}
             alt="SafePost Features"
