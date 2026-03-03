@@ -1,15 +1,27 @@
 /**
- * Extracts plain text from .txt and .docx files in the browser.
+ * Extracts plain text from uploaded files.
  *
- * - .txt  → native File.text() API (no external dependency)
- * - .docx → mammoth (dynamic import, confirmed installed)
+ * - .txt  → native browser FileReader API
+ * - .docx → mammoth library
+ * - .pdf  → not supported
  */
 
 export async function extractTextFromFile(file: File): Promise<string> {
   const ext = file.name.split('.').pop()?.toLowerCase();
 
+  if (ext === 'pdf') {
+    throw new Error(
+      'PDF files are not currently supported. Please upload a .txt or .docx file.',
+    );
+  }
+
   if (ext === 'txt') {
-    return file.text();
+    return new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error('Failed to read the text file.'));
+      reader.readAsText(file);
+    });
   }
 
   if (ext === 'docx') {
