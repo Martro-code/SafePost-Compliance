@@ -340,9 +340,9 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Activities That Trigger Ahpra Investigation */}
+      {/* Activities That May Trigger Ahpra Investigation */}
       <FAQSection
-        title="Activities that trigger AHPRA investigation"
+        title="Activities that may trigger AHPRA investigation"
         subtitle="Social media and online advertising activities most likely to attract AHPRA scrutiny"
         items={[
           {
@@ -364,6 +364,21 @@ const HomePage: React.FC = () => {
             question: 'Product and treatment endorsements',
             answer:
               'Endorsing specific pharmaceutical products, medical devices, or cosmetic treatments on social media \u2014 including paid partnerships, gifted product posts, and affiliate arrangements \u2014 can breach both AHPRA advertising guidelines and TGA advertising requirements. Practitioners are held to a higher standard than general influencers.',
+          },
+          {
+            question: 'Social media conduct and professionalism',
+            answer:
+              "Your professional obligations don\u2019t switch off when you\u2019re online. AHPRA and the National Boards treat social media conduct \u2014 including posts made in a personal capacity \u2014 as subject to the same standards as any other professional behaviour. Publicly venting about colleagues, patients, or your workplace, using language that is disrespectful or unprofessional, or engaging in personal relationships with patients through social platforms can all result in a formal notification being made against you. Even if a post is not directly linked to your role as a registered practitioner, anyone can check your registration status through the public register and make the connection.",
+          },
+          {
+            question: 'Patient confidentiality on social media',
+            answer:
+              "Sharing patient information \u2014 even unintentionally \u2014 through social media is one of the most common and easily overlooked compliance risks for practitioners. A photo taken at work may have identifying information visible in the background. A comment made in response to a public post could inadvertently reveal details about a patient\u2019s condition or treatment. Individual pieces of information that seem harmless in isolation can, when combined, be enough to identify a patient. Breaching patient confidentiality through social media can trigger both an AHPRA notification and a complaint under privacy legislation.",
+          },
+          {
+            question: 'Public health misinformation',
+            answer:
+              "As a registered health practitioner, your views carry authority \u2014 and AHPRA expects you to use that authority responsibly. Posting, sharing, endorsing, or liking content that contradicts established public health guidance or is not supported by the best available scientific evidence can breach your professional obligations under the relevant Code of Conduct. This includes content relating to vaccinations, unproven treatments, and other areas where misinformation can cause genuine public harm. The fact that a post is made on a personal account does not provide protection if it brings the profession into disrepute.",
           },
         ]}
       />
