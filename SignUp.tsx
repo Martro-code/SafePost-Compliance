@@ -82,6 +82,8 @@ const SignUp: React.FC = () => {
             suburb: suburb.trim(),
             state,
             postcode: postcode.trim(),
+            plan: plan || 'starter',
+            billing: billing || 'monthly',
           },
         },
       });
