@@ -1,8 +1,8 @@
 /**
  * Extracts plain text from .txt, .pdf, and .docx files in the browser.
  *
- * - .txt  → FileReader text
- * - .pdf  → pdfjs-dist (dynamic import, worker loaded from CDN)
+ * - .txt  → native File.text() API
+ * - .pdf  → unpdf (Vite-compatible, bundles its own PDF.js build)
  * - .docx → mammoth (dynamic import)
  */
 
@@ -14,22 +14,10 @@ export async function extractTextFromFile(file: File): Promise<string> {
   }
 
   if (ext === 'pdf') {
-    const pdfjsLib = await import('pdfjs-dist');
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-
+    const { extractText } = await import('unpdf');
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-
-    const pages: string[] = [];
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-      const pageText = textContent.items
-        .map((item: any) => item.str)
-        .join(' ');
-      pages.push(pageText);
-    }
-    return pages.join('\n').trim();
+    const result = await extractText(new Uint8Array(arrayBuffer), { mergePages: true });
+    return (result.text as string).trim();
   }
 
   if (ext === 'docx') {
