@@ -315,13 +315,13 @@ const Dashboard: React.FC = () => {
                       {isExtractingText ? (
                         <><Loader2 className="w-4 h-4 animate-spin" />Extracting text...</>
                       ) : (
-                        <><FileUp className="w-4 h-4" />Upload document (.txt, .pdf, .docx)</>
+                        <><FileUp className="w-4 h-4" />Upload document (.txt, .docx)</>
                       )}
                     </button>
                     <input
                       ref={documentInputRef}
                       type="file"
-                      accept=".txt,.pdf,.docx"
+                      accept=".txt,.docx"
                       onChange={handleDocumentFileChange}
                       className="hidden"
                     />
@@ -395,7 +395,7 @@ const Dashboard: React.FC = () => {
                     e.preventDefault();
                     e.stopPropagation();
                     const file = e.dataTransfer.files[0];
-                    if (file && (file.name.endsWith('.txt') || file.name.endsWith('.pdf') || file.name.endsWith('.docx'))) {
+                    if (file && (file.name.endsWith('.txt') || file.name.endsWith('.docx'))) {
                       setBulkFile(file);
                     }
                   }}
@@ -406,13 +406,13 @@ const Dashboard: React.FC = () => {
                       {bulkFile ? bulkFile.name : 'Drop your file here, or click to browse'}
                     </p>
                     <p className="text-[12px] text-gray-400 mt-1">
-                      Accepts .txt, .pdf, and .docx files
+                      Accepts .txt and .docx files
                     </p>
                   </div>
                   <input
                     id="bulk-file-input"
                     type="file"
-                    accept=".txt,.pdf,.docx"
+                    accept=".txt,.docx"
                     className="hidden"
                     onChange={(e) => {
                       if (e.target.files && e.target.files[0]) {
@@ -422,7 +422,7 @@ const Dashboard: React.FC = () => {
                   />
                 </div>
                 <p className="text-[13px] text-gray-500 dark:text-gray-400 leading-relaxed">
-                  Upload a text, PDF, or Word document containing multiple posts — one per line. Each will be checked individually.
+                  Upload a text or Word document containing multiple posts — one per line. Each will be checked individually.
                 </p>
                 <button
                   onClick={(e) => { e.preventDefault(); }}
