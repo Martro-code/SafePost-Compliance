@@ -42,7 +42,6 @@ const Dashboard: React.FC = () => {
   const [isExtractingText, setIsExtractingText] = useState(false);
   const [extractionError, setExtractionError] = useState<string | null>(null);
   const documentInputRef = useRef<HTMLInputElement>(null);
-  const autoCheckRef = useRef(false);
 
   // Bulk upload state
   const [inputMode, setInputMode] = useState<'single' | 'bulk'>('single');
@@ -122,14 +121,6 @@ const Dashboard: React.FC = () => {
     setView('results');
   };
 
-  // Auto-trigger compliance check after file text extraction populates the textarea
-  useEffect(() => {
-    if (autoCheckRef.current && content.trim()) {
-      autoCheckRef.current = false;
-      handleCheckCompliance();
-    }
-  }, [content]);
-
   const handleNewCheck = () => {
     setContent('');
     setAttachedFile(null);
@@ -146,7 +137,7 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // Document upload: extract text from .txt/.docx → populate textarea → auto-check
+  // Document upload: extract text from .txt/.docx → populate textarea for review
   const handleDocumentUpload = async (file: File) => {
     setDocumentFile(file);
     setAttachedFile(null); // mutual exclusivity
@@ -154,7 +145,6 @@ const Dashboard: React.FC = () => {
     setExtractionError(null);
     try {
       const text = await extractTextFromFile(file);
-      autoCheckRef.current = true;
       setContent(text);
     } catch (err) {
       console.error('Failed to extract text from file:', err);
