@@ -283,7 +283,7 @@ const Features: React.FC = () => {
             {/* Left column — definition */}
             <div>
               <p className="text-[15px] text-gray-600 leading-relaxed">
-                Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, to advertise or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media.
+                Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, to advertise or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media.<sup>*</sup>
               </p>
               <p className="mt-4 text-[12px] text-gray-400 leading-relaxed">
                 * Not an exhaustive list — adapted from:{' '}
