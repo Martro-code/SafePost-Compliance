@@ -146,7 +146,7 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // Document upload: extract text from .txt/.pdf/.docx → populate textarea → auto-check
+  // Document upload: extract text from .txt/.docx → populate textarea → auto-check
   const handleDocumentUpload = async (file: File) => {
     setDocumentFile(file);
     setAttachedFile(null); // mutual exclusivity
