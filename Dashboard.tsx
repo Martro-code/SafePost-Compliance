@@ -5,6 +5,7 @@ import LoggedInLayout from './src/components/LoggedInLayout';
 import OnboardingModal from './src/components/OnboardingModal';
 import { useAuth } from './useAuth';
 import { useComplianceChecker } from './src/hooks/useComplianceChecker';
+import { useAccount } from './src/context/AccountContext';
 import { supabase } from './src/services/supabaseClient';
 import { ComplianceResults } from './src/components/ComplianceResults';
 import { generateCompliantRewrites } from './services/geminiService';
@@ -16,13 +17,20 @@ const Dashboard: React.FC = () => {
   const [searchParams] = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { firstName, signOut } = useAuth();
+  const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount } = useAccount();
 
-  // Read plan info from URL params or sessionStorage
-  const rawPlan = searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
+  // Use account-level plan, fall back to URL/sessionStorage for initial render
+  const rawPlan = accountPlan || searchParams.get('plan') || sessionStorage.getItem('safepost_plan') || '';
   const planName = rawPlan || 'starter';
   const billingPeriod = searchParams.get('billing') || sessionStorage.getItem('safepost_billing') || '';
 
-  const checker = useComplianceChecker(planName);
+  const checker = useComplianceChecker({
+    planName,
+    accountId,
+    checksUsed,
+    checksLimit,
+    onCheckComplete: refreshAccount,
+  });
 
   const hasPaidPlan = planName && !['free', 'starter'].includes(planName.toLowerCase());
 

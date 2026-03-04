@@ -4,14 +4,18 @@ import { ChevronRight, ArrowLeft, Bell, ShieldCheck, Moon, Mail, Info, Lock, Che
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
 import { useTheme } from './src/context/ThemeContext';
+import { useAccount } from './src/context/AccountContext';
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { isDarkMode, toggleDarkMode } = useTheme();
+  const { role, plan: accountPlan } = useAccount();
+
+  const isOwner = role === 'owner';
 
   // Plan check
-  const planName = sessionStorage.getItem('safepost_plan') || '';
+  const planName = accountPlan || sessionStorage.getItem('safepost_plan') || '';
   const isUltra = planName.toLowerCase() === 'ultra';
 
   // 2FA status
@@ -435,8 +439,8 @@ const Settings: React.FC = () => {
             </div>
           </button>
 
-          {/* Setting 5 — Team members (Ultra plan only) */}
-          {isUltra && (
+          {/* Setting 5 — Team members (Ultra plan + owner only) */}
+          {isUltra && isOwner && (
             <button
               onClick={() => navigate('/settings/team')}
               className="w-full bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 hover:border-black/[0.12] dark:hover:border-gray-600 transition-[border-color] duration-200"

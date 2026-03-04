@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useComplianceChecker, SavedComplianceCheck, HISTORY_LIMITS } from './src/hooks/useComplianceChecker';
+import { useAccount } from './src/context/AccountContext';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const statusConfig: Record<string, {
@@ -148,9 +149,16 @@ const CheckRow: React.FC<{
 // ─── Main History Page ─────────────────────────────────────────────────────────
 const History: React.FC = () => {
   const navigate = useNavigate();
+  const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount } = useAccount();
 
-  const planName = sessionStorage.getItem('safepost_plan') || '';
-  const checker = useComplianceChecker(planName);
+  const planName = accountPlan || sessionStorage.getItem('safepost_plan') || '';
+  const checker = useComplianceChecker({
+    planName,
+    accountId,
+    checksUsed,
+    checksLimit,
+    onCheckComplete: refreshAccount,
+  });
 
   const isUltra = planName.toLowerCase() === 'ultra';
   const historyLimit = HISTORY_LIMITS[planName.toLowerCase()] ?? HISTORY_LIMITS.free;

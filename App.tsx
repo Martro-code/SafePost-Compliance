@@ -72,18 +72,18 @@ const App: React.FC = () => {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
-          <Route path="/billing" element={<ProtectedRoute><BillingInformation /></ProtectedRoute>} />
+          <Route path="/billing" element={<ProtectedRoute requireOwner><BillingInformation /></ProtectedRoute>} />
           <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-          <Route path="/settings/team" element={<ProtectedRoute><TeamMembers /></ProtectedRoute>} />
+          <Route path="/settings/team" element={<ProtectedRoute requireOwner><TeamMembers /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-          <Route path="/change-plan" element={<ProtectedRoute><ChangePlan /></ProtectedRoute>} />
-          <Route path="/update-card" element={<ProtectedRoute><UpdateCard /></ProtectedRoute>} />
-          <Route path="/update-billing-email" element={<ProtectedRoute><UpdateBillingEmail /></ProtectedRoute>} />
+          <Route path="/change-plan" element={<ProtectedRoute requireOwner><ChangePlan /></ProtectedRoute>} />
+          <Route path="/update-card" element={<ProtectedRoute requireOwner><UpdateCard /></ProtectedRoute>} />
+          <Route path="/update-billing-email" element={<ProtectedRoute requireOwner><UpdateBillingEmail /></ProtectedRoute>} />
           <Route path="/update-personal-details" element={<ProtectedRoute><UpdatePersonalDetails /></ProtectedRoute>} />
           <Route path="/update-contact-details" element={<ProtectedRoute><UpdateContactDetails /></ProtectedRoute>} />
-          <Route path="/upgrade-confirmation" element={<ProtectedRoute><UpgradeConfirmation /></ProtectedRoute>} />
-          <Route path="/cancel-subscription" element={<ProtectedRoute><CancelSubscription /></ProtectedRoute>} />
+          <Route path="/upgrade-confirmation" element={<ProtectedRoute requireOwner><UpgradeConfirmation /></ProtectedRoute>} />
+          <Route path="/cancel-subscription" element={<ProtectedRoute requireOwner><CancelSubscription /></ProtectedRoute>} />
           <Route path="/two-factor-auth" element={<ProtectedRoute><TwoFactorAuth /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><NotificationsInbox /></ProtectedRoute>} />
           <Route path="/notification-preferences" element={<ProtectedRoute><NotificationPreferences /></ProtectedRoute>} />
