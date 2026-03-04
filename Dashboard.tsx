@@ -125,6 +125,11 @@ const Dashboard: React.FC = () => {
 
   const handleCheckCompliance = async () => {
     if (!content.trim()) return;
+    console.log('[handleCheckCompliance] submitting content to runCheck:', {
+      length: content.length,
+      preview: content.slice(0, 300),
+      fromDocumentUpload: !!documentFile,
+    });
     setView('loading');
     await checker.runCheck(content);
     setView('results');
@@ -155,6 +160,23 @@ const Dashboard: React.FC = () => {
     setExtractionError(null);
     try {
       const text = await extractTextFromFile(file);
+
+      console.log('[handleDocumentUpload] extracted text result:', {
+        fileName: file.name,
+        length: text.length,
+        preview: text.slice(0, 300),
+        isEmpty: !text.trim(),
+        charCodes: text.slice(0, 50).split('').map(c => c.charCodeAt(0)),
+      });
+
+      if (!text.trim() || text.trim().length < 10) {
+        setExtractionError(
+          "We couldn't extract text from your file. Please check the file is not empty or try copying the content into the text area directly.",
+        );
+        setDocumentFile(null);
+        return;
+      }
+
       setContent(text);
     } catch (err) {
       console.error('Failed to extract text from file:', err);
