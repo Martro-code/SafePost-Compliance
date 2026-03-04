@@ -41,6 +41,7 @@ const Dashboard: React.FC = () => {
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const [isExtractingText, setIsExtractingText] = useState(false);
   const [extractionError, setExtractionError] = useState<string | null>(null);
+  const [pdfError, setPdfError] = useState(false);
   const documentInputRef = useRef<HTMLInputElement>(null);
 
   // Bulk upload state
@@ -126,6 +127,7 @@ const Dashboard: React.FC = () => {
     setAttachedFile(null);
     setDocumentFile(null);
     setExtractionError(null);
+    setPdfError(false);
     setView('input');
     checker.resetChecker();
   };
@@ -156,7 +158,14 @@ const Dashboard: React.FC = () => {
 
   const handleDocumentFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      handleDocumentUpload(e.target.files[0]);
+      const file = e.target.files[0];
+      if (file.name.toLowerCase().endsWith('.pdf')) {
+        setPdfError(true);
+        e.target.value = '';
+        return;
+      }
+      setPdfError(false);
+      handleDocumentUpload(file);
     }
   };
 
@@ -311,10 +320,24 @@ const Dashboard: React.FC = () => {
                     <input
                       ref={documentInputRef}
                       type="file"
-                      accept=".txt,.docx"
+                      accept=".txt,.docx,.pdf"
                       onChange={handleDocumentFileChange}
                       className="hidden"
                     />
+                    {pdfError && (
+                      <div className="flex items-start gap-2 px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg dark:bg-red-950 dark:border-red-800">
+                        <XCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
+                        <p className="text-[12px] text-red-600 dark:text-red-400 flex-1">
+                          PDF files are not currently supported. Please save your content as a .txt or .docx file, or paste it directly into the text area.
+                        </p>
+                        <button
+                          onClick={() => setPdfError(false)}
+                          className="text-red-400 hover:text-red-600 dark:text-red-500 dark:hover:text-red-300 flex-shrink-0"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    )}
                   </>
                 )}
 
