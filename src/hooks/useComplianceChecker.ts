@@ -277,7 +277,27 @@ export function useComplianceChecker(planName: string = 'free') {
       setResult(null);
       setLastContent(content);
 
-      const analysisResult = await analyzePost(content);
+      // Guard: reject empty or very short content that would produce meaningless results
+      const trimmed = content.trim();
+      if (!trimmed || trimmed.length < 10) {
+        setError("We couldn't extract text from your file. Please check the file is not empty or try copying the content into the text area directly.");
+        setStep('error');
+        return;
+      }
+
+      // Guard: truncate excessively long content to stay within API token limits.
+      // ~100 000 chars ≈ 25 000 tokens, well within the model's 200K context window
+      // while leaving headroom for the system prompt and response.
+      const MAX_CONTENT_LENGTH = 100_000;
+      let contentToAnalyze = trimmed;
+      if (trimmed.length > MAX_CONTENT_LENGTH) {
+        console.warn(
+          `[useComplianceChecker] Content length (${trimmed.length} chars) exceeds limit. Truncating to ${MAX_CONTENT_LENGTH} chars.`,
+        );
+        contentToAnalyze = trimmed.slice(0, MAX_CONTENT_LENGTH);
+      }
+
+      const analysisResult = await analyzePost(contentToAnalyze);
 
       const normalisedResult = {
         ...analysisResult,
