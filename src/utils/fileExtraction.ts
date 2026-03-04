@@ -28,7 +28,13 @@ export async function extractTextFromFile(file: File): Promise<string> {
     const mammoth = await import('mammoth');
     const arrayBuffer = await file.arrayBuffer();
     const result = await mammoth.extractRawText({ arrayBuffer });
-    return result.value.trim();
+    const extracted = result.value.trim();
+    console.log('[fileExtraction] mammoth extracted text:', {
+      length: extracted.length,
+      preview: extracted.slice(0, 200),
+      isEmpty: extracted.length === 0,
+    });
+    return extracted;
   }
 
   throw new Error(

@@ -76,6 +76,12 @@ You must return a valid JSON object in this exact structure with no markdown, no
 ${FAQ_CONTEXT}`;
 
 export const analyzePost = async (postContent: string, image?: { base64: string, mimeType: string }): Promise<AnalysisResult> => {
+  console.log('[analyzePost] received content:', {
+    length: postContent.length,
+    preview: postContent.slice(0, 200),
+    isEmpty: !postContent.trim(),
+  });
+
   try {
     const content: any[] = [
       { 
