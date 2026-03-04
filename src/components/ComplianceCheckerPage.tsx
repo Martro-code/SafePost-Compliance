@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useComplianceChecker } from '../hooks/useComplianceChecker';
+import { useAccount } from '../context/AccountContext';
 import { ContentInputForm } from './ComplianceChecker/ContentInputForm';
 import { AnalysisProgress } from './ComplianceChecker/AnalysisProgress';
 import { ComplianceReport } from './ComplianceChecker/ComplianceReport';
@@ -10,7 +11,14 @@ type ActiveTab = 'checker' | 'history';
 
 export function ComplianceCheckerPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('checker');
-  const checker = useComplianceChecker();
+  const { accountId, plan, checksUsed, checksLimit, refreshAccount } = useAccount();
+  const checker = useComplianceChecker({
+    planName: plan,
+    accountId,
+    checksUsed,
+    checksLimit,
+    onCheckComplete: refreshAccount,
+  });
 
   const showForm = checker.step === 'idle' || checker.step === 'error';
   const showProgress = checker.step === 'analyzing';

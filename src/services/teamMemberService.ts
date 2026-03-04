@@ -41,11 +41,12 @@ export async function getTeamMemberCount(ownerId: string): Promise<number> {
 
 /**
  * Invite a new team member by email.
- * Returns the created team member record, or throws if limit reached.
+ * Creates records in both team_members (invitation flow) and account_members (identity model).
  */
 export async function inviteTeamMember(
   ownerId: string,
-  email: string
+  email: string,
+  accountId?: string | null
 ): Promise<TeamMember> {
   // Enforce the 10-member limit
   const currentCount = await getTeamMemberCount(ownerId);
@@ -70,6 +71,23 @@ export async function inviteTeamMember(
       throw new Error('This email has already been invited to your team.');
     }
     throw error;
+  }
+
+  // Also create a pending account_members row for the two-tier identity model
+  if (accountId) {
+    await supabase
+      .from('account_members')
+      .insert({
+        account_id: accountId,
+        invited_email: email.toLowerCase().trim(),
+        role: 'member',
+        status: 'pending',
+      })
+      .then(({ error: amError }) => {
+        if (amError && amError.code !== '23505') {
+          console.error('Failed to create account_members row:', amError);
+        }
+      });
   }
 
   // Send invitation email via Supabase magic link
@@ -122,14 +140,31 @@ export async function resendInvitation(member: TeamMember): Promise<void> {
 
 /**
  * Remove a team member (cancel invitation or revoke access).
+ * Also removes the corresponding account_members row.
  */
 export async function removeTeamMember(memberId: string): Promise<void> {
+  // Get the member info before deleting
+  const { data: member } = await supabase
+    .from('team_members')
+    .select('invited_email')
+    .eq('id', memberId)
+    .single();
+
   const { error } = await supabase
     .from('team_members')
     .delete()
     .eq('id', memberId);
 
   if (error) throw error;
+
+  // Also remove from account_members
+  if (member?.invited_email) {
+    await supabase
+      .from('account_members')
+      .delete()
+      .eq('invited_email', member.invited_email)
+      .eq('role', 'member');
+  }
 }
 
 /**

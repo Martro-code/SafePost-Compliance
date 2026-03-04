@@ -41,7 +41,7 @@ function invalidateCache(): void {
   sessionStorage.removeItem(CACHE_KEY_HISTORY);
 }
 
-// Plan check limits — update these when pricing tiers are finalised
+// Plan check limits — used as fallback when account context is not available
 export const PLAN_LIMITS: Record<string, number> = {
   free: 3,
   starter: 3,
@@ -69,6 +69,7 @@ export interface SavedComplianceCheck {
   id: string;
   created_at: string;
   user_id: string;
+  account_id?: string;
   content_text: string;
   content_type: string;
   platform: string;
@@ -86,6 +87,18 @@ export interface UsageInfo {
   resetDate: string; // Human-readable e.g. "1 Mar 2026"
 }
 
+async function fetchAccountComplianceHistory(accountId: string, limit: number = 20): Promise<SavedComplianceCheck[]> {
+  const { data, error } = await supabase
+    .from('compliance_checks')
+    .select('*')
+    .eq('account_id', accountId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) throw new Error(error.message);
+  return data ?? [];
+}
+
+// Fallback: fetch by user_id for accounts not yet migrated
 async function fetchUserComplianceHistory(userId: string, limit: number = 20): Promise<SavedComplianceCheck[]> {
   const { data, error } = await supabase
     .from('compliance_checks')
@@ -95,24 +108,6 @@ async function fetchUserComplianceHistory(userId: string, limit: number = 20): P
     .limit(limit);
   if (error) throw new Error(error.message);
   return data ?? [];
-}
-
-async function fetchMonthlyCheckCount(userId: string): Promise<number> {
-  // Count checks from the start of the current calendar month
-  const now = new Date();
-  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-
-  const { count, error } = await supabase
-    .from('compliance_checks')
-    .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId)
-    .gte('created_at', startOfMonth);
-
-  if (error) {
-    console.error('Failed to fetch monthly check count:', error);
-    return 0;
-  }
-  return count ?? 0;
 }
 
 async function deleteComplianceCheck(id: string): Promise<void> {
@@ -133,11 +128,6 @@ function getResetDateString(): string {
   });
 }
 
-function getPlanLimit(planName: string): number {
-  const key = planName?.toLowerCase() ?? 'free';
-  return PLAN_LIMITS[key] ?? PLAN_LIMITS.free;
-}
-
 // ─── Status normalisation ─────────────────────────────────────────────────────
 const STATUS_MAP: Record<string, string> = {
   COMPLIANT: 'compliant',
@@ -154,7 +144,28 @@ function normaliseStatus(status: string): string {
 // ─── Hook ─────────────────────────────────────────────────────────────────────
 export type CheckerStep = 'idle' | 'analyzing' | 'complete' | 'error';
 
-export function useComplianceChecker(planName: string = 'free') {
+interface UseComplianceCheckerOptions {
+  planName?: string;
+  accountId?: string | null;
+  checksUsed?: number;
+  checksLimit?: number | null;
+  onCheckComplete?: () => Promise<void>;
+}
+
+export function useComplianceChecker(planNameOrOptions: string | UseComplianceCheckerOptions = 'free') {
+  // Support both legacy string arg and new options object
+  const options: UseComplianceCheckerOptions = typeof planNameOrOptions === 'string'
+    ? { planName: planNameOrOptions }
+    : planNameOrOptions;
+
+  const {
+    planName = 'free',
+    accountId = null,
+    checksUsed: accountChecksUsed,
+    checksLimit: accountChecksLimit,
+    onCheckComplete,
+  } = options;
+
   // ── Core checker state ──────────────────────────────────────────────────
   const [step, setStep] = useState<CheckerStep>('idle');
   const [result, setResult] = useState<AnalysisResult | null>(null);
@@ -172,13 +183,19 @@ export function useComplianceChecker(planName: string = 'free') {
   const [checksUsedThisMonth, setChecksUsedThisMonth] = useState(0);
   const [isLoadingUsage, setIsLoadingUsage] = useState(false);
 
-  const planLimit = getPlanLimit(planName);
+  // Determine limits: prefer account-level values, fall back to plan-based
+  const hasAccountLimits = accountChecksLimit !== undefined && accountChecksUsed !== undefined;
+  const effectiveChecksUsed = hasAccountLimits ? accountChecksUsed! : checksUsedThisMonth;
+  const planLimit = hasAccountLimits
+    ? (accountChecksLimit === null ? Infinity : accountChecksLimit!)
+    : (PLAN_LIMITS[planName?.toLowerCase() ?? 'free'] ?? PLAN_LIMITS.free);
+
   const historyLimit = getHistoryLimit(planName);
-  const checksRemaining = Math.max(0, planLimit - checksUsedThisMonth);
-  const isAtLimit = planLimit !== Infinity && checksUsedThisMonth >= planLimit;
+  const checksRemaining = Math.max(0, planLimit - effectiveChecksUsed);
+  const isAtLimit = planLimit !== Infinity && effectiveChecksUsed >= planLimit;
 
   const usage: UsageInfo = {
-    checksUsedThisMonth,
+    checksUsedThisMonth: effectiveChecksUsed,
     checksRemaining,
     planLimit,
     isAtLimit,
@@ -206,15 +223,13 @@ export function useComplianceChecker(planName: string = 'free') {
     }
   }, []);
 
-  // ── Load usage count and history on mount (with sessionStorage cache) ──
+  // ── Load history on mount (with sessionStorage cache) ──
   useEffect(() => {
     const initialLoad = async () => {
       // Check for valid cached data first
-      const cachedUsage = getCache<number>(CACHE_KEY_USAGE);
       const cachedHistory = getCache<SavedComplianceCheck[]>(CACHE_KEY_HISTORY);
 
-      if (cachedUsage !== null && cachedHistory !== null) {
-        setChecksUsedThisMonth(cachedUsage);
+      if (cachedHistory !== null) {
         setHistory(cachedHistory);
         return;
       }
@@ -223,29 +238,24 @@ export function useComplianceChecker(planName: string = 'free') {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
-        // Load usage count and history in parallel
-        setIsLoadingUsage(true);
         setIsLoadingHistory(true);
 
-        const [count, checks] = await Promise.all([
-          fetchMonthlyCheckCount(user.id),
-          fetchUserComplianceHistory(user.id, historyLimit),
-        ]);
+        // Fetch history by account_id if available, otherwise by user_id
+        const checks = accountId
+          ? await fetchAccountComplianceHistory(accountId, historyLimit)
+          : await fetchUserComplianceHistory(user.id, historyLimit);
 
-        setChecksUsedThisMonth(count);
         setHistory(checks);
-        setCache(CACHE_KEY_USAGE, count);
         setCache(CACHE_KEY_HISTORY, checks);
       } catch (err) {
         console.error('Failed to load initial data:', err);
       } finally {
-        setIsLoadingUsage(false);
         setIsLoadingHistory(false);
       }
     };
 
     initialLoad();
-  }, [historyLimit]);
+  }, [historyLimit, accountId]);
 
   // ── Guard ref to prevent concurrent checks from bypassing the limit ──
   const checkInProgressRef = useRef(false);
@@ -257,17 +267,14 @@ export function useComplianceChecker(planName: string = 'free') {
     checkInProgressRef.current = true;
 
     try {
-      // Always verify the limit against the actual database count, not stale state
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         setError('You must be logged in to run a compliance check.');
         return;
       }
 
-      const freshCount = await fetchMonthlyCheckCount(user.id);
-      setChecksUsedThisMonth(freshCount);
-
-      if (planLimit !== Infinity && freshCount >= planLimit) {
+      // Check limit using account-level data
+      if (planLimit !== Infinity && effectiveChecksUsed >= planLimit) {
         setError('You have reached your monthly check limit. Please upgrade your plan to continue.');
         return;
       }
@@ -286,8 +293,6 @@ export function useComplianceChecker(planName: string = 'free') {
       }
 
       // Guard: truncate excessively long content to stay within API token limits.
-      // ~100 000 chars ≈ 25 000 tokens, well within the model's 200K context window
-      // while leaving headroom for the system prompt and response.
       const MAX_CONTENT_LENGTH = 100_000;
       let contentToAnalyze = trimmed;
       if (trimmed.length > MAX_CONTENT_LENGTH) {
@@ -319,13 +324,13 @@ export function useComplianceChecker(planName: string = 'free') {
             - (analysisResult.issues.filter((i: any) => i.severity === 'Warning').length * 10))
         : 70;
 
-      // Optimistically update usage counter and history so the sidebar
-      // reflects the new check immediately, before the DB write completes
-      setChecksUsedThisMonth(freshCount + 1);
+      // Optimistically update usage counter and history
+      setChecksUsedThisMonth(prev => prev + 1);
       setHistory(prev => [{
         id: `pending-${Date.now()}`,
         created_at: new Date().toISOString(),
         user_id: user.id,
+        account_id: accountId ?? undefined,
         content_text: content,
         content_type: contentType,
         platform: platform,
@@ -343,17 +348,24 @@ export function useComplianceChecker(planName: string = 'free') {
       // Save to Supabase and refresh data in the background (non-blocking)
       (async () => {
         try {
+          const insertPayload: Record<string, any> = {
+            user_id: user.id,
+            content_text: content,
+            content_type: contentType,
+            platform: platform,
+            overall_status: normaliseStatus(analysisResult.status),
+            compliance_score: complianceScore,
+            result_json: analysisResult,
+          };
+
+          // Include account_id if available
+          if (accountId) {
+            insertPayload.account_id = accountId;
+          }
+
           const insertResult = await supabase
             .from('compliance_checks')
-            .insert({
-              user_id: user.id,
-              content_text: content,
-              content_type: contentType,
-              platform: platform,
-              overall_status: normaliseStatus(analysisResult.status),
-              compliance_score: complianceScore,
-              result_json: analysisResult,
-            })
+            .insert(insertPayload)
             .select()
             .single();
 
@@ -364,14 +376,30 @@ export function useComplianceChecker(planName: string = 'free') {
             sessionStorage.setItem(SESSION_KEY_CHECK_ID, insertResult.data.id);
           }
 
-          // Refetch to sync with actual DB state and update cache
-          const [syncedCount, syncedHistory] = await Promise.all([
-            fetchMonthlyCheckCount(user.id),
-            fetchUserComplianceHistory(user.id, historyLimit),
-          ]);
-          setChecksUsedThisMonth(syncedCount);
+          // Increment account-level usage counter
+          if (accountId) {
+            await supabase.rpc('increment_checks_used', { p_account_id: accountId }).then(({ error: rpcError }) => {
+              if (rpcError) {
+                // Fallback: direct update if RPC doesn't exist
+                supabase
+                  .from('accounts')
+                  .update({ checks_used: effectiveChecksUsed + 1 })
+                  .eq('id', accountId)
+                  .then(() => {});
+              }
+            });
+          }
+
+          // Refresh account context
+          if (onCheckComplete) {
+            await onCheckComplete();
+          }
+
+          // Refetch history to sync with actual DB state
+          const syncedHistory = accountId
+            ? await fetchAccountComplianceHistory(accountId, historyLimit)
+            : await fetchUserComplianceHistory(user.id, historyLimit);
           setHistory(syncedHistory);
-          setCache(CACHE_KEY_USAGE, syncedCount);
           setCache(CACHE_KEY_HISTORY, syncedHistory);
         } catch (err) {
           console.error('Background save failed:', err);
@@ -384,7 +412,7 @@ export function useComplianceChecker(planName: string = 'free') {
     } finally {
       checkInProgressRef.current = false;
     }
-  }, [planLimit, historyLimit]);
+  }, [planLimit, historyLimit, accountId, effectiveChecksUsed, onCheckComplete]);
 
   // ── Load history manually (for History page) ───────────────────────────
   const loadHistory = useCallback(async () => {
@@ -392,7 +420,9 @@ export function useComplianceChecker(planName: string = 'free') {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const checks = await fetchUserComplianceHistory(user.id, historyLimit);
+        const checks = accountId
+          ? await fetchAccountComplianceHistory(accountId, historyLimit)
+          : await fetchUserComplianceHistory(user.id, historyLimit);
         setHistory(checks);
         setCache(CACHE_KEY_HISTORY, checks);
       }
@@ -401,11 +431,10 @@ export function useComplianceChecker(planName: string = 'free') {
     } finally {
       setIsLoadingHistory(false);
     }
-  }, [historyLimit]);
+  }, [historyLimit, accountId]);
 
   // ── Delete a check ─────────────────────────────────────────────────────
   const deleteCheck = useCallback(async (id: string) => {
-    // Check if the deleted item is from the current month before decrementing
     const deletedCheck = history.find(c => c.id === id);
     await deleteComplianceCheck(id);
     setHistory(prev => prev.filter(c => c.id !== id));
@@ -417,11 +446,21 @@ export function useComplianceChecker(planName: string = 'free') {
         && checkDate.getMonth() === now.getMonth();
       if (isCurrentMonth) {
         setChecksUsedThisMonth(prev => Math.max(0, prev - 1));
+
+        // Decrement account-level counter
+        if (accountId) {
+          supabase
+            .from('accounts')
+            .update({ checks_used: Math.max(0, effectiveChecksUsed - 1) })
+            .eq('id', accountId)
+            .then(() => {});
+          if (onCheckComplete) onCheckComplete();
+        }
       }
     }
 
     invalidateCache();
-  }, [history]);
+  }, [history, accountId, effectiveChecksUsed, onCheckComplete]);
 
   // ── Save rewrite options to sessionStorage + Supabase ─────────────────
   const saveRewriteOptions = useCallback(async (rewrites: any[]) => {

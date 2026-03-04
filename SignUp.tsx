@@ -95,7 +95,9 @@ const SignUp: React.FC = () => {
         return;
       }
 
-      if (plan) sessionStorage.setItem('safepost_plan', plan);
+      // Store plan/billing so AccountContext auto-provisions on first login
+      const selectedPlan = plan || 'starter';
+      sessionStorage.setItem('safepost_plan', selectedPlan);
       if (billing) sessionStorage.setItem('safepost_billing', billing);
 
       const params = new URLSearchParams();

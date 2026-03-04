@@ -86,8 +86,36 @@ const AcceptInvitation: React.FC = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Unable to retrieve your account.');
 
-      // Accept the invitation
+      // Accept the invitation (updates team_members)
       await acceptInvitation(token, user.id);
+
+      // Link user to the account via account_members
+      // Find the account_members row for this invited email and activate it
+      const { data: pendingMember } = await supabase
+        .from('account_members')
+        .select('id, account_id')
+        .eq('invited_email', invitedEmail.toLowerCase())
+        .eq('status', 'pending')
+        .limit(1)
+        .single();
+
+      if (pendingMember) {
+        await supabase
+          .from('account_members')
+          .update({ user_id: user.id, status: 'active' })
+          .eq('id', pendingMember.id);
+
+        // Store the account's plan in sessionStorage for immediate use
+        const { data: account } = await supabase
+          .from('accounts')
+          .select('plan')
+          .eq('id', pendingMember.account_id)
+          .single();
+
+        if (account?.plan) {
+          sessionStorage.setItem('safepost_plan', account.plan);
+        }
+      }
 
       setStep('success');
     } catch (err: any) {

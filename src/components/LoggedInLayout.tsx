@@ -9,6 +9,7 @@ import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle } from 'lucide-react';
 import SafePostLogo from '../../components/SafePostLogo';
 import LoggedInFooter from './LoggedInFooter';
 import { useAuth } from '../../useAuth';
+import { useAccount } from '../context/AccountContext';
 import { getDisplayPlanName } from '../utils/planUtils';
 import { getUnreadCount, markAllNotificationsRead } from '../services/notificationService';
 
@@ -20,8 +21,10 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, userEmail, signOut } = useAuth();
+  const { role, plan: accountPlan } = useAccount();
 
-  const planName = sessionStorage.getItem('safepost_plan') || '';
+  const planName = accountPlan || sessionStorage.getItem('safepost_plan') || '';
+  const isOwner = role === 'owner';
 
   const dropdownPlanName = getDisplayPlanName(planName);
 
@@ -77,7 +80,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
     { label: 'Dashboard', path: '/dashboard' },
     { label: 'History', path: '/history' },
     { label: 'Settings', path: '/settings' },
-    ...(isUltra ? [{ label: 'Team', path: '/settings/team' }] : []),
+    ...(isUltra && isOwner ? [{ label: 'Team', path: '/settings/team' }] : []),
   ];
 
   return (
@@ -176,9 +179,11 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                   <button onClick={() => navigate('/profile')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
                     Profile
                   </button>
-                  <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
-                    Billing
-                  </button>
+                  {isOwner && (
+                    <button onClick={() => navigate('/billing')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
+                      Billing
+                    </button>
+                  )}
                   <button onClick={() => navigate('/settings')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/[0.06]">
                     Settings
                   </button>
@@ -238,9 +243,11 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
             <button onClick={() => { navigate('/profile'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
               Profile
             </button>
-            <button onClick={() => { navigate('/billing'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
-              Billing
-            </button>
+            {isOwner && (
+              <button onClick={() => { navigate('/billing'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
+                Billing
+              </button>
+            )}
             <button onClick={() => { navigate('/settings'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white">
               Settings
             </button>

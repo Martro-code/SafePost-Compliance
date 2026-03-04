@@ -1,0 +1,209 @@
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { supabase } from '../services/supabaseClient';
+
+const PLAN_LIMITS: Record<string, number | null> = {
+  free: 3,
+  starter: 3,
+  professional: 30,
+  proplus: 100,
+  ultra: null,
+};
+
+function checksLimitForPlan(plan: string): number | null {
+  const key = plan?.toLowerCase() ?? 'starter';
+  return key in PLAN_LIMITS ? PLAN_LIMITS[key] : 3;
+}
+
+export interface AccountContextType {
+  accountId: string | null;
+  role: 'owner' | 'member' | null;
+  plan: string;
+  checksUsed: number;
+  checksLimit: number | null;
+  accountLoading: boolean;
+  refreshAccount: () => Promise<void>;
+}
+
+const AccountContext = createContext<AccountContextType>({
+  accountId: null,
+  role: null,
+  plan: 'starter',
+  checksUsed: 0,
+  checksLimit: 3,
+  accountLoading: true,
+  refreshAccount: async () => {},
+});
+
+export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [accountId, setAccountId] = useState<string | null>(null);
+  const [role, setRole] = useState<'owner' | 'member' | null>(null);
+  const [plan, setPlan] = useState('starter');
+  const [checksUsed, setChecksUsed] = useState(0);
+  const [checksLimit, setChecksLimit] = useState<number | null>(3);
+  const [accountLoading, setAccountLoading] = useState(true);
+
+  const loadAccount = useCallback(async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setAccountId(null);
+        setRole(null);
+        setPlan('starter');
+        setChecksUsed(0);
+        setChecksLimit(3);
+        setAccountLoading(false);
+        return;
+      }
+
+      // Try to find existing account membership
+      const { data: membership, error: memberError } = await supabase
+        .from('account_members')
+        .select('account_id, role')
+        .eq('user_id', user.id)
+        .eq('status', 'active')
+        .limit(1)
+        .single();
+
+      if (membership && !memberError) {
+        // Found membership — load the account
+        const { data: account } = await supabase
+          .from('accounts')
+          .select('id, plan, checks_used, checks_limit')
+          .eq('id', membership.account_id)
+          .single();
+
+        if (account) {
+          setAccountId(account.id);
+          setRole(membership.role as 'owner' | 'member');
+          setPlan(account.plan || 'starter');
+          setChecksUsed(account.checks_used ?? 0);
+          setChecksLimit(account.checks_limit);
+
+          // Sync plan to sessionStorage for components that still read it
+          sessionStorage.setItem('safepost_plan', account.plan || 'starter');
+          setAccountLoading(false);
+          return;
+        }
+      }
+
+      // No account found — auto-provision for this user (new or legacy)
+      const userPlan = (user.user_metadata?.plan as string) || sessionStorage.getItem('safepost_plan') || 'starter';
+      const limit = checksLimitForPlan(userPlan);
+
+      const { data: newAccount, error: insertError } = await supabase
+        .from('accounts')
+        .insert({
+          owner_user_id: user.id,
+          plan: userPlan,
+          checks_used: 0,
+          checks_limit: limit,
+          billing_email: user.email,
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Failed to create account:', insertError);
+        // Fallback: use plan from metadata
+        setPlan(userPlan);
+        setChecksLimit(limit);
+        setAccountLoading(false);
+        return;
+      }
+
+      // Create account_members row
+      await supabase
+        .from('account_members')
+        .insert({
+          account_id: newAccount.id,
+          user_id: user.id,
+          role: 'owner',
+          status: 'active',
+          invited_email: user.email,
+        });
+
+      // Backfill account_id on existing compliance_checks for this user
+      await supabase
+        .from('compliance_checks')
+        .update({ account_id: newAccount.id })
+        .eq('user_id', user.id)
+        .is('account_id', null);
+
+      // Count this month's existing checks and set checks_used
+      const now = new Date();
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      const { count } = await supabase
+        .from('compliance_checks')
+        .select('*', { count: 'exact', head: true })
+        .eq('account_id', newAccount.id)
+        .gte('created_at', startOfMonth);
+
+      const actualUsed = count ?? 0;
+      if (actualUsed > 0) {
+        await supabase
+          .from('accounts')
+          .update({ checks_used: actualUsed })
+          .eq('id', newAccount.id);
+      }
+
+      setAccountId(newAccount.id);
+      setRole('owner');
+      setPlan(userPlan);
+      setChecksUsed(actualUsed);
+      setChecksLimit(limit);
+      sessionStorage.setItem('safepost_plan', userPlan);
+    } catch (err) {
+      console.error('Failed to load account:', err);
+    } finally {
+      setAccountLoading(false);
+    }
+  }, []);
+
+  // Load account on mount
+  useEffect(() => {
+    loadAccount();
+  }, [loadAccount]);
+
+  // Re-load when auth state changes
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        loadAccount();
+      }
+      if (event === 'SIGNED_OUT') {
+        setAccountId(null);
+        setRole(null);
+        setPlan('starter');
+        setChecksUsed(0);
+        setChecksLimit(3);
+        setAccountLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [loadAccount]);
+
+  const refreshAccount = useCallback(async () => {
+    if (!accountId) return;
+    const { data: account } = await supabase
+      .from('accounts')
+      .select('plan, checks_used, checks_limit')
+      .eq('id', accountId)
+      .single();
+
+    if (account) {
+      setPlan(account.plan || 'starter');
+      setChecksUsed(account.checks_used ?? 0);
+      setChecksLimit(account.checks_limit);
+      sessionStorage.setItem('safepost_plan', account.plan || 'starter');
+    }
+  }, [accountId]);
+
+  return (
+    <AccountContext.Provider value={{ accountId, role, plan, checksUsed, checksLimit, accountLoading, refreshAccount }}>
+      {children}
+    </AccountContext.Provider>
+  );
+};
+
+export const useAccount = () => useContext(AccountContext);

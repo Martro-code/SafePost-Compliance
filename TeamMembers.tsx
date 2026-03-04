@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
+import { useAccount } from './src/context/AccountContext';
 import {
   getTeamMembers,
   getTeamMemberCount,
@@ -29,6 +30,7 @@ const TEAM_MEMBER_LIMIT = 10;
 const TeamMembers: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { accountId, plan: accountPlan } = useAccount();
 
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,7 +42,7 @@ const TeamMembers: React.FC = () => {
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
 
-  const planName = sessionStorage.getItem('safepost_plan') || '';
+  const planName = accountPlan || sessionStorage.getItem('safepost_plan') || '';
   const isUltra = planName.toLowerCase() === 'ultra';
   const limitReached = members.length >= TEAM_MEMBER_LIMIT;
 
@@ -74,7 +76,7 @@ const TeamMembers: React.FC = () => {
     setInviting(true);
 
     try {
-      await inviteTeamMember(user.id, inviteEmail);
+      await inviteTeamMember(user.id, inviteEmail, accountId);
       setSuccessMessage(`Invitation sent to ${inviteEmail}`);
       setInviteEmail('');
       await fetchMembers();
