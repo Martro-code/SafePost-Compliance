@@ -462,6 +462,22 @@ const Dashboard: React.FC = () => {
               />
             )}
 
+            {view === 'results' && checker.error && (
+              <div className="bg-red-50 rounded-2xl border border-red-200 p-6 dark:bg-red-950 dark:border-red-800">
+                <div className="flex items-center gap-3 mb-2">
+                  <XCircle className="w-5 h-5 text-red-500" />
+                  <h3 className="text-[14px] font-semibold text-red-700 dark:text-red-300">Analysis failed</h3>
+                </div>
+                <p className="text-[13px] text-red-600 dark:text-red-400">{checker.error}</p>
+                <button
+                  onClick={handleNewCheck}
+                  className="mt-4 text-[13px] font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  Try again
+                </button>
+              </div>
+            )}
+
           </div>
           {/* END LEFT COLUMN */}
 
