@@ -570,7 +570,7 @@ const Dashboard: React.FC = () => {
           {/* END LEFT COLUMN */}
 
           {/* RIGHT SIDEBAR */}
-          <div className="space-y-6 order-1 md:order-2 md:sticky md:top-20 md:self-start md:max-h-[calc(100vh-6rem)] md:overflow-y-auto">
+          <div className="space-y-6 order-1 md:order-2 md:sticky md:top-20 md:self-start md:max-h-[calc(100vh-6rem)] md:overflow-y-hidden">
             {/* Usage Stats */}
             <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6">
               <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500 mb-4">Your Usage</h3>
