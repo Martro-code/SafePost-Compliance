@@ -17,6 +17,7 @@ const Dashboard: React.FC = () => {
   const location = useLocation();
   const [searchParams] = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const resultsAreaRef = useRef<HTMLDivElement>(null);
   const { firstName, signOut } = useAuth();
   const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount } = useAccount();
 
@@ -274,7 +275,7 @@ const Dashboard: React.FC = () => {
         <div className="relative grid grid-cols-1 md:grid-cols-[1fr_340px] gap-6">
 
           {/* LEFT COLUMN - Compliance Checker */}
-          <div className="space-y-6 order-2 md:order-1">
+          <div ref={resultsAreaRef} className="space-y-6 order-2 md:order-1">
             {/* Welcome */}
             <div>
               <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
@@ -650,7 +651,12 @@ const Dashboard: React.FC = () => {
                       key={check.id}
                       onClick={() => {
                         checker.loadCheck(check);
+                        setContent(check.content_text || '');
                         setView('results');
+                        // Scroll to the results area so the user sees the loaded check
+                        setTimeout(() => {
+                          resultsAreaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }, 50);
                       }}
                       className="w-full flex items-start gap-3 px-0 py-2.5 rounded-lg hover:bg-black/[0.03] transition-colors text-left group"
                     >
