@@ -65,6 +65,19 @@ const Dashboard: React.FC = () => {
     }
   }, [checker.result]);
 
+  // Reset to clean state when navigating away from the Dashboard
+  useEffect(() => {
+    return () => {
+      setContent('');
+      setAttachedFile(null);
+      setDocumentFile(null);
+      setExtractionError(null);
+      setPdfError(false);
+      setView('input');
+      checker.resetChecker();
+    };
+  }, []);
+
   // Onboarding modal state — driven by Supabase user metadata
   const [showOnboarding, setShowOnboarding] = useState(false);
 
