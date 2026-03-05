@@ -3,6 +3,7 @@ import {
   CheckCircle,
   XCircle,
   AlertTriangle,
+  ShieldOff,
   Trash2,
   Eye,
   Clock,
@@ -21,6 +22,7 @@ interface ComplianceHistoryProps {
 function StatusIcon({ status }: { status: string }) {
   if (status === 'compliant') return <CheckCircle className="w-4 h-4 text-green-500" />;
   if (status === 'non_compliant') return <XCircle className="w-4 h-4 text-red-500" />;
+  if (status === 'conduct_risk') return <ShieldOff className="w-4 h-4 text-purple-600" />;
   return <AlertTriangle className="w-4 h-4 text-amber-500" />;
 }
 
