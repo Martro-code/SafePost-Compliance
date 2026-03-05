@@ -45,7 +45,7 @@ const statusConfig: Record<string, {
     label: 'Conduct Risk',
     icon: <ShieldOff className="w-4 h-4 text-gray-100 flex-shrink-0" />,
     badge: 'bg-gray-800 text-gray-100 border border-gray-700',
-    row: 'border-l-gray-800',
+    row: 'border-l-gray-800 dark:border-l-purple-500',
   },
 };
 
@@ -259,6 +259,7 @@ const History: React.FC = () => {
   const reviewCount = checker.history.filter(c =>
     c.overall_status === 'warning' || c.overall_status === 'requires_review'
   ).length;
+  const conductRiskCount = checker.history.filter(c => c.overall_status === 'conduct_risk').length;
 
   // Show plan limit banner
   const showLimitBanner = !isUltra && !bannerDismissed && totalChecks >= historyLimit;
@@ -312,15 +313,16 @@ const History: React.FC = () => {
 
         {/* Stats row */}
         {!checker.isLoadingHistory && totalChecks > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
             {[
-              { label: 'Total checks', value: totalChecks, color: 'text-gray-700', bg: 'bg-white' },
-              { label: 'Compliant', value: compliantCount, color: 'text-emerald-700', bg: 'bg-emerald-50' },
-              { label: 'Non-compliant', value: nonCompliantCount, color: 'text-red-700', bg: 'bg-red-50' },
-              { label: 'Requires review', value: reviewCount, color: 'text-amber-700', bg: 'bg-amber-50' },
+              { label: 'Total checks', value: totalChecks, color: 'text-gray-700', darkColor: '', bg: 'bg-white', darkBg: '' },
+              { label: 'Compliant', value: compliantCount, color: 'text-emerald-700', darkColor: '', bg: 'bg-emerald-50', darkBg: '' },
+              { label: 'Non-compliant', value: nonCompliantCount, color: 'text-red-700', darkColor: '', bg: 'bg-red-50', darkBg: '' },
+              { label: 'Requires review', value: reviewCount, color: 'text-amber-700', darkColor: '', bg: 'bg-amber-50', darkBg: '' },
+              { label: 'Conduct Risk', value: conductRiskCount, color: 'text-purple-700', darkColor: 'dark:text-purple-400', bg: 'bg-purple-50', darkBg: 'dark:bg-purple-900/20' },
             ].map(stat => (
-              <div key={stat.label} className={`${stat.bg} rounded-xl border border-black/[0.06] p-4`}>
-                <p className={`text-2xl font-extrabold ${stat.color}`}>{stat.value}</p>
+              <div key={stat.label} className={`${stat.bg} ${stat.darkBg} rounded-xl border border-black/[0.06] p-4`}>
+                <p className={`text-2xl font-extrabold ${stat.color} ${stat.darkColor}`}>{stat.value}</p>
                 <p className="text-[11px] text-gray-400 mt-0.5 font-medium">{stat.label}</p>
               </div>
             ))}
