@@ -6,7 +6,7 @@ import LoggedInLayout from '../components/LoggedInLayout';
 const faqs = [
   {
     question: "What does SafePost check my content against?",
-    answer: "SafePost checks your content against 134 verified rules drawn from five primary AHPRA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, and guidelines for cosmetic procedures and cosmetic surgery advertising."
+    answer: "SafePost checks your content against 145 verified rules drawn from six primary AHPRA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, guidelines for cosmetic procedures and cosmetic surgery advertising, and AHPRA's acceptable evidence standard for therapeutic and efficacy claims."
   },
   {
     question: "Does a 'Compliant' result mean I am guaranteed to be compliant?",
