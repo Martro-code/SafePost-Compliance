@@ -535,7 +535,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
 
       {/* ── Conduct Risk — No Rewrites Message ──────────────────────────── */}
       {result.overall_status === 'conduct_risk' && (
-        <div className="bg-gray-100 rounded-2xl border border-gray-200 p-6 text-center">
+        <div className="bg-gray-100 rounded-2xl border border-gray-200 dark:bg-purple-900/30 dark:border-purple-500 p-6 text-center">
           <p className="text-[14px] text-gray-500 font-medium">
             Compliant rewrites are not available for this content. This content should be omitted entirely.
           </p>

@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'conduct_risk':
-        return <ShieldOff className="w-4 h-4 text-gray-800 flex-shrink-0" />;
+        return <ShieldOff className="w-4 h-4 text-gray-800 dark:text-purple-500 flex-shrink-0" />;
       case 'non_compliant':
       case 'non-compliant':
         return <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />;
