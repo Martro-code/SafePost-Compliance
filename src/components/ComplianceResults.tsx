@@ -313,6 +313,8 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
     setRewriteError(null);
     try {
       const results = await onGenerateRewrites(originalContent, result.issues);
+      console.log('[ComplianceResults] received rewrite results:', results);
+      console.log('[ComplianceResults] results length:', results?.length, 'type:', typeof results);
       setRewrites(results);
       onSaveRewrites?.(results);
     } catch {
