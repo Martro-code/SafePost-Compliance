@@ -318,7 +318,9 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
       setResult(normalisedResult as any);
 
       // Compute compliance score for the record
-      const complianceScore = analysisResult.status === ComplianceStatus.COMPLIANT
+      const complianceScore = analysisResult.status === ComplianceStatus.CONDUCT_RISK
+        ? 0
+        : analysisResult.status === ComplianceStatus.COMPLIANT
         ? 100
         : analysisResult.status === ComplianceStatus.NON_COMPLIANT
         ? Math.max(0, 100
