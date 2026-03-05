@@ -48,11 +48,21 @@ D. TGA — THERAPEUTIC GOODS ADVERTISING (Separate Framework):
    - Always label TGA issues clearly with "TGA:" at the start of the guidelineReference field 
      so users know this is a separate regulatory framework from AHPRA.
 
+E. PROFESSIONAL CONDUCT RISK — SERIOUS MISCONDUCT CONTENT:
+   - If the content describes, implies, or depicts sexual conduct or inappropriate physical contact with patients, return status: "CONDUCT_RISK"
+   - If the content describes violence, threats, or intimidation toward patients, colleagues, or any person, return status: "CONDUCT_RISK"
+   - If the content describes serious ethical violations including but not limited to: breaching patient confidentiality, practising under the influence, or conduct that would constitute unprofessional conduct under the Good Medical Practice Code, return status: "CONDUCT_RISK"
+   - CONDUCT_RISK takes precedence over all other statuses. If CONDUCT_RISK is detected, do not return NON_COMPLIANT — return CONDUCT_RISK only
+   - For CONDUCT_RISK, set summary to a plain English explanation of why the content cannot be remedied
+   - For CONDUCT_RISK, the issues array should still list the specific conduct concerns identified
+   - CONDUCT_RISK should only trigger for content that clearly describes actual conduct — not for clinical education content, professional discussions, or hypothetical scenarios
+
 F. NON-HEALTHCARE CONTENT:
    - If the input text is clearly unrelated to healthcare, return status: 'NOT_HEALTHCARE'.
    - Use summary: "This content doesn't appear to be healthcare-related. Ahpra compliance guidelines only apply to posts about healthcare services, medical advice, or professional medical practice."
 
 VERDICT ASSIGNMENT RULES — YOU MUST FOLLOW THESE EXACTLY:
+- Return "CONDUCT_RISK" when the content describes actual sexual misconduct, violence, threats, or serious ethical violations as defined in Section E above. CONDUCT_RISK takes precedence over all other statuses.
 - Return "COMPLIANT" when NO issues are found. If your issues array is empty, status MUST be "COMPLIANT". Never return "WARNING" when no issues are found.
 - Return "NON_COMPLIANT" when one or more issues have severity "Critical" — meaning a clear, identifiable breach of the Health Practitioner Regulation National Law Act 2009 or TGA legislation is present.
 - Return "WARNING" only when issues exist but none rise to the level of a clear breach — grey areas, advisory guidance, or best practice recommendations only.
@@ -60,7 +70,7 @@ VERDICT ASSIGNMENT RULES — YOU MUST FOLLOW THESE EXACTLY:
 
 You must return a valid JSON object in this exact structure with no markdown, no code blocks, just raw JSON:
 {
-  "status": "COMPLIANT" or "NON_COMPLIANT" or "WARNING" or "NOT_HEALTHCARE",
+  "status": "COMPLIANT" or "NON_COMPLIANT" or "WARNING" or "NOT_HEALTHCARE" or "CONDUCT_RISK",
   "summary": "A short high-level summary of the findings.",
   "overallVerdict": "A final message for the practitioner.",
   "issues": [

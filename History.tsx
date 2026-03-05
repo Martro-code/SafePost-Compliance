@@ -4,7 +4,7 @@ import {
   ArrowLeft, Clock,
   CheckCircle2, XCircle, AlertTriangle, Loader2, Search,
   Filter, Trash2, ChevronRight,
-  ChevronLeft, X
+  ChevronLeft, X, ShieldOff
 } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useComplianceChecker, SavedComplianceCheck, HISTORY_LIMITS } from './src/hooks/useComplianceChecker';
@@ -40,6 +40,12 @@ const statusConfig: Record<string, {
     icon: <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0" />,
     badge: 'bg-amber-50 text-amber-700 border border-amber-200',
     row: 'border-l-amber-400',
+  },
+  conduct_risk: {
+    label: 'Conduct Risk',
+    icon: <ShieldOff className="w-4 h-4 text-gray-100 flex-shrink-0" />,
+    badge: 'bg-gray-800 text-gray-100 border border-gray-700',
+    row: 'border-l-gray-800',
   },
 };
 
@@ -354,6 +360,7 @@ const History: React.FC = () => {
                     { value: 'compliant', label: 'Compliant' },
                     { value: 'non_compliant', label: 'Non-compliant' },
                     { value: 'requires_review', label: 'Requires review' },
+                    { value: 'conduct_risk', label: 'Conduct Risk' },
                   ].map(option => (
                     <button
                       key={option.value}
