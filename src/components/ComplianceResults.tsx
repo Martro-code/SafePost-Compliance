@@ -309,18 +309,28 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
   const warningCount = sortedIssues.length - criticalCount;
 
   const handleGenerateRewrites = async () => {
+    console.log('[ComplianceResults] handleGenerateRewrites called');
+    console.log('[ComplianceResults] originalContent length:', originalContent?.length, 'preview:', originalContent?.slice(0, 100));
+    console.log('[ComplianceResults] issues passed to onGenerateRewrites:', JSON.stringify(result.issues, null, 2));
+    console.log('[ComplianceResults] current rewrites state before call:', rewrites);
     setIsGenerating(true);
     setRewriteError(null);
     try {
       const results = await onGenerateRewrites(originalContent, result.issues);
-      console.log('[ComplianceResults] received rewrite results:', results);
-      console.log('[ComplianceResults] results length:', results?.length, 'type:', typeof results);
+      console.log('[ComplianceResults] received rewrite results:', JSON.stringify(results, null, 2));
+      console.log('[ComplianceResults] results length:', results?.length, 'type:', typeof results, 'isArray:', Array.isArray(results));
+      console.log('[ComplianceResults] results truthy?:', !!results, 'results.length > 0?:', results?.length > 0);
+      console.log('[ComplianceResults] will render rewrite section?:', results && results.length > 0);
+      console.log('[ComplianceResults] will show generate button after set?:', !results);
       setRewrites(results);
       onSaveRewrites?.(results);
-    } catch {
+      console.log('[ComplianceResults] setRewrites called with results, state update queued');
+    } catch (err) {
+      console.error('[ComplianceResults] error in handleGenerateRewrites:', err);
       setRewriteError('Failed to generate rewrites. Please try again.');
     } finally {
       setIsGenerating(false);
+      console.log('[ComplianceResults] isGenerating set to false');
     }
   };
 

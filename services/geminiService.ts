@@ -143,6 +143,13 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
 };
 
 export const generateCompliantRewrites = async (originalPost: string, issues: ComplianceIssue[]): Promise<RewrittenPost[]> => {
+  console.log('[generateCompliantRewrites] called with:', {
+    originalPostLength: originalPost?.length,
+    originalPostPreview: originalPost?.slice(0, 200),
+    issuesCount: issues?.length,
+    issues: JSON.stringify(issues, null, 2),
+  });
+
   try {
     const response = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
@@ -154,11 +161,11 @@ export const generateCompliantRewrites = async (originalPost: string, issues: Co
 
 ORIGINAL POST: "${originalPost}"
 
-IDENTIFIED ISSUES: 
+IDENTIFIED ISSUES:
 ${JSON.stringify(issues)}
 
 TASK:
-Rewrite the post to be fully compliant while maintaining the original intent as much as possible. 
+Rewrite the post to be fully compliant while maintaining the original intent as much as possible.
 Provide 3 distinct options (e.g., 'Minimal Edit', 'Educational/Professional', 'Safe/Conservative').
 Ensure Australian/UK spelling is used.
 Return only a JSON array with no markdown in this format:
@@ -173,20 +180,33 @@ Return only a JSON array with no markdown in this format:
       ],
     });
 
+    console.log('[generateCompliantRewrites] raw API response object:', JSON.stringify(response, null, 2));
+
     const responseText = response.content[0].type === 'text' ? response.content[0].text : '[]';
     console.log('[generateCompliantRewrites] raw API response text:', responseText);
+    console.log('[generateCompliantRewrites] response text length:', responseText.length);
+    console.log('[generateCompliantRewrites] response content type:', response.content[0].type);
+    console.log('[generateCompliantRewrites] stop_reason:', response.stop_reason);
 
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
+    console.log('[generateCompliantRewrites] JSON regex match result:', jsonMatch ? jsonMatch[0].slice(0, 500) : 'NO MATCH');
+
     if (!jsonMatch) {
       console.log('[generateCompliantRewrites] no JSON array found in response, returning []');
       return [];
     }
 
     const parsed = JSON.parse(jsonMatch[0]) as RewrittenPost[];
-    console.log('[generateCompliantRewrites] parsed result:', parsed);
+    console.log('[generateCompliantRewrites] parsed result:', JSON.stringify(parsed, null, 2));
+    console.log('[generateCompliantRewrites] parsed result length:', parsed.length);
+    console.log('[generateCompliantRewrites] parsed result type:', typeof parsed, Array.isArray(parsed));
+
+    console.log('[generateCompliantRewrites] returning parsed result to caller');
     return parsed;
   } catch (error) {
-    console.error('Error generating rewrites:', error);
+    console.error('[generateCompliantRewrites] Error generating rewrites:', error);
+    console.error('[generateCompliantRewrites] Error type:', typeof error);
+    console.error('[generateCompliantRewrites] Error message:', error instanceof Error ? error.message : String(error));
     throw new Error('Failed to generate compliant suggestions.');
   }
 };
