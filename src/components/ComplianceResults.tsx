@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef } from 'react';
 import {
   CheckCircle2, XCircle, AlertTriangle, ChevronDown, ChevronUp,
   Sparkles, Copy, Check, ArrowLeft, Loader2, Shield, ExternalLink,
-  AlertCircle, Info, FileText, Lock, ShieldOff
+  AlertCircle, Info, FileText, Lock, ShieldOff, Clock
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -36,6 +36,8 @@ interface ComplianceResultsProps {
   onGenerateRewrites: (content: string, issues: ComplianceIssue[]) => Promise<RewrittenPost[]>;
   planName?: string;
   onSaveRewrites?: (rewrites: RewrittenPost[]) => void;
+  isHistorical?: boolean;
+  checkedAt?: string;
 }
 
 // ─── Severity helpers ─────────────────────────────────────────────────────────
@@ -104,6 +106,19 @@ const verdictConfig = {
     headerColor: 'text-red-400',
   },
 };
+
+function formatCheckedAt(dateStr: string): string {
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('en-AU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }) + ' at ' + date.toLocaleTimeString('en-AU', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+}
 
 // ─── Issue Card ───────────────────────────────────────────────────────────────
 const IssueCard: React.FC<{ issue: ComplianceIssue; defaultOpen: boolean; index: number }> = ({
@@ -293,6 +308,8 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
   onGenerateRewrites,
   planName = '',
   onSaveRewrites,
+  isHistorical = false,
+  checkedAt,
 }) => {
   const [rewrites, setRewrites] = useState<RewrittenPost[] | null>(
     result.rewrite_options ?? null
@@ -388,6 +405,16 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
 
   return (
     <div className="space-y-4" ref={resultsRef}>
+
+      {/* ── Historical date stamp ──────────────────────────────────────────── */}
+      {isHistorical && checkedAt && (
+        <div className="flex items-center gap-1.5 px-1">
+          <Clock className="w-3.5 h-3.5 text-gray-400" />
+          <p className="text-[12px] text-gray-400">
+            Checked on {formatCheckedAt(checkedAt)}
+          </p>
+        </div>
+      )}
 
       {/* ── Original Post — shown first so user sees what was assessed ─────── */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm shadow-black/[0.02]">
@@ -516,7 +543,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
       )}
 
       {/* ── Rewrite Section ───────────────────────────────────────────────── */}
-      {hasIssues && !rewrites && result.overall_status !== 'conduct_risk' && (
+      {hasIssues && !rewrites && result.overall_status !== 'conduct_risk' && !isHistorical && (
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 text-center space-y-3">
           <div className="flex items-center justify-center gap-2 text-gray-700">
             <Sparkles className="w-5 h-5 text-blue-500" />
@@ -542,7 +569,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
       )}
 
       {/* ── Rewrite Results ───────────────────────────────────────────────── */}
-      {rewrites && rewrites.length > 0 && (
+      {rewrites && rewrites.length > 0 && !isHistorical && (
         <div className="space-y-4">
           {/* Header */}
           <div className="flex items-center gap-2 px-1">
@@ -588,16 +615,30 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
         </div>
       )}
 
-      {/* ── Action Buttons ────────────────────────────────────────────────── */}
-      <div className="flex flex-col items-center pt-2">
-        <button
-          onClick={onNewCheck}
-          className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          New check
-        </button>
-      </div>
+      {/* ── Historical: Start a new check button ───────────────────────── */}
+      {isHistorical && (
+        <div className="flex flex-col items-center pt-2">
+          <button
+            onClick={onNewCheck}
+            className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
+          >
+            Start a new check
+          </button>
+        </div>
+      )}
+
+      {/* ── Action Buttons (non-historical) ───────────────────────────────── */}
+      {!isHistorical && (
+        <div className="flex flex-col items-center pt-2">
+          <button
+            onClick={onNewCheck}
+            className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            New check
+          </button>
+        </div>
+      )}
 
       {/* ── Legal disclaimer — bottom of every result ─────────────────────── */}
       <LegalDisclaimer />

@@ -206,6 +206,7 @@ const History: React.FC = () => {
           checkId: match.id,
           checkResult: normalised,
           contentText: match.content_text ?? '',
+          createdAt: match.created_at,
         },
       });
     }
@@ -225,6 +226,7 @@ const History: React.FC = () => {
         checkId: check.id,
         checkResult: normalised,
         contentText: check.content_text ?? '',
+        createdAt: check.created_at,
       },
     });
   };

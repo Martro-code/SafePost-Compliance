@@ -61,7 +61,11 @@ const Dashboard: React.FC = () => {
   const [showBulkTooltip, setShowBulkTooltip] = useState(false);
 
   // If navigating from History with a specific check, load it immediately
-  const historyState = location.state as { fromHistory?: boolean; checkId?: string; checkResult?: any; contentText?: string } | null;
+  const historyState = location.state as { fromHistory?: boolean; checkId?: string; checkResult?: any; contentText?: string; createdAt?: string } | null;
+
+  // Track whether the current result is a historical check (from sidebar or History page)
+  const [isHistorical, setIsHistorical] = useState(false);
+  const [historicalCheckedAt, setHistoricalCheckedAt] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (historyState?.fromHistory && historyState.checkResult) {
@@ -73,6 +77,8 @@ const Dashboard: React.FC = () => {
       } as any);
       setContent(historyState.contentText ?? '');
       setView('results');
+      setIsHistorical(true);
+      setHistoricalCheckedAt(historyState.createdAt);
       // Clear the location state so refreshing / re-navigating doesn't replay
       window.history.replaceState({}, '');
     }
@@ -166,6 +172,8 @@ const Dashboard: React.FC = () => {
       fromDocumentUpload: !!documentFile,
     });
     setView('loading');
+    setIsHistorical(false);
+    setHistoricalCheckedAt(undefined);
     await checker.runCheck(content);
     setView('results');
   };
@@ -177,6 +185,8 @@ const Dashboard: React.FC = () => {
     setExtractionError(null);
     setPdfError(false);
     setView('input');
+    setIsHistorical(false);
+    setHistoricalCheckedAt(undefined);
     checker.resetChecker();
   };
 
@@ -547,6 +557,8 @@ const Dashboard: React.FC = () => {
                 onGenerateRewrites={generateCompliantRewrites}
                 planName={planName}
                 onSaveRewrites={checker.saveRewriteOptions}
+                isHistorical={isHistorical}
+                checkedAt={historicalCheckedAt}
               />
             )}
 
@@ -655,6 +667,8 @@ const Dashboard: React.FC = () => {
                         checker.loadCheck(check);
                         setContent(check.content_text || '');
                         setView('results');
+                        setIsHistorical(true);
+                        setHistoricalCheckedAt(check.created_at);
                         // Scroll to the results area so the user sees the loaded check
                         setTimeout(() => {
                           resultsAreaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
