@@ -31,7 +31,7 @@ const Features: React.FC = () => {
     {
       icon: <FileText className="w-7 h-7 text-blue-500/80" />,
       heading: 'Severity-tiered issue flags',
-      description: 'Every issue rated Critical or Warning with a plain-English explanation and the specific guideline reference.',
+      description: 'Every issue rated Critical, Warning, or Professional Conduct Risk with a plain-English explanation and the specific guideline reference.',
     },
     {
       icon: <Globe className="w-7 h-7 text-blue-500/80" />,
