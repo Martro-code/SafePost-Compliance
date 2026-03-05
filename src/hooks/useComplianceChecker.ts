@@ -501,6 +501,26 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
     }
   }, []);
 
+  // ── Load a saved check directly (e.g. from sidebar recent checks) ───
+  const loadCheck = useCallback((check: SavedComplianceCheck) => {
+    if (check.result_json) {
+      const normalised = {
+        ...check.result_json,
+        overall_status: check.overall_status,
+        summary: check.result_json.summary ?? check.result_json.overallVerdict ?? '',
+        issues: check.result_json.issues ?? [],
+      };
+      setResult(normalised);
+      sessionStorage.setItem(SESSION_KEY_RESULT, JSON.stringify(normalised));
+    }
+    setLastContent(check.content_text ?? '');
+    sessionStorage.setItem(SESSION_KEY_CONTENT, check.content_text ?? '');
+    lastCheckIdRef.current = check.id;
+    sessionStorage.setItem(SESSION_KEY_CHECK_ID, check.id);
+    setStep('complete');
+    setError(null);
+  }, []);
+
   // ── Reset checker state (new check) ───────────────────────────────────
   const resetChecker = useCallback(() => {
     setStep('idle');
@@ -525,6 +545,7 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
     isLoadingUsage,
     runCheck,
     loadHistory,
+    loadCheck,
     deleteCheck,
     resetChecker,
     saveRewriteOptions,
