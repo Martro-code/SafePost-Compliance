@@ -617,8 +617,8 @@ const Dashboard: React.FC = () => {
                     <button
                       key={check.id}
                       onClick={() => {
-                        sessionStorage.setItem('safepost_view_check_id', check.id);
-                        navigate('/history');
+                        checker.loadCheck(check);
+                        setView('results');
                       }}
                       className="w-full flex items-start gap-3 px-0 py-2.5 rounded-lg hover:bg-black/[0.03] transition-colors text-left group"
                     >
