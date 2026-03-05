@@ -135,6 +135,7 @@ const STATUS_MAP: Record<string, string> = {
   WARNING: 'requires_review',
   REQUIRES_REVIEW: 'requires_review',
   NOT_HEALTHCARE: 'requires_review',
+  CONDUCT_RISK: 'conduct_risk',
 };
 
 function normaliseStatus(status: string): string {
