@@ -293,13 +293,14 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
       }
 
       // Guard: truncate excessively long content to stay within API token limits.
-      const MAX_CONTENT_LENGTH = 100_000;
+      // .docx files can be very large; truncate aggressively to avoid response truncation.
+      const MAX_CONTENT_LENGTH = 2_000;
       let contentToAnalyze = trimmed;
       if (trimmed.length > MAX_CONTENT_LENGTH) {
         console.warn(
           `[useComplianceChecker] Content length (${trimmed.length} chars) exceeds limit. Truncating to ${MAX_CONTENT_LENGTH} chars.`,
         );
-        contentToAnalyze = trimmed.slice(0, MAX_CONTENT_LENGTH);
+        contentToAnalyze = trimmed.slice(0, MAX_CONTENT_LENGTH) + '... [content truncated]';
       }
 
       const analysisResult = await analyzePost(contentToAnalyze);

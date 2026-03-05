@@ -83,10 +83,16 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
   });
 
   try {
+    // Truncate long content to prevent oversized prompts and truncated responses
+    const MAX_CONTENT_LENGTH = 3000;
+    const truncatedContent = postContent.length > MAX_CONTENT_LENGTH
+      ? postContent.slice(0, MAX_CONTENT_LENGTH) + '... [content truncated for analysis]'
+      : postContent;
+
     const content: any[] = [
-      { 
-        type: 'text', 
-        text: `Analyse this social media post for Ahpra compliance and return only a JSON object: "${postContent}"` 
+      {
+        type: 'text',
+        text: `Analyse this social media post for Ahpra compliance and return only a JSON object: "${truncatedContent}"`
       }
     ];
 
@@ -103,7 +109,7 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
 
     const response = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1500,
+      max_tokens: 8000,
       system: SYSTEM_INSTRUCTION,
       messages: [
         { role: 'user', content }
