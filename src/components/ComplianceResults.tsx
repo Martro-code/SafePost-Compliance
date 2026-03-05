@@ -530,7 +530,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
                 Your original post
               </span>
             </div>
-            <p className="px-4 py-3.5 text-[13px] text-gray-500 leading-relaxed whitespace-pre-wrap line-through decoration-gray-300">
+            <p className="px-4 py-3.5 text-[13px] text-gray-600 leading-relaxed whitespace-pre-wrap line-through decoration-gray-400">
               {originalContent}
             </p>
           </div>
