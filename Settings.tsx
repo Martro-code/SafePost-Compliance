@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ArrowLeft, Bell, ShieldCheck, Moon, Mail, Info, Lock, Check, Users } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Bell, ShieldCheck, Moon, Mail, Info, Lock, Check } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
 import { useTheme } from './src/context/ThemeContext';
@@ -439,31 +439,6 @@ const Settings: React.FC = () => {
             </div>
           </button>
 
-          {/* Setting 5 — Team members (Ultra plan + owner only) */}
-          {isUltra && isOwner && (
-            <button
-              onClick={() => navigate('/settings/team')}
-              className="w-full bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 hover:border-black/[0.12] dark:hover:border-gray-600 transition-[border-color] duration-200"
-            >
-              <div className="flex items-center justify-between p-5 md:px-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center dark:bg-indigo-950">
-                    <Users className="w-4.5 h-4.5 text-indigo-600 dark:text-indigo-400" />
-                  </div>
-                  <div className="text-left">
-                    <span className="text-[14px] font-medium text-gray-700 dark:text-gray-300">Team members</span>
-                    <p className="text-[12px] text-gray-400 mt-0.5 dark:text-gray-500">Invite and manage team members on your account</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-                    Ultra
-                  </span>
-                  <ChevronRight className="w-4 h-4 text-gray-400 dark:text-gray-500" />
-                </div>
-              </div>
-            </button>
-          )}
         </div>
       </div>
     </LoggedInLayout>
