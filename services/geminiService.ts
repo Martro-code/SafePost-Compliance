@@ -143,7 +143,7 @@ export const generateCompliantRewrites = async (originalPost: string, issues: Co
   try {
     const response = await client.messages.create({
       model: 'claude-haiku-4-5-20251001',
-      max_tokens: 2000,
+      max_tokens: 6000,
       messages: [
         {
           role: 'user',
@@ -171,10 +171,17 @@ Return only a JSON array with no markdown in this format:
     });
 
     const responseText = response.content[0].type === 'text' ? response.content[0].text : '[]';
+    console.log('[generateCompliantRewrites] raw API response text:', responseText);
+
     const jsonMatch = responseText.match(/\[[\s\S]*\]/);
-    if (!jsonMatch) return [];
-    
-    return JSON.parse(jsonMatch[0]) as RewrittenPost[];
+    if (!jsonMatch) {
+      console.log('[generateCompliantRewrites] no JSON array found in response, returning []');
+      return [];
+    }
+
+    const parsed = JSON.parse(jsonMatch[0]) as RewrittenPost[];
+    console.log('[generateCompliantRewrites] parsed result:', parsed);
+    return parsed;
   } catch (error) {
     console.error('Error generating rewrites:', error);
     throw new Error('Failed to generate compliant suggestions.');
