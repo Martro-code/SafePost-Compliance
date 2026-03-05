@@ -2,7 +2,8 @@ export enum ComplianceStatus {
   COMPLIANT = 'COMPLIANT',
   NON_COMPLIANT = 'NON_COMPLIANT',
   WARNING = 'WARNING',
-  NOT_HEALTHCARE = 'NOT_HEALTHCARE'
+  NOT_HEALTHCARE = 'NOT_HEALTHCARE',
+  CONDUCT_RISK = 'CONDUCT_RISK'
 }
 
 export interface ComplianceIssue {

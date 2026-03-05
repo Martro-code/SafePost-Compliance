@@ -2,7 +2,7 @@ import React, { useState, useCallback, useRef } from 'react';
 import {
   CheckCircle2, XCircle, AlertTriangle, ChevronDown, ChevronUp,
   Sparkles, Copy, Check, ArrowLeft, Loader2, Shield, ExternalLink,
-  AlertCircle, Info, FileText, Lock
+  AlertCircle, Info, FileText, Lock, ShieldOff
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
@@ -22,7 +22,7 @@ interface RewrittenPost {
 }
 
 interface AnalysisResult {
-  overall_status: 'compliant' | 'non_compliant' | 'warning';
+  overall_status: 'compliant' | 'non_compliant' | 'warning' | 'conduct_risk';
   summary: string;
   overallVerdict?: string;
   issues: ComplianceIssue[];
@@ -91,6 +91,17 @@ const verdictConfig = {
     tagColor: 'text-amber-500',
     summaryColor: 'text-amber-800/75',
     headerColor: 'text-amber-600',
+  },
+  conduct_risk: {
+    bg: 'bg-gray-900',
+    border: 'border-gray-700',
+    iconBg: 'bg-red-900',
+    icon: <ShieldOff className="w-6 h-6 text-red-400" />,
+    label: 'Professional Conduct Risk',
+    labelColor: 'text-red-400',
+    tagColor: 'text-red-400',
+    summaryColor: 'text-gray-300',
+    headerColor: 'text-red-400',
   },
 };
 
@@ -456,6 +467,18 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
         <p className={`text-[14px] leading-relaxed ${verdict.summaryColor}`}>
           {result.summary}
         </p>
+
+        {/* Conduct Risk messages */}
+        {result.overall_status === 'conduct_risk' && (
+          <div className="mt-4 space-y-3">
+            <p className="text-[14px] font-semibold text-red-400 leading-relaxed">
+              This content describes conduct that cannot be made compliant through editing. Content of this nature should not be published in any form.
+            </p>
+            <p className="text-[13px] text-gray-400 leading-relaxed">
+              If this content relates to real events or conduct, we strongly recommend seeking immediate advice from your medical defence organisation (MDO) such as MDA National or Avant.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* ── Issue Cards ───────────────────────────────────────────────────── */}
@@ -483,8 +506,17 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
         </div>
       )}
 
+      {/* ── Conduct Risk — No Rewrites Message ──────────────────────────── */}
+      {result.overall_status === 'conduct_risk' && (
+        <div className="bg-gray-100 rounded-2xl border border-gray-200 p-6 text-center">
+          <p className="text-[14px] text-gray-500 font-medium">
+            Compliant rewrites are not available for this content. This content should be omitted entirely.
+          </p>
+        </div>
+      )}
+
       {/* ── Rewrite Section ───────────────────────────────────────────────── */}
-      {hasIssues && !rewrites && (
+      {hasIssues && !rewrites && result.overall_status !== 'conduct_risk' && (
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 text-center space-y-3">
           <div className="flex items-center justify-center gap-2 text-gray-700">
             <Sparkles className="w-5 h-5 text-blue-500" />

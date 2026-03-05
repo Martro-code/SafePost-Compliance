@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
-import { ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Rocket, ChevronRight, Lock, Upload, Download, X, FileUp } from 'lucide-react';
+import { ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Rocket, ChevronRight, Lock, Upload, Download, X, FileUp, ShieldOff } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import OnboardingModal from './src/components/OnboardingModal';
 import { useAuth } from './useAuth';
@@ -143,6 +143,8 @@ const Dashboard: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
+      case 'conduct_risk':
+        return <ShieldOff className="w-4 h-4 text-gray-800 flex-shrink-0" />;
       case 'non_compliant':
       case 'non-compliant':
         return <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />;
