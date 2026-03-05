@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { ArrowRight, Paperclip, Loader2, AlertTriangle, CheckCircle2, XCircle, Clock, Rocket, ChevronRight, Lock, Upload, Download, X, FileUp } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import OnboardingModal from './src/components/OnboardingModal';
@@ -14,6 +14,7 @@ import { extractTextFromFile } from './src/utils/fileExtraction';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { firstName, signOut } = useAuth();
@@ -58,9 +59,27 @@ const Dashboard: React.FC = () => {
   const [showBulkToast, setShowBulkToast] = useState(false);
   const [showBulkTooltip, setShowBulkTooltip] = useState(false);
 
-  // Restore results view if a previous result exists in session
+  // If navigating from History with a specific check, load it immediately
+  const historyState = location.state as { fromHistory?: boolean; checkId?: string; checkResult?: any; contentText?: string } | null;
+
   useEffect(() => {
-    if (checker.result && view === 'input') {
+    if (historyState?.fromHistory && historyState.checkResult) {
+      checker.loadCheck({
+        id: historyState.checkId ?? '',
+        result_json: historyState.checkResult,
+        overall_status: historyState.checkResult.overall_status,
+        content_text: historyState.contentText ?? '',
+      } as any);
+      setContent(historyState.contentText ?? '');
+      setView('results');
+      // Clear the location state so refreshing / re-navigating doesn't replay
+      window.history.replaceState({}, '');
+    }
+  }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Restore results view if a previous result exists in session (non-History navigation)
+  useEffect(() => {
+    if (!historyState?.fromHistory && checker.result && view === 'input') {
       setView('results');
     }
   }, [checker.result]);

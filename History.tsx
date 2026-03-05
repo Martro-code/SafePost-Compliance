@@ -187,37 +187,40 @@ const History: React.FC = () => {
     sessionStorage.removeItem('safepost_view_check_id');
     const match = checker.history.find((c) => c.id === targetId);
     if (match) {
-      // Navigate to dashboard with the check result loaded
-      if (match.result_json) {
-        const normalised = {
-          ...match.result_json,
-          overall_status: match.overall_status,
-          summary: match.result_json.summary ?? match.result_json.overallVerdict ?? '',
-          issues: match.result_json.issues ?? [],
-        };
-        sessionStorage.setItem('safepost_last_result', JSON.stringify(normalised));
-      }
-      sessionStorage.setItem('safepost_last_content', match.content_text ?? '');
-      sessionStorage.setItem('safepost_last_check_id', match.id);
-      navigate('/dashboard');
+      // Navigate to dashboard with the check result via location.state
+      const normalised = match.result_json ? {
+        ...match.result_json,
+        overall_status: match.overall_status,
+        summary: match.result_json.summary ?? match.result_json.overallVerdict ?? '',
+        issues: match.result_json.issues ?? [],
+      } : null;
+      navigate('/dashboard', {
+        state: {
+          fromHistory: true,
+          checkId: match.id,
+          checkResult: normalised,
+          contentText: match.content_text ?? '',
+        },
+      });
     }
   }, [checker.isLoadingHistory, checker.history]);
 
   // View a check on the dashboard
   const handleViewCheck = (check: SavedComplianceCheck) => {
-    if (check.result_json) {
-      const normalised = {
-        ...check.result_json,
-        overall_status: check.overall_status,
-        summary: check.result_json.summary ?? check.result_json.overallVerdict ?? '',
-        issues: check.result_json.issues ?? [],
-      };
-      sessionStorage.setItem('safepost_last_result', JSON.stringify(normalised));
-    }
-    // Always save content — even if result_json is missing
-    sessionStorage.setItem('safepost_last_content', check.content_text ?? '');
-    sessionStorage.setItem('safepost_last_check_id', check.id);
-    navigate('/dashboard');
+    const normalised = check.result_json ? {
+      ...check.result_json,
+      overall_status: check.overall_status,
+      summary: check.result_json.summary ?? check.result_json.overallVerdict ?? '',
+      issues: check.result_json.issues ?? [],
+    } : null;
+    navigate('/dashboard', {
+      state: {
+        fromHistory: true,
+        checkId: check.id,
+        checkResult: normalised,
+        contentText: check.content_text ?? '',
+      },
+    });
   };
 
   // Filter logic
