@@ -45,10 +45,6 @@ const PricingMedicalPractitioners: React.FC = () => {
       question: 'How quickly can I get compliance results?',
       answer: 'SafePost provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA guideline references, and on paid plans you\u2019ll also receive AI-generated compliant alternatives you can use straight away.',
     },
-    {
-      question: 'Are prices in Australian dollars and do they include GST?',
-      answer: 'Yes \u2014 all SafePost prices are in AUD and include GST.',
-    },
   ];
 
   return (
