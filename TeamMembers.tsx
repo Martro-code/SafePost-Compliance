@@ -122,11 +122,11 @@ const TeamMembers: React.FC = () => {
       <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
         {/* Back to Settings */}
         <button
-          onClick={() => navigate('/settings')}
+          onClick={() => navigate('/dashboard')}
           className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Settings
+          Back to Dashboard
         </button>
 
         <div className="mb-8">
