@@ -286,7 +286,7 @@ const Features: React.FC = () => {
                 Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, advertise, or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media.<sup>*</sup>
               </p>
               <p className="mt-6 text-[15px] text-gray-600 leading-relaxed">
-                Advertising applies to all types of social media — including platforms used to reach the general public, and &lsquo;closed channel&rsquo; platforms targeting specific audiences, such as dark marketing, Facebook groups, or closed LinkedIn channels — unless they satisfy the TGA&rsquo;s requirements for advertising exclusively to health professionals.
+                Advertising applies to all types of social media — including platforms used to reach the general public, and &lsquo;closed channel&rsquo; platforms targeting specific audiences, such as dark marketing, Facebook groups, or closed LinkedIn channels — unless they satisfy the TGA&rsquo;s requirements for <a href="https://www.tga.gov.au/resources/guidance/advertising-health-professionals-so-consumer-rules-do-not-apply" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">advertising exclusively to health professionals</a>.
               </p>
               <p className="mt-4 text-[12px] text-gray-400 leading-relaxed">
                 * Not an exhaustive list — adapted from:{' '}
