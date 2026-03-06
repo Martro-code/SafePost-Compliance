@@ -26,7 +26,7 @@ const Features: React.FC = () => {
     {
       icon: <Zap className="w-7 h-7 text-blue-500/80" />,
       heading: 'Instant AHPRA analysis',
-      description: 'Checked against 134 rules from five primary regulatory documents. Not a summarised guide — primary sources only.',
+      description: 'Checked against 145 rules from six primary regulatory documents. Not a summarised guide — primary sources only.',
     },
     {
       icon: <FileText className="w-7 h-7 text-blue-500/80" />,
