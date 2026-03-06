@@ -285,6 +285,17 @@ const Features: React.FC = () => {
               <p className="text-[15px] text-gray-600 leading-relaxed">
                 Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, to advertise or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media.<sup>*</sup>
               </p>
+              <p className="mt-6 text-[15px] text-gray-600 leading-relaxed">
+                Advertising applies to all types of social media, including (but not limited to):
+              </p>
+              <ul className="mt-3 space-y-2 text-[15px] text-gray-600 leading-relaxed list-disc pl-5">
+                <li>
+                  Social media platforms that are used to reach or interact with as many individuals as possible and are considered to be aimed at the public.
+                </li>
+                <li>
+                  Social media platforms that are used as a &lsquo;closed channel&rsquo; for specific audiences, such as dark marketing, Facebook groups or closed channels on LinkedIn, unless they satisfy the TGA&rsquo;s requirements for advertising exclusively to health professionals.
+                </li>
+              </ul>
               <p className="mt-4 text-[12px] text-gray-400 leading-relaxed">
                 * Not an exhaustive list — adapted from:{' '}
                 <a
@@ -301,11 +312,13 @@ const Features: React.FC = () => {
             {/* Right column — categorised list */}
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 space-y-3">
               {[
-                { category: 'Social networking', examples: 'Facebook, Twitter, WeChat, Weibo, WhatsApp' },
-                { category: 'Professional networking', examples: 'LinkedIn' },
-                { category: 'Discussion forums', examples: 'Reddit, Whirlpool' },
-                { category: 'Media sharing', examples: 'YouTube, Flickr, Instagram' },
-                { category: 'Content production', examples: 'Tumblr, Blogger, Twitter' },
+                { category: 'Social networking', examples: 'Facebook, X, WeChat, Weibo, WhatsApp' },
+                { category: 'Professional networking', examples: 'LinkedIn, Yammer' },
+                { category: 'Discussion forums', examples: 'Reddit, Whirlpool, Discord, Quora' },
+                { category: 'Media sharing', examples: 'YouTube, Flickr, Instagram, TikTok, Pinterest' },
+                { category: 'Content production', examples: 'Tumblr, Blogger, X' },
+                { category: 'Audio publishing', examples: 'Spotify, iTunes, Podcasts' },
+                { category: 'Text publishing', examples: 'Blogs, Wikipedia, SlideShare' },
                 { category: 'Knowledge aggregation', examples: 'Wikipedia' },
                 { category: 'Virtual reality & gaming', examples: 'Second Life' },
                 { category: 'Booking sites & apps', examples: 'HealthEngine, Whitecoat, Podium' },
