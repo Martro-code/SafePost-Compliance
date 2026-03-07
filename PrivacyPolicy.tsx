@@ -197,7 +197,7 @@ const PrivacyPolicy: React.FC = () => {
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 <strong className="text-gray-700">
-                  {`Important disclaimer: SafePost is an AI-powered guidance tool and does not constitute legal or regulatory advice. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009.`}
+                  {`Important disclaimer: SafePost is an AI-powered guidance tool and does not constitute legal or regulatory advice. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009 and the Therapeutic Goods Act 1989.`}
                 </strong>
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed">
