@@ -31,7 +31,7 @@ const PricingMedicalPractitioners: React.FC = () => {
     },
     {
       question: 'Can SafePost guarantee my content will be compliant?',
-      answer: 'SafePost is a guidance tool that helps identify potential compliance issues based on AHPRA\u2019s advertising guidelines and social media guidance. While we provide comprehensive analysis and compliant alternatives, AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain ultimately responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009.',
+      answer: 'SafePost is a guidance tool that helps identify potential compliance issues based on AHPRA and TGA advertising guidelines and social media guidance. While we provide comprehensive analysis and compliant alternatives, AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain ultimately responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009 and the Therapeutic Goods Act 1989.',
     },
     {
       question: 'What happens if I exceed my monthly check limit?',
@@ -39,11 +39,11 @@ const PricingMedicalPractitioners: React.FC = () => {
     },
     {
       question: 'Can I analyse content that includes images or before/after photos?',
-      answer: 'Yes \u2014 SafePost Professional, Pro+, and Ultra all include image and video content analysis, which is particularly important for cosmetic procedure advertising. SafePost analyses visual content for compliance with AHPRA\u2019s strict regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan supports text-based analysis only.',
+      answer: 'Yes \u2014 SafePost Professional, Pro+, and Ultra all include image and video content analysis, which is particularly important for cosmetic procedure advertising. SafePost analyses visual content for compliance with AHPRA and TGA regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan supports text-based analysis only.',
     },
     {
       question: 'How quickly can I get compliance results?',
-      answer: 'SafePost provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA guideline references, and on paid plans you\u2019ll also receive AI-generated compliant alternatives you can use straight away.',
+      answer: 'SafePost provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA and TGA guideline references, and on paid plans you\u2019ll also receive AI-generated compliant alternatives you can use straight away.',
     },
   ];
 
