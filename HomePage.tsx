@@ -513,7 +513,7 @@ const HomePage: React.FC = () => {
               Try SafePost now
             </h2>
             <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-              Protect your practice with instant AHPRA social media activities and advertising compliance checks
+              Protect your practice with instant AHPRA and TGA social media and advertising compliance checks
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
