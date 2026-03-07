@@ -13,7 +13,7 @@ const PublicFooter = () => {
             <span className="text-[#2563EB]">Post</span>™
           </div>
           <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
-            Checks your online advertising and social media content against AHPRA and TGA rules — before you publish, not after.
+            Checks your online advertising and social media content against AHPRA and TGA rules — before you publish, not&nbsp;after.
           </p>
         </div>
 
