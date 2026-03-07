@@ -322,7 +322,7 @@ const HomePage: React.FC = () => {
                 Get instant analysis
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                SafePost analyses your content against AHPRA compliance guidelines and flags specific issues with direct references to the relevant rules and sections.
+                SafePost analyses your content against AHPRA and TGA compliance guidelines and flags specific issues with direct references to the relevant rules and sections.
               </p>
             </div>
 
@@ -333,7 +333,7 @@ const HomePage: React.FC = () => {
                 Receive compliant alternatives
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Get ready-to-use rewritten versions of your content that meet AHPRA regulatory requirements — so you can post with confidence.
+                Get ready-to-use rewritten versions of your content that meet AHPRA and TGA regulatory requirements — so you can post with confidence.
               </p>
             </div>
           </div>
