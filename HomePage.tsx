@@ -407,10 +407,10 @@ const HomePage: React.FC = () => {
                   See SafePost in action
                 </h2>
                 <p className="text-lg text-gray-500 leading-relaxed">
-                  Watch how SafePost identifies AHPRA compliance issues and generates compliant alternatives in seconds.
+                  Watch how SafePost identifies AHPRA and TGA compliance issues and generates compliant alternatives in seconds.
                 </p>
                 <p className="text-[15px] text-gray-400 leading-relaxed">
-                  SafePost analyses your social media posts and advertising content against AHPRA's advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
+                  SafePost analyses your social media posts and advertising content against AHPRA and TGA advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
                 </p>
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
                   <button
