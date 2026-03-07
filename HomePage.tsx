@@ -229,11 +229,11 @@ const HomePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-gray-900 mb-6">
-              Navigate your online presence and stay{' '}
-              <span className="text-[#2563EB]">AHPRA-compliant.</span>
+              Navigate your online presence. Stay{' '}
+              <span className="text-[#2563EB]">AHPRA and TGA compliant.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
-              Instant social media and online advertising compliance checks for medical practitioners and practices.
+              Instant social media and online advertising compliance checks for Australian medical practitioners and practices.
             </p>
           </div>
           {/* Hero image/banner placeholder — add your image here */}
