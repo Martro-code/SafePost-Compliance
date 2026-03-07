@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk';
 import { AnalysisResult, ComplianceStatus, ComplianceIssue, RewrittenPost } from '../types';
 import { FAQ_CONTEXT } from './safepost_faq_prompt_context';
+import { EVIDENCE_PROMPT_CONTEXT } from './safepost_evidence_prompt_context';
 
 // TODO: Move API calls to a backend proxy to avoid exposing the API key in the
 // client bundle. `dangerouslyAllowBrowser` is a temporary workaround — the key
@@ -143,7 +144,9 @@ You must return a valid JSON object in this exact structure with no markdown, no
   ]
 }
   
-${FAQ_CONTEXT}`;
+${FAQ_CONTEXT}
+
+${EVIDENCE_PROMPT_CONTEXT}`;
 
 export const analyzePost = async (postContent: string, image?: { base64: string, mimeType: string }): Promise<AnalysisResult> => {
   console.log('[analyzePost] received content:', {
