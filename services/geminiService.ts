@@ -36,18 +36,78 @@ C. GOOD MEDICAL PRACTICE & SOCIAL MEDIA CONDUCT:
    - PROFESSIONAL OBLIGATIONS: Doctors must maintain professional standards online.
    - RESPECT: Maintain respect for colleagues and patients. No bullying/harassment.
 
-D. TGA — THERAPEUTIC GOODS ADVERTISING (Separate Framework):
-   - PRESCRIPTION MEDICINES: Prescription-only medicines (Schedule 4) including compounded 
-     versions (e.g. compounded tirzepatide, semaglutide) CANNOT be advertised to the public. 
-     This is an absolute prohibition — flag as Critical, the post cannot be fixed by editing.
-   - THERAPEUTIC CLAIMS: If any claim suggests a product diagnoses, treats, relieves, reduces, 
-     aids, or fades a health condition, TGA rules apply. Flag as a standalone TGA issue.
-   - PAID TESTIMONIALS: Anyone receiving payment or free product cannot provide testimonials 
-     about therapeutic goods. Flag as a standalone TGA Critical issue.
-   - HEALTH PROFESSIONAL ENDORSEMENTS: Health professionals cannot endorse therapeutic goods 
-     in advertising. Flag as a standalone TGA Critical issue.
-   - Always label TGA issues clearly with "TGA:" at the start of the guidelineReference field 
-     so users know this is a separate regulatory framework from AHPRA.
+D. TGA — THERAPEUTIC GOODS ADVERTISING (Separate Regulatory Framework):
+   TGA rules apply whenever content advertises, promotes, or implies the use or supply of a
+   therapeutic good. This includes medicines, medical devices, supplements, compounded
+   preparations, and any product making a health claim. TGA rules operate independently of
+   AHPRA rules — a post can breach both frameworks simultaneously.
+   Always label every TGA issue with "TGA:" at the start of the guidelineReference field.
+   ABSOLUTE PROHIBITIONS — these cannot be fixed by editing, flag as Critical:
+   - PRESCRIPTION MEDICINES: Prescription-only medicines (Schedule 4 or Schedule 8),
+     including all compounded versions (e.g. compounded semaglutide, compounded tirzepatide,
+     compounded ozempic), CANNOT be advertised to the public under any circumstances.
+     Reference: Therapeutic Goods Act 1989, s.42DL. Civil penalties exceed $1 million.
+   - UNAPPROVED GOODS: Therapeutic goods not included in the Australian Register of
+     Therapeutic Goods (ARTG) cannot be advertised to the public. Off-label use promotion
+     is prohibited even to health professionals.
+   - RESTRICTED REPRESENTATIONS: Claims that a therapeutic good treats a serious disease
+     (e.g. cancer, diabetes, cardiovascular disease, HIV, serious mental health conditions)
+     require prior TGA Secretary approval under s.42DF before publication.
+   SAFETY AND ACCURACY REQUIREMENTS — flag as Critical if clearly breached:
+   - SAFETY CLAIMS: Must not describe a therapeutic good as "safe", "without side effects",
+     "guaranteed", "a sure cure", "miraculous", "magical", or "infallible".
+     Reference: Advertising Code 2021, Schedule 1, s.9(1).
+   - ACCURACY: All claims must be accurate, balanced, and substantiated. Unbalanced content
+     that highlights only positives while omitting risks or limitations is non-compliant.
+     Reference: Advertising Code 2021, Schedule 1, s.8.
+   - EFFICACY EXAGGERATION: Must not exaggerate what a therapeutic good can achieve beyond
+     what the evidence and ARTG indications support.
+     Reference: Advertising Code 2021, Schedule 1, s.9(3)(d).
+   - DISCOURAGING MEDICAL ATTENTION: Must not discourage patients from seeking medical
+     advice or continuing prescribed treatment.
+     Reference: Advertising Code 2021, Schedule 1, s.9(3)(b)-(c).
+   - SCIENTIFIC CLAIMS: Clinical or scientific representations must be evidence-based,
+     clearly communicated, and properly cited with researcher and sponsor identified.
+     Reference: Advertising Code 2021, Schedule 1, s.11.
+   TESTIMONIALS AND ENDORSEMENTS — flag as Critical:
+   - HEALTH PRACTITIONER TESTIMONIALS: Current AND former health practitioners, health
+     professionals, and medical researchers cannot provide testimonials OR endorsements
+     for therapeutic goods. This is an absolute prohibition — disclosure does not fix it.
+     Reference: Advertising Code 2021, Schedule 1, s.24(4)(c) and s.24(6)(d).
+   - VALUABLE CONSIDERATION TESTIMONIALS: Anyone who received payment, free product,
+     gifts, discounts, travel, or any other benefit cannot provide a testimonial for a
+     therapeutic good. Unlike general consumer law, disclosure does not make this compliant.
+     Reference: Advertising Code 2021, Schedule 1, s.24(4)(a).
+   - GOVERNMENT AND HOSPITAL ENDORSEMENTS: Government bodies, hospitals (other than
+     community pharmacies), and their employees cannot endorse therapeutic goods.
+     Reference: Advertising Code 2021, Schedule 1, s.24(6)(a)-(c).
+   - TGA APPROVAL CLAIMS: Stating or implying a product is "TGA-approved" or endorsed by
+     the TGA is prohibited for listed medicines and misleading for most registered medicines.
+     Reference: Therapeutic Goods Act 1989, s.42DL.
+   - UNVERIFIED TESTIMONIALS: Testimonials cannot be used unless the advertiser has verified
+     the identity of the testimonial maker and the content of the testimonial.
+     Reference: Advertising Code 2021, Schedule 1, s.24(5).
+   SPECIFIC PRODUCT CATEGORY RULES — flag as Critical or Warning depending on severity:
+   - WEIGHT MANAGEMENT: Content making weight loss, weight control, or hunger suppression
+     claims for a therapeutic good must prominently promote healthy diet and physical
+     activity. Must not imply the product corrects overeating. Results shown must reflect
+     average outcomes, not exceptional individual results.
+     Reference: Advertising Code 2021, Schedule 1, s.23(4).
+   - CHILDREN UNDER 12: Therapeutic goods advertising must not be directed to children
+     under 12. Reference: Advertising Code 2021, Schedule 1, s.12(2).
+   - MANDATORY STATEMENTS: Social media posts advertising medicines must include
+     "ALWAYS READ THE LABEL AND FOLLOW THE DIRECTIONS FOR USE" prominently.
+     Note: social media posts are expressly excluded from the short-form exemption —
+     this requirement applies regardless of post length.
+     Reference: Advertising Code 2021, Schedule 1, s.19(1)(c) and s.17.
+   SOCIAL MEDIA SPECIFIC RULES — flag as Warning unless clearly Critical:
+   - HISTORICAL POSTS: Every day a non-compliant post remains live is a potential new
+     contravention. Historical posts are not exempt from current TGA requirements.
+     Reference: Therapeutic Goods Act 1989, s.42DL.
+   - CLOSED CHANNELS: Private Facebook groups, closed LinkedIn channels, and dark marketing
+     are NOT automatically exempt from TGA consumer advertising rules. The health professional
+     exemption only applies where access is controlled by verified AHPRA registration.
+     Reference: Therapeutic Goods Act 1989, s.42DL; Advertising Code 2021, s.6(1)(a).
 
 E. PROFESSIONAL CONDUCT RISK — SERIOUS MISCONDUCT CONTENT:
    - If the content describes, implies, or depicts sexual conduct or inappropriate physical contact with patients, return status: "CONDUCT_RISK"
