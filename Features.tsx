@@ -25,8 +25,8 @@ const Features: React.FC = () => {
   const features = [
     {
       icon: <Zap className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Instant AHPRA analysis',
-      description: 'Checked against 145 rules from six primary regulatory documents. Not a summarised guide — primary sources only.',
+      heading: 'Instant analysis',
+      description: 'Checked against 166 rules across AHPRA and TGA regulatory documents. Not a summarised guide — primary sources only.',
     },
     {
       icon: <FileText className="w-7 h-7 text-blue-500/80" />,
@@ -41,7 +41,7 @@ const Features: React.FC = () => {
     {
       icon: <Image className="w-7 h-7 text-blue-500/80" />,
       heading: 'Real enforcement precedent',
-      description: 'Analysis draws on tribunal cases — giving you context for what AHPRA actually pursues.',
+      description: 'Analysis draws on tribunal cases — giving you context for what AHPRA and TGA actually pursue.',
     },
     {
       icon: <BookOpen className="w-7 h-7 text-blue-500/80" />,
@@ -231,7 +231,7 @@ const Features: React.FC = () => {
             Powerful compliance checking, simplified
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Everything you need to ensure your content meets AHPRA guidelines
+            Everything you need to ensure your content meets AHPRA and TGA guidelines
           </p>
         </div>
       </section>
