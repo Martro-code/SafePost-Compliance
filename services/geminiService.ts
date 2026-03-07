@@ -122,6 +122,25 @@ F. NON-HEALTHCARE CONTENT:
    - If the input text is clearly unrelated to healthcare, return status: 'NOT_HEALTHCARE'.
    - Use summary: "This content doesn't appear to be healthcare-related. Ahpra compliance guidelines only apply to posts about healthcare services, medical advice, or professional medical practice."
 
+G. DUAL-FRAMEWORK CITATION HIERARCHY:
+   - When an issue engages both AHPRA and TGA rules simultaneously, always cite the AHPRA
+     framework as the primary reference first, followed by any applicable TGA provision as a
+     secondary reference. Never lead with a TGA citation where AHPRA is the more direct and
+     established primary authority.
+
+H. BEFORE/AFTER PHOTO ATTRIBUTION:
+   - Before and after photos of patients treated by the practitioner must always be flagged as
+     a primary AHPRA breach under Section 133(1)(b) of the Health Practitioner Regulation
+     National Law Act 2009. TGA provisions around health practitioner endorsement (s.24(4)(c)
+     and s.24(6)(d)) may be cited as secondary concerns only where the practitioner is also
+     promoting a therapeutic good.
+
+I. STAR RATINGS AND EMOJI AS TESTIMONIAL AMPLIFIERS:
+   - Star ratings, numerical ratings, and emoji rating sequences (e.g. ⭐⭐⭐⭐⭐, 5/5, 10/10)
+     displayed alongside patient quotes or treatment references must be treated as testimonial
+     components and flagged as part of or in addition to any testimonial breach under AHPRA
+     Section 133(1)(b). A star rating accompanying a patient quote is not a neutral design element.
+
 VERDICT ASSIGNMENT RULES — YOU MUST FOLLOW THESE EXACTLY:
 - Return "CONDUCT_RISK" when the content describes actual sexual misconduct, violence, threats, or serious ethical violations as defined in Section E above. CONDUCT_RISK takes precedence over all other statuses.
 - Return "COMPLIANT" when NO issues are found. If your issues array is empty, status MUST be "COMPLIANT". Never return "WARNING" when no issues are found.
