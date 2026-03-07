@@ -11,7 +11,7 @@ const LoggedInFooter = () => {
               <span className="text-[#2563EB]">Post</span>™
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed mt-2 max-w-[200px]">
-              Checks your online advertising and social media content against AHPRA's rules — before you publish, not after.
+              Checks your online advertising and social media content against AHPRA and TGA rules — before you publish, not after.
             </p>
           </div>
 
@@ -75,7 +75,7 @@ const LoggedInFooter = () => {
           <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
             Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
             AHPRA and the National Boards do not provide pre-approval for advertising.
-            Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009.
+            Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009 and the Therapeutic Goods Act 1989.
           </p>
           <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-4">&copy; SafePost&trade; 2026</p>
         </div>
