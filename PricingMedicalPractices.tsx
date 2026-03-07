@@ -43,7 +43,7 @@ const PricingMedicalPractices: React.FC = () => {
     },
     {
       question: 'Can I download a record of our compliance checks?',
-      answer: 'Yes \u2014 Ultra plan subscribers can export their complete compliance history as a PDF audit log. This is useful for demonstrating a compliance process to insurers, legal advisers, or in the event of an AHPRA inquiry. All plans include in-app compliance history up to their plan limit.',
+      answer: 'Yes \u2014 Ultra plan subscribers can export their complete compliance history as a PDF audit log. This is useful for demonstrating a compliance process to insurers, legal advisers, or in the event of an AHPRA or TGA inquiry. All plans include in-app compliance history up to their plan limit.',
     },
   ];
 
