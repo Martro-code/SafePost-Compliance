@@ -205,7 +205,7 @@ const About: React.FC = () => {
                 {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
+                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
               </p>
             </div>
 
