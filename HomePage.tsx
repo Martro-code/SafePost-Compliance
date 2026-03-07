@@ -343,7 +343,7 @@ const HomePage: React.FC = () => {
       {/* Activities That May Trigger Ahpra Investigation */}
       <FAQSection
         title="Activities that may trigger investigation"
-        subtitle="Social media and online advertising activities most likely to attract AHPRA and TGA scrutiny"
+        subtitle="Online advertising and social media activities most likely to attract AHPRA and TGA scrutiny"
         groups={[
           {
             label: 'Advertising breaches — AHPRA and TGA',
