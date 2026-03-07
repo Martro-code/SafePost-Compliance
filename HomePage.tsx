@@ -456,7 +456,7 @@ const HomePage: React.FC = () => {
           <div className="max-w-6xl mx-auto px-6 pt-16 md:pt-20 pb-24 md:pb-32">
             <div className="text-center mb-14">
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-                Built on official AHPRA guidelines
+                Built on official AHPRA and TGA guidelines
               </h2>
               <p className="text-lg text-gray-500">
                 Comprehensive coverage you can trust
@@ -485,12 +485,9 @@ const HomePage: React.FC = () => {
                 <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
                   Official guidelines
                 </h3>
-                <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                  Based directly on AHPRA's Social Media Guidance and Advertising Guidelines. All compliance checks reference current regulations.
+                <p className="text-[14px] text-gray-500 leading-relaxed">
+                  Based directly on AHPRA's Social Media Guidance and Advertising Guidelines and TGA's Therapeutic Goods Advertising Code. All compliance checks reference current regulations.
                 </p>
-                <div className="flex flex-col gap-2">
-                  <a href="https://www.ahpra.gov.au/Resources/Advertising-hub.aspx" target="_blank" rel="noopener noreferrer" className="text-[13px] text-blue-600 hover:underline">View official AHPRA guidelines for detailed compliance information.</a>
-                </div>
               </div>
 
               {/* Column 3 — Trusted by Professionals */}
@@ -516,7 +513,7 @@ const HomePage: React.FC = () => {
               Try SafePost now
             </h2>
             <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-              Protect your practice with instant AHPRA social media activities and advertising compliance checks
+              Protect your practice with instant AHPRA and TGA social media and advertising compliance checks
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
