@@ -294,7 +294,7 @@ const Dashboard: React.FC = () => {
                 {firstName ? `Welcome back, ${firstName}!` : 'Welcome back!'}
               </h2>
               <p className="text-[14px] text-gray-500 dark:text-gray-300">
-                Instant AHPRA compliance check for medical practitioners and practices
+                Instant AHPRA and TGA compliance check for medical practitioners and practices
               </p>
             </div>
 
@@ -545,7 +545,7 @@ const Dashboard: React.FC = () => {
             {view === 'loading' && (
               <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-12 flex flex-col items-center justify-center gap-4">
                 <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-                <p className="text-[14px] text-gray-500 dark:text-gray-300 font-medium">Analysing your content for AHPRA compliance...</p>
+                <p className="text-[14px] text-gray-500 dark:text-gray-300 font-medium">Analysing your content for AHPRA and TGA compliance...</p>
               </div>
             )}
 
