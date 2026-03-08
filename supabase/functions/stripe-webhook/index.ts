@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
-import Stripe from 'https://esm.sh/stripe@14.14.0?target=deno';
+import Stripe from 'https://esm.sh/stripe@13.11.0?target=deno&no-check=true';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
@@ -32,7 +32,7 @@ const priceIdToBilling: Record<string, string> = {
   'price_1T8UaCR1RAuGYaVL3M5ob7TV': 'yearly',
 };
 
-serve(async (req) => {
+serve(async (req: Request) => {
   const signature = req.headers.get('stripe-signature');
 
   if (!signature) {
@@ -43,7 +43,9 @@ serve(async (req) => {
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    // Use constructEventAsync instead of constructEvent — the sync version
+    // requires Node.js crypto which is not available in Deno
+    event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
