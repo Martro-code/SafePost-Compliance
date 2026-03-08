@@ -1,7 +1,12 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import Stripe from 'https://esm.sh/stripe@14.14.0?target=deno';
 
-const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
+const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
+if (!stripeSecretKey) {
+  console.error('STRIPE_SECRET_KEY is not set in environment variables');
+}
+
+const stripe = new Stripe(stripeSecretKey || '', {
   apiVersion: '2023-10-16',
   httpClient: Stripe.createFetchHttpClient(),
 });
@@ -9,6 +14,7 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
 serve(async (req) => {
@@ -17,6 +23,10 @@ serve(async (req) => {
   }
 
   try {
+    if (!stripeSecretKey) {
+      throw new Error('Stripe is not configured. STRIPE_SECRET_KEY is missing.');
+    }
+
     const { priceId, userId } = await req.json();
 
     if (!priceId || !userId) {
@@ -48,6 +58,7 @@ serve(async (req) => {
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
+    console.error('create-checkout-session error:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
