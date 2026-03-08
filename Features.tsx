@@ -352,7 +352,7 @@ const Features: React.FC = () => {
             </div>
 
             {/* Right column — categorised list */}
-            <div className="bg-white rounded-2xl border border-black/[0.06] p-8 space-y-3">
+            <div className="bg-white rounded-2xl border border-black/[0.06] p-6 sm:p-8 space-y-3">
               {[
                 { category: 'Social networking', examples: 'Facebook, X, WeChat, Weibo, WhatsApp' },
                 { category: 'Professional networking', examples: 'LinkedIn, Yammer' },
@@ -365,8 +365,8 @@ const Features: React.FC = () => {
                 { category: 'Virtual reality & gaming', examples: 'Second Life' },
                 { category: 'Booking sites & apps', examples: 'HealthEngine, Whitecoat, Podium' },
               ].map((item, index) => (
-                <div key={index} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-3">
-                  <span className="inline-block self-start px-2.5 py-0.5 text-[11px] font-bold text-gray-800 bg-gray-200 rounded-full whitespace-nowrap leading-snug">
+                <div key={index} className="flex items-baseline gap-3 flex-wrap">
+                  <span className="inline-block shrink-0 px-2.5 py-0.5 text-[11px] font-bold text-gray-800 bg-gray-200 rounded-full whitespace-nowrap leading-snug">
                     {item.category}
                   </span>
                   <span className="text-[14px] text-gray-500">
