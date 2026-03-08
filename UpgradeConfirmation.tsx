@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Info, CheckCircle } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { supabase } from './src/services/supabaseClient';
+import { useAccount } from './src/context/AccountContext';
 
 const plans: Record<string, { name: string; monthlyPrice: number; yearlyPrice: number }> = {
   professional: { name: 'SafePost Professional', monthlyPrice: 20, yearlyPrice: 200 },
@@ -10,9 +11,18 @@ const plans: Record<string, { name: string; monthlyPrice: number; yearlyPrice: n
   ultra: { name: 'SafePost Ultra', monthlyPrice: 149, yearlyPrice: 1490 },
 };
 
+const PLAN_LIMITS: Record<string, number | null> = {
+  free: 3,
+  starter: 3,
+  professional: 30,
+  proplus: 100,
+  ultra: null,
+};
+
 const UpgradeConfirmation: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { accountId, refreshAccount } = useAccount();
 
   const planKey = searchParams.get('plan') || '';
   const billing = searchParams.get('billing') || 'monthly';
@@ -26,14 +36,38 @@ const UpgradeConfirmation: React.FC = () => {
 
   const [upgraded, setUpgraded] = useState(false);
 
+  const [upgrading, setUpgrading] = useState(false);
+
   const handleConfirmUpgrade = async () => {
-    if (planKey) {
+    if (!planKey || !accountId) return;
+    setUpgrading(true);
+    try {
+      // Update the accounts table — this is the source of truth for Dashboard
+      const checksLimit = PLAN_LIMITS[planKey] ?? 3;
+      const { error } = await supabase
+        .from('accounts')
+        .update({ plan: planKey, checks_limit: checksLimit })
+        .eq('id', accountId);
+
+      if (error) {
+        console.error('Failed to update account plan:', error);
+        setUpgrading(false);
+        return;
+      }
+
+      // Keep sessionStorage and user_metadata in sync
       sessionStorage.setItem('safepost_plan', planKey);
       sessionStorage.setItem('safepost_billing', billing);
-      // Persist plan to Supabase user_metadata so it survives logout/login
       await supabase.auth.updateUser({ data: { plan: planKey, billing } });
+
+      // Refresh the AccountContext so Dashboard picks up the new plan
+      await refreshAccount();
+      setUpgraded(true);
+    } catch (err) {
+      console.error('Upgrade failed:', err);
+    } finally {
+      setUpgrading(false);
     }
-    setUpgraded(true);
   };
 
   return (
@@ -131,9 +165,14 @@ const UpgradeConfirmation: React.FC = () => {
                 </button>
                 <button
                   onClick={handleConfirmUpgrade}
-                  className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
+                  disabled={upgrading || !accountId}
+                  className={`flex-1 h-11 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98] ${
+                    upgrading || !accountId
+                      ? 'bg-blue-600/50 cursor-not-allowed'
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  }`}
                 >
-                  Confirm upgrade
+                  {upgrading ? 'Upgrading…' : 'Confirm upgrade'}
                 </button>
               </div>
             </>
