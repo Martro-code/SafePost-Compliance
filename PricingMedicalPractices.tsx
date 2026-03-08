@@ -37,8 +37,8 @@ const PricingMedicalPractices: React.FC = () => {
       answer: 'Yes \u2014 the Pro+ plan includes access for up to 3 team members, while the Ultra plan supports up to 10 team members. Each team member gets their own login, and all checks appear in a shared compliance history. Team accounts are ideal for practices where a practice manager and multiple practitioners all need compliance checking access.',
     },
     {
-      question: 'Do you offer compliance checks for website content and online advertising?',
-      answer: 'Yes \u2014 all paid plans include analysis of any online content including website copy, social media posts, paid advertising, and email marketing. SafePost checks content against AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA advertising requirements where relevant.',
+      question: 'Can I upgrade or downgrade my practice plan at any time?',
+      answer: 'Yes. Upgrades take effect immediately. Downgrades take effect at the start of your next billing period.',
     },
     {
       question: 'How does SafePost handle compliance for cosmetic procedures?',
@@ -119,6 +119,9 @@ const PricingMedicalPractices: React.FC = () => {
               </button>
               {resourcesDropdownOpen && (
                 <div className="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  <button onClick={() => { navigate('/faq'); setResourcesDropdownOpen(false); }} className="block w-full text-left px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    FAQ
+                  </button>
                   {resourceLinks.map((link, i) => (
                     <a
                       key={i}
@@ -238,6 +241,9 @@ const PricingMedicalPractices: React.FC = () => {
                 }}
               >
                 <div className="pl-4 space-y-0.5 pt-1">
+                  <button onClick={() => { navigate('/faq'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors">
+                    FAQ
+                  </button>
                   {resourceLinks.map((link, i) => (
                     <a
                       key={i}

@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import FAQSection from './components/FAQSection';
 import PublicFooter from './components/PublicFooter';
-import spLogo from './assets/SP-logo.svg';
 
-const About: React.FC = () => {
+const FAQ: React.FC = () => {
   const navigate = useNavigate();
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -22,6 +22,100 @@ const About: React.FC = () => {
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
+  const comparisonRows = [
+    { feature: 'Knows current AHPRA rules', generic: 'General knowledge only', safepost: '166 specific rules' },
+    { feature: 'Cites exact guideline breached', generic: 'No', safepost: 'Yes, every time' },
+    { feature: 'Built for Australian practitioners', generic: 'No', safepost: 'Yes' },
+    { feature: 'Compliance history & audit trail', generic: 'No', safepost: 'Yes' },
+    { feature: 'Requires prompt engineering', generic: 'Yes \u2014 you must explain the rules', safepost: 'No \u2014 paste and check' },
+    { feature: 'Understands TGA advertising rules', generic: 'Partially', safepost: 'Yes' },
+    { feature: 'Before/after photo analysis', generic: 'No', safepost: 'Yes' },
+    { feature: 'Star rating risk assessment', generic: 'No', safepost: 'Yes' },
+    { feature: 'Team access & shared history', generic: 'No', safepost: 'Yes' },
+  ];
+
+  const faqGroups = [
+    {
+      label: 'About SafePost',
+      items: [
+        {
+          question: 'Why was SafePost built?',
+          answer: 'Australian medical practitioners face real consequences for non-compliant social media content \u2014 from formal AHPRA complaints to TGA enforcement action. SafePost was built to give practitioners an instant, reliable way to check their content before posting, without needing to read hundreds of pages of guidelines.',
+        },
+        {
+          question: 'Who is SafePost for?',
+          answer: 'SafePost is for any Australian health practitioner registered with AHPRA \u2014 including doctors, dentists, physiotherapists, psychologists, nurses, and more \u2014 as well as medical practices managing content across multiple practitioners.',
+        },
+        {
+          question: 'Why not just use ChatGPT or Google Gemini?',
+          answer: 'General AI tools don\u2019t know what AHPRA will investigate you for. SafePost is built with 166 specific AHPRA and TGA rules hardcoded into every analysis. Unlike ChatGPT, SafePost cites the exact guideline you\u2019ve breached, maintains a full audit trail, and is updated as Australian regulations change. For practitioners whose registration is at stake, a general AI guess isn\u2019t good enough.',
+        },
+        {
+          question: 'Is SafePost affiliated with AHPRA or the TGA?',
+          answer: 'No. SafePost is an independent compliance tool. It is not affiliated with, endorsed by, or connected to AHPRA or the TGA in any way.',
+        },
+      ],
+    },
+    {
+      label: 'Compliance & Content',
+      items: [
+        {
+          question: 'What types of content can I check?',
+          answer: 'SafePost analyses social media posts, online advertising copy, website content, email marketing, and any other text-based content intended for public audiences. You can also attach images for visual content analysis including before/after photos and star ratings.',
+        },
+        {
+          question: 'Can SafePost guarantee my content will be compliant?',
+          answer: 'No tool can guarantee compliance \u2014 and you should be cautious of any that claims to. SafePost provides an AI-powered assessment based on current AHPRA and TGA guidelines. It significantly reduces your risk but does not replace professional legal advice for complex or high-stakes situations.',
+        },
+        {
+          question: 'How does SafePost handle before/after photos?',
+          answer: 'Before/after photos are assessed under AHPRA\u2019s specific prohibition on such imagery in health practitioner advertising. SafePost flags these under the correct AHPRA framework and provides guidance on compliant alternatives.',
+        },
+        {
+          question: 'How current are the compliance rules?',
+          answer: 'SafePost\u2019s rules database is updated when AHPRA or TGA publish significant guideline changes. The current version covers 166 rules across both frameworks.',
+        },
+      ],
+    },
+    {
+      label: 'Plans & Billing',
+      items: [
+        {
+          question: 'Can I try SafePost before paying?',
+          answer: 'Yes \u2014 the Starter plan is free forever with 3 compliance checks included. No credit card required.',
+        },
+        {
+          question: 'Can I upgrade or downgrade my plan at any time?',
+          answer: 'Yes. You can change your plan at any time from your account settings. Upgrades take effect immediately. Downgrades take effect at the start of your next billing period.',
+        },
+        {
+          question: 'What happens if I cancel?',
+          answer: 'You can cancel at any time. You\u2019ll retain access to your plan until the end of your current billing period. Your compliance history remains accessible after cancellation.',
+        },
+        {
+          question: 'Do you offer refunds?',
+          answer: 'We assess refund requests on a case by case basis. Contact us at support@safepost.com.au within 7 days of a charge if you believe a refund is warranted.',
+        },
+      ],
+    },
+    {
+      label: 'Privacy & Security',
+      items: [
+        {
+          question: 'Is my content stored or shared?',
+          answer: 'Your compliance checks are stored securely in your account history so you can reference them later. Your content is never shared with third parties or used to train AI models.',
+        },
+        {
+          question: 'Is SafePost secure?',
+          answer: 'Yes. SafePost uses Supabase for authentication and database management, with row-level security ensuring your data is only accessible to you. All data is encrypted in transit and at rest.',
+        },
+        {
+          question: 'Who can see my compliance checks?',
+          answer: 'Only you \u2014 and team members you explicitly invite on Pro+ and Ultra plans. SafePost staff do not access your compliance check content.',
+        },
+      ],
+    },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
@@ -245,109 +339,80 @@ const About: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            About SafePost
+            Got questions? We've got answers.
           </h1>
           <p className="text-lg text-gray-500">
-            Supporting Australian medical practitioners and practices with compliance confidence
+            Everything you need to know about SafePost, AHPRA compliance, and how it all works.
           </p>
         </div>
       </section>
 
-      {/* Main Content */}
+      {/* Comparison Table Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="max-w-[800px] mx-auto space-y-12">
-            {/* Section 1 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day"}
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
-              </p>
-            </div>
+        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+              See how SafePost compares
+            </h2>
+            <p className="text-lg text-gray-500">
+              General AI tools are built for conversation. SafePost is built for compliance.
+            </p>
+          </div>
 
-            {/* Section 2 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We founded SafePost because compliance shouldn\u2019t hold you back from connecting with patients"}
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Social media and digital marketing are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post can put your registration at risk."}
-              </p>
-            </div>
-
-            {/* Section 3 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                Our mission is to help Australian medical practitioners and practices communicate confidently, compliantly and authentically
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations."}
-              </p>
-            </div>
-
-            {/* Section 4 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re not lawyers. We\u2019re your compliance partner"}
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns, we\u2019re here to support you at every step."}
-              </p>
-            </div>
-
-            {/* SafePost Logo Divider */}
-            <div className="py-16 flex justify-center">
-              <img
-                src={spLogo}
-                alt="SafePost logo"
-                className="max-w-[500px] md:max-w-[600px] w-full h-auto"
-              />
-            </div>
-
-            {/* Section 6 - Our Design Story */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"Every detail of SafePost was built with purpose"}
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Even our logo tells the story of what we stand for. The three horizontal bars represent the journey every piece of your content takes \u2014 from the regulatory framework at the top, through SafePost\u2019s intelligent compliance layer in the middle, to your approved, ready-to-publish content at the bottom."}
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                {"But look closer. The staggered alignment of these bars creates something subtle yet intentional: a phantom \u201CS\u201D in the negative space. This hidden letter represents both Safe and Social \u2014 a visual reminder that compliance and communication aren\u2019t opposing forces. They\u2019re integrated, flowing together naturally."}
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                {"It\u2019s a design that says compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
-              </p>
-              <p className="text-lg font-bold text-gray-900 leading-snug mt-4">
-                {"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}
-              </p>
+          <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm shadow-black/[0.02]">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-black/[0.06]">
+                    <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-900">Feature</th>
+                    <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-500">ChatGPT / Gemini</th>
+                    <th className="text-left px-6 py-4 text-[13px] font-semibold text-blue-600">SafePost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparisonRows.map((row, i) => (
+                    <tr key={i} className={i < comparisonRows.length - 1 ? 'border-b border-black/[0.04]' : ''}>
+                      <td className="px-6 py-4 text-[14px] text-gray-900 font-medium">{row.feature}</td>
+                      <td className="px-6 py-4 text-[14px] text-red-400">
+                        <span className="flex items-center gap-2">
+                          <span className="text-red-400">{'\u274C'}</span>
+                          <span className="text-red-400/80">{row.generic}</span>
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-[14px] text-green-600">
+                        <span className="flex items-center gap-2">
+                          <span className="text-green-500">{'\u2705'}</span>
+                          <span className="text-green-600">{row.safepost}</span>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
+      {/* FAQ Accordions */}
+      <FAQSection
+        title="Frequently asked questions"
+        groups={faqGroups}
+      />
+
+      {/* Closing CTA */}
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to experience compliance confidence?
+            Still have questions?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join medical practitioners and practices across Australia using SafePost to communicate with confidence
+            Our team is here to help. Reach out and we'll get back to you within one business day.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button
-              onClick={() => navigate('/signup')}
-              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
-            >
-              Get started
-              <ArrowRight className="w-4 h-4" />
-            </button>
+          <div className="flex items-center justify-center">
             <button
               onClick={() => navigate('/contact')}
-              className="w-full sm:w-auto px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
             >
               Contact us
               <ArrowRight className="w-4 h-4" />
@@ -361,4 +426,4 @@ const About: React.FC = () => {
   );
 };
 
-export default About;
+export default FAQ;

@@ -8,6 +8,7 @@ import PricingMedicalPractices from './PricingMedicalPractices';
 import ContactUs from './ContactUs';
 import Features from './Features';
 import About from './About';
+import FAQ from './FAQ';
 import ForgotPassword from './ForgotPassword';
 import UpdatePassword from './UpdatePassword';
 import Dashboard from './Dashboard';
@@ -64,6 +65,7 @@ const App: React.FC = () => {
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
+          <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
