@@ -361,7 +361,7 @@ const Features: React.FC = () => {
             </div>
 
             {/* Right Column — Platform List */}
-            <div className="bg-white rounded-2xl border border-black/[0.06]">
+            <div className="bg-white rounded-2xl border border-black/[0.06] px-6 py-4">
               {[
                 { category: 'Social networking', platforms: 'Facebook, X, WeChat, Weibo, WhatsApp' },
                 { category: 'Professional networking', platforms: 'LinkedIn, Yammer' },
@@ -373,10 +373,12 @@ const Features: React.FC = () => {
                 { category: 'Knowledge aggregation', platforms: 'Wikipedia' },
                 { category: 'Virtual reality & gaming', platforms: 'Second Life' },
                 { category: 'Booking sites & apps', platforms: 'HealthEngine, Whitecoat, Podium' },
-              ].map((item, index, arr) => (
-                <div key={index} className={`flex items-baseline justify-between gap-4 px-6 py-3${index < arr.length - 1 ? ' border-b border-gray-100' : ''}`}>
+              ].map((item, index) => (
+                <div key={index} className="flex items-baseline gap-3 py-2.5">
+                  <span className="text-blue-500 text-sm leading-none shrink-0">•</span>
                   <span className="text-[14px] font-medium text-gray-900 shrink-0">{item.category}</span>
-                  <span className="text-[14px] text-gray-500 text-right">{item.platforms}</span>
+                  <span className="text-[14px] text-gray-400 shrink-0">—</span>
+                  <span className="text-[14px] text-gray-500">{item.platforms}</span>
                 </div>
               ))}
             </div>
