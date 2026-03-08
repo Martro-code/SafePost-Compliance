@@ -10,6 +10,20 @@ export function useAuth() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
+      // If a session exists but "Remember me" was not checked and the browser
+      // was closed (sessionStorage marker is gone), sign the user out.
+      if (
+        session?.user &&
+        !localStorage.getItem('safepost_remember_me') &&
+        !sessionStorage.getItem('safepost_session_active')
+      ) {
+        supabase.auth.signOut().then(() => {
+          setUser(null);
+          setLoading(false);
+        });
+        return;
+      }
+
       setUser(session?.user ?? null);
       setLoading(false);
       // Restore plan from user_metadata if sessionStorage is empty (e.g. after page refresh)
@@ -58,6 +72,8 @@ export function useAuth() {
 
   const signOut = async () => {
     isLoggingOut = true;
+    localStorage.removeItem('safepost_remember_me');
+    sessionStorage.removeItem('safepost_session_active');
     await supabase.auth.signOut();
   };
 
