@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 
@@ -6,14 +6,9 @@ const STORAGE_KEY = 'safepost-announcement-dismissed';
 
 const AnnouncementBanner = () => {
   const navigate = useNavigate();
-  const [dismissed, setDismissed] = useState(true);
-
-  useEffect(() => {
-    const wasDismissed = localStorage.getItem(STORAGE_KEY);
-    if (!wasDismissed) {
-      setDismissed(false);
-    }
-  }, []);
+  const [dismissed, setDismissed] = useState(() => {
+    return localStorage.getItem(STORAGE_KEY) === 'true';
+  });
 
   const handleDismiss = () => {
     setDismissed(true);
