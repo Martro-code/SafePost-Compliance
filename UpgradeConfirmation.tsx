@@ -43,7 +43,7 @@ const UpgradeConfirmation: React.FC = () => {
     setUpgrading(true);
     try {
       // Update the accounts table — this is the source of truth for Dashboard
-      const checksLimit = PLAN_LIMITS[planKey] ?? 3;
+      const checksLimit = planKey in PLAN_LIMITS ? PLAN_LIMITS[planKey] : 3;
       const { error } = await supabase
         .from('accounts')
         .update({ plan: planKey, checks_limit: checksLimit })
