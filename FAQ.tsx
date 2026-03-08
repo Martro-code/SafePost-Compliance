@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
+import { ChevronDown, ArrowRight, Menu, X, ExternalLink, CheckCircle } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import FAQSection from './components/FAQSection';
 import PublicFooter from './components/PublicFooter';
@@ -23,16 +23,15 @@ const FAQ: React.FC = () => {
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
-  const comparisonRows = [
-    { feature: 'Knows current AHPRA rules', generic: 'General knowledge only', safepost: '166 specific rules' },
-    { feature: 'Cites exact guideline breached', generic: 'No', safepost: 'Yes, every time' },
-    { feature: 'Built for Australian practitioners', generic: 'No', safepost: 'Yes' },
-    { feature: 'Compliance history & audit trail', generic: 'No', safepost: 'Yes' },
-    { feature: 'Requires prompt engineering', generic: 'Yes \u2014 you must explain the rules', safepost: 'No \u2014 paste and check' },
-    { feature: 'Understands TGA advertising rules', generic: 'Partially', safepost: 'Yes' },
-    { feature: 'Before/after photo analysis', generic: 'No', safepost: 'Yes' },
-    { feature: 'Star rating risk assessment', generic: 'No', safepost: 'Yes' },
-    { feature: 'Team access & shared history', generic: 'No', safepost: 'Yes' },
+  const featureList = [
+    '166 specific AHPRA & TGA rules built in',
+    'Exact guideline citations on every check',
+    'Built specifically for Australian practitioners',
+    'Full compliance history & audit trail',
+    'No prompt engineering or expertise required',
+    'Before/after photo analysis',
+    'Star rating risk assessment',
+    'Team access & shared history on Pro+ and Ultra plans',
   ];
 
   const faqGroups = [
@@ -390,39 +389,17 @@ const FAQ: React.FC = () => {
               </div>
             </div>
 
-            {/* Right Column — Comparison Table */}
-            <div className="w-full self-stretch">
-              <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm shadow-black/[0.02] h-full">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-black/[0.06]">
-                        <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-900">Feature</th>
-                        <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-500">ChatGPT / Gemini</th>
-                        <th className="text-left px-6 py-4 text-[13px] font-semibold text-blue-600">SafePost</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {comparisonRows.map((row, i) => (
-                        <tr key={i} className={i < comparisonRows.length - 1 ? 'border-b border-black/[0.04]' : ''}>
-                          <td className="px-6 py-4 text-[14px] text-gray-900 font-medium">{row.feature}</td>
-                          <td className="px-6 py-4 text-[14px] text-red-400">
-                            <span className="flex items-center gap-2">
-                              <span className="text-red-400">{'\u274C'}</span>
-                              <span className="text-red-400/80">{row.generic}</span>
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-[14px] text-green-600">
-                            <span className="flex items-center gap-2">
-                              <span className="text-green-500">{'\u2705'}</span>
-                              <span className="text-green-600">{row.safepost}</span>
-                            </span>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+            {/* Right Column — Feature List */}
+            <div className="w-full self-stretch flex items-center">
+              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm shadow-black/[0.02] p-8 md:p-10 w-full">
+                <ul className="space-y-5">
+                  {featureList.map((item, i) => (
+                    <li key={i} className="flex items-start gap-3.5">
+                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" stroke="white" />
+                      <span className="text-[15px] text-gray-700 leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
