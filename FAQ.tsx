@@ -5,10 +5,13 @@ import SafePostLogo from './components/SafePostLogo';
 import FAQSection from './components/FAQSection';
 import PublicFooter from './components/PublicFooter';
 import AnnouncementBanner from './components/AnnouncementBanner';
+import LoggedInLayout from './src/components/LoggedInLayout';
+import { useAuth } from './useAuth';
 
 
 const FAQ: React.FC = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
@@ -117,6 +120,123 @@ const FAQ: React.FC = () => {
       ],
     },
   ];
+
+  if (loading) return null;
+
+  const contentSection = (
+    <>
+      {/* Hero Section */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
+          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+            Got questions? We've got answers.
+          </h1>
+          <p className="text-lg text-gray-500">
+            Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works.
+          </p>
+        </div>
+      </section>
+
+      {/* Comparison Section — Two Column Layout */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+          <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400 mb-4">
+            WHY SAFEPOST
+          </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-stretch">
+            {/* Left Column — Text Content */}
+            <div className="space-y-6">
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
+                Built for compliance, not conversation
+              </h2>
+              <p className="text-lg text-gray-500 leading-relaxed">
+                ChatGPT doesn't know what AHPRA will investigate you for. SafePost does.
+              </p>
+              <p className="text-[15px] text-gray-400 leading-relaxed">
+                Every analysis cites the exact guideline breached — not a general opinion, but a specific AHPRA or TGA rule reference.
+              </p>
+              <p className="text-[15px] text-gray-400 leading-relaxed">
+                Every compliance check is logged in your account history, giving you documented evidence of due diligence if AHPRA ever investigates.
+              </p>
+              <p className="text-[15px] text-gray-400 leading-relaxed">
+                166 AHPRA and TGA rules are built into every check. Paste your content and get a compliance verdict in seconds — no prompting, no expertise required.
+              </p>
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => navigate('/signup')}
+                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30"
+                >
+                  Get started free
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => navigate('/features')}
+                  className="w-full sm:w-auto px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97]"
+                >
+                  See all features
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Right Column — Feature List */}
+            <div className="w-full">
+              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm shadow-black/[0.02] p-8 md:p-10 h-full flex flex-col justify-between">
+                {featureList.map((item, i) => (
+                  <div key={i} className="flex items-start gap-3.5">
+                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" stroke="white" />
+                    <span className="text-[15px] text-gray-700 leading-relaxed">{item}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Accordions */}
+      <FAQSection
+        title="Frequently asked questions"
+        groups={faqGroups}
+      />
+
+      {/* Closing CTA */}
+      <section className="w-full bg-white">
+        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+            Still have questions?
+          </h2>
+          <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
+            Our team is here to help. Reach out and we'll get back to you within one business day.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <button
+              onClick={() => navigate('/contact')}
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
+            >
+              Contact us
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => navigate('/login')}
+              className="w-full sm:w-auto px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
+            >
+              Login
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+
+  if (user) {
+    return (
+      <LoggedInLayout>
+        {contentSection}
+      </LoggedInLayout>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
@@ -337,108 +457,7 @@ const FAQ: React.FC = () => {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Got questions? We've got answers.
-          </h1>
-          <p className="text-lg text-gray-500">
-            Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works.
-          </p>
-        </div>
-      </section>
-
-      {/* Comparison Section — Two Column Layout */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400 mb-4">
-            WHY SAFEPOST
-          </span>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-stretch">
-            {/* Left Column — Text Content */}
-            <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
-                Built for compliance, not conversation
-              </h2>
-              <p className="text-lg text-gray-500 leading-relaxed">
-                ChatGPT doesn't know what AHPRA will investigate you for. SafePost does.
-              </p>
-              <p className="text-[15px] text-gray-400 leading-relaxed">
-                Every analysis cites the exact guideline breached — not a general opinion, but a specific AHPRA or TGA rule reference.
-              </p>
-              <p className="text-[15px] text-gray-400 leading-relaxed">
-                Every compliance check is logged in your account history, giving you documented evidence of due diligence if AHPRA ever investigates.
-              </p>
-              <p className="text-[15px] text-gray-400 leading-relaxed">
-                166 AHPRA and TGA rules are built into every check. Paste your content and get a compliance verdict in seconds — no prompting, no expertise required.
-              </p>
-              <div className="pt-2 flex flex-col sm:flex-row gap-3">
-                <button
-                  onClick={() => navigate('/signup')}
-                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30"
-                >
-                  Get started free
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => navigate('/features')}
-                  className="w-full sm:w-auto px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97]"
-                >
-                  See all features
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            {/* Right Column — Feature List */}
-            <div className="w-full">
-              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm shadow-black/[0.02] p-8 md:p-10 h-full flex flex-col justify-between">
-                {featureList.map((item, i) => (
-                  <div key={i} className="flex items-start gap-3.5">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" stroke="white" />
-                    <span className="text-[15px] text-gray-700 leading-relaxed">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Accordions */}
-      <FAQSection
-        title="Frequently asked questions"
-        groups={faqGroups}
-      />
-
-      {/* Closing CTA */}
-      <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Still have questions?
-          </h2>
-          <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Our team is here to help. Reach out and we'll get back to you within one business day.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <button
-              onClick={() => navigate('/contact')}
-              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
-            >
-              Contact us
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="w-full sm:w-auto px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
-            >
-              Login
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </section>
+      {contentSection}
 
       <PublicFooter />
     </div>
