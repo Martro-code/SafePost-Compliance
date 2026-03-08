@@ -5,7 +5,7 @@ import SafePostLogo from './components/SafePostLogo';
 import FAQSection from './components/FAQSection';
 import PublicFooter from './components/PublicFooter';
 import AnnouncementBanner from './components/AnnouncementBanner';
-import NotifyMeButton from './components/NotifyMeButton';
+
 
 
 const PricingMedicalPractices: React.FC = () => {
@@ -363,7 +363,12 @@ const PricingMedicalPractices: React.FC = () => {
                   <span className="text-[14px] text-gray-600">Priority email support</span>
                 </li>
               </ul>
-              <NotifyMeButton planName="proplus" variant="secondary" />
+              <button
+                onClick={() => navigate(`/checkout?plan=proplus&billing=${isYearly ? 'yearly' : 'monthly'}`)}
+                className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
+              >
+                Subscribe
+              </button>
             </div>
 
             {/* Ultra Card */}
@@ -425,7 +430,12 @@ const PricingMedicalPractices: React.FC = () => {
                   <span className="text-[14px] text-gray-600">Priority support + onboarding</span>
                 </li>
               </ul>
-              <NotifyMeButton planName="ultra" variant="primary" />
+              <button
+                onClick={() => navigate(`/checkout?plan=ultra&billing=${isYearly ? 'yearly' : 'monthly'}`)}
+                className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+              >
+                Subscribe
+              </button>
             </div>
           </div>
         </div>
