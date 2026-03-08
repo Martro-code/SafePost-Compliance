@@ -121,8 +121,6 @@ const FAQ: React.FC = () => {
     },
   ];
 
-  if (loading) return null;
-
   const contentSection = (
     <>
       {/* Hero Section */}
@@ -230,7 +228,7 @@ const FAQ: React.FC = () => {
     </>
   );
 
-  if (user) {
+  if (!loading && user) {
     return (
       <LoggedInLayout>
         {contentSection}
