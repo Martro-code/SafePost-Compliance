@@ -1,14 +1,39 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
+import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink, Loader2 } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import FAQSection from './components/FAQSection';
 import PublicFooter from './components/PublicFooter';
+import { supabase } from './src/services/supabaseClient';
 
 const PricingMedicalPractices: React.FC = () => {
   const navigate = useNavigate();
 
   const [isYearly, setIsYearly] = useState(false);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+
+  const handleCheckout = async (priceId: string, planName: string) => {
+    setCheckoutLoading(planName);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        navigate(`/signup?plan=${planName}&billing=${isYearly ? 'yearly' : 'monthly'}`);
+        return;
+      }
+      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
+        body: { priceId, userId: user.id },
+      });
+      if (error) throw error;
+      if (data?.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setCheckoutLoading(null);
+    }
+  };
 
   // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -304,10 +329,18 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
               </ul>
               <button
-                onClick={() => navigate(`/signup?plan=proplus&billing=${isYearly ? 'yearly' : 'monthly'}`)}
-                className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
+                onClick={() => handleCheckout(isYearly ? 'price_1T8UXuR1RAuGYaVLPGTPgSqA' : 'price_1T8UWKR1RAuGYaVL2RUXVEAr', 'proplus')}
+                disabled={checkoutLoading === 'proplus'}
+                className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Get Pro+
+                {checkoutLoading === 'proplus' ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Get Pro+'
+                )}
               </button>
             </div>
 
@@ -371,10 +404,18 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
               </ul>
               <button
-                onClick={() => navigate(`/signup?plan=ultra&billing=${isYearly ? 'yearly' : 'monthly'}`)}
-                className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
+                onClick={() => handleCheckout(isYearly ? 'price_1T8UaCR1RAuGYaVL3M5ob7TV' : 'price_1T8UZUR1RAuGYaVLkkbcBvJL', 'ultra')}
+                disabled={checkoutLoading === 'ultra'}
+                className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Get Ultra
+                {checkoutLoading === 'ultra' ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Loading...
+                  </>
+                ) : (
+                  'Get Ultra'
+                )}
               </button>
             </div>
           </div>
