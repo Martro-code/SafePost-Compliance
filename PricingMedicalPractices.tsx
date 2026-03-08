@@ -367,7 +367,7 @@ const PricingMedicalPractices: React.FC = () => {
                 onClick={() => navigate(`/checkout?plan=proplus&billing=${isYearly ? 'yearly' : 'monthly'}`)}
                 className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
               >
-                Subscribe
+                Get Pro+
               </button>
             </div>
 
@@ -434,7 +434,7 @@ const PricingMedicalPractices: React.FC = () => {
                 onClick={() => navigate(`/checkout?plan=ultra&billing=${isYearly ? 'yearly' : 'monthly'}`)}
                 className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
               >
-                Subscribe
+                Get Ultra
               </button>
             </div>
           </div>
