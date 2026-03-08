@@ -350,12 +350,12 @@ const FAQ: React.FC = () => {
       {/* Comparison Section — Two Column Layout */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+          <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400 mb-4">
+            WHY SAFEPOST
+          </span>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-stretch">
             {/* Left Column — Text Content */}
             <div className="space-y-6">
-              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">
-                WHY SAFEPOST
-              </span>
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
                 Built for compliance, not conversation
               </h2>
