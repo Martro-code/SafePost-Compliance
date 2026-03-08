@@ -349,48 +349,82 @@ const FAQ: React.FC = () => {
         </div>
       </section>
 
-      {/* Comparison Table Section */}
+      {/* Comparison Section — Two Column Layout */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              See how SafePost compares
-            </h2>
-            <p className="text-lg text-gray-500">
-              General AI tools are built for conversation. SafePost is built for compliance.
-            </p>
-          </div>
+        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-stretch">
+            {/* Left Column — Text Content */}
+            <div className="space-y-6">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">
+                WHY SAFEPOST
+              </span>
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
+                Built for compliance, not conversation
+              </h2>
+              <p className="text-lg text-gray-500 leading-relaxed">
+                ChatGPT doesn't know what AHPRA will investigate you for. SafePost does.
+              </p>
+              <p className="text-[15px] text-gray-400 leading-relaxed">
+                Every analysis cites the exact guideline breached — not a general opinion, but a specific AHPRA or TGA rule reference.
+              </p>
+              <p className="text-[15px] text-gray-400 leading-relaxed">
+                Every compliance check is logged in your account history, giving you documented evidence of due diligence if AHPRA ever investigates.
+              </p>
+              <p className="text-[15px] text-gray-400 leading-relaxed">
+                166 AHPRA and TGA rules are built into every check. Paste your content and get a compliance verdict in seconds — no prompting, no expertise required.
+              </p>
+              <div className="pt-2 flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={() => navigate('/signup')}
+                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30"
+                >
+                  Get started free
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => navigate('/features')}
+                  className="w-full sm:w-auto px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97]"
+                >
+                  See all features
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
 
-          <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm shadow-black/[0.02]">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-black/[0.06]">
-                    <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-900">Feature</th>
-                    <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-500">ChatGPT / Gemini</th>
-                    <th className="text-left px-6 py-4 text-[13px] font-semibold text-blue-600">SafePost</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {comparisonRows.map((row, i) => (
-                    <tr key={i} className={i < comparisonRows.length - 1 ? 'border-b border-black/[0.04]' : ''}>
-                      <td className="px-6 py-4 text-[14px] text-gray-900 font-medium">{row.feature}</td>
-                      <td className="px-6 py-4 text-[14px] text-red-400">
-                        <span className="flex items-center gap-2">
-                          <span className="text-red-400">{'\u274C'}</span>
-                          <span className="text-red-400/80">{row.generic}</span>
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-[14px] text-green-600">
-                        <span className="flex items-center gap-2">
-                          <span className="text-green-500">{'\u2705'}</span>
-                          <span className="text-green-600">{row.safepost}</span>
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {/* Right Column — Comparison Table */}
+            <div className="w-full self-stretch">
+              <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm shadow-black/[0.02] h-full">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-black/[0.06]">
+                        <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-900">Feature</th>
+                        <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-500">ChatGPT / Gemini</th>
+                        <th className="text-left px-6 py-4 text-[13px] font-semibold text-blue-600">SafePost</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {comparisonRows.map((row, i) => (
+                        <tr key={i} className={i < comparisonRows.length - 1 ? 'border-b border-black/[0.04]' : ''}>
+                          <td className="px-6 py-4 text-[14px] text-gray-900 font-medium">{row.feature}</td>
+                          <td className="px-6 py-4 text-[14px] text-red-400">
+                            <span className="flex items-center gap-2">
+                              <span className="text-red-400">{'\u274C'}</span>
+                              <span className="text-red-400/80">{row.generic}</span>
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-[14px] text-green-600">
+                            <span className="flex items-center gap-2">
+                              <span className="text-green-500">{'\u2705'}</span>
+                              <span className="text-green-600">{row.safepost}</span>
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
         </div>
