@@ -100,6 +100,14 @@ const SignUp: React.FC = () => {
       sessionStorage.setItem('safepost_plan', selectedPlan);
       if (billing) sessionStorage.setItem('safepost_billing', billing);
 
+      // If a paid plan was selected, store pending checkout so Login can redirect to Stripe
+      if (selectedPlan && selectedPlan !== 'starter') {
+        localStorage.setItem('safepost_pending_checkout', JSON.stringify({
+          plan: selectedPlan,
+          billing: billing || 'monthly',
+        }));
+      }
+
       const params = new URLSearchParams();
       params.set('email', email);
       if (plan) params.set('plan', plan);
