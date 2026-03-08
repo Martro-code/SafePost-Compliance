@@ -37,6 +37,7 @@ const LoggedInFooter = () => {
             <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Connect</h4>
             <ul className="space-y-2.5">
               <li><Link to="/help" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Help & Support</Link></li>
+              <li><Link to="/faq" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">FAQ</Link></li>
             </ul>
           </div>
 
