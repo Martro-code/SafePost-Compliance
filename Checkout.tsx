@@ -1,142 +1,71 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, Check, Lock, CreditCard, Shield, ChevronDown } from 'lucide-react';
+import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
+import { supabase } from './src/services/supabaseClient';
 
-const planData: Record<string, {
-  name: string;
-  subtitle: string;
-  monthlyPrice: number;
-  yearlyPrice: number;
-  yearlyMonthlyEquivalent: string;
-  popular: boolean;
-  features: string[];
-}> = {
+const priceIds: Record<string, { monthly: string; yearly: string }> = {
   professional: {
-    name: 'SafePost Professional',
-    subtitle: 'For practitioners who post regularly',
-    monthlyPrice: 20,
-    yearlyPrice: 200,
-    yearlyMonthlyEquivalent: '~$16',
-    popular: true,
-    features: [
-      '30 compliance checks per month',
-      'AI-powered compliant content rewrites',
-      'Image and video content analysis',
-      'Compliance history (last 30 checks)',
-      'Email support',
-    ],
+    monthly: 'price_1T8UTeR1RAuGYaVLg6CI48VN',
+    yearly: 'price_1T8UUPR1RAuGYaVL8SdWS9ut',
   },
   proplus: {
-    name: 'SafePost Pro+',
-    subtitle: 'Best for single-practitioner practices',
-    monthlyPrice: 49,
-    yearlyPrice: 490,
-    yearlyMonthlyEquivalent: '~$41',
-    popular: false,
-    features: [
-      'Everything in Professional, plus:',
-      '100 compliance checks per month',
-      'Multi-user access (up to 3 team members)',
-      'Compliance history (last 100 checks)',
-      'Priority email support',
-    ],
+    monthly: 'price_1T8UWKR1RAuGYaVL2RUXVEAr',
+    yearly: 'price_1T8UXuR1RAuGYaVLPGTPgSqA',
   },
   ultra: {
-    name: 'SafePost Ultra',
-    subtitle: 'Best for multi-practitioner practices',
-    monthlyPrice: 149,
-    yearlyPrice: 1490,
-    yearlyMonthlyEquivalent: '~$124',
-    popular: true,
-    features: [
-      'Everything in Pro+, plus:',
-      'Unlimited compliance checks',
-      'Multi-user access (up to 10 team members)',
-      'Unlimited compliance history',
-      'PDF compliance audit log export',
-      'Bulk content review (upload multiple posts at once)',
-      'Proactive notification of guideline changes',
-      'Priority support + onboarding',
-    ],
+    monthly: 'price_1T8UZUR1RAuGYaVLkkbcBvJL',
+    yearly: 'price_1T8UaCR1RAuGYaVL3M5ob7TV',
   },
 };
 
 const Checkout: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [error, setError] = useState<string | null>(null);
 
-  const plan = searchParams.get('plan') || 'professional';
-  const billing = searchParams.get('billing') || 'monthly';
+  const plan = searchParams.get('plan') || '';
+  const billing = (searchParams.get('billing') || 'monthly') as 'monthly' | 'yearly';
 
-  const isVerified = sessionStorage.getItem('safepost_verified') === 'true';
-  const selectedPlan = planData[plan];
-
-  // Route guard: redirect unverified users or invalid plans via useEffect
   useEffect(() => {
-    if (!isVerified) {
-      const params = new URLSearchParams();
-      params.set('plan', plan);
-      params.set('billing', billing);
-      navigate(`/signup?${params.toString()}`, { replace: true });
-    } else if (!selectedPlan) {
-      navigate('/pricing/medical-practitioners', { replace: true });
-    }
-  }, [isVerified, selectedPlan, plan, billing, navigate]);
+    const redirectToStripe = async () => {
+      const prices = priceIds[plan.toLowerCase()];
+      if (!prices) {
+        setError('Invalid plan selected.');
+        return;
+      }
 
-  // Show nothing while redirecting
-  if (!isVerified || !selectedPlan) return null;
+      const priceId = prices[billing] || prices.monthly;
 
-  const price = billing === 'yearly' ? selectedPlan.yearlyPrice : selectedPlan.monthlyPrice;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          navigate(`/signup?plan=${plan}&billing=${billing}`, { replace: true });
+          return;
+        }
 
-  // Form state
-  const [email, setEmail] = useState('');
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiry, setExpiry] = useState('');
-  const [cvc, setCvc] = useState('');
-  const [cardholderName, setCardholderName] = useState('');
-  const [streetAddress, setStreetAddress] = useState('');
-  const [suburb, setSuburb] = useState('');
-  const [billingState, setBillingState] = useState('');
-  const [postcode, setPostcode] = useState('');
-  const [abn, setAbn] = useState('');
-  const [agreedToTerms, setAgreedToTerms] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+        const { data, error: fnError } = await supabase.functions.invoke('create-checkout-session', {
+          body: { priceId, userId: user.id },
+        });
 
-  const handleSubmit = () => {
-    setSubmitted(true);
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 2000);
-  };
+        if (fnError) throw fnError;
 
-  if (submitted) {
-    return (
-      <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
-        <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
-          <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-            <Link to="/">
-              <SafePostLogo />
-            </Link>
-          </div>
-        </header>
-        <main className="flex-grow flex items-center justify-center">
-          <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-green-100 flex items-center justify-center">
-              <Check className="w-8 h-8 text-green-600" />
-            </div>
-            <h2 className="text-2xl font-extrabold text-gray-900 mb-2">You're all set!</h2>
-            <p className="text-[14px] text-gray-500 mb-1">Your 7-day free trial has started.</p>
-            <p className="text-[13px] text-gray-400">Redirecting to your dashboard...</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
+        if (data?.url) {
+          window.location.href = data.url;
+        } else {
+          setError('Unable to create checkout session. Please try again.');
+        }
+      } catch (err) {
+        console.error('Checkout error:', err);
+        setError('Something went wrong. Please try again.');
+      }
+    };
+
+    redirectToStripe();
+  }, [plan, billing, navigate]);
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
-      {/* Simplified Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/">
@@ -152,296 +81,30 @@ const Checkout: React.FC = () => {
         </div>
       </header>
 
-      {/* Demo Notice */}
-      <div className="bg-amber-50 border-b border-amber-200">
-        <div className="max-w-6xl mx-auto px-6 py-2.5 text-center">
-          <p className="text-[12px] font-medium text-amber-700">Demo mode &mdash; payments not yet active</p>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <main className="flex-grow">
-        <div className="max-w-5xl mx-auto px-6 py-10 md:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr_380px] gap-8 md:gap-12">
-
-            {/* LEFT COLUMN - Payment Form */}
-            <div className="space-y-8 order-2 md:order-1">
-              {/* Heading */}
-              <div>
-                <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                  Complete purchase
-                </h1>
-                <p className="text-[14px] text-gray-500">
-                  Cancel anytime
-                </p>
-              </div>
-
-              {/* Email */}
-              <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Email</label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your billing email address"
-                  className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                />
-                <p className="text-[12px] text-gray-400 mt-1.5">{"We\u2019ll send your receipt and account details here"}</p>
-              </div>
-
-              {/* Payment information */}
-              <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Payment information</label>
-                <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-                  {/* Card number */}
-                  <div className="relative border-b border-gray-200">
-                    <input
-                      type="text"
-                      value={cardNumber}
-                      onChange={(e) => {
-                        const raw = e.target.value.replace(/\D/g, '').slice(0, 16);
-                        const formatted = raw.replace(/(.{4})/g, '$1 ').trim();
-                        setCardNumber(formatted);
-                      }}
-                      placeholder="4242 4242 4242 4242"
-                      className="w-full px-4 py-3 text-[14px] text-gray-900 bg-transparent outline-none placeholder:text-gray-400 pr-24"
-                      inputMode="numeric"
-                    />
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-                      <div className="w-8 h-5 rounded bg-[#1A1F71] flex items-center justify-center">
-                        <span className="text-[8px] font-bold text-white italic">VISA</span>
-                      </div>
-                      <div className="w-8 h-5 rounded bg-gray-100 flex items-center justify-center overflow-hidden">
-                        <div className="flex">
-                          <div className="w-3 h-3 rounded-full bg-red-500 opacity-80" />
-                          <div className="w-3 h-3 rounded-full bg-yellow-500 opacity-80 -ml-1.5" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {/* Expiry + CVC row */}
-                  <div className="flex">
-                    <input
-                      type="text"
-                      value={expiry}
-                      onChange={(e) => {
-                        const raw = e.target.value.replace(/\D/g, '').slice(0, 4);
-                        if (raw.length <= 2) {
-                          setExpiry(raw);
-                        } else {
-                          setExpiry(raw.slice(0, 2) + ' / ' + raw.slice(2));
-                        }
-                      }}
-                      placeholder="MM / YY"
-                      inputMode="numeric"
-                      className="flex-1 px-4 py-3 text-[14px] text-gray-900 bg-transparent outline-none placeholder:text-gray-400 border-r border-gray-200"
-                    />
-                    <input
-                      type="text"
-                      value={cvc}
-                      onChange={(e) => {
-                        const raw = e.target.value.replace(/\D/g, '').slice(0, 3);
-                        setCvc(raw);
-                      }}
-                      placeholder="CVC"
-                      inputMode="numeric"
-                      maxLength={3}
-                      className="flex-1 px-4 py-3 text-[14px] text-gray-900 bg-transparent outline-none placeholder:text-gray-400"
-                    />
-                  </div>
-                </div>
-                {/* Cardholder name */}
-                <input
-                  type="text"
-                  value={cardholderName}
-                  onChange={(e) => setCardholderName(e.target.value)}
-                  placeholder="Cardholder name"
-                  className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 mt-3"
-                />
-                <div className="flex items-center gap-1.5 mt-2">
-                  <Lock className="w-3 h-3 text-gray-400" />
-                  <span className="text-[11px] text-gray-400">Powered by Stripe &mdash; your payment information is secure and encrypted</span>
-                </div>
-              </div>
-
-              {/* Billing address */}
-              <div>
-                <label className="block text-[13px] font-semibold text-gray-700 mb-2">Billing address</label>
-                <div className="space-y-3">
-                  <input
-                    type="text"
-                    value={streetAddress}
-                    onChange={(e) => setStreetAddress(e.target.value)}
-                    placeholder="Enter your street address"
-                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                  />
-                  <input
-                    type="text"
-                    value={suburb}
-                    onChange={(e) => setSuburb(e.target.value)}
-                    placeholder="Enter your suburb"
-                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                  />
-                  <div className="relative">
-                    <select
-                      value={billingState}
-                      onChange={(e) => setBillingState(e.target.value)}
-                      className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none cursor-pointer"
-                    >
-                      <option value="" disabled>Select your state</option>
-                      <option value="NSW">NSW</option>
-                      <option value="VIC">VIC</option>
-                      <option value="QLD">QLD</option>
-                      <option value="WA">WA</option>
-                      <option value="SA">SA</option>
-                      <option value="TAS">TAS</option>
-                      <option value="ACT">ACT</option>
-                      <option value="NT">NT</option>
-                    </select>
-                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-                  </div>
-                  <input
-                    type="tel"
-                    value={postcode}
-                    onChange={(e) => setPostcode(e.target.value.replace(/\D/g, '').slice(0, 4))}
-                    onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
-                    maxLength={4}
-                    placeholder="Enter your postcode"
-                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                  />
-                </div>
-                <div className="mt-8">
-                  <label className="block text-[13px] font-semibold text-gray-700 mb-2">ABN (optional)</label>
-                  <input
-                    type="tel"
-                    value={abn}
-                    onChange={(e) => setAbn(e.target.value.replace(/\D/g, '').slice(0, 11))}
-                    onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
-                    maxLength={11}
-                    placeholder="Enter your ABN"
-                    className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                  />
-                  <p className="text-[12px] text-gray-400 mt-1.5">{`Australian Business Number \u2014 required for GST tax invoices`}</p>
-                </div>
-              </div>
-
-              {/* Terms */}
-              <div>
-                <label className="flex items-start gap-3 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={agreedToTerms}
-                    onChange={(e) => setAgreedToTerms(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <span className="text-[13px] text-gray-600 leading-relaxed">
-                    I agree to the{' '}
-                    <Link to="/terms-of-use" className="text-blue-600 hover:text-blue-700 underline">Terms of Use</Link>
-                    {' '}and{' '}
-                    <Link to="/privacy-policy" className="text-blue-600 hover:text-blue-700 underline">Privacy Policy</Link>
-                  </span>
-                </label>
-              </div>
-
-              {/* Submit Button */}
-              <div>
-                <button
-                  onClick={handleSubmit}
-                  disabled={!agreedToTerms}
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
-                >
-                  <Lock className="w-4 h-4" />
-                  Complete purchase
-                </button>
-              </div>
-
-              {/* Security Badges */}
-              <div className="flex items-center justify-center gap-6 pt-2 pb-4">
-                <div className="flex items-center gap-1.5">
-                  <Lock className="w-3.5 h-3.5 text-gray-400" />
-                  <span className="text-[11px] text-gray-400 font-medium">Secure checkout</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CreditCard className="w-3.5 h-3.5 text-gray-400" />
-                  <span className="text-[11px] text-gray-400 font-medium">Stripe</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <Shield className="w-3.5 h-3.5 text-gray-400" />
-                  <span className="text-[11px] text-gray-400 font-medium">SSL Encrypted</span>
-                </div>
-              </div>
+      <main className="flex-grow flex items-center justify-center">
+        {error ? (
+          <div className="text-center max-w-md px-6">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-100 flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-red-600" />
             </div>
-
-            {/* RIGHT COLUMN - Order summary */}
-            <div className="order-1 md:order-2">
-              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6 md:p-8 md:sticky md:top-24">
-                {/* Plan Info */}
-                <div className="mb-6">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">{selectedPlan.name}</h3>
-                      <p className="text-[13px] text-gray-500 mt-0.5">{selectedPlan.subtitle}</p>
-                    </div>
-                    {selectedPlan.popular && (
-                      <span className="text-[10px] font-semibold text-white bg-blue-600 px-2.5 py-1 rounded-full whitespace-nowrap flex-shrink-0">
-                        MOST POPULAR
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Pricing */}
-                <div className="mb-6 pb-6 border-b border-black/[0.06]">
-                  {billing === 'yearly' ? (
-                    <div>
-                      <div className="flex items-end gap-2">
-                        <span className="text-3xl font-extrabold text-gray-900">{selectedPlan.yearlyMonthlyEquivalent}</span>
-                        <span className="text-[14px] text-gray-500 font-medium pb-0.5">/month</span>
-                      </div>
-                      <div className="flex items-center gap-2 mt-1.5">
-                        <span className="text-[13px] text-gray-500">billed as ${selectedPlan.yearlyPrice.toLocaleString()}/year</span>
-                        <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full">
-                          2 months free
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
-                    <div>
-                      <div className="flex items-end gap-2">
-                        <span className="text-3xl font-extrabold text-gray-900">${selectedPlan.monthlyPrice}</span>
-                        <span className="text-[14px] text-gray-500 font-medium pb-0.5">/month</span>
-                      </div>
-                      <p className="text-[12px] text-gray-400 mt-1">Billed monthly</p>
-                    </div>
-                  )}
-                </div>
-
-                {/* Features */}
-                <div className="mb-6 pb-6 border-b border-black/[0.06]">
-                  <h4 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">{"What\u2019s included"}</h4>
-                  <ul className="space-y-2.5">
-                    {selectedPlan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2.5">
-                        <Check className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-[13px] text-gray-600">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Total */}
-                <div>
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[14px] font-semibold text-gray-900">Total</span>
-                    <span className="text-xl font-extrabold text-gray-900">${price}.00 <span className="text-[13px] font-medium text-gray-500">AUD</span></span>
-                  </div>
-                  <p className="text-[12px] text-gray-400 text-right">Incl. GST</p>
-                </div>
-              </div>
-            </div>
-
+            <h2 className="text-xl font-bold text-gray-900 mb-2">{error}</h2>
+            <p className="text-[14px] text-gray-500 mb-6">
+              Please go back to pricing and try again.
+            </p>
+            <button
+              onClick={() => navigate('/pricing/medical-practitioners')}
+              className="px-6 py-3 text-[14px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors"
+            >
+              Back to Pricing
+            </button>
           </div>
-        </div>
+        ) : (
+          <div className="text-center">
+            <Loader2 className="w-10 h-10 text-blue-600 animate-spin mx-auto mb-4" />
+            <h2 className="text-xl font-bold text-gray-900 mb-1">Redirecting to checkout...</h2>
+            <p className="text-[14px] text-gray-500">You'll be taken to our secure payment page.</p>
+          </div>
+        )}
       </main>
     </div>
   );
