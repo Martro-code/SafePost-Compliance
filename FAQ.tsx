@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, ArrowRight, Menu, X, ExternalLink, Zap, FileText, Globe, Image, BookOpen, History } from 'lucide-react';
+import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
-import heroImage from './assets/features-hero.png';
+import FAQSection from './components/FAQSection';
 import PublicFooter from './components/PublicFooter';
 
-const Features: React.FC = () => {
+const FAQ: React.FC = () => {
   const navigate = useNavigate();
 
-  // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
@@ -23,37 +22,98 @@ const Features: React.FC = () => {
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
+  const comparisonRows = [
+    { feature: 'Knows current AHPRA rules', generic: 'General knowledge only', safepost: '166 specific rules' },
+    { feature: 'Cites exact guideline breached', generic: 'No', safepost: 'Yes, every time' },
+    { feature: 'Built for Australian practitioners', generic: 'No', safepost: 'Yes' },
+    { feature: 'Compliance history & audit trail', generic: 'No', safepost: 'Yes' },
+    { feature: 'Requires prompt engineering', generic: 'Yes \u2014 you must explain the rules', safepost: 'No \u2014 paste and check' },
+    { feature: 'Understands TGA advertising rules', generic: 'Partially', safepost: 'Yes' },
+    { feature: 'Before/after photo analysis', generic: 'No', safepost: 'Yes' },
+    { feature: 'Star rating risk assessment', generic: 'No', safepost: 'Yes' },
+    { feature: 'Team access & shared history', generic: 'No', safepost: 'Yes' },
+  ];
 
-  const features = [
+  const faqGroups = [
     {
-      icon: <Zap className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Instant analysis',
-      description: 'Checked against 166 rules across AHPRA and TGA regulatory documents. Not a summarised guide — primary sources only.',
+      label: 'About SafePost',
+      items: [
+        {
+          question: 'Why was SafePost built?',
+          answer: 'Australian medical practitioners face real consequences for non-compliant social media content \u2014 from formal AHPRA complaints to TGA enforcement action. SafePost was built to give practitioners an instant, reliable way to check their content before posting, without needing to read hundreds of pages of guidelines.',
+        },
+        {
+          question: 'Who is SafePost for?',
+          answer: 'SafePost is for any Australian health practitioner registered with AHPRA \u2014 including doctors, dentists, physiotherapists, psychologists, nurses, and more \u2014 as well as medical practices managing content across multiple practitioners.',
+        },
+        {
+          question: 'Why not just use ChatGPT or Google Gemini?',
+          answer: 'General AI tools don\u2019t know what AHPRA will investigate you for. SafePost is built with 166 specific AHPRA and TGA rules hardcoded into every analysis. Unlike ChatGPT, SafePost cites the exact guideline you\u2019ve breached, maintains a full audit trail, and is updated as Australian regulations change. For practitioners whose registration is at stake, a general AI guess isn\u2019t good enough.',
+        },
+        {
+          question: 'Is SafePost affiliated with AHPRA or the TGA?',
+          answer: 'No. SafePost is an independent compliance tool. It is not affiliated with, endorsed by, or connected to AHPRA or the TGA in any way.',
+        },
+      ],
     },
     {
-      icon: <FileText className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Severity-tiered issue flags',
-      description: 'Every issue rated Critical, Warning, or Professional Conduct Risk with a plain-English explanation and the specific guideline reference.',
+      label: 'Compliance & Content',
+      items: [
+        {
+          question: 'What types of content can I check?',
+          answer: 'SafePost analyses social media posts, online advertising copy, website content, email marketing, and any other text-based content intended for public audiences. You can also attach images for visual content analysis including before/after photos and star ratings.',
+        },
+        {
+          question: 'Can SafePost guarantee my content will be compliant?',
+          answer: 'No tool can guarantee compliance \u2014 and you should be cautious of any that claims to. SafePost provides an AI-powered assessment based on current AHPRA and TGA guidelines. It significantly reduces your risk but does not replace professional legal advice for complex or high-stakes situations.',
+        },
+        {
+          question: 'How does SafePost handle before/after photos?',
+          answer: 'Before/after photos are assessed under AHPRA\u2019s specific prohibition on such imagery in health practitioner advertising. SafePost flags these under the correct AHPRA framework and provides guidance on compliant alternatives.',
+        },
+        {
+          question: 'How current are the compliance rules?',
+          answer: 'SafePost\u2019s rules database is updated when AHPRA or TGA publish significant guideline changes. The current version covers 166 rules across both frameworks.',
+        },
+      ],
     },
     {
-      icon: <Globe className="w-7 h-7 text-blue-500/80" />,
-      heading: 'AI-powered rewrites',
-      description: 'Three compliant alternatives generated instantly. Available on all plans including Starter.',
+      label: 'Plans & Billing',
+      items: [
+        {
+          question: 'Can I try SafePost before paying?',
+          answer: 'Yes \u2014 the Starter plan is free forever with 3 compliance checks included. No credit card required.',
+        },
+        {
+          question: 'Can I upgrade or downgrade my plan at any time?',
+          answer: 'Yes. You can change your plan at any time from your account settings. Upgrades take effect immediately. Downgrades take effect at the start of your next billing period.',
+        },
+        {
+          question: 'What happens if I cancel?',
+          answer: 'You can cancel at any time. You\u2019ll retain access to your plan until the end of your current billing period. Your compliance history remains accessible after cancellation.',
+        },
+        {
+          question: 'Do you offer refunds?',
+          answer: 'We assess refund requests on a case by case basis. Contact us at support@safepost.com.au within 7 days of a charge if you believe a refund is warranted.',
+        },
+      ],
     },
     {
-      icon: <Image className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Real enforcement precedent',
-      description: 'Analysis draws on tribunal cases — giving you context for what AHPRA and TGA actually pursue.',
-    },
-    {
-      icon: <BookOpen className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Multi-platform support',
-      description: 'Check Instagram, Facebook, website copy, Google ads, and any other online advertising content.',
-    },
-    {
-      icon: <History className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Compliance history',
-      description: 'Every check saved automatically. Search and revisit past checks to demonstrate your compliance process.',
+      label: 'Privacy & Security',
+      items: [
+        {
+          question: 'Is my content stored or shared?',
+          answer: 'Your compliance checks are stored securely in your account history so you can reference them later. Your content is never shared with third parties or used to train AI models.',
+        },
+        {
+          question: 'Is SafePost secure?',
+          answer: 'Yes. SafePost uses Supabase for authentication and database management, with row-level security ensuring your data is only accessible to you. All data is encrypted in transit and at rest.',
+        },
+        {
+          question: 'Who can see my compliance checks?',
+          answer: 'Only you \u2014 and team members you explicitly invite on Pro+ and Ultra plans. SafePost staff do not access your compliance check content.',
+        },
+      ],
     },
   ];
 
@@ -62,12 +122,10 @@ const Features: React.FC = () => {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          {/* Left: Logo */}
           <Link to="/">
             <SafePostLogo />
           </Link>
 
-          {/* Center: Navigation */}
           <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
             <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Features
@@ -146,7 +204,6 @@ const Features: React.FC = () => {
             </div>
           </nav>
 
-          {/* Right: Auth buttons */}
           <div className="hidden md:flex items-center gap-2.5">
             <button onClick={() => navigate('/login')} className="px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
               Login
@@ -156,7 +213,6 @@ const Features: React.FC = () => {
             </button>
           </div>
 
-          {/* Mobile: Hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
@@ -166,7 +222,6 @@ const Features: React.FC = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
         <div
           className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
@@ -284,129 +339,82 @@ const Features: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Powerful compliance checking, simplified
+            Got questions? We've got answers.
           </h1>
-          <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Everything you need to ensure your content meets AHPRA&nbsp;and&nbsp;TGA&nbsp;guidelines
+          <p className="text-lg text-gray-500">
+            Everything you need to know about SafePost, AHPRA compliance, and how it all works.
           </p>
         </div>
       </section>
 
-      {/* Hero Image */}
+      {/* Comparison Table Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-2xl mx-auto px-6 mb-16 md:mb-20">
-          <img
-            src={heroImage}
-            alt="SafePost Features"
-            loading="eager"
-            fetchPriority="high"
-            className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
-          />
-        </div>
-      </section>
-
-      {/* Features Grid */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm"
-              >
-                <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
-                  {feature.icon}
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
-                  {feature.heading}
-                </h3>
-                <p className="text-[14px] text-gray-500 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
+        <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+              See how SafePost compares
+            </h2>
+            <p className="text-lg text-gray-500">
+              General AI tools are built for conversation. SafePost is built for compliance.
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* What is Social Media Section */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-12 text-center">
-            What is social media advertising?
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left column — definition */}
-            <div>
-              <p className="text-[15px] text-gray-600 leading-relaxed">
-                Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, advertise, or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media.<sup>*</sup>
-              </p>
-              <p className="mt-6 text-[15px] text-gray-600 leading-relaxed">
-                Advertising applies to all types of social media — including platforms used to reach the general public, and &lsquo;closed channel&rsquo; platforms targeting specific audiences, such as dark marketing, Facebook groups, or closed LinkedIn channels — unless they satisfy the TGA&rsquo;s requirements for <a href="https://www.tga.gov.au/resources/guidance/advertising-health-professionals-so-consumer-rules-do-not-apply" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">advertising exclusively to health professionals</a>.
-              </p>
-              <p className="mt-4 text-[12px] text-gray-400 leading-relaxed">
-                * Not an exhaustive list — adapted from:{' '}
-                <a
-                  href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4103576/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 underline hover:text-gray-500"
-                >
-                  Social Media and Health Care Professionals: Benefits, Risks, and Best Practices
-                </a>
-              </p>
-            </div>
-
-            {/* Right column — categorised list */}
-            <div className="bg-white rounded-2xl border border-black/[0.06] p-6 sm:p-8 space-y-3">
-              {[
-                { category: 'Social networking', examples: 'Facebook, X, WeChat, Weibo, WhatsApp' },
-                { category: 'Professional networking', examples: 'LinkedIn, Yammer' },
-                { category: 'Discussion forums', examples: 'Reddit, Whirlpool, Discord, Quora' },
-                { category: 'Media sharing', examples: 'YouTube, Flickr, Instagram, TikTok, Pinterest' },
-                { category: 'Content production', examples: 'Tumblr, Blogger, X' },
-                { category: 'Audio publishing', examples: 'Spotify, iTunes, Podcasts' },
-                { category: 'Text publishing', examples: 'Blogs, SlideShare' },
-                { category: 'Knowledge aggregation', examples: 'Wikipedia' },
-                { category: 'Virtual reality & gaming', examples: 'Second Life' },
-                { category: 'Booking sites & apps', examples: 'HealthEngine, Whitecoat, Podium' },
-              ].map((item, index) => (
-                <div key={index} className="flex items-baseline gap-3 flex-wrap">
-                  <span className="inline-block shrink-0 px-2.5 py-0.5 text-[11px] font-bold text-gray-800 bg-gray-200 rounded-full whitespace-nowrap leading-snug">
-                    {item.category}
-                  </span>
-                  <span className="text-[14px] text-gray-500">
-                    {item.examples}
-                  </span>
-                </div>
-              ))}
+          <div className="bg-white rounded-2xl border border-black/[0.06] overflow-hidden shadow-sm shadow-black/[0.02]">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-black/[0.06]">
+                    <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-900">Feature</th>
+                    <th className="text-left px-6 py-4 text-[13px] font-semibold text-gray-500">ChatGPT / Gemini</th>
+                    <th className="text-left px-6 py-4 text-[13px] font-semibold text-blue-600">SafePost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {comparisonRows.map((row, i) => (
+                    <tr key={i} className={i < comparisonRows.length - 1 ? 'border-b border-black/[0.04]' : ''}>
+                      <td className="px-6 py-4 text-[14px] text-gray-900 font-medium">{row.feature}</td>
+                      <td className="px-6 py-4 text-[14px] text-red-400">
+                        <span className="flex items-center gap-2">
+                          <span className="text-red-400">{'\u274C'}</span>
+                          <span className="text-red-400/80">{row.generic}</span>
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-[14px] text-green-600">
+                        <span className="flex items-center gap-2">
+                          <span className="text-green-500">{'\u2705'}</span>
+                          <span className="text-green-600">{row.safepost}</span>
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Call to Action */}
+      {/* FAQ Accordions */}
+      <FAQSection
+        title="Frequently asked questions"
+        groups={faqGroups}
+      />
+
+      {/* Closing CTA */}
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to get started?
+            Still have questions?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join practitioners and practices across Australia using SafePost for compliance confidence
+            Our team is here to help. Reach out and we'll get back to you within one business day.
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div className="flex items-center justify-center">
             <button
-              onClick={() => navigate('/signup')}
+              onClick={() => navigate('/contact')}
               className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
             >
-              Get started
-              <ArrowRight className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => navigate('/login')}
-              className="w-full sm:w-auto px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
-            >
-              Login
+              Contact us
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -418,4 +426,4 @@ const Features: React.FC = () => {
   );
 };
 
-export default Features;
+export default FAQ;

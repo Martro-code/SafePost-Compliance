@@ -29,12 +29,8 @@ const PricingMedicalPractitioners: React.FC = () => {
 
   const faqs = [
     {
-      question: 'Do I need to be AHPRA-registered to use SafePost?',
-      answer: 'Yes, SafePost is designed specifically for AHPRA-registered medical practitioners in Australia. Our compliance checks are based on Australian health practitioner advertising regulations and may not be applicable to practitioners in other jurisdictions.',
-    },
-    {
-      question: 'Can SafePost guarantee my content will be compliant?',
-      answer: 'SafePost is a guidance tool that helps identify potential compliance issues based on AHPRA and TGA advertising guidelines and social media guidance. While we provide comprehensive analysis and compliant alternatives, AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain ultimately responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009 and the Therapeutic Goods Act 1989.',
+      question: 'Can I try SafePost before paying?',
+      answer: 'Yes \u2014 the Starter plan is free forever with 3 compliance checks. No credit card required.',
     },
     {
       question: 'What happens if I exceed my monthly check limit?',
@@ -45,8 +41,12 @@ const PricingMedicalPractitioners: React.FC = () => {
       answer: 'Yes \u2014 SafePost Professional, Pro+, and Ultra all include image and video content analysis, which is particularly important for cosmetic procedure advertising. SafePost analyses visual content for compliance with AHPRA and TGA regulations around before/after photos, testimonials, and cosmetic procedure advertising. The free Starter plan supports text-based analysis only.',
     },
     {
-      question: 'How quickly can I get compliance results?',
-      answer: 'SafePost provides instant compliance analysis \u2014 typically within 5\u201310 seconds. You\u2019ll immediately see flagged issues with specific AHPRA and TGA guideline references, and on paid plans you\u2019ll also receive AI-generated compliant alternatives you can use straight away.',
+      question: 'What happens if I cancel my subscription?',
+      answer: 'You can cancel anytime from your account settings. You\u2019ll keep access until the end of your billing period.',
+    },
+    {
+      question: 'Is my content stored or shared?',
+      answer: 'Your checks are stored securely in your account only. Your content is never shared with third parties or used to train AI models.',
     },
   ];
 
@@ -119,6 +119,9 @@ const PricingMedicalPractitioners: React.FC = () => {
               </button>
               {resourcesDropdownOpen && (
                 <div className="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  <button onClick={() => { navigate('/faq'); setResourcesDropdownOpen(false); }} className="block w-full text-left px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    FAQ
+                  </button>
                   {resourceLinks.map((link, i) => (
                     <a
                       key={i}
@@ -238,6 +241,9 @@ const PricingMedicalPractitioners: React.FC = () => {
                 }}
               >
                 <div className="pl-4 space-y-0.5 pt-1">
+                  <button onClick={() => { navigate('/faq'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors">
+                    FAQ
+                  </button>
                   {resourceLinks.map((link, i) => (
                     <a
                       key={i}

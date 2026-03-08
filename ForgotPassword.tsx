@@ -124,6 +124,9 @@ const ForgotPassword: React.FC = () => {
               </button>
               {resourcesDropdownOpen && (
                 <div className="absolute top-full right-0 mt-1 w-64 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  <button onClick={() => { navigate('/faq'); setResourcesDropdownOpen(false); }} className="block w-full text-left px-4 py-2.5 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    FAQ
+                  </button>
                   {resourceLinks.map((link, i) => (
                     <a
                       key={i}
@@ -217,6 +220,9 @@ const ForgotPassword: React.FC = () => {
                 }}
               >
                 <div className="pl-4 space-y-0.5 pt-1">
+                  <button onClick={() => { navigate('/faq'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors">
+                    FAQ
+                  </button>
                   {resourceLinks.map((link, i) => (
                     <a
                       key={i}
