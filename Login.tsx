@@ -40,21 +40,59 @@ const Login: React.FC = () => {
     return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
   };
 
+  // Price ID mapping for pending checkout redirect
+  const PRICE_IDS: Record<string, Record<string, string>> = {
+    professional: {
+      monthly: 'price_1T8UTeR1RAuGYaVLg6CI48VN',
+      yearly: 'price_1T8UUPR1RAuGYaVL8SdWS9ut',
+    },
+    proplus: {
+      monthly: 'price_1T8UWKR1RAuGYaVL2RUXVEAr',
+      yearly: 'price_1T8UXuR1RAuGYaVLPGTPgSqA',
+    },
+    ultra: {
+      monthly: 'price_1T8UZUR1RAuGYaVLkkbcBvJL',
+      yearly: 'price_1T8UaCR1RAuGYaVL3M5ob7TV',
+    },
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setAuthError('');
     setIsSubmitting(true);
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-    setIsSubmitting(false);
+    const { data: signInData, error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
+      setIsSubmitting(false);
       setAuthError('Invalid email or password');
       return;
     }
 
+    // Check for pending checkout from signup flow
+    const pendingCheckoutRaw = localStorage.getItem('safepost_pending_checkout');
+    if (pendingCheckoutRaw && signInData.user) {
+      try {
+        const { plan, billing } = JSON.parse(pendingCheckoutRaw);
+        const priceId = PRICE_IDS[plan]?.[billing];
+        if (priceId) {
+          localStorage.removeItem('safepost_pending_checkout');
+          const { data, error: checkoutError } = await supabase.functions.invoke('create-checkout-session', {
+            body: { priceId, userId: signInData.user.id },
+          });
+          if (!checkoutError && data?.url) {
+            window.location.href = data.url;
+            return;
+          }
+        }
+      } catch {
+        // If checkout redirect fails, fall through to dashboard
+        localStorage.removeItem('safepost_pending_checkout');
+      }
+    }
+
+    setIsSubmitting(false);
     navigate('/dashboard');
   };
 
