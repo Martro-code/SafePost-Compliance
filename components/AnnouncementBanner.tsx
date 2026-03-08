@@ -21,12 +21,7 @@ const AnnouncementBanner = () => {
     <div className="bg-amber-50 border-b border-amber-200">
       <div className="max-w-6xl mx-auto px-6 py-2.5 flex items-center justify-between gap-4">
         <p className="text-[13px] text-amber-800 leading-snug flex-1 min-w-0">
-          <span className="hidden sm:inline">
-            SafePost is currently in early access — subscriptions are coming soon. In the meantime, sign up free and try 3 compliance checks on us.
-          </span>
-          <span className="sm:hidden">
-            SafePost is in early access — sign up free and try 3 compliance checks on us.
-          </span>
+          SafePost is in early access — join now and lock in founding member pricing.
           {' '}
           <button
             onClick={() => navigate('/signup')}
