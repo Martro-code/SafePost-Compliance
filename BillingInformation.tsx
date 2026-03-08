@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Mail, CalendarDays, Receipt } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ArrowLeft, CreditCard, Mail, CalendarDays, Receipt, CheckCircle, XCircle } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
 import { getDisplayPlanName, getPlanTierLabel } from './src/utils/planUtils';
@@ -13,7 +13,26 @@ const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }>
 
 const BillingInformation: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { userEmail, signOut } = useAuth();
+
+  const [billingMessage, setBillingMessage] = useState<{ type: 'success' | 'cancelled'; text: string } | null>(null);
+
+  useEffect(() => {
+    if (searchParams.get('success') === 'true') {
+      setBillingMessage({
+        type: 'success',
+        text: 'Your subscription has been activated. Welcome to SafePost!',
+      });
+      setSearchParams({}, { replace: true });
+    } else if (searchParams.get('cancelled') === 'true') {
+      setBillingMessage({
+        type: 'cancelled',
+        text: 'Your payment was cancelled. Your plan has not changed.',
+      });
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   // Read plan info from sessionStorage
   const planName = sessionStorage.getItem('safepost_plan') || '';
@@ -56,6 +75,32 @@ const BillingInformation: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           Back to Dashboard
         </button>
+
+        {/* Billing Status Message */}
+        {billingMessage && (
+          <div
+            className={`mb-6 flex items-start gap-3 rounded-xl border p-4 ${
+              billingMessage.type === 'success'
+                ? 'bg-green-50 border-green-200 text-green-800'
+                : 'bg-amber-50 border-amber-200 text-amber-800'
+            }`}
+          >
+            {billingMessage.type === 'success' ? (
+              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            ) : (
+              <XCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+            )}
+            <div className="flex-1">
+              <p className="text-[14px] font-medium">{billingMessage.text}</p>
+            </div>
+            <button
+              onClick={() => setBillingMessage(null)}
+              className="text-[13px] font-medium opacity-60 hover:opacity-100 transition-opacity"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
 
         {/* Page Heading */}
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Billing</h1>
