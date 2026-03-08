@@ -40,6 +40,7 @@ import AcceptInvitation from './AcceptInvitation';
 import NotFound from './NotFound';
 import CookieBanner from './src/components/CookieBanner';
 import BackToTop from './src/components/BackToTop';
+import AnnouncementBanner from './components/AnnouncementBanner';
 
 const ScrollToTop: React.FC = () => {
   const { pathname } = useLocation();
@@ -54,6 +55,7 @@ const ScrollToTop: React.FC = () => {
 const App: React.FC = () => {
   return (
     <>
+      <AnnouncementBanner />
       <ScrollToTop />
       <div className="page-transition">
         <Routes>
