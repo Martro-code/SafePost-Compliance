@@ -333,56 +333,51 @@ const Features: React.FC = () => {
       {/* What is Social Media Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-12 text-center">
-            What is social media advertising?
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-6 text-center">
+            Social media counts as advertising
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left column — definition */}
-            <div>
-              <p className="text-[15px] text-gray-600 leading-relaxed">
-                Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, advertise, or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media.<sup>*</sup>
-              </p>
-              <p className="mt-6 text-[15px] text-gray-600 leading-relaxed">
-                Advertising applies to all types of social media — including platforms used to reach the general public, and &lsquo;closed channel&rsquo; platforms targeting specific audiences, such as dark marketing, Facebook groups, or closed LinkedIn channels — unless they satisfy the TGA&rsquo;s requirements for <a href="https://www.tga.gov.au/resources/guidance/advertising-health-professionals-so-consumer-rules-do-not-apply" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">advertising exclusively to health professionals</a>.
-              </p>
-              <p className="mt-4 text-[12px] text-gray-400 leading-relaxed">
-                * Not an exhaustive list — adapted from:{' '}
-                <a
-                  href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4103576/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 underline hover:text-gray-500"
-                >
-                  Social Media and Health Care Professionals: Benefits, Risks, and Best Practices
-                </a>
-              </p>
-            </div>
-
-            {/* Right column — categorised list */}
-            <div className="bg-white rounded-2xl border border-black/[0.06] p-6 sm:p-8 space-y-3">
-              {[
-                { category: 'Social networking', examples: 'Facebook, X, WeChat, Weibo, WhatsApp' },
-                { category: 'Professional networking', examples: 'LinkedIn, Yammer' },
-                { category: 'Discussion forums', examples: 'Reddit, Whirlpool, Discord, Quora' },
-                { category: 'Media sharing', examples: 'YouTube, Flickr, Instagram, TikTok, Pinterest' },
-                { category: 'Content production', examples: 'Tumblr, Blogger, X' },
-                { category: 'Audio publishing', examples: 'Spotify, iTunes, Podcasts' },
-                { category: 'Text publishing', examples: 'Blogs, SlideShare' },
-                { category: 'Knowledge aggregation', examples: 'Wikipedia' },
-                { category: 'Virtual reality & gaming', examples: 'Second Life' },
-                { category: 'Booking sites & apps', examples: 'HealthEngine, Whitecoat, Podium' },
-              ].map((item, index) => (
-                <div key={index} className="flex items-baseline gap-3 flex-wrap">
-                  <span className="inline-block shrink-0 px-2.5 py-0.5 text-[11px] font-bold text-gray-800 bg-gray-200 rounded-full whitespace-nowrap leading-snug">
-                    {item.category}
-                  </span>
-                  <span className="text-[14px] text-gray-500">
-                    {item.examples}
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="max-w-3xl mx-auto mb-12">
+            <p className="text-[15px] text-gray-600 leading-relaxed text-center">
+              Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, advertise, or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media.<sup>*</sup>
+            </p>
+            <p className="mt-4 text-[15px] text-gray-600 leading-relaxed text-center">
+              Advertising applies to all types of social media — including platforms used to reach the general public, and &lsquo;closed channel&rsquo; platforms targeting specific audiences, such as dark marketing, Facebook groups, or closed LinkedIn channels — unless they satisfy the TGA&rsquo;s requirements for <a href="https://www.tga.gov.au/resources/guidance/advertising-health-professionals-so-consumer-rules-do-not-apply" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">advertising exclusively to health professionals</a>.
+            </p>
           </div>
+
+          {/* Platform card grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              { icon: '📱', category: 'Social networking', examples: 'Facebook, X, WeChat, Weibo, WhatsApp' },
+              { icon: '💼', category: 'Professional networking', examples: 'LinkedIn, Yammer' },
+              { icon: '💬', category: 'Discussion forums', examples: 'Reddit, Whirlpool, Discord, Quora' },
+              { icon: '🎬', category: 'Media sharing', examples: 'YouTube, Flickr, Instagram, TikTok, Pinterest' },
+              { icon: '✍️', category: 'Content production', examples: 'Tumblr, Blogger, X' },
+              { icon: '🎙️', category: 'Audio publishing', examples: 'Spotify, iTunes, Podcasts' },
+              { icon: '📝', category: 'Text publishing', examples: 'Blogs, SlideShare' },
+              { icon: '📚', category: 'Knowledge aggregation', examples: 'Wikipedia' },
+              { icon: '🎮', category: 'Virtual reality & gaming', examples: 'Second Life' },
+              { icon: '📅', category: 'Booking sites & apps', examples: 'HealthEngine, Whitecoat, Podium' },
+            ].map((item, index) => (
+              <div key={index} className="bg-white rounded-xl border border-black/[0.06] shadow-sm p-5">
+                <div className="text-2xl mb-2">{item.icon}</div>
+                <h3 className="text-[15px] font-bold text-gray-900 mb-1">{item.category}</h3>
+                <p className="text-[13px] text-gray-400 leading-relaxed">{item.examples}</p>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-8 text-[12px] text-gray-400 leading-relaxed text-center">
+            * Not an exhaustive list — adapted from:{' '}
+            <a
+              href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4103576/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400 underline hover:text-gray-500"
+            >
+              Social Media and Health Care Professionals: Benefits, Risks, and Best Practices
+            </a>
+          </p>
         </div>
       </section>
 
