@@ -390,16 +390,14 @@ const FAQ: React.FC = () => {
             </div>
 
             {/* Right Column — Feature List */}
-            <div className="w-full self-stretch flex items-center">
-              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm shadow-black/[0.02] p-8 md:p-10 w-full">
-                <ul className="space-y-5">
-                  {featureList.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3.5">
-                      <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" stroke="white" />
-                      <span className="text-[15px] text-gray-700 leading-relaxed">{item}</span>
-                    </li>
-                  ))}
-                </ul>
+            <div className="w-full">
+              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm shadow-black/[0.02] p-8 md:p-10 h-full flex flex-col justify-between">
+                {featureList.map((item, i) => (
+                  <div key={i} className="flex items-start gap-3.5">
+                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="currentColor" stroke="white" />
+                    <span className="text-[15px] text-gray-700 leading-relaxed">{item}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
