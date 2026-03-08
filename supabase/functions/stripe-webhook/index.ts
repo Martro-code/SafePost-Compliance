@@ -32,6 +32,14 @@ const priceIdToBilling: Record<string, string> = {
   'price_1T8UaCR1RAuGYaVL3M5ob7TV': 'yearly',
 };
 
+function getPlanName(amountTotal: number): string {
+  const amount = amountTotal / 100;
+  if (amount <= 20) return 'SafePost Starter';
+  if (amount <= 49) return 'SafePost Professional';
+  if (amount <= 99) return 'SafePost Pro+';
+  return 'SafePost Ultra';
+}
+
 serve(async (req: Request) => {
   const signature = req.headers.get('stripe-signature');
 
@@ -92,6 +100,38 @@ serve(async (req: Request) => {
     });
 
     console.log(`User ${userId} upgraded to ${plan} (${billing})`);
+
+    // Send payment confirmation email via Resend
+    const resendApiKey = Deno.env.get('RESEND_API_KEY');
+    if (resendApiKey && session.customer_email) {
+      const planName = session.amount_total
+        ? getPlanName(session.amount_total)
+        : 'SafePost';
+
+      await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          from: 'SafePost <support@safepost.com.au>',
+          to: session.customer_email,
+          subject: 'Your SafePost subscription is confirmed',
+          html: `
+            <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
+              <img src="https://www.safepost.com.au/logo.png" alt="SafePost" style="height: 40px; margin-bottom: 24px;" />
+              <h2>You're subscribed!</h2>
+              <p>Hi there,</p>
+              <p>Your <strong>${planName}</strong> subscription is now active. You have full access to SafePost.</p>
+              <a href="https://www.safepost.com.au/dashboard" style="display:inline-block;background:#2563eb;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;margin:16px 0;">Go to your dashboard →</a>
+              <p>If you have any questions, just reply to this email.</p>
+              <p>Warmly,<br/>The SafePost Team</p>
+            </div>
+          `,
+        }),
+      });
+    }
   }
 
   if (event.type === 'customer.subscription.deleted') {
