@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
-import Stripe from 'https://esm.sh/stripe@14.14.0?target=deno';
+import Stripe from 'https://esm.sh/stripe@13.11.0?target=deno&no-check=true';
 
 const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
 if (!stripeSecretKey) {
@@ -17,7 +17,7 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
-serve(async (req) => {
+serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
   }
