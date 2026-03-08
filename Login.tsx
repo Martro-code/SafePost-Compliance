@@ -72,6 +72,14 @@ const Login: React.FC = () => {
       return;
     }
 
+    // Persist session preference based on "Remember me" checkbox
+    if (rememberMe) {
+      localStorage.setItem('safepost_remember_me', 'true');
+    } else {
+      localStorage.removeItem('safepost_remember_me');
+      sessionStorage.setItem('safepost_session_active', 'true');
+    }
+
     // Check for pending checkout from signup flow
     const pendingCheckoutRaw = localStorage.getItem('safepost_pending_checkout');
     if (pendingCheckoutRaw && signInData.user && signInData.session) {
