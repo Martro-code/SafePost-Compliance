@@ -1,39 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink, Loader2 } from 'lucide-react';
+import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import FAQSection from './components/FAQSection';
 import PublicFooter from './components/PublicFooter';
-import { supabase } from './src/services/supabaseClient';
+import NotifyMeButton from './components/NotifyMeButton';
 
 const PricingMedicalPractitioners: React.FC = () => {
   const navigate = useNavigate();
 
   const [isYearly, setIsYearly] = useState(false);
-  const [checkoutLoading, setCheckoutLoading] = useState(false);
-
-  const handleCheckout = async (priceId: string) => {
-    setCheckoutLoading(true);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        navigate(`/signup?plan=professional&billing=${isYearly ? 'yearly' : 'monthly'}`);
-        return;
-      }
-      const { data, error } = await supabase.functions.invoke('create-checkout-session', {
-        body: { priceId, userId: user.id },
-      });
-      if (error) throw error;
-      if (data?.url) {
-        window.location.href = data.url;
-      }
-    } catch (err) {
-      console.error('Checkout error:', err);
-      alert('Something went wrong. Please try again.');
-    } finally {
-      setCheckoutLoading(false);
-    }
-  };
 
   // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -372,20 +348,7 @@ const PricingMedicalPractitioners: React.FC = () => {
                   <span className="text-[14px] text-gray-600">Email support</span>
                 </li>
               </ul>
-              <button
-                onClick={() => handleCheckout(isYearly ? 'price_1T8UUPR1RAuGYaVL8SdWS9ut' : 'price_1T8UTeR1RAuGYaVLg6CI48VN')}
-                disabled={checkoutLoading}
-                className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {checkoutLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    Loading...
-                  </>
-                ) : (
-                  'Get Pro'
-                )}
-              </button>
+              <NotifyMeButton planName="professional" variant="primary" />
             </div>
           </div>
         </div>
