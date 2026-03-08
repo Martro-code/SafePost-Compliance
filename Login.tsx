@@ -72,18 +72,29 @@ const Login: React.FC = () => {
 
     // Check for pending checkout from signup flow
     const pendingCheckoutRaw = localStorage.getItem('safepost_pending_checkout');
-    if (pendingCheckoutRaw && signInData.user) {
+    if (pendingCheckoutRaw && signInData.user && signInData.session) {
       try {
         const { plan, billing } = JSON.parse(pendingCheckoutRaw);
         const priceId = PRICE_IDS[plan]?.[billing];
         if (priceId) {
           localStorage.removeItem('safepost_pending_checkout');
-          const { data, error: checkoutError } = await supabase.functions.invoke('create-checkout-session', {
-            body: { priceId, userId: signInData.user.id },
+          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+          const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+          const response = await fetch(`${supabaseUrl}/functions/v1/create-checkout-session`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${signInData.session.access_token}`,
+              'apikey': supabaseAnonKey,
+            },
+            body: JSON.stringify({ priceId, userId: signInData.user.id }),
           });
-          if (!checkoutError && data?.url) {
-            window.location.href = data.url;
-            return;
+          if (response.ok) {
+            const data = await response.json();
+            if (data?.url) {
+              window.location.href = data.url;
+              return;
+            }
           }
         }
       } catch {
