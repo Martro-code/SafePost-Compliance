@@ -41,7 +41,7 @@ const FAQ: React.FC = () => {
       items: [
         {
           question: 'Why was SafePost built?',
-          answer: 'Australian medical practitioners face real consequences for non-compliant social media content \u2014 from formal AHPRA complaints to TGA enforcement action. SafePost was built to give practitioners an instant, reliable way to check their content before posting, without needing to read hundreds of pages of guidelines.',
+          answer: 'Australian medical practitioners and practices face real consequences for non-compliant social media content and online advertising \u2014 from formal AHPRA complaints to TGA enforcement action. SafePost was built to give practitioners an instant, reliable way to check their content before posting, without needing to read hundreds of pages of guidelines.',
         },
         {
           question: 'Who is SafePost for?',
@@ -83,7 +83,7 @@ const FAQ: React.FC = () => {
       items: [
         {
           question: 'Can I try SafePost before paying?',
-          answer: 'Yes \u2014 the Starter plan is free forever with 3 compliance checks included. No credit card required.',
+          answer: 'Yes \u2014 the Starter plan is free with 3 compliance checks included. No credit card required.',
         },
         {
           question: 'Can I upgrade or downgrade my plan at any time?',
@@ -343,7 +343,7 @@ const FAQ: React.FC = () => {
             Got questions? We've got answers.
           </h1>
           <p className="text-lg text-gray-500">
-            Everything you need to know about SafePost, AHPRA compliance, and how it all works.
+            Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works.
           </p>
         </div>
       </section>
@@ -444,12 +444,19 @@ const FAQ: React.FC = () => {
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
             Our team is here to help. Reach out and we'll get back to you within one business day.
           </p>
-          <div className="flex items-center justify-center">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
               onClick={() => navigate('/contact')}
               className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
             >
               Contact us
+              <ArrowRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => navigate('/login')}
+              className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
+            >
+              Login
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
