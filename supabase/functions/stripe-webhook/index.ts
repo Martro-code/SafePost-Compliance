@@ -141,7 +141,7 @@ serve(async (req: Request) => {
     // Find user by stripe_customer_id
     const { data: accounts, error: lookupError } = await supabase
       .from('accounts')
-      .select('owner_user_id')
+      .select('owner_user_id, billing_email')
       .eq('stripe_customer_id', customerId)
       .limit(1);
 
@@ -151,6 +151,7 @@ serve(async (req: Request) => {
     }
 
     const userId = accounts[0].owner_user_id;
+    const billingEmail = accounts[0].billing_email;
 
     const { error } = await supabase
       .from('accounts')
@@ -171,6 +172,43 @@ serve(async (req: Request) => {
     });
 
     console.log(`User ${userId} downgraded to starter`);
+
+    // Send cancellation confirmation email
+    if (billingEmail) {
+      let firstName = 'there';
+      try {
+        const { data: { user } } = await supabase.auth.admin.getUserById(userId);
+        if (user) {
+          firstName = user.user_metadata?.firstName || user.user_metadata?.first_name || 'there';
+        }
+      } catch (e) {
+        console.error('Could not fetch user for cancellation email:', e);
+      }
+
+      try {
+        const cancellationRes = await fetch(
+          `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-cancellation-email`,
+          {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              billing_email: billingEmail,
+              first_name: firstName,
+              access_end_date: subscription.current_period_end,
+            }),
+          },
+        );
+
+        if (!cancellationRes.ok) {
+          console.error('Failed to send cancellation email:', await cancellationRes.text());
+        }
+      } catch (e) {
+        console.error('Error calling send-cancellation-email:', e);
+      }
+    }
   }
 
   return new Response(JSON.stringify({ received: true }), {
