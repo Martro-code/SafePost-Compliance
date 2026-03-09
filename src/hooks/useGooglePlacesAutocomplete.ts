@@ -22,7 +22,6 @@ function loadGooglePlacesScript(apiKey: string): Promise<void> {
 
     const existing = document.getElementById(SCRIPT_ID);
     if (existing) {
-      // Script is already loading — wait for it
       existing.addEventListener('load', () => resolve());
       existing.addEventListener('error', () => reject(new Error('Google Places script failed to load')));
       return;
@@ -30,7 +29,7 @@ function loadGooglePlacesScript(apiKey: string): Promise<void> {
 
     const script = document.createElement('script');
     script.id = SCRIPT_ID;
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places`;
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&loading=async`;
     script.async = true;
     script.defer = true;
     script.onload = () => resolve();
@@ -39,8 +38,8 @@ function loadGooglePlacesScript(apiKey: string): Promise<void> {
   });
 }
 
-function parseAddressComponents(place: google.maps.places.PlaceResult): AddressComponents {
-  const components = place.address_components || [];
+function parseAddressComponents(place: google.maps.places.Place): AddressComponents {
+  const components = place.addressComponents || [];
   let streetNumber = '';
   let route = '';
   let suburb = '';
@@ -50,15 +49,15 @@ function parseAddressComponents(place: google.maps.places.PlaceResult): AddressC
   for (const component of components) {
     const types = component.types;
     if (types.includes('street_number')) {
-      streetNumber = component.long_name;
+      streetNumber = component.longText || '';
     } else if (types.includes('route')) {
-      route = component.long_name;
+      route = component.longText || '';
     } else if (types.includes('locality')) {
-      suburb = component.long_name;
+      suburb = component.longText || '';
     } else if (types.includes('administrative_area_level_1')) {
-      state = component.short_name;
+      state = component.shortText || '';
     } else if (types.includes('postal_code')) {
-      postcode = component.long_name;
+      postcode = component.longText || '';
     }
   }
 
@@ -67,16 +66,31 @@ function parseAddressComponents(place: google.maps.places.PlaceResult): AddressC
   return { streetAddress, suburb, state, postcode };
 }
 
+/**
+ * Hook that provides Google Places address autocomplete using the new
+ * PlaceAutocompleteElement API (replacement for the deprecated Autocomplete widget).
+ *
+ * Returns a `containerRef` to attach to a wrapper <div>. When the Places API loads,
+ * a <gmp-place-autocomplete> element is mounted inside it. If the API key is missing
+ * or the script fails to load, the container remains empty and a fallback <input>
+ * should be shown by the consuming component.
+ */
 export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlacesAutocompleteOptions) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const autocompleteRef = useRef<google.maps.places.PlaceAutocompleteElement | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const onPlaceSelectedRef = useRef(onPlaceSelected);
   onPlaceSelectedRef.current = onPlaceSelected;
 
   useEffect(() => {
     const apiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
-    if (!apiKey) return;
+    if (!apiKey) {
+      console.warn(
+        '[useGooglePlacesAutocomplete] VITE_GOOGLE_PLACES_API_KEY is not set in your ' +
+        'environment. Set it in .env.local to enable address autocomplete.'
+      );
+      return;
+    }
 
     let cancelled = false;
 
@@ -85,8 +99,8 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
         if (cancelled) return;
         setIsLoaded(true);
       })
-      .catch(() => {
-        // Silently fail — fields remain as regular text inputs
+      .catch((err) => {
+        console.warn('[useGooglePlacesAutocomplete] Failed to load Google Places script:', err.message);
       });
 
     return () => {
@@ -95,28 +109,43 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
   }, []);
 
   const initAutocomplete = useCallback(() => {
-    if (!isLoaded || !inputRef.current || autocompleteRef.current) return;
+    if (!isLoaded || !containerRef.current || autocompleteRef.current) return;
 
-    const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
+    const autocomplete = new google.maps.places.PlaceAutocompleteElement({
       types: ['address'],
       componentRestrictions: { country: 'au' },
-      fields: ['address_components'],
     });
 
-    autocomplete.addListener('place_changed', () => {
-      const place = autocomplete.getPlace();
-      if (place.address_components) {
-        const parsed = parseAddressComponents(place);
-        onPlaceSelectedRef.current(parsed);
-      }
+    autocomplete.addEventListener('gmp-placeselect', async (event: Event) => {
+      const { place } = event as unknown as { place: google.maps.places.Place };
+      await place.fetchFields({ fields: ['addressComponents'] });
+      const parsed = parseAddressComponents(place);
+      onPlaceSelectedRef.current(parsed);
     });
 
+    // Style the inner input to match the app's form fields
+    autocomplete.setAttribute('style',
+      'width: 100%; --gmpx-color-surface: transparent;'
+    );
+
+    containerRef.current.appendChild(autocomplete as unknown as Node);
     autocompleteRef.current = autocomplete;
   }, [isLoaded]);
 
   useEffect(() => {
     initAutocomplete();
+
+    return () => {
+      if (autocompleteRef.current && containerRef.current) {
+        try {
+          containerRef.current.removeChild(autocompleteRef.current as unknown as Node);
+        } catch {
+          // Element may already have been removed
+        }
+      }
+      autocompleteRef.current = null;
+    };
   }, [initAutocomplete]);
 
-  return { inputRef, isLoaded };
+  return { containerRef, isLoaded };
 }
