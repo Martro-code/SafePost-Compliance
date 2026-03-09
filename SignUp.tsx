@@ -46,7 +46,7 @@ const SignUp: React.FC = () => {
     setPostcode(address.postcode);
   }, []);
 
-  const { inputRef: streetAddressRef } = useGooglePlacesAutocomplete({
+  const { containerRef: streetAddressContainerRef, isLoaded: placesLoaded } = useGooglePlacesAutocomplete({
     onPlaceSelected: handlePlaceSelected,
   });
 
@@ -458,15 +458,22 @@ const SignUp: React.FC = () => {
                 <label htmlFor="streetAddress" className="block text-[13px] font-medium text-gray-700 mb-1.5">
                   Street address
                 </label>
-                <input
-                  ref={streetAddressRef}
-                  id="streetAddress"
-                  type="text"
-                  placeholder="Enter your street address"
-                  value={streetAddress}
-                  onChange={(e) => setStreetAddress(e.target.value)}
-                  className={getInputClasses(streetAddress, streetAddress.trim().length > 0)}
+                {/* PlaceAutocompleteElement mounts inside this container when the API loads */}
+                <div
+                  ref={streetAddressContainerRef}
+                  className={placesLoaded ? getInputClasses(streetAddress, streetAddress.trim().length > 0) + ' p-0 overflow-hidden' : 'hidden'}
                 />
+                {/* Fallback plain input when Places API is unavailable */}
+                {!placesLoaded && (
+                  <input
+                    id="streetAddress"
+                    type="text"
+                    placeholder="Enter your street address"
+                    value={streetAddress}
+                    onChange={(e) => setStreetAddress(e.target.value)}
+                    className={getInputClasses(streetAddress, streetAddress.trim().length > 0)}
+                  />
+                )}
               </div>
 
               {/* Suburb */}
