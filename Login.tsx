@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink, ArrowLeft } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import { supabase } from './src/services/supabaseClient';
@@ -7,6 +7,21 @@ import PublicFooter from './components/PublicFooter';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // If user arrives from email verification (URL contains access_token or type=signup),
+  // skip the login page and redirect directly to the dashboard.
+  useEffect(() => {
+    const hash = window.location.hash;
+    const search = window.location.search;
+    if (hash.includes('access_token') || search.includes('type=signup')) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          navigate('/dashboard', { replace: true });
+        }
+      });
+    }
+  }, [navigate]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
