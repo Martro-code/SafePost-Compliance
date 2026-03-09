@@ -205,7 +205,7 @@ const FAQ: React.FC = () => {
             Still have questions?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Our team is here to help. Reach out and we'll get back to you within one business day.
+            Our team is here to help. Reach out and we'll get back to you within one business day
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <button
