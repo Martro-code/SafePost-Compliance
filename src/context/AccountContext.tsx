@@ -98,6 +98,8 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
           checks_used: 0,
           checks_limit: limit,
           billing_email: user.email,
+          first_name: user.user_metadata?.firstName || user.user_metadata?.first_name || '',
+          last_name: user.user_metadata?.surname || user.user_metadata?.last_name || '',
         })
         .select()
         .single();

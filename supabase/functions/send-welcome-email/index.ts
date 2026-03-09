@@ -23,8 +23,14 @@ serve(async (req) => {
       });
     }
 
-    const firstName = record.first_name || 'there';
-    const email = record.email;
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
+
+    const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(record.owner_user_id);
+    const firstName = user?.user_metadata?.firstName || user?.user_metadata?.first_name || record.first_name || 'there';
+    const email = record.billing_email || record.email;
 
     if (!email) {
       return new Response(JSON.stringify({ error: 'No email in record' }), {
