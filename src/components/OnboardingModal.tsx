@@ -69,7 +69,7 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ firstName, planName, 
                 Welcome to SafePost{firstName ? `, ${firstName}` : ''}!
               </h2>
               <p className="text-[14px] text-gray-500">
-                You're seconds away from your first AHPRA compliance check.
+                Your first AHPRA and TGA compliance check starts here.
               </p>
             </div>
 
@@ -99,7 +99,7 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ firstName, planName, 
                 {
                   num: 2,
                   label: 'Get your compliance verdict',
-                  desc: 'Checked against 134 AHPRA rules in seconds.',
+                  desc: 'Checked against AHPRA and TGA guidelines in seconds.',
                 },
                 {
                   num: 3,
