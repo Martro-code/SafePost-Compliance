@@ -28,21 +28,22 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
-    // Get email - try record first, then fetch from auth.users
-    let email = record.billing_email || record.email;
-    let firstName = record.first_name || 'there';
-
-    if (!email && record.owner_user_id) {
-      const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(record.owner_user_id);
-      email = user?.email;
-      firstName = user?.user_metadata?.firstName || user?.user_metadata?.first_name || firstName;
-    }
-
-    if (!email) {
-      return new Response(JSON.stringify({ error: 'No email found for user' }), {
+    if (!record.owner_user_id) {
+      return new Response(JSON.stringify({ error: 'No owner_user_id in record' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
+
+    const { data: { user }, error: userError } = await supabaseAdmin.auth.admin.getUserById(record.owner_user_id);
+
+    if (userError || !user) {
+      return new Response(JSON.stringify({ error: 'Could not fetch user' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const email = user.email;
+    const firstName = user.user_metadata?.firstName || user.user_metadata?.first_name || 'there';
 
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
     if (!resendApiKey) {
