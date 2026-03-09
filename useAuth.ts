@@ -14,9 +14,11 @@ export function useAuth() {
     const isEmailVerification = hash.includes('access_token') && (hash.includes('type=signup') || hash.includes('type=email'));
 
     supabase.auth.getSession().then(({ data: { session } }) => {
-      // If arriving from email verification, preserve the session
+      // If arriving from email verification, preserve the session and redirect to dashboard
       if (isEmailVerification && session?.user) {
         sessionStorage.setItem('safepost_session_active', 'true');
+        window.location.replace('/dashboard');
+        return;
       }
 
       // If a session exists but "Remember me" was not checked and the browser
@@ -49,6 +51,16 @@ export function useAuth() {
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      // Redirect to dashboard when signing in from an email verification link
+      if (event === 'SIGNED_IN' && session?.user) {
+        const currentHash = window.location.hash;
+        const isVerificationRedirect = currentHash.includes('type=signup') || currentHash.includes('type=email');
+        if (isVerificationRedirect) {
+          sessionStorage.setItem('safepost_session_active', 'true');
+          window.location.replace('/dashboard');
+          return;
+        }
+      }
       setUser(session?.user ?? null);
       if (event === 'SIGNED_OUT' && isLoggingOut) {
         setTimeout(() => { isLoggingOut = false; }, 500);
