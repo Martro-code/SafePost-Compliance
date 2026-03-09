@@ -4,7 +4,7 @@ import { ChevronDown, ArrowRight, Menu, X, ExternalLink, CheckCircle } from 'luc
 import SafePostLogo from './components/SafePostLogo';
 import FAQSection from './components/FAQSection';
 import PublicFooter from './components/PublicFooter';
-import AnnouncementBanner from './components/AnnouncementBanner';
+
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
 
@@ -238,7 +238,6 @@ const FAQ: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
-      <AnnouncementBanner />
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">

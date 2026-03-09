@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import PublicFooter from './components/PublicFooter';
-import AnnouncementBanner from './components/AnnouncementBanner';
+
 
 import spLogo from './assets/SP-logo.svg';
 
@@ -27,7 +27,6 @@ const About: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
-      <AnnouncementBanner />
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
