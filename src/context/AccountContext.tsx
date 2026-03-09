@@ -66,11 +66,14 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (membership && !memberError) {
         // Found membership — load the account
-        const { data: account } = await supabase
+        const { data: account, error: accountFetchError } = await supabase
           .from('accounts')
           .select('id, plan, checks_used, checks_limit')
           .eq('id', membership.account_id)
           .single();
+        if (accountFetchError) {
+          console.error('Failed to fetch account for membership:', accountFetchError);
+        }
 
         if (account) {
           setAccountId(account.id);
@@ -114,7 +117,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
 
       // Create account_members row
-      await supabase
+      const { error: memberInsertError } = await supabase
         .from('account_members')
         .insert({
           account_id: newAccount.id,
@@ -123,13 +126,19 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
           status: 'active',
           invited_email: user.email,
         });
+      if (memberInsertError) {
+        console.error('Failed to insert account_members row:', memberInsertError);
+      }
 
       // Backfill account_id on existing compliance_checks for this user
-      await supabase
+      const { error: backfillError } = await supabase
         .from('compliance_checks')
         .update({ account_id: newAccount.id })
         .eq('user_id', user.id)
         .is('account_id', null);
+      if (backfillError) {
+        console.error('Failed to backfill compliance_checks account_id:', backfillError);
+      }
 
       // Count this month's existing checks and set checks_used
       const now = new Date();
@@ -142,10 +151,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       const actualUsed = count ?? 0;
       if (actualUsed > 0) {
-        await supabase
+        const { error: updateUsedError } = await supabase
           .from('accounts')
           .update({ checks_used: actualUsed })
           .eq('id', newAccount.id);
+        if (updateUsedError) {
+          console.error('Failed to update checks_used on account:', updateUsedError);
+        }
       }
 
       setAccountId(newAccount.id);
