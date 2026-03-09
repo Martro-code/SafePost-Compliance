@@ -135,18 +135,9 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                   </div>
                   <div className="border-t border-black/[0.06] dark:border-gray-700" />
                   <div className="py-1">
-                    <button className="w-full text-left px-4 py-3 hover:bg-black/[0.02] transition-colors dark:hover:bg-white/[0.02]">
-                      <p className="text-[13px] text-gray-900 dark:text-white">Compliance check complete</p>
-                      <p className="text-[12px] text-gray-400 mt-0.5">Your recent post has been analysed — 2 mins ago</p>
-                    </button>
-                    <button className="w-full text-left px-4 py-3 hover:bg-black/[0.02] transition-colors dark:hover:bg-white/[0.02]">
-                      <p className="text-[13px] text-gray-900 dark:text-white">Guideline update</p>
-                      <p className="text-[12px] text-gray-400 mt-0.5">AHPRA advertising guidelines updated — 1 hour ago</p>
-                    </button>
-                    <button className="w-full text-left px-4 py-3 hover:bg-black/[0.02] transition-colors dark:hover:bg-white/[0.02]">
-                      <p className="text-[13px] text-gray-900 dark:text-white">Billing notification</p>
-                      <p className="text-[12px] text-gray-400 mt-0.5">Your next payment is due soon — Yesterday</p>
-                    </button>
+                    <div className="px-4 py-6 text-center">
+                      <p className="text-[13px] text-gray-400">No new notifications</p>
+                    </div>
                   </div>
                   <div className="border-t border-black/[0.06] dark:border-gray-700" />
                   <button
