@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink, ArrowLeft } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import PublicFooter from './components/PublicFooter';
 import { supabase } from './src/services/supabaseClient';
+import { useGooglePlacesAutocomplete } from './src/hooks/useGooglePlacesAutocomplete';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -37,6 +38,17 @@ const SignUp: React.FC = () => {
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
+
+  const handlePlaceSelected = useCallback((address: { streetAddress: string; suburb: string; state: string; postcode: string }) => {
+    setStreetAddress(address.streetAddress);
+    setSuburb(address.suburb);
+    setState(address.state);
+    setPostcode(address.postcode);
+  }, []);
+
+  const { inputRef: streetAddressRef } = useGooglePlacesAutocomplete({
+    onPlaceSelected: handlePlaceSelected,
+  });
 
   const resourceLinks = [
     { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
@@ -447,6 +459,7 @@ const SignUp: React.FC = () => {
                   Street address
                 </label>
                 <input
+                  ref={streetAddressRef}
                   id="streetAddress"
                   type="text"
                   placeholder="Enter your street address"
