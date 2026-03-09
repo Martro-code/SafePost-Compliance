@@ -28,12 +28,18 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
-    const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(record.owner_user_id);
-    const firstName = user?.user_metadata?.firstName || user?.user_metadata?.first_name || record.first_name || 'there';
-    const email = record.billing_email || record.email;
+    // Get email - try record first, then fetch from auth.users
+    let email = record.billing_email || record.email;
+    let firstName = record.first_name || 'there';
+
+    if (!email && record.owner_user_id) {
+      const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(record.owner_user_id);
+      email = user?.email;
+      firstName = user?.user_metadata?.firstName || user?.user_metadata?.first_name || firstName;
+    }
 
     if (!email) {
-      return new Response(JSON.stringify({ error: 'No email in record' }), {
+      return new Response(JSON.stringify({ error: 'No email found for user' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
