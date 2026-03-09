@@ -564,24 +564,31 @@ const SignUp: React.FC = () => {
               </div>
 
               {/* Terms Checkbox */}
-              <div className="flex items-start gap-3 pt-2">
-                <input
-                  id="terms"
-                  type="checkbox"
-                  checked={agreedToTerms}
-                  onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                />
-                <label htmlFor="terms" className="text-[13px] text-gray-600 leading-relaxed cursor-pointer">
-                  I agree to the{' '}
-                  <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/terms-of-use'); }} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                    Terms of Use
-                  </button>{' '}
-                  and{' '}
-                  <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/privacy-policy'); }} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                    Privacy Policy
-                  </button>
-                </label>
+              <div className="pt-2">
+                <div className="flex items-start gap-3">
+                  <input
+                    id="terms"
+                    type="checkbox"
+                    checked={agreedToTerms}
+                    onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    className="mt-0.5 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  />
+                  <label htmlFor="terms" className="text-[13px] text-gray-600 leading-relaxed cursor-pointer">
+                    I agree to the{' '}
+                    <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/terms-of-use'); }} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                      Terms of Use
+                    </button>{' '}
+                    and{' '}
+                    <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/privacy-policy'); }} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                      Privacy Policy
+                    </button>
+                  </label>
+                </div>
+                {submitted && !agreedToTerms && (
+                  <p className="text-[13px] text-red-600 font-medium mt-2 ml-7">
+                    Please agree to the Terms of Use and Privacy Policy to continue
+                  </p>
+                )}
               </div>
 
               {/* Auth Error */}

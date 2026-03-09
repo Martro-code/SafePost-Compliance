@@ -61,17 +61,12 @@ const VerifyEmail: React.FC = () => {
             </h1>
 
             {/* Message */}
-            <p className="text-[14px] text-gray-500 leading-relaxed mb-2">
+            <p className="text-[14px] text-gray-500 leading-relaxed mb-8">
               {"We\u2019ve sent a verification link to"}
-            </p>
-            {email && (
-              <p className="text-[14px] font-semibold text-gray-900 mb-6">
-                {email}
-              </p>
-            )}
-
-            <p className="text-[13px] text-gray-400 leading-relaxed mb-8">
-              Click the link in the email to verify your account, then come back here and click the button below.
+              {email && (
+                <span className="font-semibold text-gray-900"> {email}</span>
+              )}
+              {". Once you\u2019ve verified your account, check your inbox for a welcome email from us with everything you need to get started."}
             </p>
 
             {/* Verify Button */}
