@@ -576,18 +576,18 @@ const SignUp: React.FC = () => {
                   />
                   <label htmlFor="terms" className="text-[13px] text-gray-600 leading-relaxed cursor-pointer">
                     I agree to the{' '}
-                    <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/terms-of-use'); }} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                    <a href="/terms-of-use" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
                       Terms of Use
-                    </button>{' '}
+                    </a>{' '}
                     and{' '}
-                    <button type="button" onClick={(e) => { e.stopPropagation(); navigate('/privacy-policy'); }} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
                       Privacy Policy
-                    </button>
+                    </a>
                   </label>
                 </div>
                 {submitted && !agreedToTerms && (
                   <p className="text-[13px] text-red-600 font-medium mt-2 ml-7">
-                    Please agree to the Terms of Use and Privacy Policy to continue
+                    Please tick this box to continue.
                   </p>
                 )}
               </div>
