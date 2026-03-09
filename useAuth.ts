@@ -9,7 +9,16 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Detect if user is arriving from an email verification link
+    const hash = window.location.hash;
+    const isEmailVerification = hash.includes('access_token') && (hash.includes('type=signup') || hash.includes('type=email'));
+
     supabase.auth.getSession().then(({ data: { session } }) => {
+      // If arriving from email verification, preserve the session
+      if (isEmailVerification && session?.user) {
+        sessionStorage.setItem('safepost_session_active', 'true');
+      }
+
       // If a session exists but "Remember me" was not checked and the browser
       // was closed (sessionStorage marker is gone), sign the user out.
       if (

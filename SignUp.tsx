@@ -75,6 +75,7 @@ const SignUp: React.FC = () => {
         email,
         password,
         options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
           data: {
             first_name: firstName.trim(),
             surname: surname.trim(),
