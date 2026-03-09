@@ -1,7 +1,7 @@
 import { supabase } from './supabaseClient';
 
-/** IDs of all hardcoded notifications in the app */
-const ALL_NOTIFICATION_IDS = [1, 2, 3];
+/** IDs of all active notifications — populated from the database in future. */
+const ALL_NOTIFICATION_IDS: number[] = [];
 
 /** Fetch the IDs of notifications the user has already read. */
 export async function fetchReadNotificationIds(userId: string): Promise<number[]> {

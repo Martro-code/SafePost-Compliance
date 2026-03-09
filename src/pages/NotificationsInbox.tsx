@@ -1,47 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bell, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Bell } from 'lucide-react';
 import LoggedInLayout from '../components/LoggedInLayout';
 import { useAuth } from '../../useAuth';
 import { fetchReadNotificationIds, markNotificationRead, markAllNotificationsRead } from '../services/notificationService';
 
-const initialNotifications = [
-  {
-    id: 1,
-    title: "Compliance check complete",
-    description: "Your recent post has been analysed and your results are ready to view.",
-    time: "2 mins ago",
-    icon: CheckCircle2,
-    iconColor: "text-green-500",
-    iconBg: "bg-green-50",
-    read: false,
-  },
-  {
-    id: 2,
-    title: "Guideline update",
-    description: "AHPRA advertising guidelines have been updated. Your knowledge base will be refreshed shortly.",
-    time: "1 hour ago",
-    icon: AlertTriangle,
-    iconColor: "text-amber-500",
-    iconBg: "bg-amber-50",
-    read: false,
-  },
-  {
-    id: 3,
-    title: "Billing notification",
-    description: "Your next subscription payment is due soon. Ensure your payment details are up to date.",
-    time: "Yesterday",
-    icon: Bell,
-    iconColor: "text-blue-500",
-    iconBg: "bg-blue-50",
-    read: false,
-  },
-];
+interface Notification {
+  id: number;
+  title: string;
+  description: string;
+  time: string;
+  icon: React.FC<{ className?: string }>;
+  iconColor: string;
+  iconBg: string;
+  read: boolean;
+}
 
 const NotificationsInbox: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [notifications, setNotifications] = useState(initialNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   // Load read state from Supabase on mount
   useEffect(() => {
@@ -112,7 +90,13 @@ const NotificationsInbox: React.FC = () => {
 
         {/* Notification list */}
         <div className="space-y-3">
-          {notifications.every(n => n.read) && notifications.length > 0 ? (
+          {notifications.length === 0 ? (
+            <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
+              <Bell className="w-8 h-8 text-gray-300 mx-auto mb-3" />
+              <p className="text-[14px] font-medium text-gray-500">No notifications yet</p>
+              <p className="text-[13px] text-gray-400 mt-1">You'll see updates here when there's new activity.</p>
+            </div>
+          ) : notifications.every(n => n.read) ? (
             <div className="bg-white rounded-xl border border-gray-100 p-12 text-center">
               <Bell className="w-8 h-8 text-gray-300 mx-auto mb-3" />
               <p className="text-[14px] font-medium text-gray-500">You're all caught up</p>
