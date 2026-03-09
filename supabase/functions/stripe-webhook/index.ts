@@ -87,7 +87,7 @@ serve(async (req: Request) => {
         stripe_customer_id: session.customer as string,
         stripe_subscription_id: session.subscription as string,
       })
-      .eq('user_id', userId);
+      .eq('owner_user_id', userId);
 
     if (error) {
       console.error('Error updating account:', error);
@@ -141,7 +141,7 @@ serve(async (req: Request) => {
     // Find user by stripe_customer_id
     const { data: accounts, error: lookupError } = await supabase
       .from('accounts')
-      .select('user_id')
+      .select('owner_user_id')
       .eq('stripe_customer_id', customerId)
       .limit(1);
 
@@ -150,7 +150,7 @@ serve(async (req: Request) => {
       return new Response('User not found', { status: 404 });
     }
 
-    const userId = accounts[0].user_id;
+    const userId = accounts[0].owner_user_id;
 
     const { error } = await supabase
       .from('accounts')
@@ -159,7 +159,7 @@ serve(async (req: Request) => {
         billing_period: null,
         stripe_subscription_id: null,
       })
-      .eq('user_id', userId);
+      .eq('owner_user_id', userId);
 
     if (error) {
       console.error('Error downgrading account:', error);
