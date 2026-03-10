@@ -19,7 +19,7 @@ const plans = [
     ],
   },
   {
-    key: 'proplus',
+    key: 'pro_plus',
     name: 'Pro+',
     monthlyPrice: 49,
     yearlyPrice: 490,
@@ -66,7 +66,7 @@ const ChangePlan: React.FC = () => {
   const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
 
   const currentPlanKey = planName.toLowerCase();
-  const tierOrder = ['free', '', 'professional', 'proplus', 'ultra'];
+  const tierOrder = ['free', '', 'professional', 'pro_plus', 'ultra'];
   const currentTierIndex = tierOrder.indexOf(currentPlanKey);
 
   const availablePlans = isUpgradeMode

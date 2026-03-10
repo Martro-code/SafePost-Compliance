@@ -63,7 +63,7 @@ const Login: React.FC = () => {
       monthly: 'price_1T8UTeR1RAuGYaVLg6CI48VN',
       yearly: 'price_1T8UUPR1RAuGYaVL8SdWS9ut',
     },
-    proplus: {
+    pro_plus: {
       monthly: 'price_1T8UWKR1RAuGYaVL2RUXVEAr',
       yearly: 'price_1T8UXuR1RAuGYaVLPGTPgSqA',
     },

@@ -7,7 +7,7 @@ import { useAccount } from './src/context/AccountContext';
 
 const plans: Record<string, { name: string; monthlyPrice: number; yearlyPrice: number }> = {
   professional: { name: 'SafePost Professional', monthlyPrice: 20, yearlyPrice: 200 },
-  proplus: { name: 'SafePost Pro+', monthlyPrice: 49, yearlyPrice: 490 },
+  pro_plus: { name: 'SafePost Pro+', monthlyPrice: 49, yearlyPrice: 490 },
   ultra: { name: 'SafePost Ultra', monthlyPrice: 149, yearlyPrice: 1490 },
 };
 
@@ -15,7 +15,7 @@ const PLAN_LIMITS: Record<string, number | null> = {
   free: 3,
   starter: 3,
   professional: 30,
-  proplus: 100,
+  pro_plus: 100,
   ultra: null,
 };
 

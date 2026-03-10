@@ -368,7 +368,7 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
               </ul>
               <button
-                onClick={() => navigate(`/checkout?plan=proplus&billing=${isYearly ? 'yearly' : 'monthly'}`)}
+                onClick={() => navigate(`/checkout?plan=pro_plus&billing=${isYearly ? 'yearly' : 'monthly'}`)}
                 className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
               >
                 Get Pro+

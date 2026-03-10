@@ -46,7 +46,7 @@ export const PLAN_LIMITS: Record<string, number> = {
   free: 3,
   starter: 3,
   professional: 30,
-  proplus: 100,
+  pro_plus: 100,
   ultra: Infinity,
 };
 
@@ -55,7 +55,7 @@ export const HISTORY_LIMITS: Record<string, number> = {
   free: 10,
   starter: 10,
   professional: 30,
-  proplus: 100,
+  pro_plus: 100,
   ultra: 1000,
 };
 

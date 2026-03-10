@@ -22,7 +22,7 @@ const OnboardingModal: React.FC<OnboardingModalProps> = ({ firstName, planName, 
     starter: '3 compliance checks included this month',
     free: '3 compliance checks included this month',
     professional: '30 compliance checks included this month',
-    proplus: '100 compliance checks included this month',
+    pro_plus: '100 compliance checks included this month',
     ultra: 'Unlimited compliance checks this month',
   };
 

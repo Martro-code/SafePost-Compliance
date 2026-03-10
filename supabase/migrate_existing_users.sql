@@ -26,7 +26,7 @@ BEGIN
     -- Map plan to checks_limit
     plan_limit := CASE user_plan
       WHEN 'ultra' THEN NULL
-      WHEN 'proplus' THEN 100
+      WHEN 'pro_plus' THEN 100
       WHEN 'professional' THEN 30
       WHEN 'starter' THEN 3
       WHEN 'free' THEN 3

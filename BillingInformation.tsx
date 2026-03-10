@@ -7,7 +7,7 @@ import { getDisplayPlanName, getPlanTierLabel } from './src/utils/planUtils';
 
 const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }> = {
   professional: { monthlyPrice: 20, yearlyPrice: 200 },
-  proplus: { monthlyPrice: 49, yearlyPrice: 490 },
+  pro_plus: { monthlyPrice: 49, yearlyPrice: 490 },
   ultra: { monthlyPrice: 149, yearlyPrice: 1490 },
 };
 
@@ -127,7 +127,7 @@ const BillingInformation: React.FC = () => {
               <p className="text-[13px] text-gray-500">
                 {planName.toLowerCase() === 'ultra'
                   ? 'Unlimited compliance checks per month'
-                  : planName.toLowerCase() === 'proplus'
+                  : planName.toLowerCase() === 'pro_plus'
                   ? '100 compliance checks per month'
                   : planName.toLowerCase() === 'professional'
                   ? '30 compliance checks per month'

@@ -14,8 +14,8 @@ const VerifyEmail: React.FC = () => {
   const billing = searchParams.get('billing') || '';
 
   // Starter/free plan users skip checkout and go straight to the dashboard.
-  // Paid plans (professional, proplus, ultra) proceed to checkout as normal.
-  const PAID_PLANS = ['professional', 'proplus', 'ultra'];
+  // Paid plans (professional, pro_plus, ultra) proceed to checkout as normal.
+  const PAID_PLANS = ['professional', 'pro_plus', 'ultra'];
   const isPaidPlan = PAID_PLANS.includes(plan.toLowerCase());
 
   const handleVerified = () => {
