@@ -100,24 +100,31 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
 
     try {
       const autocomplete = new google.maps.places.PlaceAutocompleteElement({
-        types: ['address'],
-        componentRestrictions: { country: 'au' },
+        includedPrimaryTypes: ['address'],
+        includedRegionCodes: ['au'],
       });
 
       autocomplete.addEventListener('gmp-placeselect', async (event: Event) => {
         const { place } = event as unknown as { place: google.maps.places.Place };
+        console.log('[useGooglePlacesAutocomplete] Place selected:', place);
         await place.fetchFields({ fields: ['addressComponents'] });
         const parsed = parseAddressComponents(place);
+        console.log('[useGooglePlacesAutocomplete] Parsed address:', parsed);
         onPlaceSelectedRef.current(parsed);
       });
 
-      // Style the inner input to match the app's form fields
+      // Style the inner input to match the app's form fields.
+      // The element uses shadow DOM so external .pac-container selectors have no
+      // effect – use CSS custom properties and the style attribute instead.
       autocomplete.setAttribute('style',
-        'width: 100%; --gmpx-color-surface: transparent;'
+        'width: 100%; --gmpx-color-surface: transparent; --gmpx-font-size-base: 14px;'
       );
+      autocomplete.setAttribute('placeholder', 'Start typing your address…');
 
       containerRef.current.appendChild(autocomplete as unknown as Node);
       autocompleteRef.current = autocomplete;
+
+      console.log('[useGooglePlacesAutocomplete] PlaceAutocompleteElement mounted into container');
     } catch (err) {
       console.warn(
         '[useGooglePlacesAutocomplete] Failed to initialise PlaceAutocompleteElement:',
