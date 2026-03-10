@@ -12,6 +12,20 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
+  // Only allow requests authenticated with the service role key.
+  // This covers both internal Edge Function calls and Supabase database webhooks.
+  const authHeader = req.headers.get('authorization');
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+  if (
+    !authHeader ||
+    (authHeader !== `Bearer ${serviceRoleKey}` && authHeader !== serviceRoleKey)
+  ) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
   try {
     const payload = await req.json();
 
