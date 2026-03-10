@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, Menu, X, ExternalLink, ArrowLeft } from 'lucide-react';
+import { ChevronDown, Menu, X, ExternalLink, ArrowLeft, Loader2 } from 'lucide-react';
 import SafePostLogo from './components/SafePostLogo';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { useAuth } from './useAuth';
 import PublicFooter from './components/PublicFooter';
+import { supabase } from './src/services/supabaseClient';
 
 
 
@@ -16,9 +17,12 @@ const ContactUs: React.FC = () => {
   const [surname, setSurname] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [category, setCategory] = useState('');
   const [message, setMessage] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -46,6 +50,13 @@ const ContactUs: React.FC = () => {
     return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
   };
 
+  const getSelectClasses = (value: string, isValid: boolean) => {
+    const base = 'w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200';
+    if (!submitted && value.length === 0) return `${base} border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20`;
+    if (isValid) return `${base} border-green-400 focus:border-green-500 focus:ring-2 focus:ring-green-500/20`;
+    return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
+  };
+
   const getTextareaClasses = (value: string, isValid: boolean) => {
     const base = 'w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200 placeholder:text-gray-400 resize-none';
     if (!submitted && value.length === 0) return `${base} border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20`;
@@ -53,25 +64,49 @@ const ContactUs: React.FC = () => {
     return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    setErrorMessage('');
 
     const isFormValid =
       firstName.trim().length > 0 &&
       surname.trim().length > 0 &&
       isValidEmail(email) &&
-      phone.trim().length > 0 &&
+      category.trim().length > 0 &&
       message.trim().length > 0;
 
-    if (isFormValid) {
+    if (!isFormValid) return;
+
+    setIsSubmitting(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('submit-contact-form', {
+        body: {
+          first_name: firstName.trim(),
+          last_name: surname.trim(),
+          email: email.trim(),
+          phone: phone.trim() || undefined,
+          category,
+          message: message.trim(),
+        },
+      });
+
+      if (error) throw error;
+
       setSuccess(true);
       setFirstName('');
       setSurname('');
       setEmail('');
       setPhone('');
+      setCategory('');
       setMessage('');
       setSubmitted(false);
+    } catch (err: any) {
+      console.error('Contact form error:', err);
+      setErrorMessage('Something went wrong. Please try again or email us directly.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -107,6 +142,15 @@ const ContactUs: React.FC = () => {
               </div>
             )}
 
+            {/* Error Message */}
+            {errorMessage && (
+              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <p className="text-[14px] text-red-700 text-center">
+                  {errorMessage}
+                </p>
+              </div>
+            )}
+
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* First name */}
@@ -119,7 +163,7 @@ const ContactUs: React.FC = () => {
                   type="text"
                   placeholder="Enter your first name"
                   value={firstName}
-                  onChange={(e) => { setFirstName(e.target.value); setSuccess(false); }}
+                  onChange={(e) => { setFirstName(e.target.value); setSuccess(false); setErrorMessage(''); }}
                   className={getInputClasses(firstName, firstName.trim().length > 0)}
                 />
               </div>
@@ -134,7 +178,7 @@ const ContactUs: React.FC = () => {
                   type="text"
                   placeholder="Enter your last name"
                   value={surname}
-                  onChange={(e) => { setSurname(e.target.value); setSuccess(false); }}
+                  onChange={(e) => { setSurname(e.target.value); setSuccess(false); setErrorMessage(''); }}
                   className={getInputClasses(surname, surname.trim().length > 0)}
                 />
               </div>
@@ -149,7 +193,7 @@ const ContactUs: React.FC = () => {
                   type="email"
                   placeholder="Enter your email address"
                   value={email}
-                  onChange={(e) => { setEmail(e.target.value); setSuccess(false); }}
+                  onChange={(e) => { setEmail(e.target.value); setSuccess(false); setErrorMessage(''); }}
                   className={getInputClasses(email, isValidEmail(email))}
                 />
               </div>
@@ -164,10 +208,31 @@ const ContactUs: React.FC = () => {
                   type="tel"
                   placeholder="04XX XXX XXX"
                   value={phone}
-                  onChange={(e) => { setPhone(e.target.value); setSuccess(false); }}
+                  onChange={(e) => { setPhone(e.target.value); setSuccess(false); setErrorMessage(''); }}
                   onKeyPress={(e) => { if (!/[0-9]/.test(e.key)) e.preventDefault(); }}
                   className={getInputClasses(phone, phone.trim().length > 0)}
                 />
+              </div>
+
+              {/* Category */}
+              <div>
+                <label htmlFor="category" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Category
+                </label>
+                <select
+                  id="category"
+                  value={category}
+                  onChange={(e) => { setCategory(e.target.value); setSuccess(false); setErrorMessage(''); }}
+                  className={getSelectClasses(category, category.trim().length > 0)}
+                >
+                  <option value="">Select a topic...</option>
+                  <option value="Compliance check question">Compliance check question</option>
+                  <option value="Billing or subscription">Billing or subscription</option>
+                  <option value="Account or login issue">Account or login issue</option>
+                  <option value="Feature request">Feature request</option>
+                  <option value="Report a bug">Report a bug</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
 
               {/* Message */}
@@ -179,7 +244,7 @@ const ContactUs: React.FC = () => {
                   id="message"
                   placeholder="Tell us how we can help..."
                   value={message}
-                  onChange={(e) => { setMessage(e.target.value); setSuccess(false); }}
+                  onChange={(e) => { setMessage(e.target.value); setSuccess(false); setErrorMessage(''); }}
                   rows={6}
                   style={{ height: '150px' }}
                   className={getTextareaClasses(message, message.trim().length > 0)}
@@ -190,9 +255,10 @@ const ContactUs: React.FC = () => {
               <div className="pt-2">
                 <button
                   type="submit"
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
+                  disabled={isSubmitting}
+                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2"
                 >
-                  Submit
+                  {isSubmitting ? <><Loader2 className="w-4 h-4 animate-spin" />Submitting...</> : 'Submit'}
                 </button>
               </div>
             </form>

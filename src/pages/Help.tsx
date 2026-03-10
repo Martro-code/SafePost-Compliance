@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronUp, ChevronDown, Check, Loader2 } from 'lucide-react';
 import LoggedInLayout from '../components/LoggedInLayout';
+import { supabase } from '../services/supabaseClient';
 
 const faqs = [
   {
@@ -26,18 +27,72 @@ const faqs = [
   },
 ];
 
+const categoryDisplayMap: Record<string, string> = {
+  'compliance': 'Compliance check question',
+  'billing': 'Billing or subscription',
+  'account': 'Account or login issue',
+  'feature': 'Feature request',
+  'bug': 'Report a bug',
+  'other': 'Other',
+};
+
 const Help: React.FC = () => {
   const navigate = useNavigate();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const firstName = user.user_metadata?.firstName || user.user_metadata?.first_name || '';
+        const lastName = user.user_metadata?.lastName || user.user_metadata?.last_name || '';
+        setUserName(`${firstName} ${lastName}`.trim());
+        setUserEmail(user.email || '');
+      }
+    };
+    loadUser();
+  }, []);
 
   const handleSubmit = async () => {
+    if (!subject || !message.trim()) return;
+
     setIsSubmitting(true);
-    // Simulate submission — replace with real email/form handler later
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+    setErrorMessage('');
+
+    const categoryLabel = categoryDisplayMap[subject] || subject;
+    const nameParts = userName.trim().split(/\s+/);
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
+    try {
+      const { data, error } = await supabase.functions.invoke('submit-contact-form', {
+        body: {
+          first_name: firstName,
+          last_name: lastName,
+          email: userEmail,
+          category: categoryLabel,
+          message: message.trim(),
+        },
+      });
+
+      if (error) throw error;
+
+      setIsSubmitted(true);
+      setSubject('');
+      setMessage('');
+    } catch (err: any) {
+      console.error('Help form error:', err);
+      setErrorMessage('Something went wrong. Please try again or email us directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -88,13 +143,35 @@ const Help: React.FC = () => {
             Can't find what you're looking for? We'll get back to you within 1 business day.
           </p>
 
+          {/* Success Message */}
+          {isSubmitted && (
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+              <p className="text-[14px] text-green-700 text-center">
+                Message sent — we'll be in touch soon.
+              </p>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {errorMessage && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-[14px] text-red-700 text-center">
+                {errorMessage}
+              </p>
+            </div>
+          )}
+
           <div className="space-y-4">
             {/* Subject dropdown */}
             <div>
               <label className="text-[12px] font-semibold text-gray-700 uppercase tracking-wider mb-1.5 block">
                 Subject
               </label>
-              <select className="w-full px-4 py-2.5 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all">
+              <select
+                value={subject}
+                onChange={(e) => { setSubject(e.target.value); setIsSubmitted(false); setErrorMessage(''); }}
+                className="w-full px-4 py-2.5 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              >
                 <option value="">Select a topic...</option>
                 <option value="compliance">Compliance check question</option>
                 <option value="billing">Billing or subscription</option>
@@ -113,6 +190,8 @@ const Help: React.FC = () => {
               <textarea
                 placeholder="Describe your question or issue..."
                 rows={5}
+                value={message}
+                onChange={(e) => { setMessage(e.target.value); setIsSubmitted(false); setErrorMessage(''); }}
                 className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 resize-none transition-all placeholder:text-gray-400"
               />
             </div>
