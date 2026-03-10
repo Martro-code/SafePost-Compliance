@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
+import { Loader } from '@googlemaps/js-api-loader';
 
 interface AddressComponents {
   streetAddress: string;
@@ -11,31 +12,16 @@ interface UseGooglePlacesAutocompleteOptions {
   onPlaceSelected: (address: AddressComponents) => void;
 }
 
-const SCRIPT_ID = 'google-places-script';
+let loaderInstance: Loader | null = null;
 
-function loadGooglePlacesScript(apiKey: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (window.google?.maps?.places) {
-      resolve();
-      return;
-    }
-
-    const existing = document.getElementById(SCRIPT_ID);
-    if (existing) {
-      existing.addEventListener('load', () => resolve());
-      existing.addEventListener('error', () => reject(new Error('Google Places script failed to load')));
-      return;
-    }
-
-    const script = document.createElement('script');
-    script.id = SCRIPT_ID;
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&loading=async`;
-    script.async = true;
-    script.defer = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Google Places script failed to load'));
-    document.head.appendChild(script);
-  });
+function getLoader(apiKey: string): Loader {
+  if (!loaderInstance) {
+    loaderInstance = new Loader({
+      apiKey,
+      libraries: ['places'],
+    });
+  }
+  return loaderInstance;
 }
 
 function parseAddressComponents(place: google.maps.places.Place): AddressComponents {
@@ -93,14 +79,15 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
     }
 
     let cancelled = false;
+    const loader = getLoader(apiKey);
 
-    loadGooglePlacesScript(apiKey)
+    loader.importLibrary('places')
       .then(() => {
         if (cancelled) return;
         setIsLoaded(true);
       })
       .catch((err) => {
-        console.warn('[useGooglePlacesAutocomplete] Failed to load Google Places script:', err.message);
+        console.warn('[useGooglePlacesAutocomplete] Failed to load Google Places library:', err.message);
       });
 
     return () => {
