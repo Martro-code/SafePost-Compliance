@@ -175,6 +175,10 @@ const HomePage: React.FC = () => {
           }`}
         >
           <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
+            <button onClick={() => { navigate('/'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
+              Home
+            </button>
+
             <button onClick={() => { navigate('/features'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Features
             </button>
@@ -259,6 +263,7 @@ const HomePage: React.FC = () => {
                       href={link.href}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => setMobileMenuOpen(false)}
                       className="flex items-center justify-between px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors"
                     >
                       {link.label}
