@@ -6,6 +6,7 @@ create table if not exists public.onboarding_emails (
   email_number integer not null check (email_number between 1 and 5),
   scheduled_for timestamptz not null,
   sent_at timestamptz,
+  cancelled_at timestamptz,
   created_at timestamptz not null default now(),
 
   -- Prevent duplicate sends for the same user + email number
@@ -15,7 +16,7 @@ create table if not exists public.onboarding_emails (
 -- Index for efficient cron queries that find unsent emails due to be sent
 create index if not exists idx_onboarding_emails_schedule
   on public.onboarding_emails (scheduled_for)
-  where sent_at is null;
+  where sent_at is null and cancelled_at is null;
 
 -- Index on sent_at for querying sent history
 create index if not exists idx_onboarding_emails_sent_at
