@@ -43,3 +43,23 @@ jobs:
         run: supabase functions deploy stripe-webhook --project-ref fdowzbqsytvzsaqaawds
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy submit-contact-form
+        run: supabase functions deploy submit-contact-form --project-ref fdowzbqsytvzsaqaawds
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy initialise-onboarding-sequence
+        run: supabase functions deploy initialise-onboarding-sequence --project-ref fdowzbqsytvzsaqaawds
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy send-onboarding-email
+        run: supabase functions deploy send-onboarding-email --project-ref fdowzbqsytvzsaqaawds
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy process-onboarding-sequence
+        run: supabase functions deploy process-onboarding-sequence --project-ref fdowzbqsytvzsaqaawds
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
