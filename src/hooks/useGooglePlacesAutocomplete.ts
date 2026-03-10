@@ -1,5 +1,5 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
-import { Loader } from '@googlemaps/js-api-loader';
+import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 
 interface AddressComponents {
   streetAddress: string;
@@ -12,17 +12,7 @@ interface UseGooglePlacesAutocompleteOptions {
   onPlaceSelected: (address: AddressComponents) => void;
 }
 
-let loaderInstance: Loader | null = null;
-
-function getLoader(apiKey: string): Loader {
-  if (!loaderInstance) {
-    loaderInstance = new Loader({
-      apiKey,
-      libraries: ['places'],
-    });
-  }
-  return loaderInstance;
-}
+let optionsConfigured = false;
 
 function parseAddressComponents(place: google.maps.places.Place): AddressComponents {
   const components = place.addressComponents || [];
@@ -79,16 +69,26 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
     }
 
     let cancelled = false;
-    const loader = getLoader(apiKey);
 
-    loader.importLibrary('places')
-      .then(() => {
-        if (cancelled) return;
-        setIsLoaded(true);
-      })
-      .catch((err) => {
-        console.warn('[useGooglePlacesAutocomplete] Failed to load Google Places library:', err.message);
-      });
+    (async () => {
+      try {
+        if (!optionsConfigured) {
+          setOptions({ key: apiKey });
+          optionsConfigured = true;
+        }
+
+        await importLibrary('places');
+
+        if (!cancelled) {
+          setIsLoaded(true);
+        }
+      } catch (err) {
+        console.warn(
+          '[useGooglePlacesAutocomplete] Failed to load Google Places library:',
+          err instanceof Error ? err.message : err
+        );
+      }
+    })();
 
     return () => {
       cancelled = true;
@@ -98,25 +98,32 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
   const initAutocomplete = useCallback(() => {
     if (!isLoaded || !containerRef.current || autocompleteRef.current) return;
 
-    const autocomplete = new google.maps.places.PlaceAutocompleteElement({
-      types: ['address'],
-      componentRestrictions: { country: 'au' },
-    });
+    try {
+      const autocomplete = new google.maps.places.PlaceAutocompleteElement({
+        types: ['address'],
+        componentRestrictions: { country: 'au' },
+      });
 
-    autocomplete.addEventListener('gmp-placeselect', async (event: Event) => {
-      const { place } = event as unknown as { place: google.maps.places.Place };
-      await place.fetchFields({ fields: ['addressComponents'] });
-      const parsed = parseAddressComponents(place);
-      onPlaceSelectedRef.current(parsed);
-    });
+      autocomplete.addEventListener('gmp-placeselect', async (event: Event) => {
+        const { place } = event as unknown as { place: google.maps.places.Place };
+        await place.fetchFields({ fields: ['addressComponents'] });
+        const parsed = parseAddressComponents(place);
+        onPlaceSelectedRef.current(parsed);
+      });
 
-    // Style the inner input to match the app's form fields
-    autocomplete.setAttribute('style',
-      'width: 100%; --gmpx-color-surface: transparent;'
-    );
+      // Style the inner input to match the app's form fields
+      autocomplete.setAttribute('style',
+        'width: 100%; --gmpx-color-surface: transparent;'
+      );
 
-    containerRef.current.appendChild(autocomplete as unknown as Node);
-    autocompleteRef.current = autocomplete;
+      containerRef.current.appendChild(autocomplete as unknown as Node);
+      autocompleteRef.current = autocomplete;
+    } catch (err) {
+      console.warn(
+        '[useGooglePlacesAutocomplete] Failed to initialise PlaceAutocompleteElement:',
+        err instanceof Error ? err.message : err
+      );
+    }
   }, [isLoaded]);
 
   useEffect(() => {
