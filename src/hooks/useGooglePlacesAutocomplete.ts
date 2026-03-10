@@ -100,7 +100,7 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
 
     try {
       const autocomplete = new google.maps.places.PlaceAutocompleteElement({
-        includedPrimaryTypes: ['address'],
+        includedPrimaryTypes: ['geocode'],
         includedRegionCodes: ['au'],
       });
 
