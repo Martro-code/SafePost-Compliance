@@ -47,9 +47,27 @@ serve(async (req) => {
       httpClient: Stripe.createFetchHttpClient(),
     });
 
+    const allowedPriceIds = (Deno.env.get('ALLOWED_STRIPE_PRICE_IDS') ?? '')
+      .split(',')
+      .map((id: string) => id.trim())
+      .filter(Boolean);
+
+    if (allowedPriceIds.length === 0) {
+      console.error('ALLOWED_STRIPE_PRICE_IDS environment variable is not set or empty');
+      return new Response(JSON.stringify({ error: 'Pricing not configured' }), {
+        status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
     const { priceId } = await req.json();
     if (!priceId) {
       return new Response(JSON.stringify({ error: 'priceId is required' }), {
+        status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    if (!allowedPriceIds.includes(priceId)) {
+      return new Response(JSON.stringify({ error: 'Invalid price ID' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
