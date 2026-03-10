@@ -9,7 +9,7 @@ const PLAN_DISPLAY_NAMES: Record<string, string> = {
   starter: 'SafePost Starter',
   free: 'SafePost Starter',
   professional: 'SafePost Professional',
-  proplus: 'SafePost Pro+',
+  pro_plus: 'SafePost Pro+',
   ultra: 'SafePost Ultra',
 };
 
@@ -18,7 +18,7 @@ const PLAN_TIER_LABELS: Record<string, string> = {
   starter: 'Starter',
   free: 'Starter',
   professional: 'Professional',
-  proplus: 'Pro+',
+  pro_plus: 'Pro+',
   ultra: 'Ultra',
 };
 
