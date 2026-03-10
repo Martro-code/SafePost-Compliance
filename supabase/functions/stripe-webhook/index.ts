@@ -101,6 +101,26 @@ serve(async (req: Request) => {
 
     console.log(`User ${userId} upgraded to ${plan} (${billing})`);
 
+    // Initialise onboarding email sequence for the new subscriber
+    try {
+      const onboardingRes = await fetch(
+        `${Deno.env.get('SUPABASE_URL')}/functions/v1/initialise-onboarding-sequence`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ user_id: userId, plan_tier: plan }),
+        },
+      );
+      if (!onboardingRes.ok) {
+        console.error('Failed to initialise onboarding sequence:', await onboardingRes.text());
+      }
+    } catch (e) {
+      console.error('Error calling initialise-onboarding-sequence:', e);
+    }
+
     // Send payment confirmation email via Resend
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
     if (resendApiKey && session.customer_email) {

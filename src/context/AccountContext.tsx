@@ -130,6 +130,17 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         console.error('Failed to insert account_members row:', memberInsertError);
       }
 
+      // Initialise onboarding email sequence for new Starter (free) users
+      if (userPlan === 'starter') {
+        try {
+          await supabase.functions.invoke('initialise-onboarding-sequence', {
+            body: { user_id: user.id, plan_tier: 'starter' },
+          });
+        } catch (e) {
+          console.error('Failed to initialise onboarding sequence:', e);
+        }
+      }
+
       // Backfill account_id on existing compliance_checks for this user
       const { error: backfillError } = await supabase
         .from('compliance_checks')
