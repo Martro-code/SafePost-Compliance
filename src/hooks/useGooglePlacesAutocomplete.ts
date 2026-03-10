@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { setOptions, importLibrary } from '@googlemaps/js-api-loader';
 
 interface AddressComponents {
@@ -14,8 +14,9 @@ interface UseGooglePlacesAutocompleteOptions {
 
 let optionsConfigured = false;
 
-function parseAddressComponents(place: google.maps.places.Place): AddressComponents {
-  const components = place.addressComponents || [];
+function parseAddressComponents(
+  components: google.maps.GeocoderAddressComponent[]
+): AddressComponents {
   let streetNumber = '';
   let route = '';
   let suburb = '';
@@ -25,15 +26,15 @@ function parseAddressComponents(place: google.maps.places.Place): AddressCompone
   for (const component of components) {
     const types = component.types;
     if (types.includes('street_number')) {
-      streetNumber = component.longText || '';
+      streetNumber = component.long_name;
     } else if (types.includes('route')) {
-      route = component.longText || '';
+      route = component.long_name;
     } else if (types.includes('locality')) {
-      suburb = component.longText || '';
+      suburb = component.long_name;
     } else if (types.includes('administrative_area_level_1')) {
-      state = component.shortText || '';
+      state = component.short_name;
     } else if (types.includes('postal_code')) {
-      postcode = component.longText || '';
+      postcode = component.long_name;
     }
   }
 
@@ -43,17 +44,16 @@ function parseAddressComponents(place: google.maps.places.Place): AddressCompone
 }
 
 /**
- * Hook that provides Google Places address autocomplete using the new
- * PlaceAutocompleteElement API (replacement for the deprecated Autocomplete widget).
+ * Hook that provides Google Places address autocomplete using the classic
+ * google.maps.places.Autocomplete widget.
  *
- * Returns a `containerRef` to attach to a wrapper <div>. When the Places API loads,
- * a <gmp-place-autocomplete> element is mounted inside it. If the API key is missing
- * or the script fails to load, the container remains empty and a fallback <input>
- * should be shown by the consuming component.
+ * Returns an `inputRef` to attach to an <input> element. When the Places API
+ * loads, the Autocomplete widget binds to that input. If the API key is missing
+ * or the script fails to load, the input remains a plain text field.
  */
 export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlacesAutocompleteOptions) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const autocompleteRef = useRef<google.maps.places.PlaceAutocompleteElement | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const onPlaceSelectedRef = useRef(onPlaceSelected);
   onPlaceSelectedRef.current = onPlaceSelected;
@@ -79,9 +79,24 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
 
         await importLibrary('places');
 
-        if (!cancelled) {
-          setIsLoaded(true);
-        }
+        if (cancelled || !inputRef.current) return;
+
+        const autocomplete = new google.maps.places.Autocomplete(inputRef.current, {
+          types: ['geocode'],
+          componentRestrictions: { country: 'au' },
+          fields: ['address_components'],
+        });
+
+        autocomplete.addListener('place_changed', () => {
+          const place = autocomplete.getPlace();
+          if (!place.address_components) return;
+
+          const parsed = parseAddressComponents(place.address_components);
+          onPlaceSelectedRef.current(parsed);
+        });
+
+        autocompleteRef.current = autocomplete;
+        setIsLoaded(true);
       } catch (err) {
         console.warn(
           '[useGooglePlacesAutocomplete] Failed to load Google Places library:',
@@ -92,68 +107,12 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
 
     return () => {
       cancelled = true;
+      if (autocompleteRef.current) {
+        google.maps.event.clearInstanceListeners(autocompleteRef.current);
+        autocompleteRef.current = null;
+      }
     };
   }, []);
 
-  const initAutocomplete = useCallback(() => {
-    if (!isLoaded || !containerRef.current || autocompleteRef.current) return;
-
-    try {
-      const autocomplete = new google.maps.places.PlaceAutocompleteElement({
-        includedPrimaryTypes: ['geocode'],
-        includedRegionCodes: ['au'],
-      });
-
-      autocomplete.addEventListener('gmp-placeselect', async (event: Event) => {
-        const { place } = event as unknown as { place: google.maps.places.Place };
-        console.log('[useGooglePlacesAutocomplete] gmp-placeselect event fired');
-        console.log('[useGooglePlacesAutocomplete] Place before fetchFields:', place);
-
-        await place.fetchFields({ fields: ['address_components', 'formatted_address'] });
-
-        console.log('[useGooglePlacesAutocomplete] Place after fetchFields:', place);
-        console.log('[useGooglePlacesAutocomplete] addressComponents:', place.addressComponents);
-        console.log('[useGooglePlacesAutocomplete] formattedAddress:', place.formattedAddress);
-
-        const parsed = parseAddressComponents(place);
-        console.log('[useGooglePlacesAutocomplete] Parsed address:', parsed);
-        onPlaceSelectedRef.current(parsed);
-      });
-
-      // Style the inner input to match the app's form fields.
-      // The element uses shadow DOM so external .pac-container selectors have no
-      // effect – use CSS custom properties and the style attribute instead.
-      autocomplete.setAttribute('style',
-        'width: 100%; --gmpx-color-surface: transparent; --gmpx-font-size-base: 14px;'
-      );
-      autocomplete.setAttribute('placeholder', 'Start typing your address…');
-
-      containerRef.current.appendChild(autocomplete as unknown as Node);
-      autocompleteRef.current = autocomplete;
-
-      console.log('[useGooglePlacesAutocomplete] PlaceAutocompleteElement mounted into container');
-    } catch (err) {
-      console.warn(
-        '[useGooglePlacesAutocomplete] Failed to initialise PlaceAutocompleteElement:',
-        err instanceof Error ? err.message : err
-      );
-    }
-  }, [isLoaded]);
-
-  useEffect(() => {
-    initAutocomplete();
-
-    return () => {
-      if (autocompleteRef.current && containerRef.current) {
-        try {
-          containerRef.current.removeChild(autocompleteRef.current as unknown as Node);
-        } catch {
-          // Element may already have been removed
-        }
-      }
-      autocompleteRef.current = null;
-    };
-  }, [initAutocomplete]);
-
-  return { containerRef, isLoaded };
+  return { inputRef, isLoaded };
 }

@@ -46,7 +46,7 @@ const SignUp: React.FC = () => {
     setPostcode(address.postcode);
   }, []);
 
-  const { containerRef: streetAddressContainerRef, isLoaded: placesLoaded } = useGooglePlacesAutocomplete({
+  const { inputRef: streetAddressInputRef, isLoaded: placesLoaded } = useGooglePlacesAutocomplete({
     onPlaceSelected: handlePlaceSelected,
   });
 
@@ -458,23 +458,15 @@ const SignUp: React.FC = () => {
                 <label htmlFor="streetAddress" className="block text-[13px] font-medium text-gray-700 mb-1.5">
                   Street address
                 </label>
-                {/* PlaceAutocompleteElement mounts inside this container when the API loads.
-                    Do NOT use overflow-hidden here — the shadow-DOM dropdown needs to escape the container. */}
-                <div
-                  ref={streetAddressContainerRef}
-                  className={placesLoaded ? 'relative w-full' : 'hidden'}
+                <input
+                  id="streetAddress"
+                  ref={streetAddressInputRef}
+                  type="text"
+                  placeholder="Enter your street address"
+                  value={streetAddress}
+                  onChange={(e) => setStreetAddress(e.target.value)}
+                  className={getInputClasses(streetAddress, streetAddress.trim().length > 0)}
                 />
-                {/* Fallback plain input when Places API is unavailable */}
-                {!placesLoaded && (
-                  <input
-                    id="streetAddress"
-                    type="text"
-                    placeholder="Enter your street address"
-                    value={streetAddress}
-                    onChange={(e) => setStreetAddress(e.target.value)}
-                    className={getInputClasses(streetAddress, streetAddress.trim().length > 0)}
-                  />
-                )}
               </div>
 
               {/* Suburb */}
