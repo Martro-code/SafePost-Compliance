@@ -106,8 +106,15 @@ export function useGooglePlacesAutocomplete({ onPlaceSelected }: UseGooglePlaces
 
       autocomplete.addEventListener('gmp-placeselect', async (event: Event) => {
         const { place } = event as unknown as { place: google.maps.places.Place };
-        console.log('[useGooglePlacesAutocomplete] Place selected:', place);
-        await place.fetchFields({ fields: ['addressComponents'] });
+        console.log('[useGooglePlacesAutocomplete] gmp-placeselect event fired');
+        console.log('[useGooglePlacesAutocomplete] Place before fetchFields:', place);
+
+        await place.fetchFields({ fields: ['address_components', 'formatted_address'] });
+
+        console.log('[useGooglePlacesAutocomplete] Place after fetchFields:', place);
+        console.log('[useGooglePlacesAutocomplete] addressComponents:', place.addressComponents);
+        console.log('[useGooglePlacesAutocomplete] formattedAddress:', place.formattedAddress);
+
         const parsed = parseAddressComponents(place);
         console.log('[useGooglePlacesAutocomplete] Parsed address:', parsed);
         onPlaceSelectedRef.current(parsed);
