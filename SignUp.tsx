@@ -458,10 +458,11 @@ const SignUp: React.FC = () => {
                 <label htmlFor="streetAddress" className="block text-[13px] font-medium text-gray-700 mb-1.5">
                   Street address
                 </label>
-                {/* PlaceAutocompleteElement mounts inside this container when the API loads */}
+                {/* PlaceAutocompleteElement mounts inside this container when the API loads.
+                    Do NOT use overflow-hidden here — the shadow-DOM dropdown needs to escape the container. */}
                 <div
                   ref={streetAddressContainerRef}
-                  className={placesLoaded ? getInputClasses(streetAddress, streetAddress.trim().length > 0) + ' p-0 overflow-hidden' : 'hidden'}
+                  className={placesLoaded ? 'relative w-full' : 'hidden'}
                 />
                 {/* Fallback plain input when Places API is unavailable */}
                 {!placesLoaded && (
