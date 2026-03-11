@@ -36,6 +36,8 @@ import ProtectedRoute from './pages/ProtectedRoute';
 import { ComplianceCheckerPage } from './pages/ComplianceCheckerPage';
 import TeamMembers from './pages/TeamMembers';
 import AcceptInvitation from './pages/AcceptInvitation';
+import NewsPage from './pages/NewsPage';
+import NewsArticlePage from './pages/NewsArticlePage';
 import NotFound from './pages/NotFound';
 import CookieBanner from './components/ui/CookieBanner';
 import BackToTop from './components/ui/BackToTop';
@@ -68,6 +70,8 @@ const App: React.FC = () => {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
+          <Route path="/news" element={<NewsPage />} />
+          <Route path="/news/:slug" element={<NewsArticlePage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/update-password" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

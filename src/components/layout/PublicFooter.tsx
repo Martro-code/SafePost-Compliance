@@ -43,7 +43,7 @@ const PublicFooter = () => {
             <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Company</h4>
             <ul className="space-y-2.5">
               <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About Us</button></li>
-              <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</a></li>
+              <li><button onClick={() => navigate('/news')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</button></li>
             </ul>
           </div>
 
