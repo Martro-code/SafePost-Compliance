@@ -1,5 +1,4 @@
 import type { ComponentType } from 'react';
-import matter from 'gray-matter';
 
 export interface NewsArticle {
   slug: string;
@@ -11,26 +10,35 @@ export interface NewsArticle {
   Component: ComponentType;
 }
 
-const rawFiles = import.meta.glob('/src/content/news/*.mdx', { query: '?raw', eager: true }) as Record<string, { default: string }>;
-const mdxModules = import.meta.glob('/src/content/news/*.mdx', { eager: true }) as Record<string, { default: ComponentType }>;
+interface MdxModule {
+  default: ComponentType;
+  frontmatter: {
+    title: string;
+    date: string;
+    category: 'Press Release' | 'Blog' | 'Industry News';
+    author: string;
+    excerpt: string;
+  };
+}
+
+const mdxModules = import.meta.glob('/src/content/news/*.mdx', { eager: true }) as Record<string, MdxModule>;
 
 export function getAllArticles(): NewsArticle[] {
   const articles: NewsArticle[] = [];
 
-  for (const path in rawFiles) {
-    const raw = rawFiles[path]?.default;
-    if (typeof raw !== 'string') continue;
-    const { data } = matter(raw);
-    const slug = path.replace('/src/content/news/', '').replace('.mdx', '');
+  for (const path in mdxModules) {
     const mod = mdxModules[path];
+    const { frontmatter } = mod;
+    if (!frontmatter) continue;
+    const slug = path.replace('/src/content/news/', '').replace('.mdx', '');
 
     articles.push({
       slug,
-      title: data.title,
-      date: data.date,
-      category: data.category,
-      author: data.author,
-      excerpt: data.excerpt,
+      title: frontmatter.title,
+      date: frontmatter.date,
+      category: frontmatter.category,
+      author: frontmatter.author,
+      excerpt: frontmatter.excerpt,
       Component: mod.default,
     });
   }
