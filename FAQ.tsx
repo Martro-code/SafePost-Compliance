@@ -51,7 +51,7 @@ const FAQ: React.FC = () => {
           answer: 'SafePost is for any Australian health practitioner registered with AHPRA \u2014 including doctors, dentists, physiotherapists, psychologists, nurses, and more \u2014 as well as medical practices managing content across multiple practitioners.',
         },
         {
-          question: 'Why not just use ChatGPT or Google Gemini?',
+          question: 'Why not just use ChatGPT or other general AI tools?',
           answer: 'General AI tools don\u2019t know what AHPRA will investigate you for. SafePost is built with 166 specific AHPRA and TGA rules hardcoded into every analysis. Unlike ChatGPT, SafePost cites the exact guideline you\u2019ve breached, maintains a full audit trail, and is updated as Australian regulations change. For practitioners whose registration is at stake, a general AI guess isn\u2019t good enough.',
         },
         {

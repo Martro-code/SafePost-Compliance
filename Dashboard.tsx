@@ -8,7 +8,7 @@ import { useComplianceChecker } from './src/hooks/useComplianceChecker';
 import { useAccount } from './src/context/AccountContext';
 import { supabase } from './src/services/supabaseClient';
 import { ComplianceResults } from './src/components/ComplianceResults';
-import { generateCompliantRewrites } from './services/geminiService';
+import { generateCompliantRewrites } from './services/complianceService';
 import { getDisplayPlanName } from './src/utils/planUtils';
 import { extractTextFromFile } from './src/utils/fileExtraction';
 
