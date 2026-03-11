@@ -70,7 +70,7 @@ const Features: React.FC = () => {
           </Link>
 
           {/* Center: Navigation */}
-          <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
+          <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
             <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
               Features
             </button>
@@ -149,7 +149,7 @@ const Features: React.FC = () => {
           </nav>
 
           {/* Right: Auth buttons */}
-          <div className="hidden md:flex items-center gap-2.5">
+          <div className="hidden lg:flex items-center gap-2.5">
             <button onClick={() => navigate('/login')} className="px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
               Login
             </button>
@@ -161,7 +161,7 @@ const Features: React.FC = () => {
           {/* Mobile: Hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
+            className="lg:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -170,7 +170,7 @@ const Features: React.FC = () => {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
             mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >

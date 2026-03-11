@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Loader2 } from 'lucide-react';
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe, type Stripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { supabase } from '../services/supabaseClient';
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY as string);
+let stripePromise: Promise<Stripe | null> | null = null;
+function getStripe() {
+  if (!stripePromise) {
+    const key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    if (!key) {
+      console.error('Stripe publishable key is not configured');
+      return null;
+    }
+    stripePromise = loadStripe(key);
+  }
+  return stripePromise;
+}
 
 const CARD_ELEMENT_OPTIONS = {
   style: {
@@ -166,7 +177,7 @@ const UpdateCardForm: React.FC = () => {
 const UpdateCard: React.FC = () => {
   return (
     <LoggedInLayout>
-      <Elements stripe={stripePromise}>
+      <Elements stripe={getStripe()}>
         <UpdateCardForm />
       </Elements>
     </LoggedInLayout>
