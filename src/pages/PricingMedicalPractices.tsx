@@ -325,7 +325,7 @@ const PricingMedicalPractices: React.FC = () => {
       </section>
 
       {/* Pricing Cards */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+      <section id="plans" className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-4xl mx-auto px-6 pb-20 md:pb-24">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Pro+ Card */}
@@ -371,7 +371,7 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
               </ul>
               <button
-                onClick={() => navigate(`/checkout?plan=pro_plus&billing=${isYearly ? 'yearly' : 'monthly'}`)}
+                onClick={() => navigate(`/signup?plan=pro-plus&billing=${isYearly ? 'annual' : 'monthly'}`)}
                 className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
               >
                 Get Pro+
@@ -438,7 +438,7 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
               </ul>
               <button
-                onClick={() => navigate(`/checkout?plan=ultra&billing=${isYearly ? 'yearly' : 'monthly'}`)}
+                onClick={() => navigate(`/signup?plan=ultra&billing=${isYearly ? 'annual' : 'monthly'}`)}
                 className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
               >
                 Get Ultra
@@ -465,7 +465,7 @@ const PricingMedicalPractices: React.FC = () => {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
-              onClick={() => navigate('/signup')}
+              onClick={() => document.getElementById('plans')?.scrollIntoView({ behavior: 'smooth' })}
               className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-7 py-3 text-white rounded-xl font-semibold shadow-lg shadow-blue-600/25 transition-all duration-300 flex items-center justify-center gap-2.5 text-[15px] active:scale-[0.97] hover:shadow-blue-600/30 min-w-[180px]"
             >
               Get started
