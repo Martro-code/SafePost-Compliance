@@ -80,8 +80,15 @@ export function useAuth() {
   const signOut = async () => {
     isLoggingOut = true;
     localStorage.removeItem('safepost_remember_me');
-    sessionStorage.removeItem('safepost_session_active');
-    await supabase.auth.signOut();
+    sessionStorage.clear();
+    try {
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error('supabase.auth.signOut() failed:', err);
+      // Even if signOut fails, clear local user state so the UI
+      // doesn't stay stuck in a logged-in state.
+      setUser(null);
+    }
   };
 
   return { user, userEmail, firstName, surname, mobileNumber, practiceName, streetAddress, suburb, userState, postcode, loading, signOut };
