@@ -33,7 +33,7 @@ const UpdateCardForm: React.FC = () => {
   const handleSubmit = async () => {
     if (!stripe || !elements) return;
 
-    const cardElement = elements.getElement(CardElement);
+    const cardElement = elements.getElement('card');
     if (!cardElement) return;
 
     setSaving(true);
