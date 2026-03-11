@@ -89,7 +89,7 @@ serve(async (req) => {
         subject: 'Welcome to SafePost — you\'re in',
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
-            <img src="https://www.safepost.com.au/assets/safepost-logo.png" alt="SafePost" style="height: 40px; margin-bottom: 24px;" />
+            <img src="https://www.safepost.com.au/assets/safepost-logo.png" alt="SafePost" width="200" style="width:200px; max-width:200px; height:auto; display:block; margin-bottom:24px;" />
             <h2 style="color: #1e293b;">Welcome to SafePost!</h2>
             <p style="color: #475569;">Hi ${firstName},</p>
             <p style="color: #475569;">Welcome to SafePost! You've just taken the first step toward keeping your practice's online presence AHPRA and TGA compliant.</p>
