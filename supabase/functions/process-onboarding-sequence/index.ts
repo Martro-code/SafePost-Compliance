@@ -35,7 +35,7 @@ serve(async (req) => {
     if (fetchError) {
       console.error('Failed to fetch due onboarding emails:', fetchError);
       return new Response(
-        JSON.stringify({ error: 'Failed to fetch due emails', details: fetchError.message }),
+        JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } },
       );
     }
@@ -171,7 +171,7 @@ serve(async (req) => {
   } catch (err) {
     console.error('Process onboarding sequence error:', err);
     return new Response(
-      JSON.stringify({ error: err.message }),
+      JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }),
       { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   }

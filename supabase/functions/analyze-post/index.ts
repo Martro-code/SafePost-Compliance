@@ -751,7 +751,34 @@ serve(async (req) => {
 
     const { data: { user }, error: userError } = await supabase.auth.getUser(token);
     if (userError || !user) {
-      return jsonResponse({ error: 'Unauthorized', details: userError?.message }, 401);
+      console.error('Auth error:', userError?.message);
+      return jsonResponse({ error: 'Unauthorized' }, 401);
+    }
+
+    // --- Rate limiting: 10 requests per 60 seconds ---
+    const windowStart = new Date(Date.now() - 60 * 1000).toISOString();
+    const { count: recentCount, error: rateLimitError } = await supabase
+      .from('rate_limit_events')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('function_name', 'analyze-post')
+      .gte('created_at', windowStart);
+
+    if (rateLimitError) {
+      console.error('Rate limit check error:', rateLimitError);
+    }
+
+    if ((recentCount ?? 0) >= 10) {
+      return jsonResponse({ error: 'Too many requests. Please wait a moment before trying again.' }, 429);
+    }
+
+    // Record this request for rate limiting
+    const { error: insertRateLimitError } = await supabase
+      .from('rate_limit_events')
+      .insert({ user_id: user.id, function_name: 'analyze-post' });
+
+    if (insertRateLimitError) {
+      console.error('Rate limit insert error:', insertRateLimitError);
     }
 
     // --- Validate body ---
@@ -765,7 +792,8 @@ serve(async (req) => {
 
       const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
       if (!anthropicApiKey) {
-        return jsonResponse({ error: 'Anthropic API key not configured' }, 500);
+        console.error('ANTHROPIC_API_KEY is not configured');
+        return jsonResponse({ error: 'An unexpected error occurred. Please try again.' }, 500);
       }
 
       const rewriteResponse = await fetch('https://api.anthropic.com/v1/messages', {
@@ -828,7 +856,8 @@ Return only a JSON array with no markdown in this format:
 
     const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
     if (!anthropicApiKey) {
-      return jsonResponse({ error: 'Anthropic API key not configured' }, 500);
+      console.error('ANTHROPIC_API_KEY is not configured');
+      return jsonResponse({ error: 'An unexpected error occurred. Please try again.' }, 500);
     }
 
     const MAX_CONTENT_LENGTH = 3000;
@@ -889,6 +918,6 @@ Return only a JSON array with no markdown in this format:
     return jsonResponse({ analysis });
   } catch (error) {
     console.error('analyze-post error:', error);
-    return jsonResponse({ error: error.message || 'Internal server error' }, 500);
+    return jsonResponse({ error: 'An unexpected error occurred. Please try again.' }, 500);
   }
 });

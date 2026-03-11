@@ -30,14 +30,16 @@ serve(async (req) => {
 
     const { data: { user }, error: userError } = await supabaseAdmin.auth.getUser(token);
     if (userError || !user) {
-      return new Response(JSON.stringify({ error: 'Unauthorized', details: userError?.message }), {
+      console.error('Auth error:', userError?.message);
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
 
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
-      return new Response(JSON.stringify({ error: 'Stripe not configured' }), {
+      console.error('STRIPE_SECRET_KEY is not configured');
+      return new Response(JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }), {
         status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
@@ -54,7 +56,7 @@ serve(async (req) => {
 
     if (allowedPriceIds.length === 0) {
       console.error('ALLOWED_STRIPE_PRICE_IDS environment variable is not set or empty');
-      return new Response(JSON.stringify({ error: 'Pricing not configured' }), {
+      return new Response(JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }), {
         status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
@@ -88,7 +90,7 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Checkout error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });
   }

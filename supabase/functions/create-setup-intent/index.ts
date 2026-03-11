@@ -28,7 +28,8 @@ serve(async (req) => {
 
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
-      return new Response(JSON.stringify({ error: 'Stripe not configured' }), {
+      console.error('STRIPE_SECRET_KEY is not configured');
+      return new Response(JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -49,7 +50,7 @@ serve(async (req) => {
     });
   } catch (error) {
     console.error('SetupIntent error:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
