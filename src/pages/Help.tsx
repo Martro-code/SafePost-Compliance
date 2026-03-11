@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronUp, ChevronDown, Check, Loader2 } from 'lucide-react';
-import LoggedInLayout from '../components/LoggedInLayout';
+import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { supabase } from '../services/supabaseClient';
 
 const faqs = [

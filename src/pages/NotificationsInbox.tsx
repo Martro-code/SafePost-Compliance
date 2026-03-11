@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bell } from 'lucide-react';
-import LoggedInLayout from '../components/LoggedInLayout';
-import { useAuth } from '../../useAuth';
+import LoggedInLayout from '../components/layout/LoggedInLayout';
+import { useAuth } from '../hooks/useAuth';
 import { fetchReadNotificationIds, markNotificationRead, markAllNotificationsRead } from '../services/notificationService';
 
 interface Notification {
