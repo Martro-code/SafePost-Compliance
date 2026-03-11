@@ -80,7 +80,7 @@ serve(async (req: Request) => {
 
     if (!userId) {
       console.error('No userId found in session metadata or client_reference_id');
-      return new Response('No userId found', { status: 400 });
+      return new Response(JSON.stringify({ error: 'Invalid session data' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
     }
 
     const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
@@ -88,7 +88,7 @@ serve(async (req: Request) => {
 
     if (!priceId) {
       console.error('No priceId found in line items');
-      return new Response('No priceId found', { status: 400 });
+      return new Response(JSON.stringify({ error: 'Invalid line items' }), { status: 400, headers: { 'Content-Type': 'application/json' } });
     }
 
     const plan = priceIdToPlan[priceId] || 'starter';
@@ -106,7 +106,7 @@ serve(async (req: Request) => {
 
     if (error) {
       console.error('Error updating account:', error);
-      return new Response('Database update failed', { status: 500 });
+      return new Response(JSON.stringify({ error: 'Processing failed' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
 
     // Also update user metadata
@@ -182,7 +182,7 @@ serve(async (req: Request) => {
 
     if (lookupError || !accounts?.length) {
       console.error('Could not find user for customer:', customerId);
-      return new Response('User not found', { status: 404 });
+      return new Response(JSON.stringify({ error: 'Processing failed' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
     }
 
     const userId = accounts[0].owner_user_id;
@@ -199,7 +199,7 @@ serve(async (req: Request) => {
 
     if (error) {
       console.error('Error downgrading account:', error);
-      return new Response('Database update failed', { status: 500 });
+      return new Response(JSON.stringify({ error: 'Processing failed' }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
 
     await supabase.auth.admin.updateUserById(userId, {

@@ -62,7 +62,7 @@ serve(async (req) => {
     if (error) {
       console.error('Failed to insert onboarding emails:', error);
       return new Response(
-        JSON.stringify({ error: 'Failed to insert onboarding emails', details: error.message }),
+        JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
@@ -75,7 +75,7 @@ serve(async (req) => {
   } catch (err) {
     console.error('Onboarding sequence error:', err);
     return new Response(
-      JSON.stringify({ error: err.message }),
+      JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
   }

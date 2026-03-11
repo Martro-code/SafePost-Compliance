@@ -30,6 +30,9 @@ const Login: React.FC = () => {
   const [submitted, setSubmitted] = useState(false);
   const [authError, setAuthError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [failedAttempts, setFailedAttempts] = useState(0);
+  const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
+  const [lockoutRemaining, setLockoutRemaining] = useState(0);
 
   // Header state
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
@@ -39,6 +42,32 @@ const Login: React.FC = () => {
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
+
+  // Lockout countdown timer
+  useEffect(() => {
+    if (!lockoutUntil) {
+      setLockoutRemaining(0);
+      return;
+    }
+
+    const tick = () => {
+      const remaining = Math.ceil((lockoutUntil - Date.now()) / 1000);
+      if (remaining <= 0) {
+        setLockoutUntil(null);
+        setLockoutRemaining(0);
+        setFailedAttempts(0);
+        setAuthError('');
+      } else {
+        setLockoutRemaining(remaining);
+      }
+    };
+
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [lockoutUntil]);
+
+  const isLockedOut = lockoutUntil !== null && Date.now() < lockoutUntil;
 
   const resourceLinks = [
     { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
@@ -75,6 +104,7 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLockedOut) return;
     setSubmitted(true);
     setAuthError('');
     setIsSubmitting(true);
@@ -83,9 +113,21 @@ const Login: React.FC = () => {
 
     if (error) {
       setIsSubmitting(false);
-      setAuthError('Invalid email or password');
+      const newAttempts = failedAttempts + 1;
+      setFailedAttempts(newAttempts);
+      if (newAttempts >= 5) {
+        const lockUntil = Date.now() + 300 * 1000; // 5 minutes
+        setLockoutUntil(lockUntil);
+        setAuthError('Too many failed attempts. Please wait 5 minutes before trying again.');
+      } else {
+        setAuthError('Invalid email or password');
+      }
       return;
     }
+
+    // Reset failed attempts on successful login
+    setFailedAttempts(0);
+    setLockoutUntil(null);
 
     // Persist session preference based on "Remember me" checkbox
     if (rememberMe) {
@@ -447,17 +489,24 @@ const Login: React.FC = () => {
 
               {/* Auth Error */}
               {authError && (
-                <p className="text-[13px] text-red-600 font-medium">{authError}</p>
+                <p className="text-[13px] text-red-600 font-medium">
+                  {authError}
+                  {isLockedOut && lockoutRemaining > 0 && (
+                    <span className="block mt-1 text-gray-500">
+                      Try again in {Math.floor(lockoutRemaining / 60)}:{String(lockoutRemaining % 60).padStart(2, '0')}
+                    </span>
+                  )}
+                </p>
               )}
 
               {/* Submit Button */}
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || isLockedOut}
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  {isSubmitting ? 'Signing in...' : 'Sign in'}
+                  {isLockedOut ? 'Temporarily locked' : isSubmitting ? 'Signing in...' : 'Sign in'}
                 </button>
               </div>
             </form>

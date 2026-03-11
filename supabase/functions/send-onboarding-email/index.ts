@@ -452,8 +452,9 @@ serve(async (req) => {
     // ── Send email via Resend ───────────────────────────────────────────
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
     if (!resendApiKey) {
+      console.error('RESEND_API_KEY is not configured');
       return new Response(
-        JSON.stringify({ error: 'RESEND_API_KEY not configured' }),
+        JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
@@ -476,7 +477,7 @@ serve(async (req) => {
       const errBody = await emailRes.text();
       console.error('Resend error:', errBody);
       return new Response(
-        JSON.stringify({ error: 'Failed to send email', details: errBody }),
+        JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
@@ -501,7 +502,7 @@ serve(async (req) => {
   } catch (err) {
     console.error('Send onboarding email error:', err);
     return new Response(
-      JSON.stringify({ error: err.message }),
+      JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
   }
