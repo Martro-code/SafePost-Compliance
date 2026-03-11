@@ -1,10 +1,19 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://www.safepost.com.au',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -27,7 +36,7 @@ serve(async (req) => {
       });
     }
 
-    const name = first_name || 'there';
+    const name = escapeHtml(first_name || 'there');
     const expiryDate = access_end_date
       ? new Date(access_end_date * 1000).toLocaleDateString('en-AU', {
           day: 'numeric',

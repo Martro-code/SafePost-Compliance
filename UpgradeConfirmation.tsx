@@ -55,9 +55,7 @@ const UpgradeConfirmation: React.FC = () => {
         return;
       }
 
-      // Keep sessionStorage and user_metadata in sync
-      sessionStorage.setItem('safepost_plan', planKey);
-      sessionStorage.setItem('safepost_billing', billing);
+      // Keep user_metadata in sync
       await supabase.auth.updateUser({ data: { plan: planKey, billing } });
 
       // Refresh the AccountContext so Dashboard picks up the new plan

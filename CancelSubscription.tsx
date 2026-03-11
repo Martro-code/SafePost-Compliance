@@ -23,7 +23,7 @@ const CancelSubscription: React.FC = () => {
   const backLabel = from === 'billing' ? 'Back to Billing' : 'Back to Profile';
   const backPath = from === 'billing' ? '/billing' : '/profile';
 
-  const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
+  const billingPeriod = (location.state as { billingPeriod?: string })?.billingPeriod || '';
 
   const [step, setStep] = useState(1);
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
@@ -50,13 +50,10 @@ const CancelSubscription: React.FC = () => {
   })();
 
   const handlePause = () => {
-    sessionStorage.setItem('safepost_paused', 'true');
     setOutcome('paused');
   };
 
   const handleConfirmCancel = () => {
-    sessionStorage.setItem('safepost_cancelled', 'true');
-    sessionStorage.setItem('safepost_cancel_date', billingEndDate);
     setOutcome('cancelled');
   };
 
@@ -181,7 +178,7 @@ const CancelSubscription: React.FC = () => {
                 Your access continues until {billingEndDate}. We hope to see you again soon.
               </p>
               <button
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/dashboard', { state: { cancelled: true, cancelDate: billingEndDate } })}
                 className="h-11 px-8 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
               >
                 Go to Dashboard

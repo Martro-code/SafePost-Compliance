@@ -37,17 +37,6 @@ export function useAuth() {
 
       setUser(session?.user ?? null);
       setLoading(false);
-      // Restore plan from user_metadata if sessionStorage is empty (e.g. after page refresh)
-      if (session?.user) {
-        const metaPlan = session.user.user_metadata?.plan as string | undefined;
-        const metaBilling = session.user.user_metadata?.billing as string | undefined;
-        if (metaPlan && !sessionStorage.getItem('safepost_plan')) {
-          sessionStorage.setItem('safepost_plan', metaPlan);
-        }
-        if (metaBilling && !sessionStorage.getItem('safepost_billing')) {
-          sessionStorage.setItem('safepost_billing', metaBilling);
-        }
-      }
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
@@ -64,17 +53,6 @@ export function useAuth() {
       setUser(session?.user ?? null);
       if (event === 'SIGNED_OUT' && isLoggingOut) {
         setTimeout(() => { isLoggingOut = false; }, 500);
-      }
-      // Restore plan from user_metadata into sessionStorage on login
-      if ((event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') && session?.user) {
-        const metaPlan = session.user.user_metadata?.plan as string | undefined;
-        const metaBilling = session.user.user_metadata?.billing as string | undefined;
-        if (metaPlan && !sessionStorage.getItem('safepost_plan')) {
-          sessionStorage.setItem('safepost_plan', metaPlan);
-        }
-        if (metaBilling && !sessionStorage.getItem('safepost_billing')) {
-          sessionStorage.setItem('safepost_billing', metaBilling);
-        }
       }
     });
 

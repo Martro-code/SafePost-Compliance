@@ -59,6 +59,21 @@ serve(async (req: Request) => {
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
+  // ── Idempotency check: skip already-processed events ──────────────────
+  const { data: existing } = await supabase
+    .from('processed_webhook_events')
+    .select('event_id')
+    .eq('event_id', event.id)
+    .maybeSingle();
+
+  if (existing) {
+    console.log(`Skipping already-processed event ${event.id}`);
+    return new Response(JSON.stringify({ received: true, duplicate: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
     const userId = session.metadata?.userId || session.client_reference_id;
@@ -230,6 +245,11 @@ serve(async (req: Request) => {
       }
     }
   }
+
+  // ── Record this event as processed ──────────────────────────────────
+  await supabase
+    .from('processed_webhook_events')
+    .insert({ event_id: event.id, processed_at: new Date().toISOString() });
 
   return new Response(JSON.stringify({ received: true }), {
     status: 200,
