@@ -58,7 +58,7 @@ serve(async (req) => {
         subject: 'Your SafePost subscription has been cancelled',
         html: `
           <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
-            <img src="https://www.safepost.com.au/assets/safepost-logo.png" alt="SafePost" style="height: 40px; margin-bottom: 24px;" />
+            <img src="https://www.safepost.com.au/assets/safepost-logo.png" alt="SafePost" width="200" style="width:200px; max-width:200px; height:auto; display:block; margin-bottom:24px;" />
             <h2 style="color: #1e293b;">Subscription cancelled</h2>
             <p style="color: #475569;">Hi ${name},</p>
             <p style="color: #475569;">We're confirming that your SafePost subscription has been cancelled.</p>

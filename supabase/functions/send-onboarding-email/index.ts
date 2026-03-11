@@ -38,7 +38,7 @@ function ctaButton(cta: { text: string; url: string }): string {
 function wrap(inner: string): string {
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
-      <img src="${BASE_URL}/assets/safepost-logo.png" alt="SafePost" style="height: 40px; margin-bottom: 24px;" />
+      <img src="${BASE_URL}/assets/safepost-logo.png" alt="SafePost" width="200" style="width:200px; max-width:200px; height:auto; display:block; margin-bottom:24px;" />
       ${inner}
       <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;" />
       <p style="color:#94a3b8;font-size:12px;">SafePost Pty Ltd | <a href="${BASE_URL}" style="color:#94a3b8;">safepost.com.au</a></p>

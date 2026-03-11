@@ -1,6 +1,23 @@
 import React, { useEffect } from 'react';
 import { supabase } from '../services/supabaseClient';
 
+function getPostAuthRedirect(): string {
+  try {
+    const raw = localStorage.getItem('safepost_pending_checkout');
+    if (raw) {
+      const { plan, billing } = JSON.parse(raw);
+      if (plan && plan !== 'starter') {
+        localStorage.removeItem('safepost_pending_checkout');
+        return `/checkout?plan=${encodeURIComponent(plan)}&billing=${encodeURIComponent(billing || 'monthly')}`;
+      }
+      localStorage.removeItem('safepost_pending_checkout');
+    }
+  } catch {
+    localStorage.removeItem('safepost_pending_checkout');
+  }
+  return '/dashboard';
+}
+
 const AuthCallback: React.FC = () => {
   useEffect(() => {
     const handleCallback = async () => {
@@ -9,7 +26,7 @@ const AuthCallback: React.FC = () => {
 
       if (session) {
         sessionStorage.setItem('safepost_session_active', 'true');
-        window.location.replace('/dashboard');
+        window.location.replace(getPostAuthRedirect());
         return;
       }
 
@@ -18,7 +35,7 @@ const AuthCallback: React.FC = () => {
         if (event === 'SIGNED_IN' && session) {
           sessionStorage.setItem('safepost_session_active', 'true');
           subscription.unsubscribe();
-          window.location.replace('/dashboard');
+          window.location.replace(getPostAuthRedirect());
         }
       });
 
