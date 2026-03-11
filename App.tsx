@@ -14,6 +14,7 @@ import UpdatePassword from './UpdatePassword';
 import Dashboard from './Dashboard';
 import Checkout from './Checkout';
 import VerifyEmail from './VerifyEmail';
+import AuthCallback from './AuthCallback';
 import BillingInformation from './BillingInformation';
 import History from './History';
 import Settings from './Settings';
@@ -74,6 +75,7 @@ const App: React.FC = () => {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/billing" element={<ProtectedRoute requireOwner><BillingInformation /></ProtectedRoute>} />
           <Route path="/history" element={<ProtectedRoute><History /></ProtectedRoute>} />
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
