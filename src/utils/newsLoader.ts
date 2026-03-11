@@ -11,14 +11,15 @@ export interface NewsArticle {
   Component: ComponentType;
 }
 
-const rawFiles = import.meta.glob('/src/content/news/*.mdx', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+const rawFiles = import.meta.glob('/src/content/news/*.mdx', { query: '?raw', eager: true }) as Record<string, { default: string }>;
 const mdxModules = import.meta.glob('/src/content/news/*.mdx', { eager: true }) as Record<string, { default: ComponentType }>;
 
 export function getAllArticles(): NewsArticle[] {
   const articles: NewsArticle[] = [];
 
   for (const path in rawFiles) {
-    const raw = rawFiles[path];
+    const raw = rawFiles[path]?.default;
+    if (typeof raw !== 'string') continue;
     const { data } = matter(raw);
     const slug = path.replace('/src/content/news/', '').replace('.mdx', '');
     const mod = mdxModules[path];
