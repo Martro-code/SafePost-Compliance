@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { analyzePost } from '../../services/geminiService';
+import { analyzePost } from '../../services/complianceService';
 import { AnalysisResult, ComplianceStatus } from '../../types';
 import { supabase } from '../services/supabaseClient';
 

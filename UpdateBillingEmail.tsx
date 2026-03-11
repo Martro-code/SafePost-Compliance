@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
+import { supabase } from './src/services/supabaseClient';
 
 const UpdateBillingEmail: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +11,35 @@ const UpdateBillingEmail: React.FC = () => {
   const [billingEmail, setBillingEmail] = useState(
     sessionStorage.getItem('safepost_signup_email') || ''
   );
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleSave = async () => {
+    if (!billingEmail.trim()) return;
+
+    setSaving(true);
+    setError(null);
+    setSuccess(false);
+
+    try {
+      const { error: updateError } = await supabase.auth.updateUser({
+        email: billingEmail.trim(),
+      });
+
+      if (updateError) {
+        setError(updateError.message);
+        return;
+      }
+
+      sessionStorage.setItem('safepost_signup_email', billingEmail.trim());
+      setSuccess(true);
+    } catch (err) {
+      setError('Failed to update billing email. Please try again.');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <LoggedInLayout>
@@ -42,12 +72,21 @@ const UpdateBillingEmail: React.FC = () => {
               <input
                 type="email"
                 value={billingEmail}
-                onChange={(e) => setBillingEmail(e.target.value)}
+                onChange={(e) => { setBillingEmail(e.target.value); setSuccess(false); setError(null); }}
                 placeholder="Enter your billing email address"
                 className="w-full px-4 py-3 text-[14px] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
               />
               <p className="text-[12px] text-gray-400 mt-1.5 dark:text-gray-500">Receipts and invoices will be sent to this address.</p>
             </div>
+
+            {error && (
+              <p className="text-[13px] text-red-600 dark:text-red-400">{error}</p>
+            )}
+            {success && (
+              <p className="text-[13px] text-green-600 dark:text-green-400">
+                Billing email updated. If you changed your email address, please check your inbox to confirm.
+              </p>
+            )}
           </div>
 
           <div className="border-t border-black/[0.06] dark:border-gray-700" />
@@ -60,8 +99,12 @@ const UpdateBillingEmail: React.FC = () => {
             >
               Cancel
             </button>
-            <button className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]">
-              Save changes
+            <button
+              onClick={handleSave}
+              disabled={saving || !billingEmail.trim()}
+              className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
+            >
+              {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving...</> : 'Save changes'}
             </button>
           </div>
         </div>

@@ -10,8 +10,8 @@
  * will commonly ask about.
  *
  * HOW TO USE:
- * Append FAQ_CONTEXT to your existing system prompt string in geminiService.ts
- * (or wherever you construct your Claude API messages array).
+ * Append FAQ_CONTEXT to your existing system prompt string
+ * (wherever you construct your Claude API messages array).
  *
  * Example:
  *   const systemPrompt = `${YOUR_EXISTING_SYSTEM_PROMPT}\n\n${FAQ_CONTEXT}`;

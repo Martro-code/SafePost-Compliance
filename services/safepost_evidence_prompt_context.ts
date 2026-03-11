@@ -1,15 +1,9 @@
 // safepost_evidence_prompt_context.ts
-// Ahpra acceptable evidence framework — prompt context for geminiService.ts
+// Ahpra acceptable evidence framework — prompt context for the compliance analysis service
 //
 // HOW TO USE:
-// Import this constant and append it to your existing system prompt in geminiService.ts,
+// Import this constant and append it to your existing system prompt,
 // alongside your existing safepost_faq_prompt_context.ts import.
-//
-// Example in geminiService.ts:
-//   import { EVIDENCE_PROMPT_CONTEXT } from './safepost_evidence_prompt_context';
-//   ... (in your system prompt string) ...
-//   ${FAQ_PROMPT_CONTEXT}
-//   ${EVIDENCE_PROMPT_CONTEXT}
 
 export const EVIDENCE_PROMPT_CONTEXT = `
 === AHPRA EVIDENCE STANDARD — REASONING GUIDANCE ===
