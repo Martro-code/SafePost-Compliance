@@ -3,9 +3,9 @@
  * Provides the sticky header (nav, bell, My Account dropdown) and LoggedInFooter.
  * Usage: wrap any logged-in page content in <LoggedInLayout>{children}</LoggedInLayout>
  */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle } from 'lucide-react';
+import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle, Loader2 } from 'lucide-react';
 import SafePostLogo from '../ui/SafePostLogo';
 import LoggedInFooter from './LoggedInFooter';
 import { useAuth } from '../../hooks/useAuth';
@@ -37,11 +37,15 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
     return saved !== null ? parseInt(saved, 10) : 0;
   });
   const notificationRef = useRef<HTMLDivElement>(null);
+  const accountDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
         setNotificationDropdownOpen(false);
+      }
+      if (accountDropdownRef.current && !accountDropdownRef.current.contains(event.target as Node)) {
+        setAccountDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -68,11 +72,20 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
     return () => window.removeEventListener('safepost-notifications-updated', handleNotificationUpdate);
   }, []);
 
-  const handleLogOut = async () => {
-    sessionStorage.clear();
-    await signOut();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogOut = useCallback(async () => {
+    if (loggingOut) return; // guard against double-clicks
+    setLoggingOut(true);
+    try {
+      await signOut();
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
+    // Always redirect regardless of success/failure — signOut already
+    // clears local state so the user won't remain authenticated.
     navigate('/');
-  };
+  }, [loggingOut, signOut, navigate]);
 
   const isUltra = planName.toLowerCase() === 'ultra';
 
@@ -151,10 +164,9 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
             </div>
 
             {/* My Account dropdown */}
-            <div className="relative">
+            <div className="relative" ref={accountDropdownRef}>
               <button
                 onClick={() => { setAccountDropdownOpen(!accountDropdownOpen); setNotificationDropdownOpen(false); }}
-                onBlur={() => setTimeout(() => setAccountDropdownOpen(false), 150)}
                 className="flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium text-gray-700 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors duration-200"
               >
                 My Account
@@ -185,10 +197,11 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                   <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
                   <button
                     onClick={handleLogOut}
-                    className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white"
+                    disabled={loggingOut}
+                    className="flex items-center gap-2 w-full text-left px-4 py-2 text-[13px] text-gray-600 hover:text-gray-900 hover:bg-black/[0.04] transition-colors dark:text-gray-400 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <LogOut className="w-3.5 h-3.5" />
-                    Log out
+                    {loggingOut ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LogOut className="w-3.5 h-3.5" />}
+                    {loggingOut ? 'Signing out\u2026' : 'Log out'}
                   </button>
                 </div>
               )}
@@ -245,10 +258,11 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
             <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
             <button
               onClick={handleLogOut}
-              className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white"
+              disabled={loggingOut}
+              className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200 dark:text-gray-400 dark:hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              Log out
+              {loggingOut ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <LogOut className="w-3.5 h-3.5" />}
+              {loggingOut ? 'Signing out\u2026' : 'Log out'}
             </button>
           </div>
         </div>
