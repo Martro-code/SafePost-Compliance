@@ -293,8 +293,8 @@ const Features: React.FC = () => {
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Powerful compliance checking, simplified
           </h1>
-          <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
-            Everything you need to ensure your content meets AHPRA&nbsp;and&nbsp;TGA&nbsp;guidelines
+          <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
+            Everything you need to ensure your content meets AHPRA and TGA guidelines
           </p>
         </div>
       </section>
