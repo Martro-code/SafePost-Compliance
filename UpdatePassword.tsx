@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import LoggedInLayout from './src/components/LoggedInLayout';
 import { supabase } from './src/services/supabaseClient';
+import { useAuth } from './useAuth';
 
 const UpdatePassword: React.FC = () => {
   const navigate = useNavigate();
+  const { userEmail } = useAuth();
 
   // Form state
   const [currentPassword, setCurrentPassword] = useState('');
@@ -14,13 +16,42 @@ const UpdatePassword: React.FC = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const passwordMismatch = confirmNewPassword.length > 0 && newPassword !== confirmNewPassword;
 
   const handleUpdatePassword = async () => {
-    if (passwordMismatch || !newPassword) return;
-    await supabase.auth.updateUser({ password: newPassword });
-    navigate('/profile');
+    if (passwordMismatch || !newPassword || !currentPassword) return;
+    setError('');
+    setIsSubmitting(true);
+
+    try {
+      // Verify the current password first
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: userEmail,
+        password: currentPassword,
+      });
+
+      if (signInError) {
+        setError('Current password is incorrect');
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Current password verified — proceed with update
+      const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+      if (updateError) {
+        setError(updateError.message);
+        setIsSubmitting(false);
+        return;
+      }
+
+      navigate('/profile');
+    } catch (err) {
+      setError('An unexpected error occurred. Please try again.');
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -117,6 +148,10 @@ const UpdatePassword: React.FC = () => {
                 <p className="text-[12px] text-red-500 mt-1.5">Passwords do not match</p>
               )}
             </div>
+
+            {error && (
+              <p className="text-[13px] text-red-500 font-medium">{error}</p>
+            )}
           </div>
 
           <div className="border-t border-black/[0.06] dark:border-gray-700" />
@@ -130,9 +165,10 @@ const UpdatePassword: React.FC = () => {
             </button>
             <button
               onClick={handleUpdatePassword}
-              className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
+              disabled={passwordMismatch || !newPassword || !currentPassword || isSubmitting}
+              className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
             >
-              Update password
+              {isSubmitting ? 'Updating...' : 'Update password'}
             </button>
           </div>
         </div>

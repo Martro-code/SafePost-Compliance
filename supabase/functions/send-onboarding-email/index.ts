@@ -2,10 +2,19 @@ import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': 'https://www.safepost.com.au',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
+
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
 
 const BASE_URL = 'https://www.safepost.com.au';
 
@@ -430,7 +439,8 @@ serve(async (req) => {
       );
     }
 
-    const firstName = user.user_metadata?.firstName || user.user_metadata?.first_name || 'there';
+    const rawFirstName = user.user_metadata?.firstName || user.user_metadata?.first_name || 'there';
+    const firstName = escapeHtml(rawFirstName);
     const toEmail = user.email;
     if (!toEmail) {
       return new Response(

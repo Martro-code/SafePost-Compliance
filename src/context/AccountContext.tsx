@@ -18,6 +18,9 @@ export interface AccountContextType {
   accountId: string | null;
   role: 'owner' | 'member' | null;
   plan: string;
+  billingPeriod: string;
+  cancelled: boolean;
+  cancelDate: string;
   checksUsed: number;
   checksLimit: number | null;
   accountLoading: boolean;
@@ -28,6 +31,9 @@ const AccountContext = createContext<AccountContextType>({
   accountId: null,
   role: null,
   plan: 'starter',
+  billingPeriod: '',
+  cancelled: false,
+  cancelDate: '',
   checksUsed: 0,
   checksLimit: 3,
   accountLoading: true,
@@ -38,6 +44,9 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [accountId, setAccountId] = useState<string | null>(null);
   const [role, setRole] = useState<'owner' | 'member' | null>(null);
   const [plan, setPlan] = useState('starter');
+  const [billingPeriod, setBillingPeriod] = useState('');
+  const [cancelled, setCancelled] = useState(false);
+  const [cancelDate, setCancelDate] = useState('');
   const [checksUsed, setChecksUsed] = useState(0);
   const [checksLimit, setChecksLimit] = useState<number | null>(3);
   const [accountLoading, setAccountLoading] = useState(true);
@@ -68,7 +77,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // Found membership — load the account
         const { data: account, error: accountFetchError } = await supabase
           .from('accounts')
-          .select('id, plan, checks_used, checks_limit')
+          .select('id, plan, billing_period, checks_used, checks_limit')
           .eq('id', membership.account_id)
           .single();
         if (accountFetchError) {
@@ -79,11 +88,10 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setAccountId(account.id);
           setRole(membership.role as 'owner' | 'member');
           setPlan(account.plan || 'starter');
+          setBillingPeriod(account.billing_period || '');
+          setCancelled(account.plan === 'starter' && !!account.billing_period);
           setChecksUsed(account.checks_used ?? 0);
           setChecksLimit(account.checks_limit);
-
-          // Sync plan to sessionStorage for components that still read it
-          sessionStorage.setItem('safepost_plan', account.plan || 'starter');
           setAccountLoading(false);
           return;
         }
@@ -174,9 +182,9 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setAccountId(newAccount.id);
       setRole('owner');
       setPlan(userPlan);
+      setBillingPeriod('');
       setChecksUsed(actualUsed);
       setChecksLimit(limit);
-      sessionStorage.setItem('safepost_plan', userPlan);
     } catch (err) {
       console.error('Failed to load account:', err);
     } finally {
@@ -212,20 +220,20 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!accountId) return;
     const { data: account } = await supabase
       .from('accounts')
-      .select('plan, checks_used, checks_limit')
+      .select('plan, billing_period, checks_used, checks_limit')
       .eq('id', accountId)
       .single();
 
     if (account) {
       setPlan(account.plan || 'starter');
+      setBillingPeriod(account.billing_period || '');
       setChecksUsed(account.checks_used ?? 0);
       setChecksLimit(account.checks_limit);
-      sessionStorage.setItem('safepost_plan', account.plan || 'starter');
     }
   }, [accountId]);
 
   return (
-    <AccountContext.Provider value={{ accountId, role, plan, checksUsed, checksLimit, accountLoading, refreshAccount }}>
+    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, accountLoading, refreshAccount }}>
       {children}
     </AccountContext.Provider>
   );
