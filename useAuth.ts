@@ -21,6 +21,14 @@ export function useAuth() {
         return;
       }
 
+      // If we detected a verification hash but the session isn't ready yet,
+      // keep loading=true so ProtectedRoute doesn't redirect to /login.
+      // The onAuthStateChange listener below will handle the redirect once
+      // Supabase finishes processing the token from the URL hash.
+      if (isEmailVerification) {
+        return;
+      }
+
       // If a session exists but "Remember me" was not checked and the browser
       // was closed (sessionStorage marker is gone), sign the user out.
       if (
