@@ -1,5 +1,5 @@
-import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
-import Stripe from 'https://esm.sh/stripe@13.11.0?target=deno&no-check=true';
+import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
+import Stripe from 'https://esm.sh/stripe@17.7.0?target=deno&deno-std=0.177.0&no-check=true';
 
 const allowedOrigins = [
   'https://www.safepost.com.au',
