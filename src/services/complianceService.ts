@@ -6,8 +6,8 @@ const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ana
 async function getAuthHeaders(): Promise<Record<string, string>> {
   let { data: { session } } = await supabase.auth.getSession();
 
-  // If session is missing or the access token has expired, attempt a refresh
-  if (!session?.access_token || isTokenExpired(session.expires_at)) {
+  // If no session or no access token, attempt a single refresh
+  if (!session?.access_token) {
     const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
     if (refreshError || !refreshData.session?.access_token) {
       throw new SessionExpiredError();
@@ -20,12 +20,6 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
     'Content-Type': 'application/json',
     'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
   };
-}
-
-function isTokenExpired(expiresAt: number | undefined): boolean {
-  if (!expiresAt) return true;
-  // Consider expired if less than 30 seconds remaining
-  return expiresAt * 1000 - Date.now() < 30_000;
 }
 
 export class SessionExpiredError extends Error {

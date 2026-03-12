@@ -269,17 +269,22 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
     checkInProgressRef.current = true;
 
     try {
-      let { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        // Attempt to refresh the session before giving up
+      // Use getSession() (reads from local storage) instead of getUser() (network call)
+      // to avoid false negatives from network errors, especially on Edge
+      let { data: { session } } = await supabase.auth.getSession();
+      let user = session?.user ?? null;
+
+      if (!session?.access_token || !user) {
+        // Session missing locally — attempt a refresh before giving up
         const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
-        if (refreshError || !refreshData.user) {
+        if (refreshError || !refreshData.session?.access_token || !refreshData.session?.user) {
           setError('Your session has expired. Please save your content and log in again.');
           setAuthError(true);
           setStep('error');
           return;
         }
-        user = refreshData.user;
+        session = refreshData.session;
+        user = refreshData.session.user;
       }
 
       // Check limit using account-level data
