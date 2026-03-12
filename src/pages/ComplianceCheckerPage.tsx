@@ -71,6 +71,7 @@ export function ComplianceCheckerPage() {
               <ContentInputForm
                 onSubmit={checker.runCheck}
                 error={checker.error}
+                authError={checker.authError}
               />
             )}
             {showProgress && <AnalysisProgress step={checker.step} />}

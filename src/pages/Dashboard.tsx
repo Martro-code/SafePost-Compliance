@@ -561,18 +561,29 @@ const Dashboard: React.FC = () => {
             )}
 
             {view === 'results' && checker.error && (
-              <div className="bg-red-50 rounded-2xl border border-red-200 p-6 dark:bg-red-950 dark:border-red-800">
+              <div className={`rounded-2xl border p-6 ${checker.authError ? 'bg-amber-50 border-amber-200 dark:bg-amber-950 dark:border-amber-800' : 'bg-red-50 border-red-200 dark:bg-red-950 dark:border-red-800'}`}>
                 <div className="flex items-center gap-3 mb-2">
-                  <XCircle className="w-5 h-5 text-red-500" />
-                  <h3 className="text-[14px] font-semibold text-red-700 dark:text-red-300">Analysis failed</h3>
+                  <XCircle className={`w-5 h-5 ${checker.authError ? 'text-amber-500' : 'text-red-500'}`} />
+                  <h3 className={`text-[14px] font-semibold ${checker.authError ? 'text-amber-700 dark:text-amber-300' : 'text-red-700 dark:text-red-300'}`}>
+                    {checker.authError ? 'Session expired' : 'Analysis failed'}
+                  </h3>
                 </div>
-                <p className="text-[13px] text-red-600 dark:text-red-400">{checker.error}</p>
-                <button
-                  onClick={handleNewCheck}
-                  className="mt-4 text-[13px] font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
-                >
-                  Try again
-                </button>
+                <p className={`text-[13px] ${checker.authError ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}`}>{checker.error}</p>
+                {checker.authError ? (
+                  <a
+                    href="/login"
+                    className="mt-4 inline-block text-[13px] font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
+                  >
+                    Log in
+                  </a>
+                ) : (
+                  <button
+                    onClick={handleNewCheck}
+                    className="mt-4 text-[13px] font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                  >
+                    Try again
+                  </button>
+                )}
               </div>
             )}
 
