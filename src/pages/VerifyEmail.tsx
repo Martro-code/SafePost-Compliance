@@ -49,7 +49,7 @@ const VerifyEmail: React.FC = () => {
               {email && (
                 <span className="font-semibold text-gray-900"> {email}</span>
               )}
-              {". Once you\u2019ve verified your account, check your inbox for a welcome email from us with everything you need to get started."}
+              {". Click the link in your email to verify your account. It will open in a new tab \u2014 you can close this one."}
             </p>
 
             {/* Resend */}
