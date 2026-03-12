@@ -3,30 +3,32 @@ import { supabase } from './supabaseClient';
 
 const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-post`;
 
-async function getAuthHeaders(): Promise<Record<string, string>> {
-  let { data: { session } } = await supabase.auth.getSession();
-
-  // If no session or no access token, attempt a single refresh
-  if (!session?.access_token) {
-    const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
-    if (refreshError || !refreshData.session?.access_token) {
-      throw new SessionExpiredError();
-    }
-    session = refreshData.session;
-  }
-
-  return {
-    'Authorization': `Bearer ${session.access_token}`,
-    'Content-Type': 'application/json',
-    'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
-  };
-}
-
 export class SessionExpiredError extends Error {
   constructor() {
     super('Your session has expired. Please save your content and log in again.');
     this.name = 'SessionExpiredError';
   }
+}
+
+/**
+ * Retrieve a fresh access token, attempting a refresh if the session is missing.
+ * Returns the raw JWT string or throws SessionExpiredError.
+ */
+async function getFreshAccessToken(): Promise<string> {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (session?.access_token) {
+    return session.access_token;
+  }
+
+  // Session missing — attempt a single refresh
+  const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+  if (refreshError || !refreshData.session?.access_token) {
+    console.error('[getFreshAccessToken] refresh failed:', refreshError?.message ?? 'no session after refresh');
+    throw new SessionExpiredError();
+  }
+
+  return refreshData.session.access_token;
 }
 
 export const analyzePost = async (postContent: string, image?: { base64: string, mimeType: string }): Promise<AnalysisResult> => {
@@ -37,8 +39,8 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
   });
 
   try {
-    const headers = await getAuthHeaders();
-    console.log('[analyzePost] auth token present:', !!headers['Authorization']);
+    const accessToken = await getFreshAccessToken();
+    console.log('[analyzePost] access token obtained:', !!accessToken, 'length:', accessToken.length);
 
     const body: Record<string, unknown> = { content: postContent };
     if (image) {
@@ -47,7 +49,11 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
 
     const response = await fetch(EDGE_FUNCTION_URL, {
       method: 'POST',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+        'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+      },
       body: JSON.stringify(body),
     });
 
@@ -87,11 +93,15 @@ export const generateCompliantRewrites = async (originalPost: string, issues: Co
   });
 
   try {
-    const headers = await getAuthHeaders();
+    const accessToken = await getFreshAccessToken();
 
     const response = await fetch(EDGE_FUNCTION_URL, {
       method: 'POST',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+        'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+      },
       body: JSON.stringify({
         action: 'rewrite',
         content: originalPost,
