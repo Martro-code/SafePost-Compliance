@@ -278,13 +278,22 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
         // Session missing locally — attempt a refresh before giving up
         const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
         if (refreshError || !refreshData.session?.access_token || !refreshData.session?.user) {
-          setError('Your session has expired. Please save your content and log in again.');
-          setAuthError(true);
-          setStep('error');
-          return;
+          // Double-check: the session may have been restored by autoRefreshToken
+          // between our getSession() call and now (race condition)
+          const { data: { session: recheckedSession } } = await supabase.auth.getSession();
+          if (recheckedSession?.access_token && recheckedSession?.user) {
+            session = recheckedSession;
+            user = recheckedSession.user;
+          } else {
+            setError('Your session has expired. Please save your content and log in again.');
+            setAuthError(true);
+            setStep('error');
+            return;
+          }
+        } else {
+          session = refreshData.session;
+          user = refreshData.session.user;
         }
-        session = refreshData.session;
-        user = refreshData.session.user;
       }
 
       // Check limit using account-level data
@@ -424,9 +433,19 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
       })();
     } catch (err) {
       if (err instanceof SessionExpiredError || (err as any)?.name === 'SessionExpiredError') {
-        setError('Your session has expired. Please save your content and log in again.');
-        setAuthError(true);
-        setStep('error');
+        // Verify the session is genuinely expired before showing the auth error banner.
+        // A 401 from the Edge Function does not necessarily mean the local session is invalid
+        // (e.g. server-side auth misconfiguration, token not yet propagated, etc.).
+        const { data: { session: currentSession } } = await supabase.auth.getSession();
+        if (currentSession?.access_token) {
+          // Local session is still valid — treat as a server-side error, not session expiry
+          setError('Failed to analyze post. Please try again.');
+          setStep('error');
+        } else {
+          setError('Your session has expired. Please save your content and log in again.');
+          setAuthError(true);
+          setStep('error');
+        }
         // Do NOT clear lastContent — the user should be able to copy their draft
       } else {
         const message = err instanceof Error ? err.message : 'An unexpected error occurred';
