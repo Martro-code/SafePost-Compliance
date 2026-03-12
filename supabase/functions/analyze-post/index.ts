@@ -740,7 +740,7 @@ serve(async (req) => {
     // --- Auth ---
     const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return jsonResponse({ error: 'Missing authorization header' }, 401);
+      return jsonResponse({ error: 'Missing authorization header. Please log in and try again.', code: 'AUTH_MISSING' }, 401);
     }
 
     const token = authHeader.replace('Bearer ', '');
@@ -752,7 +752,14 @@ serve(async (req) => {
     const { data: { user }, error: userError } = await supabase.auth.getUser(token);
     if (userError || !user) {
       console.error('Auth error:', userError?.message);
-      return jsonResponse({ error: 'Unauthorized' }, 401);
+      const isExpired = userError?.message?.toLowerCase().includes('expired') ||
+        userError?.message?.toLowerCase().includes('invalid');
+      return jsonResponse({
+        error: isExpired
+          ? 'Your session has expired. Please refresh the page or log in again.'
+          : 'Authentication failed. Please log in again.',
+        code: 'AUTH_EXPIRED',
+      }, 401);
     }
 
     // --- Rate limiting: 10 requests per 60 seconds ---

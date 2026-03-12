@@ -4,15 +4,35 @@ import { supabase } from './supabaseClient';
 const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-post`;
 
 async function getAuthHeaders(): Promise<Record<string, string>> {
-  const { data: { session } } = await supabase.auth.getSession();
-  if (!session?.access_token) {
-    throw new Error('Not authenticated. Please sign in to analyze posts.');
+  let { data: { session } } = await supabase.auth.getSession();
+
+  // If session is missing or the access token has expired, attempt a refresh
+  if (!session?.access_token || isTokenExpired(session.expires_at)) {
+    const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+    if (refreshError || !refreshData.session?.access_token) {
+      throw new SessionExpiredError();
+    }
+    session = refreshData.session;
   }
+
   return {
     'Authorization': `Bearer ${session.access_token}`,
     'Content-Type': 'application/json',
     'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
   };
+}
+
+function isTokenExpired(expiresAt: number | undefined): boolean {
+  if (!expiresAt) return true;
+  // Consider expired if less than 30 seconds remaining
+  return expiresAt * 1000 - Date.now() < 30_000;
+}
+
+export class SessionExpiredError extends Error {
+  constructor() {
+    super('Your session has expired. Please save your content and log in again.');
+    this.name = 'SessionExpiredError';
+  }
 }
 
 export const analyzePost = async (postContent: string, image?: { base64: string, mimeType: string }): Promise<AnalysisResult> => {
@@ -37,7 +57,7 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
     });
 
     if (response.status === 401) {
-      throw new Error('Not authenticated. Please sign in to analyze posts.');
+      throw new SessionExpiredError();
     }
 
     if (!response.ok) {
@@ -53,7 +73,10 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
 
     return analysis;
   } catch (error: any) {
-    if (error.message?.includes('healthcare-related') || error.message?.includes('Not authenticated')) {
+    if (error instanceof SessionExpiredError || error.name === 'SessionExpiredError') {
+      throw error;
+    }
+    if (error.message?.includes('healthcare-related')) {
       throw error;
     }
     console.error('Claude Analysis Error:', error);
@@ -82,7 +105,7 @@ export const generateCompliantRewrites = async (originalPost: string, issues: Co
     });
 
     if (response.status === 401) {
-      throw new Error('Not authenticated. Please sign in.');
+      throw new SessionExpiredError();
     }
 
     if (!response.ok) {
@@ -94,6 +117,9 @@ export const generateCompliantRewrites = async (originalPost: string, issues: Co
     console.log('[generateCompliantRewrites] received rewrites:', rewrites?.length);
     return rewrites;
   } catch (error) {
+    if (error instanceof SessionExpiredError || (error as any).name === 'SessionExpiredError') {
+      throw error;
+    }
     console.error('[generateCompliantRewrites] Error generating rewrites:', error);
     throw new Error('Failed to generate compliant suggestions.');
   }

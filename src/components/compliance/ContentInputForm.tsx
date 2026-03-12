@@ -42,9 +42,10 @@ Book now and get a FREE consultation valued at $200.
 interface ContentInputFormProps {
   onSubmit: (content: string, contentType: string, platform: string) => void;
   error: string | null;
+  authError?: boolean;
 }
 
-export function ContentInputForm({ onSubmit, error }: ContentInputFormProps) {
+export function ContentInputForm({ onSubmit, error, authError }: ContentInputFormProps) {
   const [content, setContent] = useState('');
   const [contentType, setContentType] = useState('social_media_post');
   const [platform, setPlatform] = useState('instagram');
@@ -154,11 +155,21 @@ export function ContentInputForm({ onSubmit, error }: ContentInputFormProps) {
 
       {/* API error */}
       {error && (
-        <div className="flex gap-3 bg-red-50 border border-red-200 rounded-lg p-4">
-          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+        <div className={`flex gap-3 border rounded-lg p-4 ${authError ? 'bg-amber-50 border-amber-200' : 'bg-red-50 border-red-200'}`}>
+          <AlertCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${authError ? 'text-amber-500' : 'text-red-500'}`} />
           <div>
-            <p className="text-sm font-medium text-red-800">Analysis failed</p>
-            <p className="text-sm text-red-600 mt-0.5">{error}</p>
+            <p className={`text-sm font-medium ${authError ? 'text-amber-800' : 'text-red-800'}`}>
+              {authError ? 'Session expired' : 'Analysis failed'}
+            </p>
+            <p className={`text-sm mt-0.5 ${authError ? 'text-amber-600' : 'text-red-600'}`}>{error}</p>
+            {authError && (
+              <a
+                href="/login"
+                className="mt-3 inline-block text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg"
+              >
+                Log in
+              </a>
+            )}
           </div>
         </div>
       )}

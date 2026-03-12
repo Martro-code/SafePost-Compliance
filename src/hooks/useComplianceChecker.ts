@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { analyzePost } from '../services/complianceService';
+import { analyzePost, SessionExpiredError } from '../services/complianceService';
 import { AnalysisResult, ComplianceStatus } from '../types';
 import { supabase } from '../services/supabaseClient';
 
@@ -172,6 +172,7 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [lastContent, setLastContent] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
+  const [authError, setAuthError] = useState<boolean>(false);
 
   // ── Check ID ref (tracks the Supabase ID of the current check) ──────
   const lastCheckIdRef = useRef<string | null>(null);
@@ -268,10 +269,17 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
     checkInProgressRef.current = true;
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      let { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setError('You must be logged in to run a compliance check.');
-        return;
+        // Attempt to refresh the session before giving up
+        const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession();
+        if (refreshError || !refreshData.user) {
+          setError('Your session has expired. Please save your content and log in again.');
+          setAuthError(true);
+          setStep('error');
+          return;
+        }
+        user = refreshData.user;
       }
 
       // Check limit using account-level data
@@ -410,9 +418,16 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
         }
       })();
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
-      setError(message);
-      setStep('error');
+      if (err instanceof SessionExpiredError || (err as any)?.name === 'SessionExpiredError') {
+        setError('Your session has expired. Please save your content and log in again.');
+        setAuthError(true);
+        setStep('error');
+        // Do NOT clear lastContent — the user should be able to copy their draft
+      } else {
+        const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+        setError(message);
+        setStep('error');
+      }
     } finally {
       checkInProgressRef.current = false;
     }
@@ -530,6 +545,7 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
     setResult(null);
     setLastContent('');
     setError(null);
+    setAuthError(false);
     lastCheckIdRef.current = null;
     // Clear session storage so navigating back shows fresh input
     sessionStorage.removeItem(SESSION_KEY_RESULT);
@@ -542,6 +558,7 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
     result,
     lastContent,
     error,
+    authError,
     history,
     isLoadingHistory,
     usage,
