@@ -5,17 +5,21 @@ import SafePostLogo from '../components/ui/SafePostLogo';
 import { supabase } from '../services/supabaseClient';
 
 const priceIds: Record<string, { monthly: string; yearly: string }> = {
+  starter: {
+    monthly: 'price_1TAHuHJAm9wjk5YfCqAF30bc',
+    yearly: 'price_1TAI1AJAm9wjk5Yf5b68eoVw',
+  },
   professional: {
-    monthly: 'price_1T8UTeR1RAuGYaVLg6CI48VN',
-    yearly: 'price_1T8UUPR1RAuGYaVL8SdWS9ut',
+    monthly: 'price_1T8VA7JAm9wjk5YfkbJ56VTX',
+    yearly: 'price_1T8VA3JAm9wjk5YfSRSEyVoW',
   },
   pro_plus: {
-    monthly: 'price_1T8UWKR1RAuGYaVL2RUXVEAr',
-    yearly: 'price_1T8UXuR1RAuGYaVLPGTPgSqA',
+    monthly: 'price_1T8VA4JAm9wjk5YfEAzY5e4q',
+    yearly: 'price_1T8VA3JAm9wjk5YfsvpQvllA',
   },
   ultra: {
-    monthly: 'price_1T8UZUR1RAuGYaVLkkbcBvJL',
-    yearly: 'price_1T8UaCR1RAuGYaVL3M5ob7TV',
+    monthly: 'price_1T8VA6JAm9wjk5YfK73bIGbJ',
+    yearly: 'price_1T8VA7JAm9wjk5YfN6Ql6KfM',
   },
 };
 

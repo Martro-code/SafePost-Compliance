@@ -15,21 +15,25 @@ const supabase = createClient(
 );
 
 const priceIdToPlan: Record<string, string> = {
-  'price_1T8UTeR1RAuGYaVLg6CI48VN': 'professional',
-  'price_1T8UUPR1RAuGYaVL8SdWS9ut': 'professional',
-  'price_1T8UWKR1RAuGYaVL2RUXVEAr': 'pro_plus',
-  'price_1T8UXuR1RAuGYaVLPGTPgSqA': 'pro_plus',
-  'price_1T8UZUR1RAuGYaVLkkbcBvJL': 'ultra',
-  'price_1T8UaCR1RAuGYaVL3M5ob7TV': 'ultra',
+  'price_1TAHuHJAm9wjk5YfCqAF30bc': 'starter',
+  'price_1TAI1AJAm9wjk5Yf5b68eoVw': 'starter',
+  'price_1T8VA7JAm9wjk5YfkbJ56VTX': 'professional',
+  'price_1T8VA3JAm9wjk5YfSRSEyVoW': 'professional',
+  'price_1T8VA4JAm9wjk5YfEAzY5e4q': 'pro_plus',
+  'price_1T8VA3JAm9wjk5YfsvpQvllA': 'pro_plus',
+  'price_1T8VA6JAm9wjk5YfK73bIGbJ': 'ultra',
+  'price_1T8VA7JAm9wjk5YfN6Ql6KfM': 'ultra',
 };
 
 const priceIdToBilling: Record<string, string> = {
-  'price_1T8UTeR1RAuGYaVLg6CI48VN': 'monthly',
-  'price_1T8UUPR1RAuGYaVL8SdWS9ut': 'yearly',
-  'price_1T8UWKR1RAuGYaVL2RUXVEAr': 'monthly',
-  'price_1T8UXuR1RAuGYaVLPGTPgSqA': 'yearly',
-  'price_1T8UZUR1RAuGYaVLkkbcBvJL': 'monthly',
-  'price_1T8UaCR1RAuGYaVL3M5ob7TV': 'yearly',
+  'price_1TAHuHJAm9wjk5YfCqAF30bc': 'monthly',
+  'price_1TAI1AJAm9wjk5Yf5b68eoVw': 'yearly',
+  'price_1T8VA7JAm9wjk5YfkbJ56VTX': 'monthly',
+  'price_1T8VA3JAm9wjk5YfSRSEyVoW': 'yearly',
+  'price_1T8VA4JAm9wjk5YfEAzY5e4q': 'monthly',
+  'price_1T8VA3JAm9wjk5YfsvpQvllA': 'yearly',
+  'price_1T8VA6JAm9wjk5YfK73bIGbJ': 'monthly',
+  'price_1T8VA7JAm9wjk5YfN6Ql6KfM': 'yearly',
 };
 
 function getPlanName(amountTotal: number): string {
