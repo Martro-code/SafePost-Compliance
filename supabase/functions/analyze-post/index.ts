@@ -756,18 +756,14 @@ serve(async (req) => {
       return jsonResponse({ error: 'Missing authorization header. Please log in and try again.', code: 'AUTH_MISSING' }, 401);
     }
 
-    // User-scoped client: anon key + user's JWT for auth validation
-    const supabaseAuth = createClient(
+    // Service role client for admin operations (auth validation, rate limiting, bypasses RLS)
+    const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: authHeader },
-        },
-      },
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
 
-    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser();
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token);
     if (userError || !user) {
       console.error('Auth error:', userError?.message ?? 'user is null', '| authHeader present:', !!authHeader);
       return jsonResponse({
@@ -775,12 +771,6 @@ serve(async (req) => {
         code: 'AUTH_EXPIRED',
       }, 401);
     }
-
-    // Service role client for admin operations (rate limiting, bypasses RLS)
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-    );
 
     // --- Rate limiting: 10 requests per 60 seconds ---
     const windowStart = new Date(Date.now() - 60 * 1000).toISOString();
