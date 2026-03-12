@@ -38,6 +38,7 @@ export const analyzePost = async (postContent: string, image?: { base64: string,
 
   try {
     const headers = await getAuthHeaders();
+    console.log('[analyzePost] auth token present:', !!headers['Authorization']);
 
     const body: Record<string, unknown> = { content: postContent };
     if (image) {

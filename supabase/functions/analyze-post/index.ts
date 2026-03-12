@@ -752,27 +752,35 @@ serve(async (req) => {
     // --- Auth ---
     const authHeader = req.headers.get('Authorization');
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('Auth: missing or malformed Authorization header');
       return jsonResponse({ error: 'Missing authorization header. Please log in and try again.', code: 'AUTH_MISSING' }, 401);
     }
 
-    const token = authHeader.replace('Bearer ', '');
+    // User-scoped client: anon key + user's JWT for auth validation
+    const supabaseAuth = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      {
+        global: {
+          headers: { Authorization: authHeader },
+        },
+      },
+    );
+
+    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser();
+    if (userError || !user) {
+      console.error('Auth error:', userError?.message ?? 'user is null', '| authHeader present:', !!authHeader);
+      return jsonResponse({
+        error: 'Authentication failed. Please refresh the page or log in again.',
+        code: 'AUTH_EXPIRED',
+      }, 401);
+    }
+
+    // Service role client for admin operations (rate limiting, bypasses RLS)
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
     );
-
-    const { data: { user }, error: userError } = await supabase.auth.getUser(token);
-    if (userError || !user) {
-      console.error('Auth error:', userError?.message);
-      const isExpired = userError?.message?.toLowerCase().includes('expired') ||
-        userError?.message?.toLowerCase().includes('invalid');
-      return jsonResponse({
-        error: isExpired
-          ? 'Your session has expired. Please refresh the page or log in again.'
-          : 'Authentication failed. Please log in again.',
-        code: 'AUTH_EXPIRED',
-      }, 401);
-    }
 
     // --- Rate limiting: 10 requests per 60 seconds ---
     const windowStart = new Date(Date.now() - 60 * 1000).toISOString();
@@ -936,7 +944,7 @@ Return only a JSON array with no markdown in this format:
     const analysis = JSON.parse(jsonMatch[0]);
     return jsonResponse({ analysis });
   } catch (error) {
-    console.error('analyze-post error:', error);
+    console.error('analyze-post error:', error instanceof Error ? { message: error.message, stack: error.stack } : error);
     return jsonResponse({ error: 'An unexpected error occurred. Please try again.' }, 500);
   }
 });
