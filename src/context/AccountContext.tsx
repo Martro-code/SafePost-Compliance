@@ -1,6 +1,41 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '../services/supabaseClient';
 
+const ACCOUNT_CACHE_KEY = 'safepost_account_cache';
+const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+interface AccountCache {
+  accountId: string;
+  plan: string;
+  billingPeriod: string;
+  checksUsed: number;
+  checksLimit: number | null;
+  cachedAt: number;
+}
+
+function readAccountCache(): AccountCache | null {
+  try {
+    const raw = localStorage.getItem(ACCOUNT_CACHE_KEY);
+    if (!raw) return null;
+    const parsed: AccountCache = JSON.parse(raw);
+    if (Date.now() - parsed.cachedAt > CACHE_MAX_AGE_MS) {
+      localStorage.removeItem(ACCOUNT_CACHE_KEY);
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function writeAccountCache(data: Omit<AccountCache, 'cachedAt'>) {
+  try {
+    localStorage.setItem(ACCOUNT_CACHE_KEY, JSON.stringify({ ...data, cachedAt: Date.now() }));
+  } catch {
+    // localStorage may be unavailable — silently ignore
+  }
+}
+
 const PLAN_LIMITS: Record<string, number | null> = {
   free: 3,
   starter: 3,
@@ -41,14 +76,15 @@ const AccountContext = createContext<AccountContextType>({
 });
 
 export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [accountId, setAccountId] = useState<string | null>(null);
+  const cached = readAccountCache();
+  const [accountId, setAccountId] = useState<string | null>(cached?.accountId ?? null);
   const [role, setRole] = useState<'owner' | 'member' | null>(null);
-  const [plan, setPlan] = useState('starter');
-  const [billingPeriod, setBillingPeriod] = useState('');
+  const [plan, setPlan] = useState(cached?.plan ?? 'starter');
+  const [billingPeriod, setBillingPeriod] = useState(cached?.billingPeriod ?? '');
   const [cancelled, setCancelled] = useState(false);
   const [cancelDate, setCancelDate] = useState('');
-  const [checksUsed, setChecksUsed] = useState(0);
-  const [checksLimit, setChecksLimit] = useState<number | null>(3);
+  const [checksUsed, setChecksUsed] = useState(cached?.checksUsed ?? 0);
+  const [checksLimit, setChecksLimit] = useState<number | null>(cached?.checksLimit ?? 3);
   const [accountLoading, setAccountLoading] = useState(true);
 
   const loadAccount = useCallback(async () => {
@@ -114,6 +150,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setCancelled(account.plan === 'starter' && !!account.billing_period);
           setChecksUsed(reconciledUsed);
           setChecksLimit(account.checks_limit);
+          writeAccountCache({
+            accountId: account.id,
+            plan: account.plan || 'starter',
+            billingPeriod: account.billing_period || '',
+            checksUsed: reconciledUsed,
+            checksLimit: account.checks_limit,
+          });
           setAccountLoading(false);
           return;
         }
@@ -226,6 +269,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setBillingPeriod('');
       setChecksUsed(actualUsed);
       setChecksLimit(limit);
+      writeAccountCache({
+        accountId: resolvedAccount.id,
+        plan: userPlan,
+        billingPeriod: '',
+        checksUsed: actualUsed,
+        checksLimit: limit,
+      });
     } catch (err) {
       console.error('Failed to load account:', err);
     } finally {
@@ -245,6 +295,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         loadAccount();
       }
       if (event === 'SIGNED_OUT') {
+        localStorage.removeItem(ACCOUNT_CACHE_KEY);
         setAccountId(null);
         setRole(null);
         setPlan('starter');
@@ -281,6 +332,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setBillingPeriod(account.billing_period || '');
       setChecksUsed(reconciledUsed);
       setChecksLimit(account.checks_limit);
+      writeAccountCache({
+        accountId,
+        plan: account.plan || 'starter',
+        billingPeriod: account.billing_period || '',
+        checksUsed: reconciledUsed,
+        checksLimit: account.checks_limit,
+      });
     }
   }, [accountId]);
 
