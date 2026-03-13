@@ -98,6 +98,36 @@ const TwoFactorAuth: React.FC = () => {
   const handleGetStarted = async () => {
     setError(null);
     setEnrolling(true);
+
+    // Check for any existing TOTP factors before enrolling
+    const { data: factors, error: listErr } = await supabase.auth.mfa.listFactors();
+    if (listErr) {
+      setEnrolling(false);
+      setError('Failed to check existing factors. Please try again.');
+      return;
+    }
+
+    // If a verified factor already exists, show the enabled state
+    const verified = factors.totp.find((f) => f.status === 'verified');
+    if (verified) {
+      setVerifiedFactorId(verified.id);
+      setEnrolling(false);
+      return;
+    }
+
+    // If an unverified (pending) factor exists, unenroll it first so we get a clean enrollment
+    const unverified = factors.totp.find((f) => f.status !== 'verified');
+    if (unverified) {
+      const { error: unenrollErr } = await supabase.auth.mfa.unenroll({
+        factorId: unverified.id,
+      });
+      if (unenrollErr) {
+        setEnrolling(false);
+        setError('Failed to clean up previous enrollment. Please try again.');
+        return;
+      }
+    }
+
     const { data, error: enrollErr } = await supabase.auth.mfa.enroll({
       factorType: 'totp',
     });
