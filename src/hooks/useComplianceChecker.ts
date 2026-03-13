@@ -404,16 +404,14 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
 
           // Increment account-level usage counter
           if (accountId) {
-            await supabase.rpc('increment_checks_used', { p_account_id: accountId }).then(({ error: rpcError }) => {
-              if (rpcError) {
-                // Fallback: direct update if RPC doesn't exist
-                supabase
-                  .from('accounts')
-                  .update({ checks_used: effectiveChecksUsed + 1 })
-                  .eq('id', accountId)
-                  .then(() => {});
-              }
-            });
+            const { error: rpcError } = await supabase.rpc('increment_checks_used', { p_account_id: accountId });
+            if (rpcError) {
+              // Fallback: direct update if RPC doesn't exist
+              await supabase
+                .from('accounts')
+                .update({ checks_used: effectiveChecksUsed + 1 })
+                .eq('id', accountId);
+            }
           }
 
           // Refresh account context
