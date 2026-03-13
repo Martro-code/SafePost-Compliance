@@ -39,3 +39,18 @@ export function getPlanTierLabel(planKey: string): string {
   const key = planKey?.toLowerCase().trim() || 'starter';
   return PLAN_TIER_LABELS[key] ?? PLAN_TIER_LABELS.starter;
 }
+
+/** Ordered list of plan tiers from lowest to highest */
+const PLAN_ORDER = ['starter', 'professional', 'pro_plus', 'ultra'];
+
+/**
+ * Returns the next plan tier key above the given plan, or null if already at the top.
+ * "free" is treated as "starter".
+ */
+export function getNextPlanTier(planKey: string): string | null {
+  const key = planKey?.toLowerCase().trim() || 'starter';
+  const normalised = key === 'free' ? 'starter' : key;
+  const idx = PLAN_ORDER.indexOf(normalised);
+  if (idx === -1 || idx >= PLAN_ORDER.length - 1) return null;
+  return PLAN_ORDER[idx + 1];
+}
