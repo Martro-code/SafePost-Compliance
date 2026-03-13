@@ -274,8 +274,25 @@ const TwoFactorAuth: React.FC = () => {
   if (loading) {
     return (
       <LoggedInLayout>
-        <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16 flex justify-center">
-          <Loader2 className="w-6 h-6 text-gray-400 animate-spin mt-20" />
+        <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
+          {/* Back link skeleton */}
+          <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mb-8 dark:bg-gray-700" />
+
+          {/* Heading skeleton */}
+          <div className="mb-8">
+            <div className="h-7 w-80 bg-gray-200 rounded animate-pulse mb-2 dark:bg-gray-700" />
+            <div className="h-4 w-64 bg-gray-100 rounded animate-pulse mt-1 mb-8 dark:bg-gray-700/60" />
+          </div>
+
+          {/* Card skeleton */}
+          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <div className="h-4 w-full bg-gray-100 rounded animate-pulse mb-3 dark:bg-gray-700/60" />
+            <div className="h-4 w-5/6 bg-gray-100 rounded animate-pulse mb-5 dark:bg-gray-700/60" />
+            <div className="h-16 w-full bg-gray-50 rounded-xl animate-pulse mb-6 dark:bg-gray-700/40" />
+            <div className="border-t border-black/[0.06] dark:border-gray-700 mt-2 pt-6">
+              <div className="h-11 w-full bg-gray-200 rounded-lg animate-pulse dark:bg-gray-700" />
+            </div>
+          </div>
         </div>
       </LoggedInLayout>
     );
