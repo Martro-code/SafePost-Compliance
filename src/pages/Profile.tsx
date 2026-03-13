@@ -131,9 +131,14 @@ const Profile: React.FC = () => {
               </button>
             </div>
             <div className="inline-flex items-center gap-2">
-              <span className="text-[14px] font-medium text-gray-900 dark:text-white">
-                ••••••••••••
-              </span>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value="••••••••••••"
+                readOnly
+                tabIndex={-1}
+                className="text-[14px] font-medium text-gray-900 dark:text-white bg-transparent border-none outline-none p-0 w-auto"
+                style={{ width: '7.5em' }}
+              />
               <button
                 type="button"
                 tabIndex={-1}
