@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
 import { useAccount } from '../context/AccountContext';
@@ -15,9 +15,6 @@ const Profile: React.FC = () => {
   const billingPeriod = accountBillingPeriod || '';
 
   const displayPlanName = getDisplayPlanName(planName);
-
-  // Password visibility toggle
-  const [showPassword, setShowPassword] = useState(false);
 
 
   return (
@@ -130,23 +127,9 @@ const Profile: React.FC = () => {
                 Edit
               </button>
             </div>
-            <div className="inline-flex items-center gap-2">
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value="••••••••••••"
-                readOnly
-                tabIndex={-1}
-                className="text-[14px] font-medium text-gray-900 dark:text-white bg-transparent border-none outline-none p-0 w-auto"
-                style={{ width: '7.5em' }}
-              />
-              <button
-                type="button"
-                tabIndex={-1}
-                onClick={() => setShowPassword(!showPassword)}
-                className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
-              >
-                {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
-              </button>
+            <div>
+              <p className="text-[14px] font-medium text-gray-900 dark:text-white">••••••••••••</p>
+              <p className="text-[12px] text-gray-400 mt-0.5">Click Edit to change your password</p>
             </div>
           </div>
         </div>

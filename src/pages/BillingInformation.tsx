@@ -29,7 +29,10 @@ const BillingInformation: React.FC = () => {
     const fetchCard = async () => {
       try {
         const { data, error } = await supabase.functions.invoke('get-payment-method');
-        if (!error && data) {
+        console.log('[BillingInformation] get-payment-method response:', { data, error });
+        if (error) {
+          console.error('[BillingInformation] Edge Function error:', error);
+        } else if (data) {
           if (data.card) {
             setCardDetails(data.card);
           }
@@ -38,7 +41,7 @@ const BillingInformation: React.FC = () => {
           }
         }
       } catch (err) {
-        console.error('Failed to fetch payment method:', err);
+        console.error('[BillingInformation] Failed to fetch payment method:', err);
       } finally {
         setCardLoading(false);
       }
