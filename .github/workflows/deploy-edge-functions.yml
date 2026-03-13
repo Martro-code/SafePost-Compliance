@@ -68,3 +68,8 @@ jobs:
         run: supabase functions deploy create-setup-intent --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy get-payment-method
+        run: supabase functions deploy get-payment-method --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}

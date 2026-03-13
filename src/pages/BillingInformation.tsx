@@ -4,6 +4,7 @@ import { ArrowLeft, CreditCard, Mail, CalendarDays, Receipt, CheckCircle, XCircl
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
 import { getDisplayPlanName, getPlanTierLabel } from '../utils/planUtils';
+import { supabase } from '../services/supabaseClient';
 
 const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }> = {
   professional: { monthlyPrice: 20, yearlyPrice: 200 },
@@ -17,6 +18,25 @@ const BillingInformation: React.FC = () => {
   const { userEmail, signOut } = useAuth();
 
   const [billingMessage, setBillingMessage] = useState<{ type: 'success' | 'cancelled'; text: string } | null>(null);
+  const [cardDetails, setCardDetails] = useState<{ brand: string; last4: string; exp_month: number; exp_year: number } | null>(null);
+  const [cardLoading, setCardLoading] = useState(true);
+
+  // Fetch payment method details from Stripe
+  useEffect(() => {
+    const fetchCard = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('get-payment-method');
+        if (!error && data?.card) {
+          setCardDetails(data.card);
+        }
+      } catch (err) {
+        console.error('Failed to fetch payment method:', err);
+      } finally {
+        setCardLoading(false);
+      }
+    };
+    fetchCard();
+  }, []);
 
   useEffect(() => {
     if (searchParams.get('success') === 'true') {
@@ -157,8 +177,20 @@ const BillingInformation: React.FC = () => {
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-[14px] font-medium text-gray-900 dark:text-white">Visa ending in XXXX</p>
-              <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">Expires 12/2027</p>
+              {cardLoading ? (
+                <p className="text-[14px] text-gray-400 dark:text-gray-500">Loading payment method…</p>
+              ) : cardDetails ? (
+                <>
+                  <p className="text-[14px] font-medium text-gray-900 dark:text-white">
+                    {cardDetails.brand.charAt(0).toUpperCase() + cardDetails.brand.slice(1)} ending in {cardDetails.last4}
+                  </p>
+                  <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">
+                    Expires {String(cardDetails.exp_month).padStart(2, '0')}/{cardDetails.exp_year}
+                  </p>
+                </>
+              ) : (
+                <p className="text-[14px] text-gray-500 dark:text-gray-400">No payment method on file</p>
+              )}
             </div>
             <button onClick={() => navigate('/update-card')} className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300">
               Edit
