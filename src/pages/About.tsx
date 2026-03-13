@@ -312,6 +312,9 @@ const About: React.FC = () => {
               <img
                 src={spLogo}
                 alt="SafePost logo"
+                loading="lazy"
+                width={600}
+                height={91}
                 className="max-w-[500px] md:max-w-[600px] w-full h-auto"
               />
             </div>

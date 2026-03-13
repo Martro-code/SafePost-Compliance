@@ -305,13 +305,17 @@ const Features: React.FC = () => {
       {/* Hero Image */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-2xl mx-auto px-6 mb-16 md:mb-20">
-          <img
-            src={heroImage}
-            alt="SafePost Features"
-            loading="eager"
-            fetchPriority="high"
-            className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
-          />
+          <picture>
+            <source srcSet={heroImage.replace(/\.png$/, '.webp')} type="image/webp" />
+            <img
+              src={heroImage}
+              alt="SafePost Features"
+              loading="lazy"
+              width={1507}
+              height={470}
+              className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
+            />
+          </picture>
         </div>
       </section>
 
