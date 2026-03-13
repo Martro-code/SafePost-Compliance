@@ -9,7 +9,7 @@ import { useAccount } from '../context/AccountContext';
 import { supabase } from '../services/supabaseClient';
 import { ComplianceResults } from '../components/compliance/ComplianceResults';
 import { generateCompliantRewrites } from '../services/complianceService';
-import { getDisplayPlanName } from '../utils/planUtils';
+import { getDisplayPlanName, getNextPlanTier, getPlanTierLabel } from '../utils/planUtils';
 import { extractTextFromFile } from '../utils/fileExtraction';
 
 const Dashboard: React.FC = () => {
@@ -41,6 +41,7 @@ const Dashboard: React.FC = () => {
   };
 
   const isUltra = planName.toLowerCase() === 'ultra';
+  const nextTier = getNextPlanTier(planName);
 
   // Form state
   const [content, setContent] = useState('');
@@ -619,12 +620,14 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Upgrade CTA - only shown for Starter / free plan users */}
-            {['free', 'starter'].includes(planName.toLowerCase()) && (
+            {/* Upgrade / Upsell CTA — shown when a higher plan tier exists */}
+            {nextTier && (
               <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6 dark:bg-blue-950 dark:border-blue-900">
                 <div className="flex items-center gap-2.5 mb-3">
                   <Rocket className="w-5 h-5 text-blue-600" />
-                  <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider dark:text-blue-400">Upgrade your plan</h3>
+                  <h3 className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider dark:text-blue-400">
+                    Upgrade to {getPlanTierLabel(nextTier)}
+                  </h3>
                 </div>
                 <ul className="space-y-2.5 mb-5">
                   <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
@@ -652,7 +655,7 @@ const Dashboard: React.FC = () => {
                   onClick={() => navigate('/change-plan?mode=upgrade')}
                   className="w-full h-10 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
                 >
-                  Upgrade your plan
+                  Upgrade to {getPlanTierLabel(nextTier)}
                 </button>
               </div>
             )}

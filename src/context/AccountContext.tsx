@@ -85,12 +85,34 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
 
         if (account) {
+          // Reconcile checks_used with actual compliance checks this month
+          const now = new Date();
+          const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+          const { count: actualCount } = await supabase
+            .from('compliance_checks')
+            .select('*', { count: 'exact', head: true })
+            .eq('account_id', account.id)
+            .gte('created_at', startOfMonth);
+
+          const reconciledUsed = actualCount ?? account.checks_used ?? 0;
+
+          // If stored value is stale, update it in the DB
+          if (reconciledUsed !== (account.checks_used ?? 0)) {
+            supabase
+              .from('accounts')
+              .update({ checks_used: reconciledUsed })
+              .eq('id', account.id)
+              .then(({ error: updateErr }) => {
+                if (updateErr) console.error('Failed to reconcile checks_used:', updateErr);
+              });
+          }
+
           setAccountId(account.id);
           setRole(membership.role as 'owner' | 'member');
           setPlan(account.plan || 'starter');
           setBillingPeriod(account.billing_period || '');
           setCancelled(account.plan === 'starter' && !!account.billing_period);
-          setChecksUsed(account.checks_used ?? 0);
+          setChecksUsed(reconciledUsed);
           setChecksLimit(account.checks_limit);
           setAccountLoading(false);
           return;
@@ -244,9 +266,20 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       .single();
 
     if (account) {
+      // Reconcile checks_used with actual compliance checks this month
+      const now = new Date();
+      const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      const { count: actualCount } = await supabase
+        .from('compliance_checks')
+        .select('*', { count: 'exact', head: true })
+        .eq('account_id', accountId)
+        .gte('created_at', startOfMonth);
+
+      const reconciledUsed = actualCount ?? account.checks_used ?? 0;
+
       setPlan(account.plan || 'starter');
       setBillingPeriod(account.billing_period || '');
-      setChecksUsed(account.checks_used ?? 0);
+      setChecksUsed(reconciledUsed);
       setChecksLimit(account.checks_limit);
     }
   }, [accountId]);
