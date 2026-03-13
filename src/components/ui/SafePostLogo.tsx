@@ -6,6 +6,9 @@ const SafePostLogo: React.FC<{ className?: string }> = ({ className = '' }) => (
     <img
       src={spLogo}
       alt="SafePost™"
+      fetchPriority="high"
+      width={225}
+      height={34}
       className="h-[34px] w-auto"
     />
   </div>
