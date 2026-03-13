@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, ArrowLeft, Bell, ShieldCheck, Moon, Mail, Info, Lock, Check } from 'lucide-react';
+import { ChevronRight, ArrowLeft, Bell, ShieldCheck, Moon, Mail, Info, Lock, Check, AlertCircle } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
 import { useTheme } from '../context/ThemeContext';
 import { useAccount } from '../context/AccountContext';
+import { supabase } from '../services/supabaseClient';
+
+const DEFAULTS = {
+  notif_compliance_results: true,
+  notif_guideline_updates: true,
+  notif_billing_activity: true,
+  notif_new_features: true,
+  email_product_updates: true,
+  email_compliance_alerts: true,
+  email_usage_summaries: true,
+  email_tips_education: false,
+};
 
 const Settings: React.FC = () => {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const { isDarkMode, toggleDarkMode } = useTheme();
   const { role, plan: accountPlan } = useAccount();
 
@@ -22,22 +34,57 @@ const Settings: React.FC = () => {
   const twoFactor = sessionStorage.getItem('safepost_2fa') === 'true';
 
   // In-App Notification preferences
-  const [notifComplianceResults, setNotifComplianceResults] = useState(false);
-  const [notifGuidelineUpdates, setNotifGuidelineUpdates] = useState(false);
-  const [notifBillingActivity, setNotifBillingActivity] = useState(false);
-  const [notifNewFeatures, setNotifNewFeatures] = useState(false);
+  const [notifComplianceResults, setNotifComplianceResults] = useState(DEFAULTS.notif_compliance_results);
+  const [notifGuidelineUpdates, setNotifGuidelineUpdates] = useState(DEFAULTS.notif_guideline_updates);
+  const [notifBillingActivity, setNotifBillingActivity] = useState(DEFAULTS.notif_billing_activity);
+  const [notifNewFeatures, setNotifNewFeatures] = useState(DEFAULTS.notif_new_features);
   const notifMasterOn = notifComplianceResults || notifGuidelineUpdates || notifBillingActivity || notifNewFeatures;
   const [notifExpanded, setNotifExpanded] = useState(false);
   const [notifSaved, setNotifSaved] = useState(false);
 
   // Email preferences
-  const [emailProductUpdates, setEmailProductUpdates] = useState(false);
-  const [emailComplianceAlerts, setEmailComplianceAlerts] = useState(false);
-  const [emailUsageSummaries, setEmailUsageSummaries] = useState(false);
-  const [emailTipsEducation, setEmailTipsEducation] = useState(false);
+  const [emailProductUpdates, setEmailProductUpdates] = useState(DEFAULTS.email_product_updates);
+  const [emailComplianceAlerts, setEmailComplianceAlerts] = useState(DEFAULTS.email_compliance_alerts);
+  const [emailUsageSummaries, setEmailUsageSummaries] = useState(DEFAULTS.email_usage_summaries);
+  const [emailTipsEducation, setEmailTipsEducation] = useState(DEFAULTS.email_tips_education);
   const emailMasterOn = emailProductUpdates || emailComplianceAlerts || emailUsageSummaries || emailTipsEducation;
   const [emailExpanded, setEmailExpanded] = useState(false);
   const [emailSaved, setEmailSaved] = useState(false);
+
+  // Error state
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  // Load preferences from Supabase on mount
+  useEffect(() => {
+    if (!user) return;
+
+    (async () => {
+      const { data, error } = await supabase
+        .from('user_preferences')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Failed to load preferences:', error);
+        return;
+      }
+
+      if (data) {
+        setNotifComplianceResults(data.notif_compliance_results);
+        setNotifGuidelineUpdates(data.notif_guideline_updates);
+        setNotifBillingActivity(data.notif_billing_activity);
+        setNotifNewFeatures(data.notif_new_features);
+        setEmailProductUpdates(data.email_product_updates);
+        setEmailComplianceAlerts(data.email_compliance_alerts);
+        setEmailUsageSummaries(data.email_usage_summaries);
+        setEmailTipsEducation(data.email_tips_education);
+      } else {
+        // No row yet — insert defaults
+        await supabase.from('user_preferences').insert({ user_id: user.id });
+      }
+    })();
+  }, [user]);
 
   const handleNotifMasterToggle = () => {
     if (notifMasterOn) {
@@ -56,13 +103,27 @@ const Settings: React.FC = () => {
     setNotifSaved(false);
   };
 
-  const handleNotifSave = () => {
-    localStorage.setItem('safepost_notification_prefs', JSON.stringify({
-      complianceResults: notifComplianceResults,
-      guidelineUpdates: notifGuidelineUpdates,
-      billingActivity: notifBillingActivity,
-      newFeatures: notifNewFeatures,
-    }));
+  const handleNotifSave = async () => {
+    if (!user) return;
+    setSaveError(null);
+
+    const { error } = await supabase
+      .from('user_preferences')
+      .upsert({
+        user_id: user.id,
+        notif_compliance_results: notifComplianceResults,
+        notif_guideline_updates: notifGuidelineUpdates,
+        notif_billing_activity: notifBillingActivity,
+        notif_new_features: notifNewFeatures,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'user_id' });
+
+    if (error) {
+      console.error('Failed to save notification preferences:', error);
+      setSaveError('Failed to save preferences. Please try again.');
+      return;
+    }
+
     setNotifSaved(true);
     setTimeout(() => {
       setNotifExpanded(false);
@@ -87,13 +148,27 @@ const Settings: React.FC = () => {
     setEmailSaved(false);
   };
 
-  const handleEmailSave = () => {
-    localStorage.setItem('safepost_email_prefs', JSON.stringify({
-      productUpdates: emailProductUpdates,
-      complianceAlerts: emailComplianceAlerts,
-      usageSummaries: emailUsageSummaries,
-      tipsEducation: emailTipsEducation,
-    }));
+  const handleEmailSave = async () => {
+    if (!user) return;
+    setSaveError(null);
+
+    const { error } = await supabase
+      .from('user_preferences')
+      .upsert({
+        user_id: user.id,
+        email_product_updates: emailProductUpdates,
+        email_compliance_alerts: emailComplianceAlerts,
+        email_usage_summaries: emailUsageSummaries,
+        email_tips_education: emailTipsEducation,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: 'user_id' });
+
+    if (error) {
+      console.error('Failed to save email preferences:', error);
+      setSaveError('Failed to save preferences. Please try again.');
+      return;
+    }
+
     setEmailSaved(true);
     setTimeout(() => {
       setEmailExpanded(false);
@@ -127,6 +202,14 @@ const Settings: React.FC = () => {
             Manage your account preferences
           </p>
         </div>
+
+        {/* Error toast */}
+        {saveError && (
+          <div className="mb-4 flex items-center gap-2 p-3.5 bg-red-50 border border-red-200 rounded-xl text-[13px] text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            {saveError}
+          </div>
+        )}
 
         <div className="space-y-3">
           {/* Setting 1 — Dark mode */}
