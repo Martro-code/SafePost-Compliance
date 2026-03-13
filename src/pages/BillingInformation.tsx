@@ -1,9 +1,10 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, CreditCard, Mail, CalendarDays, Receipt, CheckCircle, XCircle } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
-import { getDisplayPlanName, getPlanTierLabel } from '../utils/planUtils';
+import { useAccount } from '../context/AccountContext';
+import { getDisplayPlanName } from '../utils/planUtils';
 import { supabase } from '../services/supabaseClient';
 
 const planPricing: Record<string, { monthlyPrice: number; yearlyPrice: number }> = {
@@ -16,18 +17,25 @@ const BillingInformation: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const { userEmail, signOut } = useAuth();
+  const { plan: accountPlan, billingPeriod: accountBillingPeriod } = useAccount();
 
   const [billingMessage, setBillingMessage] = useState<{ type: 'success' | 'cancelled'; text: string } | null>(null);
   const [cardDetails, setCardDetails] = useState<{ brand: string; last4: string; exp_month: number; exp_year: number } | null>(null);
   const [cardLoading, setCardLoading] = useState(true);
+  const [subscriptionDetails, setSubscriptionDetails] = useState<{ next_payment_date: string; amount: number; interval: string } | null>(null);
 
-  // Fetch payment method details from Stripe
+  // Fetch payment method and subscription details from Stripe
   useEffect(() => {
     const fetchCard = async () => {
       try {
         const { data, error } = await supabase.functions.invoke('get-payment-method');
-        if (!error && data?.card) {
-          setCardDetails(data.card);
+        if (!error && data) {
+          if (data.card) {
+            setCardDetails(data.card);
+          }
+          if (data.subscription) {
+            setSubscriptionDetails(data.subscription);
+          }
         }
       } catch (err) {
         console.error('Failed to fetch payment method:', err);
@@ -54,35 +62,42 @@ const BillingInformation: React.FC = () => {
     }
   }, [searchParams, setSearchParams]);
 
-  // Read plan info from sessionStorage
-  const planName = sessionStorage.getItem('safepost_plan') || '';
-  const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
+  // Read plan info from AccountContext (single source of truth from DB)
+  const planName = accountPlan || '';
+  const billingPeriod = accountBillingPeriod || '';
 
   const formatBillingPeriod = (period: string) => {
     return period.charAt(0).toUpperCase() + period.slice(1).toLowerCase();
   };
 
-  // Calculate next payment amount and date
-  const { nextPaymentAmount, nextPaymentDate } = useMemo(() => {
-    const pricing = planPricing[planName.toLowerCase()];
-    let amount = 0;
-    if (pricing) {
-      amount = billingPeriod.toLowerCase() === 'yearly' ? pricing.yearlyPrice : pricing.monthlyPrice;
-    }
+  // Use subscription details from Stripe when available, otherwise calculate locally
+  const nextPaymentAmount = subscriptionDetails?.amount
+    ?? (() => {
+      const pricing = planPricing[planName.toLowerCase()];
+      if (!pricing) return 0;
+      return billingPeriod.toLowerCase() === 'yearly' ? pricing.yearlyPrice : pricing.monthlyPrice;
+    })();
 
-    const date = new Date();
-    if (billingPeriod.toLowerCase() === 'yearly') {
-      date.setFullYear(date.getFullYear() + 1);
-    } else {
-      date.setMonth(date.getMonth() + 1);
-    }
-    const formatted = date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
-
-    return { nextPaymentAmount: amount, nextPaymentDate: formatted };
-  }, [planName, billingPeriod]);
+  const nextPaymentDate = subscriptionDetails?.next_payment_date
+    ?? (() => {
+      const date = new Date();
+      if (billingPeriod.toLowerCase() === 'yearly') {
+        date.setFullYear(date.getFullYear() + 1);
+      } else {
+        date.setMonth(date.getMonth() + 1);
+      }
+      return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+    })();
 
   // Billing email state — pre-populate from Supabase session
   const [billingEmail, setBillingEmail] = useState(userEmail);
+
+  // Update billing email when userEmail becomes available (async auth loading)
+  useEffect(() => {
+    if (userEmail && !billingEmail) {
+      setBillingEmail(userEmail);
+    }
+  }, [userEmail]);
 
   return (
     <LoggedInLayout>
@@ -247,7 +262,7 @@ const BillingInformation: React.FC = () => {
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-extrabold text-gray-900 dark:text-white">
-                    ${nextPaymentAmount}.00 <span className="text-[12px] font-medium text-gray-500">AUD</span>
+                    ${Number(nextPaymentAmount).toFixed(2)} <span className="text-[12px] font-medium text-gray-500">AUD</span>
                   </p>
                   <p className="text-[12px] text-gray-400">Incl. GST</p>
                 </div>

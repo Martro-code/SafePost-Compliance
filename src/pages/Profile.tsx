@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
+import { useAccount } from '../context/AccountContext';
 import { getDisplayPlanName } from '../utils/planUtils';
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const { userEmail, firstName, surname, mobileNumber, practiceName, streetAddress, suburb, userState, postcode, signOut } = useAuth();
+  const { plan: accountPlan, billingPeriod: accountBillingPeriod } = useAccount();
 
-  const planName = sessionStorage.getItem('safepost_plan') || '';
-  const billingPeriod = sessionStorage.getItem('safepost_billing') || '';
+  const planName = accountPlan || '';
+  const billingPeriod = accountBillingPeriod || '';
 
   const displayPlanName = getDisplayPlanName(planName);
 
   // Password visibility toggle
+  const [showPassword, setShowPassword] = useState(false);
 
 
   return (
@@ -127,10 +130,18 @@ const Profile: React.FC = () => {
                 Edit
               </button>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="inline-flex items-center gap-2">
               <span className="text-[14px] font-medium text-gray-900 dark:text-white">
                 ••••••••••••
               </span>
+              <button
+                type="button"
+                tabIndex={-1}
+                onClick={() => setShowPassword(!showPassword)}
+                className="p-1 text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+              </button>
             </div>
           </div>
         </div>

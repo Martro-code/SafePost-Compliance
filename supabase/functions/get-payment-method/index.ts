@@ -115,8 +115,33 @@ serve(async (req) => {
       }
     }
 
+    // Fetch active subscription for next payment details
+    let subscription = null;
+    try {
+      const subscriptions = await stripe.subscriptions.list({
+        customer: account.stripe_customer_id,
+        status: 'active',
+        limit: 1,
+      });
+      if (subscriptions.data.length > 0) {
+        const sub = subscriptions.data[0];
+        const nextDate = new Date(sub.current_period_end * 1000);
+        const formatted = nextDate.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+        const amount = sub.items.data[0]?.price?.unit_amount
+          ? sub.items.data[0].price.unit_amount / 100
+          : 0;
+        subscription = {
+          next_payment_date: formatted,
+          amount,
+          interval: sub.items.data[0]?.price?.recurring?.interval ?? 'month',
+        };
+      }
+    } catch (subErr) {
+      console.error('Failed to fetch subscription:', subErr);
+    }
+
     if (!paymentMethodId) {
-      return new Response(JSON.stringify({ card: null }), {
+      return new Response(JSON.stringify({ card: null, subscription }), {
         status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -131,6 +156,7 @@ serve(async (req) => {
         exp_month: pm.card?.exp_month,
         exp_year: pm.card?.exp_year,
       },
+      subscription,
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
