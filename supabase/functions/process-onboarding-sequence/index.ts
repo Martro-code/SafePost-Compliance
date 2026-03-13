@@ -121,6 +121,25 @@ serve(async (req) => {
         continue;
       }
 
+      // ── Check user email preferences before sending ────────────────
+      const { data: userPrefs } = await supabaseAdmin
+        .from('user_preferences')
+        .select('email_product_updates')
+        .eq('user_id', row.user_id)
+        .maybeSingle();
+
+      if (userPrefs && userPrefs.email_product_updates === false) {
+        // User has opted out — mark as sent so we don't retry
+        await supabaseAdmin
+          .from('onboarding_emails')
+          .update({ sent_at: now })
+          .eq('id', row.id);
+
+        console.log(`Skipped onboarding email ${row.email_number} for user ${row.user_id} (email_product_updates = false)`);
+        skipped++;
+        continue;
+      }
+
       // ── Send the onboarding email ───────────────────────────────────
       try {
         const res = await fetch(

@@ -425,6 +425,31 @@ serve(async (req) => {
       }
     }
 
+    // ── Check user email preferences ────────────────────────────────────
+    // Onboarding emails are non-essential product emails; respect opt-out.
+    const { data: prefs } = await supabaseAdmin
+      .from('user_preferences')
+      .select('email_product_updates')
+      .eq('user_id', user_id)
+      .maybeSingle();
+
+    if (prefs && prefs.email_product_updates === false) {
+      console.log(`User ${user_id} has opted out of product emails — skipping onboarding email ${email_number}`);
+
+      // Mark as sent so it doesn't keep retrying
+      await supabaseAdmin
+        .from('onboarding_emails')
+        .update({ sent_at: new Date().toISOString() })
+        .eq('user_id', user_id)
+        .eq('email_number', email_number)
+        .eq('plan_tier', plan_tier);
+
+      return new Response(
+        JSON.stringify({ success: true, skipped: true, reason: 'email_preferences_opt_out' }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
     // ── Look up the template ────────────────────────────────────────────
     const tierTemplates = templates[plan_tier];
     if (!tierTemplates) {

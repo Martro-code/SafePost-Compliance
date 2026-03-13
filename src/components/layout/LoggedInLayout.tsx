@@ -65,12 +65,20 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
 
   useEffect(() => {
     const handleNotificationUpdate = () => {
+      // Re-read from sessionStorage for immediate UI updates from inbox page
       const saved = sessionStorage.getItem('safepost_notification_count');
       setNotificationCount(saved !== null ? parseInt(saved, 10) : 0);
+      // Also re-fetch from Supabase for accuracy (e.g. after new notification inserted)
+      if (user) {
+        getUnreadCount(user.id).then(count => {
+          setNotificationCount(count);
+          sessionStorage.setItem('safepost_notification_count', String(count));
+        }).catch(() => {});
+      }
     };
     window.addEventListener('safepost-notifications-updated', handleNotificationUpdate);
     return () => window.removeEventListener('safepost-notifications-updated', handleNotificationUpdate);
-  }, []);
+  }, [user]);
 
   const [loggingOut, setLoggingOut] = useState(false);
 

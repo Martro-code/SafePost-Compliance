@@ -3,39 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bell } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
-import { fetchReadNotificationIds, markNotificationRead, markAllNotificationsRead } from '../services/notificationService';
-
-interface Notification {
-  id: number;
-  title: string;
-  description: string;
-  time: string;
-  icon: React.FC<{ className?: string }>;
-  iconColor: string;
-  iconBg: string;
-  read: boolean;
-}
+import { getNotifications, markAsRead, markAllNotificationsRead, type Notification } from '../services/notificationService';
 
 const NotificationsInbox: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  // Load read state from Supabase on mount
+  // Load notifications from Supabase on mount
   useEffect(() => {
     if (!user) return;
-    fetchReadNotificationIds(user.id).then(readIds => {
-      setNotifications(prev => {
-        const updated = prev.map(n => readIds.includes(n.id) ? { ...n, read: true } : n);
-        const unreadCount = updated.filter(n => !n.read).length;
-        sessionStorage.setItem('safepost_notification_count', String(unreadCount));
-        window.dispatchEvent(new Event('safepost-notifications-updated'));
-        return updated;
-      });
+    getNotifications(user.id).then(data => {
+      setNotifications(data);
+      const unreadCount = data.filter(n => !n.read).length;
+      sessionStorage.setItem('safepost_notification_count', String(unreadCount));
+      window.dispatchEvent(new Event('safepost-notifications-updated'));
     });
   }, [user]);
 
-  const markAsRead = (id: number) => {
+  const handleMarkAsRead = (id: string) => {
     setNotifications(prev => {
       const updated = prev.map(n => n.id === id ? { ...n, read: true } : n);
       const unreadCount = updated.filter(n => !n.read).length;
@@ -43,12 +29,10 @@ const NotificationsInbox: React.FC = () => {
       window.dispatchEvent(new Event('safepost-notifications-updated'));
       return updated;
     });
-    if (user) {
-      markNotificationRead(user.id, id);
-    }
+    markAsRead(id);
   };
 
-  const markAllAsRead = () => {
+  const handleMarkAllAsRead = () => {
     setNotifications(prev => prev.map(n => ({ ...n, read: true })));
     sessionStorage.setItem('safepost_notification_count', '0');
     window.dispatchEvent(new Event('safepost-notifications-updated'));
@@ -58,6 +42,20 @@ const NotificationsInbox: React.FC = () => {
   };
 
   const hasUnread = notifications.some(n => !n.read);
+
+  const formatTime = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffMins = Math.floor(diffMs / 60_000);
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+  };
 
   return (
     <LoggedInLayout>
@@ -79,7 +77,7 @@ const NotificationsInbox: React.FC = () => {
             </div>
             {hasUnread && (
               <button
-                onClick={markAllAsRead}
+                onClick={handleMarkAllAsRead}
                 className="text-[13px] text-blue-600 hover:text-blue-700 font-medium transition-colors"
               >
                 Mark all as read
@@ -117,26 +115,21 @@ const NotificationsInbox: React.FC = () => {
                   <div className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0 mt-2" />
                 )}
 
-                {/* Icon */}
-                <div className={`w-9 h-9 rounded-lg ${notification.iconBg} flex items-center justify-center flex-shrink-0`}>
-                  <notification.icon className={`w-4 h-4 ${notification.iconColor}`} />
-                </div>
-
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <p className={`text-[14px] font-semibold ${notification.read ? 'text-gray-700' : 'text-gray-900'}`}>
                     {notification.title}
                   </p>
                   <p className="text-[13px] text-gray-500 mt-0.5 leading-relaxed">
-                    {notification.description}
+                    {notification.message}
                   </p>
-                  <p className="text-[11px] text-gray-400 mt-1.5">{notification.time}</p>
+                  <p className="text-[11px] text-gray-400 mt-1.5">{formatTime(notification.created_at)}</p>
                 </div>
 
                 {/* Mark as read button */}
                 {!notification.read && (
                   <button
-                    onClick={() => markAsRead(notification.id)}
+                    onClick={() => handleMarkAsRead(notification.id)}
                     className="text-[11px] text-blue-500 hover:text-blue-700 font-medium flex-shrink-0 transition-colors"
                   >
                     Mark read

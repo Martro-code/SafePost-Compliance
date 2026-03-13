@@ -1,31 +1,54 @@
 import { supabase } from './supabaseClient';
 
-/** IDs of all active notifications — populated from the database in future. */
-const ALL_NOTIFICATION_IDS: number[] = [];
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: string;
+  title: string;
+  message: string;
+  read: boolean;
+  created_at: string;
+}
 
-/** Fetch the IDs of notifications the user has already read. */
-export async function fetchReadNotificationIds(userId: string): Promise<number[]> {
-  const { data, error } = await supabase
-    .from('notification_reads')
-    .select('notification_id')
-    .eq('user_id', userId);
+/** Get the count of unread notifications for the given user. */
+export async function getUnreadCount(userId: string): Promise<number> {
+  const { count, error } = await supabase
+    .from('notifications')
+    .select('*', { count: 'exact', head: true })
+    .eq('user_id', userId)
+    .eq('read', false);
 
   if (error) {
-    console.error('Error fetching notification reads:', error);
+    console.error('Error fetching unread count:', error);
+    return 0;
+  }
+
+  return count ?? 0;
+}
+
+/** Fetch the most recent 20 notifications for the given user. */
+export async function getNotifications(userId: string): Promise<Notification[]> {
+  const { data, error } = await supabase
+    .from('notifications')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  if (error) {
+    console.error('Error fetching notifications:', error);
     return [];
   }
 
-  return data.map((row: { notification_id: number }) => row.notification_id);
+  return data ?? [];
 }
 
-/** Mark a single notification as read for the given user. */
-export async function markNotificationRead(userId: string, notificationId: number): Promise<void> {
+/** Mark a single notification as read. */
+export async function markAsRead(notificationId: string): Promise<void> {
   const { error } = await supabase
-    .from('notification_reads')
-    .upsert(
-      { user_id: userId, notification_id: notificationId },
-      { onConflict: 'user_id,notification_id' }
-    );
+    .from('notifications')
+    .update({ read: true })
+    .eq('id', notificationId);
 
   if (error) {
     console.error('Error marking notification as read:', error);
@@ -34,22 +57,13 @@ export async function markNotificationRead(userId: string, notificationId: numbe
 
 /** Mark all notifications as read for the given user. */
 export async function markAllNotificationsRead(userId: string): Promise<void> {
-  const rows = ALL_NOTIFICATION_IDS.map(id => ({
-    user_id: userId,
-    notification_id: id,
-  }));
-
   const { error } = await supabase
-    .from('notification_reads')
-    .upsert(rows, { onConflict: 'user_id,notification_id' });
+    .from('notifications')
+    .update({ read: true })
+    .eq('user_id', userId)
+    .eq('read', false);
 
   if (error) {
     console.error('Error marking all notifications as read:', error);
   }
-}
-
-/** Get the count of unread notifications for the given user. */
-export async function getUnreadCount(userId: string): Promise<number> {
-  const readIds = await fetchReadNotificationIds(userId);
-  return ALL_NOTIFICATION_IDS.length - readIds.length;
 }
