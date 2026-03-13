@@ -83,8 +83,21 @@ const TwoFactorAuth: React.FC = () => {
       setLoading(false);
       return;
     }
+
     const verified = data.totp.find((f) => f.status === 'verified');
-    setVerifiedFactorId(verified?.id ?? null);
+    if (verified) {
+      setVerifiedFactorId(verified.id);
+      setLoading(false);
+      return;
+    }
+
+    // Silently clean up any unverified (pending) factors left from abandoned enrollments
+    const unverifiedFactors = data.totp.filter((f) => f.status !== 'verified');
+    for (const factor of unverifiedFactors) {
+      await supabase.auth.mfa.unenroll({ factorId: factor.id });
+    }
+
+    setVerifiedFactorId(null);
     setLoading(false);
   }, []);
 
@@ -99,32 +112,17 @@ const TwoFactorAuth: React.FC = () => {
     setError(null);
     setEnrolling(true);
 
-    // Check for any existing TOTP factors before enrolling
+    // Clean up any stale unverified factors that may have appeared since mount
     const { data: factors, error: listErr } = await supabase.auth.mfa.listFactors();
-    if (listErr) {
-      setEnrolling(false);
-      setError('Failed to check existing factors. Please try again.');
-      return;
-    }
-
-    // If a verified factor already exists, show the enabled state
-    const verified = factors.totp.find((f) => f.status === 'verified');
-    if (verified) {
-      setVerifiedFactorId(verified.id);
-      setEnrolling(false);
-      return;
-    }
-
-    // If an unverified (pending) factor exists, unenroll it first so we get a clean enrollment
-    const unverified = factors.totp.find((f) => f.status !== 'verified');
-    if (unverified) {
-      const { error: unenrollErr } = await supabase.auth.mfa.unenroll({
-        factorId: unverified.id,
-      });
-      if (unenrollErr) {
+    if (!listErr && factors) {
+      const verified = factors.totp.find((f) => f.status === 'verified');
+      if (verified) {
+        setVerifiedFactorId(verified.id);
         setEnrolling(false);
-        setError('Failed to clean up previous enrollment. Please try again.');
         return;
+      }
+      for (const f of factors.totp.filter((f) => f.status !== 'verified')) {
+        await supabase.auth.mfa.unenroll({ factorId: f.id });
       }
     }
 
