@@ -101,41 +101,60 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const userPlan = (user.user_metadata?.plan as string) || sessionStorage.getItem('safepost_plan') || 'starter';
       const limit = checksLimitForPlan(userPlan);
 
-      const { data: newAccount, error: insertError } = await supabase
+      const { data: newAccount, error: upsertError } = await supabase
         .from('accounts')
-        .insert({
-          owner_user_id: user.id,
-          plan: userPlan,
-          checks_used: 0,
-          checks_limit: limit,
-          billing_email: user.email,
-          first_name: user.user_metadata?.firstName || user.user_metadata?.first_name || '',
-          last_name: user.user_metadata?.surname || user.user_metadata?.last_name || '',
-        })
+        .upsert(
+          {
+            owner_user_id: user.id,
+            plan: userPlan,
+            checks_used: 0,
+            checks_limit: limit,
+            billing_email: user.email,
+            first_name: user.user_metadata?.firstName || user.user_metadata?.first_name || '',
+            last_name: user.user_metadata?.surname || user.user_metadata?.last_name || '',
+          },
+          { onConflict: 'owner_user_id', ignoreDuplicates: true }
+        )
         .select()
         .single();
 
-      if (insertError) {
-        console.error('Failed to create account:', insertError);
-        // Fallback: use plan from metadata
-        setPlan(userPlan);
-        setChecksLimit(limit);
-        setAccountLoading(false);
-        return;
+      if (upsertError) {
+        console.error('Failed to create account:', upsertError);
+      }
+
+      // If ignoreDuplicates fired, newAccount will be null — re-fetch existing
+      let resolvedAccount = newAccount;
+      if (!resolvedAccount) {
+        const { data: existingAccount, error: fetchError } = await supabase
+          .from('accounts')
+          .select('id, plan, billing_period, checks_used, checks_limit')
+          .eq('owner_user_id', user.id)
+          .single();
+        if (fetchError || !existingAccount) {
+          console.error('Failed to fetch existing account after upsert:', fetchError);
+          setPlan(userPlan);
+          setChecksLimit(limit);
+          setAccountLoading(false);
+          return;
+        }
+        resolvedAccount = existingAccount;
       }
 
       // Create account_members row
       const { error: memberInsertError } = await supabase
         .from('account_members')
-        .insert({
-          account_id: newAccount.id,
-          user_id: user.id,
-          role: 'owner',
-          status: 'active',
-          invited_email: user.email,
-        });
+        .upsert(
+          {
+            account_id: resolvedAccount.id,
+            user_id: user.id,
+            role: 'owner',
+            status: 'active',
+            invited_email: user.email,
+          },
+          { onConflict: 'account_id,user_id', ignoreDuplicates: true }
+        );
       if (memberInsertError) {
-        console.error('Failed to insert account_members row:', memberInsertError);
+        console.error('Failed to upsert account_members row:', memberInsertError);
       }
 
       // Initialise onboarding email sequence for new Starter (free) users
@@ -152,7 +171,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // Backfill account_id on existing compliance_checks for this user
       const { error: backfillError } = await supabase
         .from('compliance_checks')
-        .update({ account_id: newAccount.id })
+        .update({ account_id: resolvedAccount.id })
         .eq('user_id', user.id)
         .is('account_id', null);
       if (backfillError) {
@@ -165,7 +184,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const { count } = await supabase
         .from('compliance_checks')
         .select('*', { count: 'exact', head: true })
-        .eq('account_id', newAccount.id)
+        .eq('account_id', resolvedAccount.id)
         .gte('created_at', startOfMonth);
 
       const actualUsed = count ?? 0;
@@ -173,13 +192,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         const { error: updateUsedError } = await supabase
           .from('accounts')
           .update({ checks_used: actualUsed })
-          .eq('id', newAccount.id);
+          .eq('id', resolvedAccount.id);
         if (updateUsedError) {
           console.error('Failed to update checks_used on account:', updateUsedError);
         }
       }
 
-      setAccountId(newAccount.id);
+      setAccountId(resolvedAccount.id);
       setRole('owner');
       setPlan(userPlan);
       setBillingPeriod('');

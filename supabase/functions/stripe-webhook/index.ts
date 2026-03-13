@@ -98,6 +98,20 @@ serve(async (req: Request) => {
     const plan = priceIdToPlan[priceId] || 'starter';
     const billing = priceIdToBilling[priceId] || 'monthly';
 
+    // Find the most recently created account for this user to handle duplicates
+    const { data: accountToUpdate, error: lookupErr } = await supabase
+      .from('accounts')
+      .select('id')
+      .eq('owner_user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (lookupErr || !accountToUpdate) {
+      console.error('No account found for user:', userId, lookupErr);
+      return new Response(JSON.stringify({ error: 'Account not found' }), { status: 404, headers: { 'Content-Type': 'application/json' } });
+    }
+
     const { error } = await supabase
       .from('accounts')
       .update({
@@ -106,7 +120,7 @@ serve(async (req: Request) => {
         stripe_customer_id: session.customer as string,
         stripe_subscription_id: session.subscription as string,
       })
-      .eq('owner_user_id', userId);
+      .eq('id', accountToUpdate.id);
 
     if (error) {
       console.error('Error updating account:', error);
