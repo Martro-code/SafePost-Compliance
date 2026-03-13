@@ -1,37 +1,230 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle, Info, AlertTriangle, Download } from 'lucide-react';
+import { ArrowLeft, CheckCircle, Info, AlertTriangle, Download, Loader2 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
+import { supabase } from '../services/supabaseClient';
+import { useAuth } from '../hooks/useAuth';
 
-const backupCodes = [
-  'SAFE-1234-ABCD',
-  'SAFE-5678-EFGH',
-  'SAFE-9012-IJKL',
-  'SAFE-3456-MNOP',
-  'SAFE-7890-QRST',
-  'SAFE-2345-UVWX',
-  'SAFE-6789-YZAB',
-  'SAFE-0123-CDEF',
-];
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Generate a single backup code in XXXX-XXXX-XXXX format using crypto. */
+function generateBackupCode(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const values = crypto.getRandomValues(new Uint8Array(12));
+  const raw = Array.from(values, (v) => chars[v % chars.length]).join('');
+  return `${raw.slice(0, 4)}-${raw.slice(4, 8)}-${raw.slice(8, 12)}`;
+}
+
+/** SHA-256 hash a plaintext string, returned as hex. */
+async function sha256(text: string): Promise<string> {
+  const data = new TextEncoder().encode(text);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf))
+    .map((b) => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+/** Trigger a .txt file download with the given content. */
+function downloadTextFile(filename: string, content: string) {
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ---------------------------------------------------------------------------
+// Component
+// ---------------------------------------------------------------------------
 
 const TwoFactorAuth: React.FC = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const is2FAEnabled = sessionStorage.getItem('safepost_2fa') === 'true';
+  // MFA factor state from Supabase
+  const [verifiedFactorId, setVerifiedFactorId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  // Enrollment state
+  const [enrollFactorId, setEnrollFactorId] = useState<string | null>(null);
+  const [totpSecret, setTotpSecret] = useState('');
+  const [totpUri, setTotpUri] = useState('');
+
+  // UI state
   const [step, setStep] = useState(1);
   const [verificationCode, setVerificationCode] = useState('');
-  const [showDisableConfirm, setShowDisableConfirm] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [verifying, setVerifying] = useState(false);
+  const [enrolling, setEnrolling] = useState(false);
 
-  const handleVerify = () => {
-    if (verificationCode.length === 6) {
-      sessionStorage.setItem('safepost_2fa', 'true');
-      setStep(4);
+  // Backup codes (plaintext, shown only once)
+  const [backupCodes, setBackupCodes] = useState<string[]>([]);
+
+  // Disable flow
+  const [showDisableConfirm, setShowDisableConfirm] = useState(false);
+  const [disableCode, setDisableCode] = useState('');
+  const [disabling, setDisabling] = useState(false);
+
+  // --------------------------------------------------
+  // On mount: check if user already has a verified TOTP factor
+  // --------------------------------------------------
+  const checkFactors = useCallback(async () => {
+    setLoading(true);
+    const { data, error: listErr } = await supabase.auth.mfa.listFactors();
+    if (listErr) {
+      console.error('Failed to list MFA factors:', listErr);
+      setLoading(false);
+      return;
     }
+    const verified = data.totp.find((f) => f.status === 'verified');
+    setVerifiedFactorId(verified?.id ?? null);
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    checkFactors();
+  }, [checkFactors]);
+
+  // --------------------------------------------------
+  // Fix 1 — Enroll: call supabase.auth.mfa.enroll
+  // --------------------------------------------------
+  const handleGetStarted = async () => {
+    setError(null);
+    setEnrolling(true);
+    const { data, error: enrollErr } = await supabase.auth.mfa.enroll({
+      factorType: 'totp',
+    });
+    setEnrolling(false);
+
+    if (enrollErr || !data) {
+      setError(enrollErr?.message ?? 'Failed to start enrollment. Please try again.');
+      return;
+    }
+
+    setEnrollFactorId(data.id);
+    setTotpSecret(data.totp.secret);
+    setTotpUri(data.totp.uri);
+    setStep(2);
   };
 
-  const handleDisable = () => {
-    sessionStorage.removeItem('safepost_2fa');
+  // --------------------------------------------------
+  // Fix 2 — Verify: call challengeAndVerify
+  // --------------------------------------------------
+  const handleVerify = async () => {
+    if (verificationCode.length !== 6 || !enrollFactorId) return;
+
+    setError(null);
+    setVerifying(true);
+
+    const { error: verifyErr } = await supabase.auth.mfa.challengeAndVerify({
+      factorId: enrollFactorId,
+      code: verificationCode,
+    });
+
+    if (verifyErr) {
+      setVerifying(false);
+      setError(verifyErr.message ?? 'Invalid code. Please try again.');
+      return;
+    }
+
+    // Fix 3 — Generate & store backup codes after successful verification
+    await generateAndStoreBackupCodes();
+
+    setVerifiedFactorId(enrollFactorId);
+    setVerifying(false);
+    setStep(4);
+  };
+
+  // --------------------------------------------------
+  // Fix 3 — Generate 8 backup codes, hash & store them
+  // --------------------------------------------------
+  const generateAndStoreBackupCodes = async () => {
+    if (!user) return;
+
+    const codes = Array.from({ length: 8 }, () => generateBackupCode());
+    const hashes = await Promise.all(codes.map((c) => sha256(c)));
+
+    // Delete any existing codes for this user
+    await supabase.from('mfa_backup_codes').delete().eq('user_id', user.id);
+
+    // Insert new hashed codes
+    const rows = hashes.map((h) => ({
+      user_id: user.id,
+      code_hash: h,
+      used: false,
+    }));
+    await supabase.from('mfa_backup_codes').insert(rows);
+
+    setBackupCodes(codes);
+  };
+
+  // --------------------------------------------------
+  // Download backup codes as .txt
+  // --------------------------------------------------
+  const handleDownloadCodes = () => {
+    const header = 'SafePost Compliance — MFA Backup Codes\n';
+    const separator = '=========================================\n\n';
+    const body = backupCodes.map((c, i) => `${i + 1}. ${c}`).join('\n');
+    const footer = '\n\nEach code can only be used once.\nStore these codes in a safe place.';
+    downloadTextFile('safepost-backup-codes.txt', header + separator + body + footer);
+  };
+
+  // --------------------------------------------------
+  // Fix 5 — Disable 2FA (unenroll)
+  // --------------------------------------------------
+  const handleDisable = async () => {
+    if (disableCode.length !== 6 || !verifiedFactorId) return;
+
+    setError(null);
+    setDisabling(true);
+
+    // Challenge first to validate the code
+    const { data: challenge, error: challengeErr } = await supabase.auth.mfa.challenge({
+      factorId: verifiedFactorId,
+    });
+
+    if (challengeErr || !challenge) {
+      setDisabling(false);
+      setError(challengeErr?.message ?? 'Failed to create challenge. Please try again.');
+      return;
+    }
+
+    const { error: verifyErr } = await supabase.auth.mfa.verify({
+      factorId: verifiedFactorId,
+      challengeId: challenge.id,
+      code: disableCode,
+    });
+
+    if (verifyErr) {
+      setDisabling(false);
+      setError('Invalid code. Please enter a valid 6-digit code from your authenticator app.');
+      return;
+    }
+
+    // Unenroll the factor
+    const { error: unenrollErr } = await supabase.auth.mfa.unenroll({
+      factorId: verifiedFactorId,
+    });
+
+    if (unenrollErr) {
+      setDisabling(false);
+      setError(unenrollErr.message ?? 'Failed to disable 2FA. Please try again.');
+      return;
+    }
+
+    // Delete backup codes
+    if (user) {
+      await supabase.from('mfa_backup_codes').delete().eq('user_id', user.id);
+    }
+
+    setDisabling(false);
     navigate('/settings');
   };
 
@@ -39,6 +232,26 @@ const TwoFactorAuth: React.FC = () => {
     const digits = value.replace(/\D/g, '').slice(0, 6);
     setVerificationCode(digits);
   };
+
+  const handleDisableCodeInput = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 6);
+    setDisableCode(digits);
+  };
+
+  // --------------------------------------------------
+  // Render
+  // --------------------------------------------------
+  if (loading) {
+    return (
+      <LoggedInLayout>
+        <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16 flex justify-center">
+          <Loader2 className="w-6 h-6 text-gray-400 animate-spin mt-20" />
+        </div>
+      </LoggedInLayout>
+    );
+  }
+
+  const is2FAEnabled = !!verifiedFactorId;
 
   return (
     <LoggedInLayout>
@@ -62,10 +275,18 @@ const TwoFactorAuth: React.FC = () => {
           </p>
         </div>
 
+        {/* Error banner */}
+        {error && (
+          <div className="mb-4 flex items-center gap-2 p-3.5 bg-red-50 border border-red-200 rounded-xl text-[13px] text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300">
+            <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+            {error}
+          </div>
+        )}
+
         {/* Card */}
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
 
-          {/* ===== 2FA ENABLED — Management Screen ===== */}
+          {/* ===== 2FA ENABLED — Management Screen (Fix 5) ===== */}
           {is2FAEnabled && step === 1 && (
             <div className="p-6 md:p-8">
               <div className="flex items-center gap-2.5 mb-4">
@@ -78,13 +299,6 @@ const TwoFactorAuth: React.FC = () => {
               <p className="text-[14px] text-gray-500 mb-6 leading-relaxed dark:text-gray-300">
                 Your account is protected with two-factor authentication.
               </p>
-
-              <button
-                onClick={() => {}}
-                className="w-full h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
-              >
-                View backup codes
-              </button>
 
               <div className="border-t border-black/[0.06] dark:border-gray-700 mt-6 pt-6" />
 
@@ -100,20 +314,45 @@ const TwoFactorAuth: React.FC = () => {
               ) : (
                 <div>
                   <p className="text-[14px] text-gray-700 mb-4 dark:text-gray-300">
-                    Are you sure you want to disable two-factor authentication? This will make your account less secure.
+                    Enter a 6-digit code from your authenticator app to confirm disabling 2FA.
                   </p>
+
+                  <div className="flex justify-center mb-4">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={disableCode}
+                      onChange={(e) => handleDisableCodeInput(e.target.value)}
+                      placeholder="000000"
+                      maxLength={6}
+                      className="w-48 px-6 py-4 text-center text-2xl font-mono font-bold tracking-[0.3em] text-gray-900 bg-white rounded-xl border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-300 focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-600"
+                    />
+                  </div>
+
                   <div className="flex items-center gap-3">
                     <button
-                      onClick={() => setShowDisableConfirm(false)}
+                      onClick={() => { setShowDisableConfirm(false); setDisableCode(''); setError(null); }}
                       className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
                     >
                       Keep enabled
                     </button>
                     <button
                       onClick={handleDisable}
-                      className="flex-1 h-11 text-[14px] font-semibold text-red-600 hover:text-red-700 rounded-lg border border-red-200 hover:border-red-300 hover:bg-red-50 transition-all duration-200 active:scale-[0.98] dark:border-red-800 dark:hover:bg-red-900/20"
+                      disabled={disableCode.length !== 6 || disabling}
+                      className={`flex-1 h-11 text-[14px] font-semibold rounded-lg border transition-all duration-200 active:scale-[0.98] ${
+                        disableCode.length === 6 && !disabling
+                          ? 'text-red-600 hover:text-red-700 border-red-200 hover:border-red-300 hover:bg-red-50 dark:border-red-800 dark:hover:bg-red-900/20'
+                          : 'text-red-400 border-red-100 cursor-not-allowed dark:border-red-900 dark:text-red-600'
+                      }`}
                     >
-                      Disable 2FA
+                      {disabling ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Disabling…
+                        </span>
+                      ) : (
+                        'Disable 2FA'
+                      )}
                     </button>
                   </div>
                 </div>
@@ -141,15 +380,23 @@ const TwoFactorAuth: React.FC = () => {
               <div className="border-t border-black/[0.06] dark:border-gray-700 mt-6 pt-6" />
 
               <button
-                onClick={() => setStep(2)}
-                className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
+                onClick={handleGetStarted}
+                disabled={enrolling}
+                className="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                Get started
+                {enrolling ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Setting up…
+                  </span>
+                ) : (
+                  'Get started'
+                )}
               </button>
             </div>
           )}
 
-          {/* ===== SETUP STEP 2 — QR Code ===== */}
+          {/* ===== SETUP STEP 2 — QR Code (Fix 1) ===== */}
           {!is2FAEnabled && step === 2 && (
             <div className="p-6 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 mb-2 dark:text-white">Scan the QR code</h2>
@@ -157,18 +404,18 @@ const TwoFactorAuth: React.FC = () => {
                 Open your authenticator app, tap the + button, and scan the QR code below
               </p>
 
-              {/* QR Code Placeholder */}
+              {/* Real QR Code */}
               <div className="flex justify-center mb-5">
-                <div className="w-[180px] h-[180px] rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center dark:border-gray-600">
-                  <p className="text-[13px] text-gray-400 text-center px-4 dark:text-gray-500">QR Code will appear here</p>
+                <div className="p-4 bg-white rounded-xl border border-gray-200 dark:border-gray-600">
+                  <QRCodeSVG value={totpUri} size={180} />
                 </div>
               </div>
 
-              {/* Manual Code */}
+              {/* Real Manual Secret */}
               <div className="text-center mb-6">
                 <p className="text-[13px] text-gray-500 mb-2 dark:text-gray-400">Can't scan? Enter this code manually:</p>
-                <span className="inline-block px-4 py-2 bg-gray-100 rounded-lg text-[14px] font-mono font-medium text-gray-700 tracking-wider dark:bg-gray-700 dark:text-gray-300">
-                  SAFEPOST-XXXX-XXXX
+                <span className="inline-block px-4 py-2 bg-gray-100 rounded-lg text-[14px] font-mono font-medium text-gray-700 tracking-wider dark:bg-gray-700 dark:text-gray-300 select-all">
+                  {totpSecret}
                 </span>
               </div>
 
@@ -183,7 +430,7 @@ const TwoFactorAuth: React.FC = () => {
             </div>
           )}
 
-          {/* ===== SETUP STEP 3 — Verification ===== */}
+          {/* ===== SETUP STEP 3 — Verification (Fix 2) ===== */}
           {!is2FAEnabled && step === 3 && (
             <div className="p-6 md:p-8">
               <h2 className="text-lg font-bold text-gray-900 mb-2 dark:text-white">Enter verification code</h2>
@@ -207,19 +454,26 @@ const TwoFactorAuth: React.FC = () => {
 
               <button
                 onClick={handleVerify}
-                disabled={verificationCode.length !== 6}
+                disabled={verificationCode.length !== 6 || verifying}
                 className={`w-full h-11 text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98] ${
-                  verificationCode.length === 6
+                  verificationCode.length === 6 && !verifying
                     ? 'bg-blue-600 hover:bg-blue-700 text-white'
                     : 'bg-blue-600/50 text-white/70 cursor-not-allowed'
                 }`}
               >
-                Verify & enable 2FA
+                {verifying ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Verifying…
+                  </span>
+                ) : (
+                  'Verify & enable 2FA'
+                )}
               </button>
 
               <div className="text-center mt-4">
                 <button
-                  onClick={() => setStep(2)}
+                  onClick={() => { setStep(2); setError(null); }}
                   className="text-[13px] text-gray-400 hover:text-gray-600 transition-colors dark:text-gray-500 dark:hover:text-gray-300"
                 >
                   Back
@@ -228,7 +482,7 @@ const TwoFactorAuth: React.FC = () => {
             </div>
           )}
 
-          {/* ===== SETUP STEP 4 — Success + Backup Codes ===== */}
+          {/* ===== SETUP STEP 4 — Success + Backup Codes (Fix 3) ===== */}
           {step === 4 && (
             <div className="p-6 md:p-8">
               <div className="text-center mb-5">
@@ -257,7 +511,7 @@ const TwoFactorAuth: React.FC = () => {
               </div>
 
               <button
-                onClick={() => {}}
+                onClick={handleDownloadCodes}
                 className="w-full h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] mb-3 flex items-center justify-center gap-2 dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
               >
                 <Download className="w-4 h-4" />

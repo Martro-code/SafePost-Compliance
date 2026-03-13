@@ -30,8 +30,20 @@ const Settings: React.FC = () => {
   const planName = accountPlan || sessionStorage.getItem('safepost_plan') || '';
   const isUltra = planName.toLowerCase() === 'ultra';
 
-  // 2FA status
-  const twoFactor = sessionStorage.getItem('safepost_2fa') === 'true';
+  // 2FA status — check Supabase MFA factors
+  const [twoFactor, setTwoFactor] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      const { data, error: listErr } = await supabase.auth.mfa.listFactors();
+      if (listErr) {
+        console.error('Failed to list MFA factors:', listErr);
+        return;
+      }
+      const hasVerified = data.totp.some((f) => f.status === 'verified');
+      setTwoFactor(hasVerified);
+    })();
+  }, []);
 
   // In-App Notification preferences
   const [notifComplianceResults, setNotifComplianceResults] = useState(DEFAULTS.notif_compliance_results);
