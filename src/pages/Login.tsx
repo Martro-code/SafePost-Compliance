@@ -141,6 +141,14 @@ const Login: React.FC = () => {
       sessionStorage.setItem('safepost_session_active', 'true');
     }
 
+    // Check if MFA is required (user has enrolled TOTP but hasn't completed 2nd factor yet)
+    const { data: aalData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aalData && aalData.nextLevel === 'aal2' && aalData.currentLevel === 'aal1') {
+      setIsSubmitting(false);
+      navigate('/mfa-challenge');
+      return;
+    }
+
     // Check for pending checkout from signup flow
     const pendingCheckoutRaw = localStorage.getItem('safepost_pending_checkout');
     if (pendingCheckoutRaw && signInData.user && signInData.session) {

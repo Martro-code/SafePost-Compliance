@@ -27,6 +27,7 @@ import UpdateContactDetails from './pages/UpdateContactDetails';
 import UpgradeConfirmation from './pages/UpgradeConfirmation';
 import CancelSubscription from './pages/CancelSubscription';
 import TwoFactorAuth from './pages/TwoFactorAuth';
+import MFAChallenge from './pages/MFAChallenge';
 import NotificationsInbox from './pages/NotificationsInbox';
 import Help from './pages/Help';
 import CookiePolicy from './pages/CookiePolicy';
@@ -73,6 +74,7 @@ const App: React.FC = () => {
           <Route path="/news" element={<NewsPage />} />
           <Route path="/news/:slug" element={<NewsArticlePage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/mfa-challenge" element={<MFAChallenge />} />
           <Route path="/update-password" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/checkout" element={<Checkout />} />

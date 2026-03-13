@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth, isLoggingOut } from '../hooks/useAuth';
 import { useAccount } from '../context/AccountContext';
+import { supabase } from '../services/supabaseClient';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -11,11 +12,32 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requireOwner = false }) => {
   const { user, loading } = useAuth();
   const { role, accountLoading } = useAccount();
+  const [aalChecked, setAalChecked] = useState(false);
+  const [needsMfa, setNeedsMfa] = useState(false);
 
-  if (loading) return null;
+  useEffect(() => {
+    if (!user) {
+      setAalChecked(true);
+      return;
+    }
+    (async () => {
+      const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+      if (data && data.nextLevel === 'aal2' && data.currentLevel === 'aal1') {
+        setNeedsMfa(true);
+      }
+      setAalChecked(true);
+    })();
+  }, [user]);
+
+  if (loading || !aalChecked) return null;
+
   if (!user) {
     if (isLoggingOut) return <Navigate to="/" replace />;
     return <Navigate to="/login" replace />;
+  }
+
+  if (needsMfa) {
+    return <Navigate to="/mfa-challenge" replace />;
   }
 
   // Wait for account data before enforcing role
