@@ -619,8 +619,8 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Upgrade CTA - hidden for Ultra users */}
-            {planName.toLowerCase() !== 'ultra' && (
+            {/* Upgrade CTA - only shown for Starter / free plan users */}
+            {['free', 'starter'].includes(planName.toLowerCase()) && (
               <div className="bg-blue-50 rounded-2xl border border-blue-100 p-6 dark:bg-blue-950 dark:border-blue-900">
                 <div className="flex items-center gap-2.5 mb-3">
                   <Rocket className="w-5 h-5 text-blue-600" />
