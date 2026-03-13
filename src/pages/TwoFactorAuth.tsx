@@ -273,21 +273,29 @@ const TwoFactorAuth: React.FC = () => {
     return (
       <LoggedInLayout>
         <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
-          {/* Back link skeleton */}
+          {/* Back link skeleton — matches h-4 icon + text with mb-8 */}
           <div className="h-4 w-32 bg-gray-200 rounded animate-pulse mb-8 dark:bg-gray-700" />
 
-          {/* Heading skeleton */}
+          {/* Heading skeleton — matches text-2xl (h-8) title + text-[14px] subtitle with mb-8 */}
           <div className="mb-8">
-            <div className="h-7 w-80 bg-gray-200 rounded animate-pulse mb-2 dark:bg-gray-700" />
+            <div className="h-8 w-80 bg-gray-200 rounded animate-pulse mb-1 dark:bg-gray-700" />
             <div className="h-4 w-64 bg-gray-100 rounded animate-pulse mt-1 mb-8 dark:bg-gray-700/60" />
           </div>
 
-          {/* Card skeleton */}
+          {/* Card skeleton — matches intro card: paragraph + info box + divider + button */}
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
-            <div className="h-4 w-full bg-gray-100 rounded animate-pulse mb-3 dark:bg-gray-700/60" />
-            <div className="h-4 w-5/6 bg-gray-100 rounded animate-pulse mb-5 dark:bg-gray-700/60" />
-            <div className="h-16 w-full bg-gray-50 rounded-xl animate-pulse mb-6 dark:bg-gray-700/40" />
-            <div className="border-t border-black/[0.06] dark:border-gray-700 mt-2 pt-6">
+            {/* Paragraph lines — matches text-[14px] leading-relaxed mb-5 */}
+            <div className="h-4 w-full bg-gray-100 rounded animate-pulse mb-2 dark:bg-gray-700/60" />
+            <div className="h-4 w-11/12 bg-gray-100 rounded animate-pulse mb-5 dark:bg-gray-700/60" />
+
+            {/* Info box — matches flex gap-3 p-4 bg-blue-50 rounded-xl with two lines of text */}
+            <div className="p-4 bg-gray-50 rounded-xl dark:bg-gray-700/40">
+              <div className="h-4 w-28 bg-gray-200 rounded animate-pulse mb-2 dark:bg-gray-600" />
+              <div className="h-4 w-72 bg-gray-100 rounded animate-pulse dark:bg-gray-700/60" />
+            </div>
+
+            {/* Divider + button — matches mt-6 pt-6 border-t + h-11 button */}
+            <div className="border-t border-black/[0.06] dark:border-gray-700 mt-6 pt-6">
               <div className="h-11 w-full bg-gray-200 rounded-lg animate-pulse dark:bg-gray-700" />
             </div>
           </div>
