@@ -347,24 +347,14 @@ const Features: React.FC = () => {
             {/* Left Column — Text Content */}
             <div className="space-y-6">
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
-                Social media counts as advertising
+                Social media is advertising
               </h2>
               <p className="text-[15px] text-gray-600 leading-relaxed">
-                Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, advertise, or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media.<sup>*</sup>
+                Any social media activity intended to attract patients, promote services, or drive engagement with your practice is considered advertising under Australian law. This applies to all platforms and includes both public posts and closed channels such as private Facebook groups or dark marketing, unless they meet strict health professional-only access requirements.
               </p>
+              <h3 className="text-lg font-bold text-gray-900">What the rules cover</h3>
               <p className="text-[15px] text-gray-600 leading-relaxed">
-                Advertising applies to all types of social media — including platforms used to reach the general public, and &lsquo;closed channel&rsquo; platforms targeting specific audiences, such as dark marketing, Facebook groups, or closed LinkedIn channels — unless they satisfy the TGA&rsquo;s requirements for <a href="https://www.tga.gov.au/resources/guidance/advertising-health-professionals-so-consumer-rules-do-not-apply" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">advertising exclusively to health professionals</a>.
-              </p>
-              <p className="hidden md:block text-[12px] text-gray-400 leading-relaxed pt-2">
-                * Not an exhaustive list — adapted from:{' '}
-                <a
-                  href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4103576/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-400 underline hover:text-gray-500"
-                >
-                  Social Media and Health Care Professionals: Benefits, Risks, and Best Practices
-                </a>
+                Both AHPRA and the TGA regulate what you can say online. AHPRA&rsquo;s National Law prohibits false or misleading claims, patient testimonials, and content that creates unreasonable expectations about treatment results. The TGA&rsquo;s Advertising Code adds additional requirements whenever a post promotes medicines, medical devices, or supplements.
               </p>
             </div>
 
@@ -375,12 +365,11 @@ const Features: React.FC = () => {
                 { category: 'Professional networking', platforms: 'LinkedIn, Yammer' },
                 { category: 'Discussion forums', platforms: 'Reddit, Whirlpool, Discord, Quora' },
                 { category: 'Media sharing', platforms: 'YouTube, Flickr, Instagram, TikTok, Pinterest' },
-                { category: 'Content production', platforms: 'Tumblr, Blogger, X' },
+                { category: 'Microblogging', platforms: 'Tumblr, Blogger, X' },
                 { category: 'Audio publishing', platforms: 'Spotify, iTunes, Podcasts' },
                 { category: 'Text publishing', platforms: 'Blogs, SlideShare' },
                 { category: 'Knowledge aggregation', platforms: 'Wikipedia' },
-                { category: 'Virtual reality & gaming', platforms: 'Second Life' },
-                { category: 'Booking sites & apps', platforms: 'HealthEngine, Whitecoat, Podium' },
+{ category: 'Booking sites & apps', platforms: 'HealthEngine, Whitecoat, Podium' },
               ].map((item, index) => (
                 <div key={index} className="flex items-baseline gap-3 py-2.5">
                   <span className="text-blue-500 text-sm leading-none shrink-0">•</span>
@@ -392,18 +381,6 @@ const Features: React.FC = () => {
             </div>
           </div>
 
-          {/* Footnote — below both columns on mobile */}
-          <p className="md:hidden mt-8 text-[12px] text-gray-400 leading-relaxed">
-            * Not an exhaustive list — adapted from:{' '}
-            <a
-              href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4103576/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-gray-400 underline hover:text-gray-500"
-            >
-              Social Media and Health Care Professionals: Benefits, Risks, and Best Practices
-            </a>
-          </p>
         </div>
       </section>
 
