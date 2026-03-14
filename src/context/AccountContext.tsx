@@ -85,17 +85,24 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [cancelDate, setCancelDate] = useState('');
   const [checksUsed, setChecksUsed] = useState(cached?.checksUsed ?? 0);
   const [checksLimit, setChecksLimit] = useState<number | null>(cached?.checksLimit ?? 3);
-  const [accountLoading, setAccountLoading] = useState(true);
+  const [accountLoading, setAccountLoading] = useState(!cached);
 
   const loadAccount = useCallback(async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setAccountId(null);
-        setRole(null);
-        setPlan('starter');
-        setChecksUsed(0);
-        setChecksLimit(3);
+        // Only reset to defaults if there's no cached data.
+        // Real sign-outs are handled by the SIGNED_OUT event handler which
+        // explicitly clears both state and cache. Resetting here when the
+        // auth session hasn't restored yet would wipe cached values and
+        // cause a visible flash of zeros on the dashboard.
+        if (!readAccountCache()) {
+          setAccountId(null);
+          setRole(null);
+          setPlan('starter');
+          setChecksUsed(0);
+          setChecksLimit(3);
+        }
         setAccountLoading(false);
         return;
       }
