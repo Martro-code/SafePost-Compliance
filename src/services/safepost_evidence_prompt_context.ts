@@ -52,4 +52,32 @@ EXAMPLE COMPLIANT vs NON-COMPLIANT FRAMING:
 
 - NON-COMPLIANT: "Studies show our laser treatment permanently removes acne scars."
 - COMPLIANT: "Laser resurfacing is used to improve the appearance of acne scarring. Individual results vary. Book a consultation to learn more."
+
+=== TGA SOCIAL MEDIA GUIDANCE UPDATE — NOVEMBER 2025 ===
+
+On 5 November 2025 the TGA updated its social media advertising guidance to explicitly cover social distribution mechanics. Compliance reports may now cite the following six rule areas when assessing therapeutic goods advertising on social media:
+
+1. INFLUENCER AND AFFILIATE ADVERTISING (TGA-SM-2025-001)
+   Reference: Therapeutic Goods Advertising Code 2021, Section 4 read with TGA Social Media Guidance November 2025.
+   Social media posts by influencers, ambassadors, creators, affiliates, or paid partners about therapeutic goods constitute advertising and must comply with the Code regardless of whether the practitioner or business controls the account directly.
+
+2. REPOST, SHARE, AND HASHTAG AMPLIFICATION (TGA-SM-2025-002)
+   Reference: Therapeutic Goods Advertising Code 2021, TGA Social Media Guidance November 2025.
+   Promotional use of reposts, shares, likes, tags, links, hashtags, stories, reels, livestreams, sponsored ads, and closed groups or channels about therapeutic goods constitutes advertising activity subject to TGA requirements.
+
+3. USER-GENERATED TESTIMONIALS AND ENDORSEMENTS (TGA-SM-2025-003)
+   Reference: Therapeutic Goods Advertising Code 2021, Section 20 read with TGA Social Media Guidance November 2025.
+   Testimonials or endorsements appearing in comments or user-generated content that the advertiser controls, moderates, or republishes are subject to the same testimonial restrictions as directly published content.
+
+4. DARK MARKETING AND CLOSED-CHANNEL DISSEMINATION (TGA-SM-2025-004)
+   Reference: Therapeutic Goods Advertising Code 2021, TGA Social Media Guidance November 2025.
+   Targeting tactics using closed channels, private groups, or "dark marketing" methods to disseminate therapeutic goods advertising are subject to TGA advertising requirements regardless of the private or restricted nature of the channel.
+
+5. AI-GENERATED ADVERTISING CONTENT (TGA-SM-2025-005)
+   Reference: Therapeutic Goods Advertising Code 2021, TGA Social Media Guidance November 2025.
+   AI-generated or AI-assisted advertising content about therapeutic goods remains fully subject to TGA advertising requirements. The use of AI to create content does not exempt it from compliance obligations.
+
+6. ADVERSE EVENT CAPTURE FROM SOCIAL CHANNELS (TGA-SM-2025-006)
+   Reference: Therapeutic Goods Advertising Code 2021, TGA Social Media Guidance November 2025, TGA Pharmacovigilance responsibilities.
+   Adverse-event mentions appearing in comments or user interactions on social media channels controlled by a therapeutic goods advertiser may trigger moderation and escalation obligations to the TGA.
 `;

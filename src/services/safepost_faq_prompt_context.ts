@@ -526,5 +526,67 @@ When content advertises a prescription medicine directly to the public: flag thi
 as a CRITICAL TGA breach. The content cannot be made compliant through editing — 
 it must be removed entirely. Advise the user to seek urgent legal and TGA advice.
 
+### 25. TGA SOCIAL MEDIA GUIDANCE — NOVEMBER 2025 UPDATE
+
+As of 5 November 2025, the TGA updated its social media advertising guidance to
+explicitly cover social distribution mechanics. The following areas are now
+expressly within scope of TGA advertising requirements:
+
+INFLUENCER AND AFFILIATE CONTENT:
+Social media posts by influencers, ambassadors, creators, affiliates, or paid
+partners about therapeutic goods constitute advertising under the Code. The
+practitioner or business does not need to control the account directly for the
+Code to apply. If the content is about a therapeutic good and the poster has any
+commercial relationship with the advertiser, TGA advertising rules apply in full.
+Reference: Therapeutic Goods Advertising Code 2021, Section 4 read with TGA
+Social Media Guidance November 2025.
+
+HASHTAGS, REPOSTS, AND PLATFORM AMPLIFICATION MECHANICS:
+Promotional use of reposts, shares, likes, tags, links, hashtags, stories, reels,
+livestreams, sponsored ads, and closed groups or channels about therapeutic goods
+constitutes advertising activity subject to TGA requirements. Simply sharing or
+reposting content about a therapeutic good can trigger compliance obligations.
+Reference: Therapeutic Goods Advertising Code 2021, TGA Social Media Guidance
+November 2025.
+
+AI-GENERATED ADVERTISING CONTENT:
+AI-generated or AI-assisted advertising content about therapeutic goods remains
+fully subject to TGA advertising requirements. The use of AI tools (including
+chatbots, image generators, or content assistants) to create advertising content
+does not exempt the advertiser from compliance obligations. The advertiser remains
+responsible for all content regardless of how it was produced.
+Reference: Therapeutic Goods Advertising Code 2021, TGA Social Media Guidance
+November 2025.
+
+CLOSED-CHANNEL AND DARK MARKETING DISSEMINATION:
+Targeting tactics using closed channels, private groups, or "dark marketing"
+methods to disseminate therapeutic goods advertising are subject to TGA advertising
+requirements regardless of the private or restricted nature of the channel. There
+is no exemption for content distributed through private Facebook groups, closed
+LinkedIn channels, encrypted messaging groups, or any other restricted-access
+platform.
+Reference: Therapeutic Goods Advertising Code 2021, TGA Social Media Guidance
+November 2025.
+
+ADVERSE-EVENT CAPTURE OBLIGATIONS FROM SOCIAL INTERACTIONS:
+Adverse-event mentions appearing in comments or user interactions on social media
+channels controlled by a therapeutic goods advertiser may trigger moderation and
+escalation obligations to the TGA. Advertisers must monitor their social channels
+for adverse event reports and may be required to report them under TGA
+pharmacovigilance obligations.
+Reference: Therapeutic Goods Advertising Code 2021, TGA Social Media Guidance
+November 2025, TGA Pharmacovigilance responsibilities.
+
+USER-GENERATED TESTIMONIALS:
+Testimonials or endorsements appearing in comments or user-generated content that
+the advertiser controls, moderates, or republishes are subject to the same
+testimonial restrictions as directly published content. This includes comments on
+social media posts, reviews on business pages, and any user content the advertiser
+has the ability to moderate or remove.
+Reference: Therapeutic Goods Advertising Code 2021, Section 20 read with TGA
+Social Media Guidance November 2025.
+
+---
+
 END OF FAQ GUIDANCE
 `;
