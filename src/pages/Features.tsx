@@ -30,7 +30,7 @@ const Features: React.FC = () => {
     {
       icon: <Zap className="w-7 h-7 text-blue-500/80" />,
       heading: 'Instant analysis',
-      description: 'Checked against 166 rules across AHPRA and TGA regulatory documents. Not a summarised guide — primary sources only.',
+      description: 'Checked against 172 rules across AHPRA and TGA regulatory documents. Not a summarised guide — primary sources only.',
     },
     {
       icon: <FileText className="w-7 h-7 text-blue-500/80" />,
