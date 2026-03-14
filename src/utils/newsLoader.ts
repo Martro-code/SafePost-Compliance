@@ -4,7 +4,7 @@ export interface NewsArticle {
   slug: string;
   title: string;
   date: string;
-  category: 'Press Release' | 'Blog' | 'Industry News';
+  category: 'Press Release' | 'Blog' | 'Industry News' | 'Regulatory Update';
   author: string;
   excerpt: string;
   Component: ComponentType;
@@ -15,7 +15,7 @@ interface MdxModule {
   frontmatter: {
     title: string;
     date: string;
-    category: 'Press Release' | 'Blog' | 'Industry News';
+    category: 'Press Release' | 'Blog' | 'Industry News' | 'Regulatory Update';
     author: string;
     excerpt: string;
   };

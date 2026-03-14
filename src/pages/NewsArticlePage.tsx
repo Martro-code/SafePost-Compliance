@@ -9,6 +9,7 @@ const categoryColors: Record<string, string> = {
   'Press Release': 'bg-blue-50 text-blue-700',
   'Blog': 'bg-green-50 text-green-700',
   'Industry News': 'bg-amber-50 text-amber-700',
+  'Regulatory Update': 'bg-purple-50 text-purple-700',
 };
 
 const NewsArticlePage: React.FC = () => {
