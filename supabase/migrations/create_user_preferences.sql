@@ -4,17 +4,17 @@ create table if not exists user_preferences (
   user_id uuid references auth.users(id) on delete cascade not null unique,
 
   -- Email preferences
-  email_product_updates boolean not null default true,
-  email_compliance_alerts boolean not null default true,
+  email_product_updates boolean not null default false,
+  email_compliance_alerts boolean not null default false,
   email_billing_notifications boolean not null default true,
-  email_usage_summaries boolean not null default true,
+  email_usage_summaries boolean not null default false,
   email_tips_education boolean not null default false,
 
   -- In-app notification preferences
-  notif_compliance_results boolean not null default true,
-  notif_guideline_updates boolean not null default true,
-  notif_billing_activity boolean not null default true,
-  notif_new_features boolean not null default true,
+  notif_compliance_results boolean not null default false,
+  notif_guideline_updates boolean not null default false,
+  notif_billing_activity boolean not null default false,
+  notif_new_features boolean not null default false,
 
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

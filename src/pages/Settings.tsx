@@ -8,13 +8,13 @@ import { useAccount } from '../context/AccountContext';
 import { supabase } from '../services/supabaseClient';
 
 const DEFAULTS = {
-  notif_compliance_results: true,
-  notif_guideline_updates: true,
-  notif_billing_activity: true,
-  notif_new_features: true,
-  email_product_updates: true,
-  email_compliance_alerts: true,
-  email_usage_summaries: true,
+  notif_compliance_results: false,
+  notif_guideline_updates: false,
+  notif_billing_activity: false,
+  notif_new_features: false,
+  email_product_updates: false,
+  email_compliance_alerts: false,
+  email_usage_summaries: false,
   email_tips_education: false,
 };
 
@@ -83,17 +83,27 @@ const Settings: React.FC = () => {
       }
 
       if (data) {
-        setNotifComplianceResults(data.notif_compliance_results);
-        setNotifGuidelineUpdates(data.notif_guideline_updates);
-        setNotifBillingActivity(data.notif_billing_activity);
-        setNotifNewFeatures(data.notif_new_features);
-        setEmailProductUpdates(data.email_product_updates);
-        setEmailComplianceAlerts(data.email_compliance_alerts);
-        setEmailUsageSummaries(data.email_usage_summaries);
-        setEmailTipsEducation(data.email_tips_education);
+        setNotifComplianceResults(data.notif_compliance_results ?? false);
+        setNotifGuidelineUpdates(data.notif_guideline_updates ?? false);
+        setNotifBillingActivity(data.notif_billing_activity ?? false);
+        setNotifNewFeatures(data.notif_new_features ?? false);
+        setEmailProductUpdates(data.email_product_updates ?? false);
+        setEmailComplianceAlerts(data.email_compliance_alerts ?? false);
+        setEmailUsageSummaries(data.email_usage_summaries ?? false);
+        setEmailTipsEducation(data.email_tips_education ?? false);
       } else {
-        // No row yet — insert defaults
-        await supabase.from('user_preferences').insert({ user_id: user.id });
+        // No row yet — insert with all preferences off (opt-in model)
+        await supabase.from('user_preferences').insert({
+          user_id: user.id,
+          notif_compliance_results: false,
+          notif_guideline_updates: false,
+          notif_billing_activity: false,
+          notif_new_features: false,
+          email_product_updates: false,
+          email_compliance_alerts: false,
+          email_usage_summaries: false,
+          email_tips_education: false,
+        });
       }
     })();
   }, [user]);
