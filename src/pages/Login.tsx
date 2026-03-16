@@ -457,14 +457,9 @@ const Login: React.FC = () => {
 
               {/* Password */}
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label htmlFor="password" className="block text-[13px] font-medium text-gray-700">
-                    Password
-                  </label>
-                  <a onClick={() => navigate('/forgot-password')} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
-                    Forgot password?
-                  </a>
-                </div>
+                <label htmlFor="password" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Password
+                </label>
                 <div className="relative">
                   <input
                     id="password"
@@ -485,18 +480,23 @@ const Login: React.FC = () => {
                 </div>
               </div>
 
-              {/* Remember Me Checkbox */}
-              <div className="flex items-center justify-end gap-2 pt-1">
-                <input
-                  id="rememberMe"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                />
-                <label htmlFor="rememberMe" className="text-[13px] text-gray-600 cursor-pointer">
-                  Remember me
-                </label>
+              {/* Stay signed in & Forgot password */}
+              <div className="flex items-center justify-between pt-1">
+                <div className="flex items-center gap-2">
+                  <input
+                    id="rememberMe"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                  />
+                  <label htmlFor="rememberMe" className="text-[13px] text-gray-600 cursor-pointer">
+                    Stay signed in
+                  </label>
+                </div>
+                <a onClick={() => navigate('/forgot-password')} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium cursor-pointer">
+                  Forgot password?
+                </a>
               </div>
 
               {/* Auth Error */}
@@ -518,7 +518,7 @@ const Login: React.FC = () => {
                   disabled={isSubmitting || isLockedOut}
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
-                  {isLockedOut ? 'Temporarily locked' : isSubmitting ? 'Signing in...' : 'Sign in'}
+                  {isLockedOut ? 'Temporarily locked' : isSubmitting ? 'Signing in...' : 'Continue with email'}
                 </button>
               </div>
             </form>
