@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, ShieldAlert, Users, Clock, Play, CheckCircle, FileText, TrendingUp, Menu, X, ExternalLink } from 'lucide-react';
+import { ArrowRight, ChevronDown, ShieldAlert, Users, Compass, Play, Layers, FileText, BadgeCheck, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import FAQSection from '../components/ui/FAQSection';
 import PublicFooter from '../components/layout/PublicFooter';
@@ -344,7 +344,7 @@ const HomePage: React.FC = () => {
             {/* Column 3 */}
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
               <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
-                <Clock className="w-7 h-7 text-blue-500/80" />
+                <Compass className="w-7 h-7 text-blue-500/80" />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
                 Navigate complex guidelines with confidence
@@ -533,7 +533,7 @@ const HomePage: React.FC = () => {
               {/* Column 1 — Comprehensive Coverage */}
               <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
                 <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
-                  <CheckCircle className="w-7 h-7 text-blue-500/80" />
+                  <Layers className="w-7 h-7 text-blue-500/80" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
                   Comprehensive coverage
@@ -559,7 +559,7 @@ const HomePage: React.FC = () => {
               {/* Column 3 — Trusted by Professionals */}
               <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
                 <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
-                  <TrendingUp className="w-7 h-7 text-blue-500/80" />
+                  <BadgeCheck className="w-7 h-7 text-blue-500/80" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
                   Trusted by medical professionals
