@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, ArrowRight, Menu, X, ExternalLink, Zap, Flag, Globe, Scale, BookOpen, History } from 'lucide-react';
+import { ChevronDown, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import heroImage from '../assets/features-hero.png';
 import PublicFooter from '../components/layout/PublicFooter';
@@ -35,7 +35,7 @@ const Features: React.FC = () => {
 
   const features = [
     {
-      icon: <Zap className="w-7 h-7 text-blue-500/80" />,
+      icon: <ScanSearch className="w-7 h-7 text-blue-500/80" />,
       heading: 'Instant analysis',
       description: 'Checked against 172 rules across AHPRA and TGA regulatory documents. Not a summarised guide — primary sources only.',
     },
@@ -45,7 +45,7 @@ const Features: React.FC = () => {
       description: 'Every issue rated Critical, Warning, or Professional Conduct Risk with a plain-English explanation and the specific guideline reference.',
     },
     {
-      icon: <Globe className="w-7 h-7 text-blue-500/80" />,
+      icon: <Wand2 className="w-7 h-7 text-blue-500/80" />,
       heading: 'AI-powered rewrites',
       description: 'Three compliant alternatives generated instantly. Available on all plans including Starter.',
     },
@@ -55,7 +55,7 @@ const Features: React.FC = () => {
       description: 'Analysis draws on tribunal cases — giving you context for what AHPRA and TGA actually pursue.',
     },
     {
-      icon: <BookOpen className="w-7 h-7 text-blue-500/80" />,
+      icon: <MonitorSmartphone className="w-7 h-7 text-blue-500/80" />,
       heading: 'Multi-platform support',
       description: 'Check Instagram, Facebook, website copy, Google ads, and any other online advertising content.',
     },

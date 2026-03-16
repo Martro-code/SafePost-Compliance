@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowRight, ChevronDown, ShieldAlert, Users, Compass, Play, Layers, FileText, BadgeCheck, Menu, X, ExternalLink } from 'lucide-react';
+import { ArrowRight, ChevronDown, ShieldAlert, Star, Compass, Play, Layers, FileText, BadgeCheck, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import FAQSection from '../components/ui/FAQSection';
 import PublicFooter from '../components/layout/PublicFooter';
@@ -331,7 +331,7 @@ const HomePage: React.FC = () => {
             {/* Column 2 */}
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm">
               <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
-                <Users className="w-7 h-7 text-blue-500/80" />
+                <Star className="w-7 h-7 text-blue-500/80" />
               </div>
               <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
                 Safeguard your professional reputation
