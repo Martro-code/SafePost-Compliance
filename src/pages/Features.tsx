@@ -5,6 +5,13 @@ import SafePostLogo from '../components/ui/SafePostLogo';
 import heroImage from '../assets/features-hero.png';
 import PublicFooter from '../components/layout/PublicFooter';
 
+// Preload the hero image so the browser fetches it before React renders the <img>
+const preloadLink = document.createElement('link');
+preloadLink.rel = 'preload';
+preloadLink.as = 'image';
+preloadLink.href = heroImage;
+document.head.appendChild(preloadLink);
+
 
 
 const Features: React.FC = () => {
@@ -308,7 +315,8 @@ const Features: React.FC = () => {
           <img
             src={heroImage}
             alt="SafePost Features"
-            loading="lazy"
+            loading="eager"
+            fetchPriority="high"
             width={1507}
             height={470}
             className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
