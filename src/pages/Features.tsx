@@ -367,7 +367,7 @@ const Features: React.FC = () => {
             </div>
 
             {/* Right Column — Platform List */}
-            <div className="bg-white rounded-2xl border border-black/[0.06] px-6 py-4">
+            <div className="grid grid-cols-2 gap-3">
               {[
                 { category: 'Social networking', platforms: 'Facebook, X, WeChat, Weibo, WhatsApp' },
                 { category: 'Professional networking', platforms: 'LinkedIn, Yammer' },
@@ -377,13 +377,11 @@ const Features: React.FC = () => {
                 { category: 'Audio publishing', platforms: 'Spotify, iTunes, Podcasts' },
                 { category: 'Text publishing', platforms: 'Blogs, SlideShare' },
                 { category: 'Knowledge aggregation', platforms: 'Wikipedia' },
-{ category: 'Booking sites & apps', platforms: 'HealthEngine, Whitecoat, Podium' },
+                { category: 'Booking sites & apps', platforms: 'HealthEngine, Whitecoat, Podium' },
               ].map((item, index) => (
-                <div key={index} className="flex items-baseline gap-3 py-2.5">
-                  <span className="text-blue-500 text-sm leading-none shrink-0">•</span>
-                  <span className="text-[14px] font-medium text-gray-900 shrink-0">{item.category}</span>
-                  <span className="text-[14px] text-gray-400 shrink-0">—</span>
-                  <span className="text-[14px] text-gray-500">{item.platforms}</span>
+                <div key={index} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
+                  <span className="font-semibold text-slate-800 text-[14px]">{item.category}</span>
+                  <p className="text-[13px] text-slate-500 mt-1">{item.platforms}</p>
                 </div>
               ))}
             </div>
