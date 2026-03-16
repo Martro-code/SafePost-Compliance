@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, ArrowRight, Menu, X, ExternalLink, Zap, FileText, Globe, Image, BookOpen, History } from 'lucide-react';
+import { ChevronDown, ArrowRight, Menu, X, ExternalLink, Zap, Flag, Globe, Scale, BookOpen, History } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import heroImage from '../assets/features-hero.png';
 import PublicFooter from '../components/layout/PublicFooter';
@@ -33,7 +33,7 @@ const Features: React.FC = () => {
       description: 'Checked against 172 rules across AHPRA and TGA regulatory documents. Not a summarised guide — primary sources only.',
     },
     {
-      icon: <FileText className="w-7 h-7 text-blue-500/80" />,
+      icon: <Flag className="w-7 h-7 text-blue-500/80" />,
       heading: 'Severity-tiered issue flags',
       description: 'Every issue rated Critical, Warning, or Professional Conduct Risk with a plain-English explanation and the specific guideline reference.',
     },
@@ -43,7 +43,7 @@ const Features: React.FC = () => {
       description: 'Three compliant alternatives generated instantly. Available on all plans including Starter.',
     },
     {
-      icon: <Image className="w-7 h-7 text-blue-500/80" />,
+      icon: <Scale className="w-7 h-7 text-blue-500/80" />,
       heading: 'Real enforcement precedent',
       description: 'Analysis draws on tribunal cases — giving you context for what AHPRA and TGA actually pursue.',
     },
