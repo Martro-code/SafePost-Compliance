@@ -25,6 +25,10 @@ const faqs = [
     question: "How do I upgrade or change my plan?",
     answer: "You can change your plan at any time by going to My Account → Profile → Change plan, or by clicking the Upgrade your plan button in the Dashboard sidebar. Changes take effect immediately and your billing will be adjusted accordingly."
   },
+  {
+    question: "What happens if I cancel my subscription?",
+    answer: "Your access continues until the end of your current billing period. You won't be charged again after cancellation, and your account will move to the free Starter plan when the period ends. You can reactivate at any time before then."
+  },
 ];
 
 const categoryDisplayMap: Record<string, string> = {
