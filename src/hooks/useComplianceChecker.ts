@@ -453,6 +453,20 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
             await onCheckComplete();
           }
 
+          // Fire-and-forget: warn user if approaching check limit (≥80% used)
+          const updatedChecksUsed = effectiveChecksUsed + 1;
+          if (
+            accountChecksLimit != null &&
+            accountChecksLimit !== 0 &&
+            updatedChecksUsed / accountChecksLimit >= 0.8
+          ) {
+            supabase.functions.invoke('send-limit-warning', {
+              body: { user_id: user.id, checks_used: updatedChecksUsed, checks_limit: accountChecksLimit },
+            }).catch((err) => {
+              console.error('Failed to send limit warning:', err);
+            });
+          }
+
           // Refetch history to sync with actual DB state
           const syncedHistory = accountId
             ? await fetchAccountComplianceHistory(accountId, historyLimit)
