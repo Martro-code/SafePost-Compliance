@@ -7,11 +7,11 @@ import { supabase } from '../services/supabaseClient';
 const faqs = [
   {
     question: "What does SafePost check my content against?",
-    answer: "SafePost checks your content against 145 verified rules drawn from six primary AHPRA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, guidelines for cosmetic procedures and cosmetic surgery advertising, and AHPRA's acceptable evidence standard for therapeutic and efficacy claims."
+    answer: "SafePost checks your content against 172 verified rules drawn from primary AHPRA and TGA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and the TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Therapeutic Goods Act 1989, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, guidelines for cosmetic procedures and cosmetic surgery advertising, AHPRA's acceptable evidence standard for therapeutic and efficacy claims, and TGA therapeutic goods advertising rules including the November 2025 social media advertising guidance."
   },
   {
     question: "Does a 'Compliant' result mean I am guaranteed to be compliant?",
-    answer: "No. A compliant result from SafePost means no issues were identified based on our current knowledge base — it does not constitute legal advice or guarantee compliance with all applicable laws and regulations. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain solely responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009 and AHPRA guidelines. If in doubt, seek independent legal advice before publishing."
+    answer: "No. A compliant result from SafePost means no issues were identified based on our current knowledge base — it does not constitute legal advice or guarantee compliance with all applicable laws and regulations. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain solely responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009, the Therapeutic Goods Act 1989, and AHPRA and TGA guidelines. If in doubt, seek independent legal advice before publishing."
   },
   {
     question: "How many compliance checks do I get per month?",
@@ -24,6 +24,10 @@ const faqs = [
   {
     question: "How do I upgrade or change my plan?",
     answer: "You can change your plan at any time by going to My Account → Profile → Change plan, or by clicking the Upgrade your plan button in the Dashboard sidebar. Changes take effect immediately and your billing will be adjusted accordingly."
+  },
+  {
+    question: "What happens if I cancel my subscription?",
+    answer: "Your access continues until the end of your current billing period. You won't be charged again after cancellation, and your account will move to the free Starter plan when the period ends. You can reactivate at any time before then."
   },
 ];
 
