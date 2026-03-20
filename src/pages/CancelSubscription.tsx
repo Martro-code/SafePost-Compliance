@@ -24,6 +24,7 @@ const CancelSubscription: React.FC = () => {
   const backPath = from === 'billing' ? '/billing' : '/profile';
 
   const billingPeriod = (location.state as { billingPeriod?: string })?.billingPeriod || '';
+  const periodEndDate = (location.state as { periodEndDate?: string })?.periodEndDate || '';
 
   const [step, setStep] = useState(1);
   const [selectedReason, setSelectedReason] = useState<string | null>(null);
@@ -31,8 +32,8 @@ const CancelSubscription: React.FC = () => {
   const [featureFeedback, setFeatureFeedback] = useState('');
   const [outcome, setOutcome] = useState<'paused' | 'cancelled' | null>(null);
 
-  // Calculate billing period end date
-  const billingEndDate = (() => {
+  // Use Stripe period end date if available, otherwise calculate locally
+  const billingEndDate = periodEndDate || (() => {
     const date = new Date();
     if (billingPeriod.toLowerCase() === 'yearly') {
       date.setFullYear(date.getFullYear() + 1);
@@ -175,7 +176,7 @@ const CancelSubscription: React.FC = () => {
                 Your subscription has been cancelled
               </h2>
               <p className="text-[14px] text-gray-500 mb-6 leading-relaxed dark:text-gray-300">
-                Your access continues until {billingEndDate}. We hope to see you again soon.
+                You'll continue to have full access until the end of your current billing period on {billingEndDate}. You will not be charged again. We hope to see you again soon.
               </p>
               <button
                 onClick={() => navigate('/dashboard', { state: { cancelled: true, cancelDate: billingEndDate } })}
@@ -321,7 +322,11 @@ const CancelSubscription: React.FC = () => {
               <div className="bg-gray-50 rounded-xl p-5 space-y-3 dark:bg-gray-700/50">
                 <div className="flex items-start gap-2.5">
                   <span className="text-green-500 text-[14px] leading-none mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-[13px] text-gray-600 dark:text-gray-300">Your access continues until {billingEndDate}</p>
+                  <p className="text-[13px] text-gray-600 dark:text-gray-300">You'll continue to have full access until the end of your current billing period on {billingEndDate}</p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="text-green-500 text-[14px] leading-none mt-0.5 flex-shrink-0">&#10003;</span>
+                  <p className="text-[13px] text-gray-600 dark:text-gray-300">You will not be charged again — your last payment has already been processed</p>
                 </div>
                 <div className="flex items-start gap-2.5">
                   <span className="text-green-500 text-[14px] leading-none mt-0.5 flex-shrink-0">&#10003;</span>
@@ -330,10 +335,6 @@ const CancelSubscription: React.FC = () => {
                 <div className="flex items-start gap-2.5">
                   <span className="text-green-500 text-[14px] leading-none mt-0.5 flex-shrink-0">&#10003;</span>
                   <p className="text-[13px] text-gray-600 dark:text-gray-300">You can reactivate your subscription at any time</p>
-                </div>
-                <div className="flex items-start gap-2.5">
-                  <span className="text-green-500 text-[14px] leading-none mt-0.5 flex-shrink-0">&#10003;</span>
-                  <p className="text-[13px] text-gray-600 dark:text-gray-300">No further charges will be made after your access ends</p>
                 </div>
               </div>
 
