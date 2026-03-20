@@ -381,7 +381,7 @@ const PricingMedicalPractitioners: React.FC = () => {
               <div className="mb-8">
                 <div className="flex items-end gap-2">
                   <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$200' : '$20'}</span>
-                  <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">{isYearly ? '/year' : '/month'}</span>
+                  <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">{isYearly ? '/year' : '/month (incl. GST)'}</span>
                 </div>
                 {isYearly && (
                   <p className="text-[12px] text-gray-400 mt-1.5 flex items-center gap-1.5">
