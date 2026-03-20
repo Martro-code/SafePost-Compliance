@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
+import { supabase } from '../services/supabaseClient';
 
 const reasons = [
   'Too expensive',
@@ -31,6 +32,8 @@ const CancelSubscription: React.FC = () => {
   const [otherText, setOtherText] = useState('');
   const [featureFeedback, setFeatureFeedback] = useState('');
   const [outcome, setOutcome] = useState<'paused' | 'cancelled' | null>(null);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelError, setCancelError] = useState<string | null>(null);
 
   // Use Stripe period end date if available, otherwise calculate locally
   const billingEndDate = periodEndDate || (() => {
@@ -54,7 +57,20 @@ const CancelSubscription: React.FC = () => {
     setOutcome('paused');
   };
 
-  const handleConfirmCancel = () => {
+  const handleConfirmCancel = async () => {
+    setCancelling(true);
+    setCancelError(null);
+
+    const { error } = await supabase.functions.invoke('cancel-subscription');
+
+    if (error) {
+      console.error('Failed to cancel subscription:', error);
+      setCancelError('Something went wrong. Please try again or contact support.');
+      setCancelling(false);
+      return;
+    }
+
+    setCancelling(false);
     setOutcome('cancelled');
   };
 
@@ -347,12 +363,21 @@ const CancelSubscription: React.FC = () => {
                 Keep my subscription
               </button>
 
+              {cancelError && (
+                <p className="text-[13px] text-red-500 text-center mt-3">{cancelError}</p>
+              )}
+
               <div className="text-center mt-4">
                 <button
                   onClick={handleConfirmCancel}
-                  className="text-[13px] text-red-500 hover:text-red-600 transition-colors"
+                  disabled={cancelling}
+                  className={`text-[13px] transition-colors ${
+                    cancelling
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : 'text-red-500 hover:text-red-600'
+                  }`}
                 >
-                  Confirm cancellation
+                  {cancelling ? 'Cancelling…' : 'Confirm cancellation'}
                 </button>
               </div>
             </div>
