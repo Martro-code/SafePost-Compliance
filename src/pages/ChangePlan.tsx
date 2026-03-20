@@ -153,7 +153,7 @@ const ChangePlan: React.FC = () => {
                   <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">
                     {billingCycle === 'yearly'
                       ? `${plan.yearlyMonthlyEquivalent}/month — billed as $${plan.yearlyPrice.toLocaleString()}/year (2 months free)`
-                      : `$${plan.monthlyPrice}/month`}
+                      : `$${plan.monthlyPrice}/month (incl. GST)`}
                   </p>
                 </div>
                 <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
