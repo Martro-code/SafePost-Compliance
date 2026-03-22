@@ -24,7 +24,9 @@ root.render(
     <BrowserRouter>
       <ThemeProvider>
         <AccountProvider>
-          <App />
+          <Sentry.ErrorBoundary fallback={<p>Something went wrong. Please refresh the page.</p>}>
+            <App />
+          </Sentry.ErrorBoundary>
         </AccountProvider>
       </ThemeProvider>
     </BrowserRouter>
