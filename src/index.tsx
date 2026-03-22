@@ -5,6 +5,13 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { ThemeProvider } from './context/ThemeContext';
 import { AccountProvider } from './context/AccountContext';
+import * as Sentry from "@sentry/react";
+
+Sentry.init({
+  dsn: import.meta.env.VITE_GLITCHTIP_DSN,
+  tracesSampleRate: 0.01,
+  autoSessionTracking: false,
+});
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
