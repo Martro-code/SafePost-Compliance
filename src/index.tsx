@@ -25,12 +25,6 @@ root.render(
       <ThemeProvider>
         <AccountProvider>
           <Sentry.ErrorBoundary fallback={<p>Something went wrong. Please refresh the page.</p>}>
-            <button
-              onClick={() => { throw new Error("GlitchTip test error"); }}
-              style={{ background: "red", color: "white", padding: "10px 20px", border: "none", cursor: "pointer", fontSize: "16px" }}
-            >
-              Test GlitchTip
-            </button>
             <App />
           </Sentry.ErrorBoundary>
         </AccountProvider>
