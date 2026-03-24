@@ -1,6 +1,6 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink, ArrowLeft } from 'lucide-react';
+import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import PublicFooter from '../components/layout/PublicFooter';
 import { supabase } from '../services/supabaseClient';
@@ -25,6 +25,14 @@ const SignUp: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [abn, setAbn] = useState('');
+  const [abnVerified, setAbnVerified] = useState(false);
+  const [abnEntityName, setAbnEntityName] = useState('');
+  const [abnStatus, setAbnStatus] = useState('');
+  const [abnLoading, setAbnLoading] = useState(false);
+  const [abnError, setAbnError] = useState('');
+  const abnControllerRef = useRef<AbortController | null>(null);
+
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [authError, setAuthError] = useState('');
@@ -61,6 +69,56 @@ const SignUp: React.FC = () => {
   const isValidEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
   const isValidPassword = (val: string) => val.length >= 8;
   const passwordsMatch = () => confirmPassword.length > 0 && password === confirmPassword;
+  const isValidAbnFormat = (val: string) => /^\d{11}$/.test(val.replace(/\s/g, ''));
+
+  const verifyAbn = useCallback(async (abnValue: string) => {
+    const cleaned = abnValue.replace(/\s/g, '');
+    if (!isValidAbnFormat(abnValue)) {
+      setAbnVerified(false);
+      setAbnEntityName('');
+      setAbnStatus('');
+      if (cleaned.length > 0) {
+        setAbnError('ABN must be exactly 11 digits.');
+      }
+      return;
+    }
+
+    // Cancel any in-flight request
+    if (abnControllerRef.current) abnControllerRef.current.abort();
+    const controller = new AbortController();
+    abnControllerRef.current = controller;
+
+    setAbnLoading(true);
+    setAbnError('');
+    setAbnVerified(false);
+    setAbnEntityName('');
+    setAbnStatus('');
+
+    try {
+      const { data, error } = await supabase.functions.invoke('verify-abn', {
+        body: { abn: cleaned },
+      });
+
+      if (controller.signal.aborted) return;
+
+      if (error || !data?.valid) {
+        setAbnError(data?.error || 'This ABN could not be verified. Please check and try again.');
+        setAbnVerified(false);
+      } else {
+        setAbnVerified(true);
+        setAbnEntityName(data.entityName || '');
+        setAbnStatus(data.status || '');
+        setAbnError('');
+      }
+    } catch {
+      if (!controller.signal.aborted) {
+        setAbnError('This ABN could not be verified. Please check and try again.');
+        setAbnVerified(false);
+      }
+    } finally {
+      if (!controller.signal.aborted) setAbnLoading(false);
+    }
+  }, []);
 
   const getInputClasses = (value: string, isValid: boolean) => {
     const base = 'w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border outline-none transition-all duration-200 placeholder:text-gray-400';
@@ -78,6 +136,7 @@ const SignUp: React.FC = () => {
       firstName.trim() &&
       surname.trim() &&
       isValidEmail(email) &&
+      abnVerified &&
       isValidPassword(password) &&
       passwordsMatch() &&
       agreedToTerms
@@ -97,6 +156,8 @@ const SignUp: React.FC = () => {
             suburb: suburb.trim(),
             state,
             postcode: postcode.trim(),
+            abn: abn.replace(/\s/g, ''),
+            abn_entity_name: abnEntityName,
             plan: plan || 'starter',
             billing: billing || 'monthly',
           },
@@ -461,6 +522,52 @@ const SignUp: React.FC = () => {
                 />
               </div>
 
+              {/* ABN */}
+              <div>
+                <label htmlFor="abn" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  ABN
+                </label>
+                <div className="relative">
+                  <input
+                    id="abn"
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="Enter your 11-digit ABN"
+                    value={abn}
+                    onChange={(e) => {
+                      const val = e.target.value.replace(/[^\d\s]/g, '');
+                      setAbn(val);
+                      if (abnVerified || abnError) {
+                        setAbnVerified(false);
+                        setAbnEntityName('');
+                        setAbnStatus('');
+                        setAbnError('');
+                      }
+                    }}
+                    onBlur={() => verifyAbn(abn)}
+                    maxLength={14}
+                    className={getInputClasses(abn, abnVerified)}
+                  />
+                  {abnLoading && (
+                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-blue-500 animate-spin" />
+                  )}
+                  {abnVerified && !abnLoading && (
+                    <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-green-500" />
+                  )}
+                </div>
+                {abnVerified && abnEntityName && (
+                  <p className="text-[13px] text-green-600 font-medium mt-1.5 flex items-center gap-1">
+                    <span>&#10003;</span> {abnEntityName} — {abnStatus}
+                  </p>
+                )}
+                {abnError && !abnLoading && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">{abnError}</p>
+                )}
+                {submitted && !abnVerified && !abnError && abn.replace(/\s/g, '').length === 0 && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">Please enter and verify your ABN.</p>
+                )}
+              </div>
+
               {/* Street address */}
               <div>
                 <label htmlFor="streetAddress" className="block text-[13px] font-medium text-gray-700 mb-1.5">
@@ -622,7 +729,7 @@ const SignUp: React.FC = () => {
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || !abnVerified}
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
                   {isSubmitting ? 'Creating account...' : 'Create account'}

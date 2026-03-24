@@ -184,6 +184,8 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
             billing_email: user.email,
             first_name: user.user_metadata?.firstName || user.user_metadata?.first_name || '',
             last_name: user.user_metadata?.surname || user.user_metadata?.last_name || '',
+            abn: user.user_metadata?.abn || null,
+            abn_entity_name: user.user_metadata?.abn_entity_name || null,
           },
           { onConflict: 'owner_user_id', ignoreDuplicates: true }
         )
