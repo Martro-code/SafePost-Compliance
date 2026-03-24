@@ -4,20 +4,11 @@ import { ArrowLeft, CreditCard, Info, CheckCircle, Loader2 } from 'lucide-react'
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { supabase } from '../services/supabaseClient';
 import { useAccount } from '../context/AccountContext';
-import { trackUpgradeCompleted } from '../services/analytics';
 
 const plans: Record<string, { name: string; monthlyPrice: number; yearlyPrice: number }> = {
   professional: { name: 'SafePost Professional', monthlyPrice: 20, yearlyPrice: 200 },
   pro_plus: { name: 'SafePost Pro+', monthlyPrice: 49, yearlyPrice: 490 },
   ultra: { name: 'SafePost Ultra', monthlyPrice: 149, yearlyPrice: 1490 },
-};
-
-const PLAN_LIMITS: Record<string, number | null> = {
-  free: 3,
-  starter: 3,
-  professional: 30,
-  pro_plus: 100,
-  ultra: null,
 };
 
 const UpgradeConfirmation: React.FC = () => {
@@ -64,26 +55,23 @@ const UpgradeConfirmation: React.FC = () => {
     if (!planKey || !accountId) return;
     setUpgrading(true);
     try {
-      // Update the accounts table — this is the source of truth for Dashboard
-      const checksLimit = planKey in PLAN_LIMITS ? PLAN_LIMITS[planKey] : 3;
-      const { error } = await supabase
-        .from('accounts')
-        .update({ plan: planKey, checks_limit: checksLimit })
-        .eq('id', accountId);
+      // SECURITY: Plan and checks_limit are sensitive columns — never update
+      // them directly from the client. The Stripe webhook (service role) is
+      // the only authorised path for plan changes. We invoke the server-side
+      // Edge Function which creates a Stripe subscription/upgrade and the
+      // webhook handler updates the account record.
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { plan: planKey, billing },
+      });
 
-      if (error) {
-        console.error('Failed to update account plan:', error);
+      if (error || !data?.url) {
+        console.error('Failed to initiate upgrade checkout:', error);
         setUpgrading(false);
         return;
       }
 
-      // Keep user_metadata in sync
-      await supabase.auth.updateUser({ data: { plan: planKey, billing } });
-
-      // Refresh the AccountContext so Dashboard picks up the new plan
-      await refreshAccount();
-      trackUpgradeCompleted(planKey, price);
-      setUpgraded(true);
+      // Redirect to Stripe Checkout — the webhook will update plan on success
+      window.location.href = data.url;
     } catch (err) {
       console.error('Upgrade failed:', err);
     } finally {

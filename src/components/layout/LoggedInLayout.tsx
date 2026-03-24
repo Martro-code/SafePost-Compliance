@@ -23,7 +23,9 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
   const { user, userEmail, signOut } = useAuth();
   const { role, plan: accountPlan } = useAccount();
 
-  const planName = accountPlan || sessionStorage.getItem('safepost_plan') || '';
+  // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
+  // Only trust the database-backed value from AccountContext.
+  const planName = accountPlan || '';
   const isOwner = role === 'owner';
 
   const dropdownPlanName = getDisplayPlanName(planName);

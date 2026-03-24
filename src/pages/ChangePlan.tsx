@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { ArrowLeft, Check } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
+import { useAccount } from '../context/AccountContext';
 import { trackUpgradeInitiated } from '../services/analytics';
 
 const plans = [
@@ -60,7 +61,10 @@ const ChangePlan: React.FC = () => {
   const backPath = from === 'billing' ? '/billing' : '/profile';
 
   const [searchParams] = useSearchParams();
-  const planName = sessionStorage.getItem('safepost_plan') || '';
+  const { plan: accountPlan } = useAccount();
+  // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
+  // Only trust the database-backed value from AccountContext.
+  const planName = accountPlan || '';
   const isUpgradeMode = searchParams.get('mode') === 'upgrade';
 
   const [selectedPlan, setSelectedPlan] = useState<string | null>(null);

@@ -140,15 +140,14 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
           const reconciledUsed = actualCount ?? account.checks_used ?? 0;
 
-          // If stored value is stale, update it in the DB
+          // If stored value is stale, log the drift but do not attempt a
+          // direct UPDATE — checks_used is a restricted column. The counter
+          // will self-correct on the next increment/decrement via RPC.
           if (reconciledUsed !== (account.checks_used ?? 0)) {
-            supabase
-              .from('accounts')
-              .update({ checks_used: reconciledUsed })
-              .eq('id', account.id)
-              .then(({ error: updateErr }) => {
-                if (updateErr) console.error('Failed to reconcile checks_used:', updateErr);
-              });
+            console.warn(
+              `checks_used drift detected: DB=${account.checks_used}, actual=${reconciledUsed}. ` +
+              'Counter will self-correct on next check.'
+            );
           }
 
           setAccountId(account.id);
@@ -263,15 +262,9 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         .gte('created_at', startOfMonth);
 
       const actualUsed = count ?? 0;
-      if (actualUsed > 0) {
-        const { error: updateUsedError } = await supabase
-          .from('accounts')
-          .update({ checks_used: actualUsed })
-          .eq('id', resolvedAccount.id);
-        if (updateUsedError) {
-          console.error('Failed to update checks_used on account:', updateUsedError);
-        }
-      }
+      // Note: checks_used is a restricted column — do not update directly.
+      // The counter is maintained via increment/decrement RPCs during normal
+      // check operations and will converge with actual usage over time.
 
       setAccountId(resolvedAccount.id);
       setRole('owner');

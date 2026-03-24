@@ -112,9 +112,8 @@ const AcceptInvitation: React.FC = () => {
           .eq('id', pendingMember.account_id)
           .single();
 
-        if (account?.plan) {
-          sessionStorage.setItem('safepost_plan', account.plan);
-        }
+        // Plan tier is read from AccountContext (database-backed) — no need
+        // to cache in sessionStorage which is user-controllable.
       }
 
       setStep('success');

@@ -42,7 +42,9 @@ const TeamMembers: React.FC = () => {
   const [removingId, setRemovingId] = useState<string | null>(null);
   const [confirmRemoveId, setConfirmRemoveId] = useState<string | null>(null);
 
-  const planName = accountPlan || sessionStorage.getItem('safepost_plan') || '';
+  // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
+  // Only trust the database-backed value from AccountContext.
+  const planName = accountPlan || '';
   const isUltra = planName.toLowerCase() === 'ultra';
   const limitReached = members.length >= TEAM_MEMBER_LIMIT;
 

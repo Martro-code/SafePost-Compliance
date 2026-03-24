@@ -157,7 +157,9 @@ const History: React.FC = () => {
   const navigate = useNavigate();
   const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount } = useAccount();
 
-  const planName = accountPlan || sessionStorage.getItem('safepost_plan') || '';
+  // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
+  // Only trust the database-backed value from AccountContext.
+  const planName = accountPlan || '';
   const checker = useComplianceChecker({
     planName,
     accountId,
