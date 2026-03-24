@@ -27,7 +27,9 @@ const Settings: React.FC = () => {
   const isOwner = role === 'owner';
 
   // Plan check
-  const planName = accountPlan || sessionStorage.getItem('safepost_plan') || '';
+  // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
+  // Only trust the database-backed value from AccountContext.
+  const planName = accountPlan || '';
   const isUltra = planName.toLowerCase() === 'ultra';
 
   // 2FA status — check Supabase MFA factors

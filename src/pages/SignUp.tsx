@@ -175,10 +175,10 @@ const SignUp: React.FC = () => {
 
       trackSignUp('email');
 
-      // Store plan/billing so AccountContext auto-provisions on first login
+      // SECURITY: Do not store plan in sessionStorage — it's user-controllable
+      // and no longer read by any feature-gating code. Account provisioning
+      // always defaults to 'starter'; paid upgrades go through Stripe.
       const selectedPlan = plan || 'starter';
-      sessionStorage.setItem('safepost_plan', selectedPlan);
-      if (billing) sessionStorage.setItem('safepost_billing', billing);
 
       // If a paid plan was selected, store pending checkout so Login can redirect to Stripe
       if (selectedPlan && selectedPlan !== 'starter') {

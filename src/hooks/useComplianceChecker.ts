@@ -436,15 +436,12 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
             }
           }
 
-          // Increment account-level usage counter
+          // Increment account-level usage counter via server-side RPC
+          // (checks_used is a restricted column — never update directly)
           if (accountId) {
             const { error: rpcError } = await supabase.rpc('increment_checks_used', { p_account_id: accountId });
             if (rpcError) {
-              // Fallback: direct update if RPC doesn't exist
-              await supabase
-                .from('accounts')
-                .update({ checks_used: effectiveChecksUsed + 1 })
-                .eq('id', accountId);
+              console.error('Failed to increment checks_used via RPC:', rpcError);
             }
           }
 
@@ -536,13 +533,13 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
       if (isCurrentMonth) {
         setChecksUsedThisMonth(prev => Math.max(0, prev - 1));
 
-        // Decrement account-level counter
+        // Decrement account-level counter via server-side RPC
+        // (checks_used is a restricted column — never update directly)
         if (accountId) {
-          supabase
-            .from('accounts')
-            .update({ checks_used: Math.max(0, effectiveChecksUsed - 1) })
-            .eq('id', accountId)
-            .then(() => {});
+          supabase.rpc('decrement_checks_used', { p_account_id: accountId })
+            .then(({ error }) => {
+              if (error) console.error('Failed to decrement checks_used via RPC:', error);
+            });
           if (onCheckComplete) onCheckComplete();
         }
       }
