@@ -45,5 +45,8 @@ verify_jwt = false
 [functions.submit-contact-form]
 verify_jwt = false
 
+[functions.unsubscribe]
+verify_jwt = false
+
 [functions.verify-abn]
 verify_jwt = false

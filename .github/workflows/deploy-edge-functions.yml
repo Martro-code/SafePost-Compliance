@@ -84,6 +84,13 @@ jobs:
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
+      # UNSUBSCRIBE_SECRET must be set as a Supabase Edge Function secret before deploying:
+      #   supabase secrets set UNSUBSCRIBE_SECRET=<your-secret> --project-ref acvcwzaipsxyrwbxithc
+      - name: Deploy unsubscribe
+        run: supabase functions deploy unsubscribe --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
       # ABR_GUID must be set as a Supabase Edge Function secret before deploying:
       #   supabase secrets set ABR_GUID=<your-abr-guid> --project-ref acvcwzaipsxyrwbxithc
       # Get a free GUID at: https://abr.business.gov.au/Tools/AbrApi

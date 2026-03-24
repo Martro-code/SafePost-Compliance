@@ -1,0 +1,2 @@
+# Unsubscribe links must work without being logged in.
+verify_jwt = false

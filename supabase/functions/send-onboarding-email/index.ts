@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { buildUnsubscribeUrl } from '../_shared/unsubscribe-token.ts';
 
 const allowedOrigins = [
   'https://www.safepost.com.au',
@@ -45,13 +46,17 @@ function ctaButton(cta: { text: string; url: string }): string {
   return `<a href="${cta.url}" style="display:inline-block;background:#2563eb;color:white;padding:12px 24px;border-radius:6px;text-decoration:none;margin:16px 0;font-weight:600;">${cta.text}</a>`;
 }
 
-function wrap(inner: string): string {
+function wrap(inner: string, unsubscribeUrl?: string): string {
+  const unsubscribeFooter = unsubscribeUrl
+    ? `<p style="color:#94a3b8;font-size:11px;margin-top:8px;">You're receiving this because you signed up for SafePost. <a href="${unsubscribeUrl}" style="color:#94a3b8;">Unsubscribe from marketing emails</a>.</p>`
+    : '';
   return `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 24px;">
       <img src="${BASE_URL}/assets/safepost-logo.png" alt="SafePost" width="200" style="width:200px; max-width:200px; height:auto; display:block; margin-bottom:24px;" />
       ${inner}
       <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;" />
       <p style="color:#94a3b8;font-size:12px;">SafePost Pty Ltd | <a href="${BASE_URL}" style="color:#94a3b8;">safepost.com.au</a></p>
+      ${unsubscribeFooter}
     </div>`;
 }
 
@@ -60,7 +65,7 @@ function wrap(inner: string): string {
 // ---------------------------------------------------------------------------
 interface EmailTemplate {
   subject: string;
-  html: (name: string) => string;
+  html: (name: string, unsubscribeUrl?: string) => string;
 }
 
 type TemplateMap = Record<string, Record<number, EmailTemplate>>;
@@ -70,7 +75,7 @@ const templates: TemplateMap = {
   starter: {
     1: {
       subject: "Welcome to SafePost – you're all set",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Welcome to SafePost!</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Welcome to SafePost! You've just taken the first step toward keeping your practice's online presence AHPRA and TGA compliant.</p>
@@ -80,11 +85,11 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.runCheck)}
         <p style="color:#475569;">Got questions? Just reply to this email — we're here to help.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     2: {
       subject: 'Did you run your first check?',
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Did you run your first check?</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Just checking in — have you had a chance to run your first compliance check yet?</p>
@@ -94,11 +99,11 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.runCheck)}
         <p style="color:#475569;">Got questions? Just reply.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     3: {
       subject: 'What you get when you upgrade',
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">What you get when you upgrade</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">On the Starter plan you have 3 compliance checks to try SafePost out.</p>
@@ -108,11 +113,11 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 See which plan fits your practice.</p>
         ${ctaButton(CTA.viewPlans)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     4: {
       subject: 'Why AHPRA and TGA compliance matters for your practice',
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Why AHPRA and TGA compliance matters</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">AHPRA and TGA guidelines around advertising are strict — and the consequences of non-compliant content can include formal complaints, mandatory corrections, or reputational damage.</p>
@@ -121,11 +126,11 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 Run a check on your most recent social post or ad — even if it's already published. You might be surprised what it finds.</p>
         ${ctaButton(CTA.runCheck)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     5: {
       subject: "Your free checks are waiting — here's how to use them",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Your free checks are waiting</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">You've had SafePost for a week now. If you haven't used all 3 of your free compliance checks yet, now's a great time.</p>
@@ -134,7 +139,7 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 Log in and use your remaining checks, or upgrade to keep going.</p>
         ${ctaButton(CTA.login)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
   },
 
@@ -142,7 +147,7 @@ const templates: TemplateMap = {
   professional: {
     1: {
       subject: "Welcome to SafePost – you're all set",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Welcome to SafePost!</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Welcome to SafePost! You've just taken the first step toward keeping your practice's online presence AHPRA and TGA compliant.</p>
@@ -152,11 +157,11 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.login)}
         <p style="color:#475569;">Tomorrow we'll show you how to make the most of your plan.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     2: {
       subject: "Run your first compliance check – here's how",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Run your first compliance check</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Yesterday you got access. Today, let's make it real.</p>
@@ -166,11 +171,11 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.runCheck)}
         <p style="color:#475569;">Got questions? Just reply.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     3: {
       subject: 'Try image and video analysis today',
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Try image and video analysis</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Your Professional plan includes image and video content analysis — not just text.</p>
@@ -179,11 +184,11 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 Upload an image or video from your practice's recent content and run a compliance check.</p>
         ${ctaButton(CTA.runCheck)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     4: {
       subject: 'Your compliance history is building up',
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Your compliance history is building up</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Every compliance check you run is saved in your compliance history — the last 30 checks are stored on your Professional plan.</p>
@@ -192,11 +197,11 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 Log in and review your compliance history.</p>
         ${ctaButton(CTA.viewHistory)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     5: {
       subject: "Need more checks or team access? Here's your next step",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Need more checks or team access?</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">You've been with SafePost for a week — great work.</p>
@@ -205,7 +210,7 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 See if Pro+ or Ultra is right for your practice.</p>
         ${ctaButton(CTA.viewPlans)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
   },
 
@@ -213,7 +218,7 @@ const templates: TemplateMap = {
   pro_plus: {
     1: {
       subject: "Welcome to SafePost – you're all set",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Welcome to SafePost!</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Welcome to SafePost! You've just unlocked 100 compliance checks per month, multi-user access for up to 3 team members, and full compliance history.</p>
@@ -222,11 +227,11 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.login)}
         <p style="color:#475569;">Tomorrow we'll show you how to get your team set up.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     2: {
       subject: "Run your first compliance check – here's how",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Run your first compliance check</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Yesterday you got access. Today, let's make it real.</p>
@@ -236,11 +241,11 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.runCheck)}
         <p style="color:#475569;">Got questions? Just reply.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     3: {
       subject: 'Bring your team in – it only takes a minute',
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Bring your team in</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Your Pro+ plan includes multi-user access for up to 3 team members.</p>
@@ -249,11 +254,11 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 Add at least one team member to your SafePost account. Go to Settings → Team Members → Invite.</p>
         ${ctaButton(CTA.addTeam)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     4: {
       subject: 'Your compliance history is building up',
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Your compliance history is building up</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Every compliance check you run is saved — your Pro+ plan stores your last 100 checks.</p>
@@ -262,11 +267,11 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 Log in and review your compliance history.</p>
         ${ctaButton(CTA.viewHistory)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     5: {
       subject: "Need unlimited checks or a bigger team? Here's your next step",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Need unlimited checks or a bigger team?</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">You've been with SafePost for a week — great work.</p>
@@ -275,7 +280,7 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 See if Ultra is right for your practice.</p>
         ${ctaButton(CTA.viewPlans)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
   },
 
@@ -283,7 +288,7 @@ const templates: TemplateMap = {
   ultra: {
     1: {
       subject: "Welcome to SafePost – you're all set",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Welcome to SafePost!</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Welcome to SafePost! We're really glad you're here.</p>
@@ -294,11 +299,11 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.login)}
         <p style="color:#475569;">Tomorrow we'll show you how to get your team set up.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     2: {
       subject: "Run your first compliance check – here's how",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Run your first compliance check</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">Yesterday you got access. Today, let's make it real.</p>
@@ -308,11 +313,11 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.runCheck)}
         <p style="color:#475569;">Got questions? Just reply to this email – we're here to help.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     3: {
       subject: 'Bring your team in – it only takes a minute',
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Bring your team in</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">As an Ultra member, you can add up to 10 team members to SafePost – so everyone in your practice is working from the same compliance standards.</p>
@@ -322,11 +327,11 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.addTeam)}
         <p style="color:#475569;">Tomorrow we'll walk you through your audit logs and bulk review.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     4: {
       subject: 'Two features worth knowing about',
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Two features worth knowing about</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">By now you've run a compliance check and hopefully added a few team members. Nice work.</p>
@@ -337,11 +342,11 @@ const templates: TemplateMap = {
         <p style="color:#475569;">👉 Try uploading more than one piece of content using bulk review.</p>
         ${ctaButton(CTA.bulkReview)}
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
     5: {
       subject: "Let's connect – book your onboarding call",
-      html: (n) => wrap(`
+      html: (n, u) => wrap(`
         <h2 style="color:#1e293b;">Let's connect</h2>
         <p style="color:#475569;">Hi ${n},</p>
         <p style="color:#475569;">You've made it through your first week with SafePost – and we hope it's already making compliance feel a little less daunting.</p>
@@ -352,7 +357,7 @@ const templates: TemplateMap = {
         ${ctaButton(CTA.bookCall)}
         <p style="color:#475569;">Looking forward to speaking with you.</p>
         <p style="color:#475569;">Warmly,<br/>The SafePost Team</p>
-      `),
+      `, u),
     },
   },
 };
@@ -486,6 +491,9 @@ serve(async (req) => {
       );
     }
 
+    // ── Generate signed unsubscribe URL ────────────────────────────────
+    const unsubscribeUrl = await buildUnsubscribeUrl(user_id);
+
     // ── Send email via Resend ───────────────────────────────────────────
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
     if (!resendApiKey) {
@@ -506,7 +514,7 @@ serve(async (req) => {
         from: 'SafePost <support@safepost.com.au>',
         to: toEmail,
         subject: template.subject,
-        html: template.html(firstName),
+        html: template.html(firstName, unsubscribeUrl),
       }),
     });
 

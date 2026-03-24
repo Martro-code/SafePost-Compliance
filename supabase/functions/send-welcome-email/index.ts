@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { buildUnsubscribeUrl } from '../_shared/unsubscribe-token.ts';
 
 const allowedOrigins = [
   'https://www.safepost.com.au',
@@ -91,6 +92,9 @@ serve(async (req) => {
     const rawFirstName = user.user_metadata?.firstName || user.user_metadata?.first_name || 'there';
     const firstName = escapeHtml(rawFirstName);
 
+    // Generate signed unsubscribe URL
+    const unsubscribeUrl = await buildUnsubscribeUrl(record.owner_user_id);
+
     const resendApiKey = Deno.env.get('RESEND_API_KEY');
     if (!resendApiKey) {
       console.error('RESEND_API_KEY is not configured');
@@ -122,6 +126,7 @@ serve(async (req) => {
             <p style="color: #475569;">Warmly,<br/>The SafePost Team</p>
             <hr style="border:none;border-top:1px solid #e2e8f0;margin:24px 0;" />
             <p style="color: #94a3b8;font-size:12px;">SafePost Pty Ltd | <a href="https://www.safepost.com.au" style="color:#94a3b8;">safepost.com.au</a></p>
+            <p style="color:#94a3b8;font-size:11px;margin-top:8px;">You're receiving this because you signed up for SafePost. <a href="${unsubscribeUrl}" style="color:#94a3b8;">Unsubscribe from marketing emails</a>.</p>
           </div>
         `,
       }),
