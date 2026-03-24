@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
 import Stripe from 'https://esm.sh/stripe@17.7.0?target=deno&deno-std=0.177.0&no-check=true';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.1';
 
 const allowedOrigins = [
   'https://www.safepost.com.au',
@@ -25,18 +26,51 @@ serve(async (req) => {
   }
 
   try {
-    const authHeader = req.headers.get('authorization');
-    const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+    const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 
-    if (
-      !authHeader ||
-      (authHeader !== `Bearer ${serviceRoleKey}` && authHeader !== serviceRoleKey)
-    ) {
+    const authHeader = req.headers.get('authorization') ?? '';
+    const token = authHeader.replace('Bearer ', '');
+
+    if (!token) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    // Verify the user via their JWT
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+    const { data: { user }, error: authError } = await supabase.auth.getUser(token);
+
+    if (authError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Look up the user's account to get stripe_customer_id
+    const { data: membership } = await supabase
+      .from('account_members')
+      .select('account_id')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .limit(1)
+      .single();
+
+    if (!membership) {
+      return new Response(JSON.stringify({ error: 'No account found' }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    const { data: account } = await supabase
+      .from('accounts')
+      .select('stripe_customer_id')
+      .eq('id', membership.account_id)
+      .single();
 
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
@@ -52,8 +86,28 @@ serve(async (req) => {
       httpClient: Stripe.createFetchHttpClient(),
     });
 
+    // If the account has no Stripe customer yet, create one
+    let customerId = account?.stripe_customer_id;
+    if (!customerId) {
+      const customer = await stripe.customers.create({
+        email: user.email,
+        metadata: { supabase_user_id: user.id, account_id: membership.account_id },
+      });
+      customerId = customer.id;
+
+      // Store the customer ID back on the account
+      await supabase
+        .from('accounts')
+        .update({ stripe_customer_id: customerId })
+        .eq('id', membership.account_id);
+    }
+
+    const { setAsDefault } = await req.json().catch(() => ({ setAsDefault: true }));
+
     const setupIntent = await stripe.setupIntents.create({
+      customer: customerId,
       payment_method_types: ['card'],
+      metadata: { set_as_default: String(setAsDefault) },
     });
 
     return new Response(JSON.stringify({ clientSecret: setupIntent.client_secret }), {
