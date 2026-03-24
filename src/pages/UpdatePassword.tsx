@@ -3,11 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { supabase } from '../services/supabaseClient';
-import { useAuth } from '../hooks/useAuth';
+import { useAuth, isPasswordRecovery } from '../hooks/useAuth';
 
 const UpdatePassword: React.FC = () => {
   const navigate = useNavigate();
   const { userEmail } = useAuth();
+  const recoveryMode = isPasswordRecovery;
 
   // Form state
   const [currentPassword, setCurrentPassword] = useState('');
@@ -17,29 +18,33 @@ const UpdatePassword: React.FC = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const passwordMismatch = confirmNewPassword.length > 0 && newPassword !== confirmNewPassword;
 
   const handleUpdatePassword = async () => {
-    if (passwordMismatch || !newPassword || !currentPassword) return;
+    if (passwordMismatch || !newPassword || (!recoveryMode && !currentPassword)) return;
     setError('');
+    setSuccessMessage('');
     setIsSubmitting(true);
 
     try {
-      // Verify the current password first
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: userEmail,
-        password: currentPassword,
-      });
+      // In normal mode, verify the current password first
+      if (!recoveryMode) {
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: userEmail,
+          password: currentPassword,
+        });
 
-      if (signInError) {
-        setError('Current password is incorrect');
-        setIsSubmitting(false);
-        return;
+        if (signInError) {
+          setError('Current password is incorrect');
+          setIsSubmitting(false);
+          return;
+        }
       }
 
-      // Current password verified — proceed with update
+      // Proceed with password update
       const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
       if (updateError) {
         setError(updateError.message);
@@ -47,16 +52,22 @@ const UpdatePassword: React.FC = () => {
         return;
       }
 
-      navigate('/profile');
-    } catch (err) {
+      if (recoveryMode) {
+        // Sign out so the user logs in with their new password
+        await supabase.auth.signOut();
+        navigate('/login', { state: { passwordReset: true } });
+      } else {
+        navigate('/profile');
+      }
+    } catch {
       setError('An unexpected error occurred. Please try again.');
       setIsSubmitting(false);
     }
   };
 
-  return (
-    <LoggedInLayout>
-      <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
+  const content = (
+      <div className={recoveryMode ? "min-h-screen flex items-center justify-center bg-[#f7f7f4] px-6 py-16" : "max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16"}>
+        {!recoveryMode && (
         <button
           onClick={() => navigate('/profile')}
           className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8 dark:text-gray-400 dark:hover:text-white"
@@ -64,10 +75,12 @@ const UpdatePassword: React.FC = () => {
           <ArrowLeft className="w-4 h-4" />
           Back to Profile
         </button>
+        )}
 
+        <div className={recoveryMode ? "w-full max-w-[450px]" : ""}>
         <div className="mb-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-            Update password
+            {recoveryMode ? 'Set new password' : 'Update password'}
           </h1>
           <p className="text-[14px] text-gray-500 mt-1 mb-8">
             Choose a strong password for your account
@@ -76,7 +89,8 @@ const UpdatePassword: React.FC = () => {
 
         <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 md:p-8 space-y-4">
-            {/* Current password */}
+            {/* Current password — hidden in recovery mode */}
+            {!recoveryMode && (
             <div>
               <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Current password</label>
               <div className="relative">
@@ -97,6 +111,7 @@ const UpdatePassword: React.FC = () => {
                 </button>
               </div>
             </div>
+            )}
 
             {/* New password */}
             <div>
@@ -150,7 +165,15 @@ const UpdatePassword: React.FC = () => {
             </div>
 
             {error && (
-              <p className="text-[13px] text-red-500 font-medium">{error}</p>
+              <div className="rounded-lg bg-red-50 border border-red-200 p-3">
+                <p className="text-[13px] text-red-700">{error}</p>
+              </div>
+            )}
+
+            {successMessage && (
+              <div className="rounded-lg bg-green-50 border border-green-200 p-3">
+                <p className="text-[13px] text-green-700">{successMessage}</p>
+              </div>
             )}
           </div>
 
@@ -158,23 +181,29 @@ const UpdatePassword: React.FC = () => {
 
           <div className="flex items-center gap-3 p-6 md:px-8">
             <button
-              onClick={() => navigate('/profile')}
+              onClick={() => navigate(recoveryMode ? '/login' : '/profile')}
               className="flex-1 h-11 text-[14px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
             >
               Cancel
             </button>
             <button
               onClick={handleUpdatePassword}
-              disabled={passwordMismatch || !newPassword || !currentPassword || isSubmitting}
+              disabled={passwordMismatch || !newPassword || (!recoveryMode && !currentPassword) || isSubmitting}
               className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98]"
             >
-              {isSubmitting ? 'Updating...' : 'Update password'}
+              {isSubmitting ? 'Updating...' : (recoveryMode ? 'Set new password' : 'Update password')}
             </button>
           </div>
         </div>
+        </div>
       </div>
-    </LoggedInLayout>
   );
+
+  if (recoveryMode) {
+    return content;
+  }
+
+  return <LoggedInLayout>{content}</LoggedInLayout>;
 };
 
 export default UpdatePassword;

@@ -3,15 +3,21 @@ import { supabase } from '../services/supabaseClient';
 import type { User } from '@supabase/supabase-js';
 
 export let isLoggingOut = false;
+export let isPasswordRecovery = false;
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Detect if user is arriving from an email verification link
+    // Detect if user is arriving from an email verification or password recovery link
     const hash = window.location.hash;
     const isEmailVerification = hash.includes('access_token') && (hash.includes('type=signup') || hash.includes('type=email'));
+    const isRecovery = hash.includes('access_token') && hash.includes('type=recovery');
+
+    if (isRecovery) {
+      isPasswordRecovery = true;
+    }
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       // If arriving from email verification, preserve the session and redirect to dashboard
@@ -21,11 +27,19 @@ export function useAuth() {
         return;
       }
 
-      // If we detected a verification hash but the session isn't ready yet,
+      // If arriving from password recovery link, establish the session and stay on the page
+      if (isRecovery && session?.user) {
+        sessionStorage.setItem('safepost_session_active', 'true');
+        setUser(session.user);
+        setLoading(false);
+        return;
+      }
+
+      // If we detected a verification/recovery hash but the session isn't ready yet,
       // keep loading=true so ProtectedRoute doesn't redirect to /login.
-      // The onAuthStateChange listener below will handle the redirect once
+      // The onAuthStateChange listener below will handle it once
       // Supabase finishes processing the token from the URL hash.
-      if (isEmailVerification) {
+      if (isEmailVerification || isRecovery) {
         return;
       }
 
@@ -57,6 +71,14 @@ export function useAuth() {
           window.location.replace('/dashboard');
           return;
         }
+      }
+      // Handle password recovery event — establish session and stay on page
+      if (event === 'PASSWORD_RECOVERY' && session?.user) {
+        isPasswordRecovery = true;
+        sessionStorage.setItem('safepost_session_active', 'true');
+        setUser(session.user);
+        setLoading(false);
+        return;
       }
       setUser(session?.user ?? null);
       if (event === 'SIGNED_OUT' && isLoggingOut) {
