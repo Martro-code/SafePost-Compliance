@@ -1,5 +1,49 @@
-[functions.submit-contact-form]
+# SafePost Supabase Configuration
+# Project ref: acvcwzaipsxyrwbxithc (Sydney region)
+#
+# All Edge Functions use verify_jwt = false because authentication
+# is handled within each function via Supabase client auth headers.
+# This is the single source of truth for JWT settings — the deploy
+# workflow flags (--no-verify-jwt) should match these entries.
+
+[functions.analyze-post]
+verify_jwt = false
+
+[functions.cancel-subscription]
+verify_jwt = false
+
+[functions.create-checkout-session]
 verify_jwt = false
 
 [functions.create-setup-intent]
+verify_jwt = false
+
+[functions.get-payment-method]
+verify_jwt = false
+
+[functions.initialise-onboarding-sequence]
+verify_jwt = false
+
+[functions.process-onboarding-sequence]
+verify_jwt = false
+
+[functions.send-cancellation-email]
+verify_jwt = false
+
+[functions.send-limit-warning]
+verify_jwt = false
+
+[functions.send-onboarding-email]
+verify_jwt = false
+
+[functions.send-welcome-email]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false
+
+[functions.submit-contact-form]
+verify_jwt = false
+
+[functions.verify-abn]
 verify_jwt = false
