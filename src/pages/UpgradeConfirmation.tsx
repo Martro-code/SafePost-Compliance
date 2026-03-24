@@ -32,13 +32,16 @@ const UpgradeConfirmation: React.FC = () => {
   const [cardInfo, setCardInfo] = useState<{ brand: string; last4: string; exp_month: number; exp_year: number } | null>(null);
   const [cardLoading, setCardLoading] = useState(true);
   const [cardError, setCardError] = useState(false);
+  const [hasNoCard, setHasNoCard] = useState(false);
 
   useEffect(() => {
     const fetchCard = async () => {
       try {
         const { data, error } = await supabase.functions.invoke('get-payment-method');
-        if (error || !data?.card) {
+        if (error) {
           setCardError(true);
+        } else if (!data?.card) {
+          setHasNoCard(true);
         } else {
           setCardInfo(data.card);
         }
@@ -138,12 +141,16 @@ const UpgradeConfirmation: React.FC = () => {
                     <Loader2 className="w-4 h-4 animate-spin" />
                     <span className="text-[13px]">Loading payment method…</span>
                   </div>
-                ) : cardError || !cardInfo ? (
+                ) : cardError ? (
                   <div className="flex items-center justify-between">
-                    <p className="text-[13px] text-gray-500 dark:text-gray-400">No payment method on file</p>
+                    <p className="text-[13px] text-red-500 dark:text-red-400">Unable to load payment method. Please try again.</p>
+                  </div>
+                ) : hasNoCard || !cardInfo ? (
+                  <div className="flex items-center justify-between">
+                    <p className="text-[13px] text-gray-500 dark:text-gray-400">No card added yet — add one to continue with your upgrade.</p>
                     <button
                       onClick={() => navigate('/update-card')}
-                      className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300"
+                      className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300 whitespace-nowrap ml-4"
                     >
                       Add card
                     </button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import { loadStripe, type Stripe } from '@stripe/stripe-js';
@@ -25,6 +25,7 @@ const CARD_ELEMENT_OPTIONS = {
       fontSize: '14px',
       color: '#111827',
       fontFamily: 'inherit',
+      lineHeight: '24px',
       '::placeholder': { color: '#9ca3af' },
     },
     invalid: { color: '#dc2626' },
@@ -40,6 +41,24 @@ const UpdateCardForm: React.FC = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const [hasExistingCard, setHasExistingCard] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    const checkCard = async () => {
+      try {
+        const { data, error: fnError } = await supabase.functions.invoke('get-payment-method');
+        if (fnError || !data?.card) {
+          setHasExistingCard(false);
+        } else {
+          setHasExistingCard(true);
+        }
+      } catch {
+        setHasExistingCard(false);
+      }
+    };
+    checkCard();
+  }, []);
 
   const handleSubmit = async () => {
     if (!stripe || !elements) return;
@@ -86,17 +105,25 @@ const UpdateCardForm: React.FC = () => {
       });
 
       if (stripeError) {
-        setError(stripeError.message ?? 'Failed to update card. Please try again.');
+        setError(stripeError.message ?? 'Failed to save card. Please try again.');
         return;
       }
 
       setSuccess(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update card. Please try again.');
+      setError(err instanceof Error ? err.message : 'Failed to save card. Please try again.');
     } finally {
       setSaving(false);
     }
   };
+
+  const heading = hasExistingCard ? 'Update your card' : 'Add your card';
+  const subtitle = hasExistingCard
+    ? 'Your new card will replace your current card'
+    : 'Add a payment method to upgrade your plan';
+  const buttonText = hasExistingCard ? 'Update card' : 'Add card';
+  const savingText = hasExistingCard ? 'Updating...' : 'Adding...';
+  const successText = hasExistingCard ? 'Card updated successfully.' : 'Card added successfully.';
 
   return (
     <div className="max-w-2xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
@@ -112,14 +139,14 @@ const UpdateCardForm: React.FC = () => {
       {/* Page Heading */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-          Update your card
+          {hasExistingCard === null ? 'Card details' : heading}
         </h1>
         <p className="text-[14px] text-gray-500 mt-1 mb-8">
-          Your new card will replace your current card
+          {hasExistingCard === null ? 'Loading...' : subtitle}
         </p>
       </div>
 
-      {/* Update card Form */}
+      {/* Card Form */}
       <div className="bg-white rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04] dark:bg-gray-800 dark:border-gray-700">
         <div className="p-6 md:p-8 space-y-5">
           {/* Stripe CardElement */}
@@ -147,7 +174,7 @@ const UpdateCardForm: React.FC = () => {
             <p className="text-[13px] text-red-600 dark:text-red-400">{error}</p>
           )}
           {success && (
-            <p className="text-[13px] text-green-600 dark:text-green-400">Card updated successfully.</p>
+            <p className="text-[13px] text-green-600 dark:text-green-400">{successText}</p>
           )}
         </div>
 
@@ -166,7 +193,7 @@ const UpdateCardForm: React.FC = () => {
             disabled={saving || !stripe}
             className="flex-1 h-11 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[14px] font-semibold rounded-lg transition-all duration-200 active:scale-[0.98] flex items-center justify-center gap-2"
           >
-            {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Updating...</> : 'Update card'}
+            {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> {savingText}</> : buttonText}
           </button>
         </div>
       </div>
