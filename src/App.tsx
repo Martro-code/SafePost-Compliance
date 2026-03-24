@@ -1,5 +1,6 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { trackPageView, isGA4Initialised } from './services/analytics';
 import HomePage from './pages/HomePage';
 import SignUp from './pages/SignUp';
 import Login from './pages/Login';
@@ -53,10 +54,23 @@ const ScrollToTop: React.FC = () => {
   return null;
 };
 
+const PageViewTracker: React.FC = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (isGA4Initialised()) {
+      trackPageView(pathname);
+    }
+  }, [pathname]);
+
+  return null;
+};
+
 const App: React.FC = () => {
   return (
     <>
       <ScrollToTop />
+      <PageViewTracker />
       <div className="page-transition">
         <Routes>
           <Route path="/" element={<HomePage />} />

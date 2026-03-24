@@ -6,6 +6,7 @@ import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
 import PublicFooter from '../components/layout/PublicFooter';
 import { supabase } from '../services/supabaseClient';
+import { trackContactFormSubmitted } from '../services/analytics';
 
 
 
@@ -94,6 +95,7 @@ const ContactUs: React.FC = () => {
 
       if (error) throw error;
 
+      trackContactFormSubmitted();
       setSuccess(true);
       setFirstName('');
       setSurname('');

@@ -11,6 +11,7 @@ import { ComplianceResults } from '../components/compliance/ComplianceResults';
 import { generateCompliantRewrites } from '../services/complianceService';
 import { getDisplayPlanName, getNextPlanTier, getPlanTierLabel } from '../utils/planUtils';
 import { extractTextFromFile } from '../utils/fileExtraction';
+import { trackComplianceCheckRun } from '../services/analytics';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -175,6 +176,7 @@ const Dashboard: React.FC = () => {
     setView('loading');
     setIsHistorical(false);
     setHistoricalCheckedAt(undefined);
+    trackComplianceCheckRun('general', 'social_media_post');
     await checker.runCheck(content);
     setView('results');
   };

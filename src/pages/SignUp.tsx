@@ -5,6 +5,7 @@ import SafePostLogo from '../components/ui/SafePostLogo';
 import PublicFooter from '../components/layout/PublicFooter';
 import { supabase } from '../services/supabaseClient';
 import { useGooglePlacesAutocomplete } from '../hooks/useGooglePlacesAutocomplete';
+import { trackSignUp } from '../services/analytics';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -170,6 +171,8 @@ const SignUp: React.FC = () => {
         setAuthError(error.message);
         return;
       }
+
+      trackSignUp('email');
 
       // Store plan/billing so AccountContext auto-provisions on first login
       const selectedPlan = plan || 'starter';

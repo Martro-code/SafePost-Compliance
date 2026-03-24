@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { supabase } from '../services/supabaseClient';
+import { trackLogin, trackSignUp } from '../services/analytics';
 
 function getPostAuthRedirect(): string {
   try {
@@ -25,6 +26,15 @@ const AuthCallback: React.FC = () => {
       const { data: { session } } = await supabase.auth.getSession();
 
       if (session) {
+        // Track Google auth — new users have created_at ≈ last_sign_in_at
+        const user = session.user;
+        const isNewUser = user.created_at && user.last_sign_in_at &&
+          Math.abs(new Date(user.created_at).getTime() - new Date(user.last_sign_in_at).getTime()) < 10000;
+        if (isNewUser) {
+          trackSignUp('google');
+        } else {
+          trackLogin('google');
+        }
         sessionStorage.setItem('safepost_session_active', 'true');
         window.location.replace(getPostAuthRedirect());
         return;
@@ -33,6 +43,14 @@ const AuthCallback: React.FC = () => {
       // If the session isn't ready yet, wait for the auth state change
       const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN' && session) {
+          const user = session.user;
+          const isNewUser = user.created_at && user.last_sign_in_at &&
+            Math.abs(new Date(user.created_at).getTime() - new Date(user.last_sign_in_at).getTime()) < 10000;
+          if (isNewUser) {
+            trackSignUp('google');
+          } else {
+            trackLogin('google');
+          }
           sessionStorage.setItem('safepost_session_active', 'true');
           subscription.unsubscribe();
           window.location.replace(getPostAuthRedirect());
