@@ -37,7 +37,7 @@ const Features: React.FC = () => {
     {
       icon: <ScanSearch className="w-7 h-7 text-blue-500/80" />,
       heading: 'Instant analysis',
-      description: 'Checked against 172 rules across AHPRA and TGA regulatory documents. Not a summarised guide — primary sources only.',
+      description: 'Checked against 174 rules across AHPRA and TGA regulatory documents. Not a summarised guide — primary sources only.',
     },
     {
       icon: <Flag className="w-7 h-7 text-blue-500/80" />,

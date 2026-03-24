@@ -28,7 +28,7 @@ const FAQ: React.FC = () => {
   ];
 
   const featureList = [
-    '172 specific AHPRA & TGA rules built in',
+    '174 specific AHPRA & TGA rules built in',
     'Exact guideline citations on every check',
     'Built specifically for Australian practitioners',
     'Full compliance history & audit trail',
@@ -52,7 +52,7 @@ const FAQ: React.FC = () => {
         },
         {
           question: 'Why not just use ChatGPT or other general AI tools?',
-          answer: 'General AI tools don\u2019t know what AHPRA will investigate you for. SafePost is built with 172 specific AHPRA and TGA rules hardcoded into every analysis. Unlike ChatGPT, SafePost cites the exact guideline you\u2019ve breached, maintains a full audit trail, and is updated as Australian regulations change. For practitioners whose registration is at stake, a general AI guess isn\u2019t good enough.',
+          answer: 'General AI tools don\u2019t know what AHPRA will investigate you for. SafePost is built with 174 specific AHPRA and TGA rules hardcoded into every analysis. Unlike ChatGPT, SafePost cites the exact guideline you\u2019ve breached, maintains a full audit trail, and is updated as Australian regulations change. For practitioners whose registration is at stake, a general AI guess isn\u2019t good enough.',
         },
         {
           question: 'Is SafePost affiliated with AHPRA or the TGA?',
@@ -77,7 +77,7 @@ const FAQ: React.FC = () => {
         },
         {
           question: 'How current are the compliance rules?',
-          answer: 'SafePost\u2019s rules database is updated when AHPRA or TGA publish significant guideline changes. The current version covers 172 rules across both frameworks.',
+          answer: 'SafePost\u2019s rules database is updated when AHPRA or TGA publish significant guideline changes. The current version covers 174 rules across both frameworks.',
         },
       ],
     },
@@ -157,7 +157,7 @@ const FAQ: React.FC = () => {
                 Every compliance check is logged in your account history, giving you documented evidence of due diligence if AHPRA ever investigates.
               </p>
               <p className="text-[15px] text-gray-400 leading-relaxed">
-                172 AHPRA and TGA rules are built into every check. Paste your content and get a compliance verdict in seconds — no prompting, no expertise required.
+                174 AHPRA and TGA rules are built into every check. Paste your content and get a compliance verdict in seconds — no prompting, no expertise required.
               </p>
               <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 <button
