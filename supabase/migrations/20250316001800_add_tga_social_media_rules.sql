@@ -1,6 +1,6 @@
 -- Migration: Add TGA Social Media Advertising Rules (November 2025 Guidance Update)
 -- Inserts six new TGA social media advertising rules into the existing guidelines table.
--- The guidelines table already exists with 172 rows — this migration only adds new rows.
+-- The guidelines table already exists with 174 rows — this migration only adds new rows.
 
 -- 1. Influencer and affiliate advertising
 INSERT INTO public.guidelines (category, subcategory, source_document, section_reference, rule_text, plain_english_summary, recommended_action, regulatory_framework)

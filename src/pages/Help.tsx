@@ -7,7 +7,7 @@ import { supabase } from '../services/supabaseClient';
 const faqs = [
   {
     question: "What does SafePost check my content against?",
-    answer: "SafePost checks your content against 172 verified rules drawn from primary AHPRA and TGA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and the TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Therapeutic Goods Act 1989, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, guidelines for cosmetic procedures and cosmetic surgery advertising, AHPRA's acceptable evidence standard for therapeutic and efficacy claims, and TGA therapeutic goods advertising rules including the November 2025 social media advertising guidance."
+    answer: "SafePost checks your content against 174 verified rules drawn from primary AHPRA and TGA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and the TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Therapeutic Goods Act 1989, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, guidelines for cosmetic procedures and cosmetic surgery advertising, AHPRA's acceptable evidence standard for therapeutic and efficacy claims, and TGA therapeutic goods advertising rules including the November 2025 social media advertising guidance."
   },
   {
     question: "Does a 'Compliant' result mean I am guaranteed to be compliant?",
