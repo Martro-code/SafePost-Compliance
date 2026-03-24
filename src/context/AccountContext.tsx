@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '../services/supabaseClient';
+import { sanitizeObject } from '../utils/sanitizeInput';
 
 const ACCOUNT_CACHE_KEY = 'safepost_account_cache';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -114,7 +115,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         .eq('user_id', user.id)
         .eq('status', 'active')
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (membership && !memberError) {
         // Found membership — load the account
@@ -176,7 +177,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const { error: upsertError } = await supabase
         .from('accounts')
         .upsert(
-          {
+          sanitizeObject({
             owner_user_id: user.id,
             plan: userPlan,
             checks_used: 0,
@@ -186,7 +187,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
             last_name: user.user_metadata?.surname || user.user_metadata?.last_name || '',
             abn: user.user_metadata?.abn || null,
             abn_entity_name: user.user_metadata?.abn_entity_name || null,
-          },
+          }),
           { onConflict: 'owner_user_id', ignoreDuplicates: true }
         );
 
@@ -215,13 +216,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const { error: memberInsertError } = await supabase
         .from('account_members')
         .upsert(
-          {
+          sanitizeObject({
             account_id: resolvedAccount.id,
             user_id: user.id,
             role: 'owner',
             status: 'active',
             invited_email: user.email,
-          },
+          }),
           { onConflict: 'account_id,user_id', ignoreDuplicates: true }
         );
       if (memberInsertError) {

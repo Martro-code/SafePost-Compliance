@@ -4,6 +4,7 @@ import { ArrowLeft, ChevronDown } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../services/supabaseClient';
+import { sanitizeInput } from '../utils/sanitizeInput';
 
 const UpdateContactDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -29,12 +30,12 @@ const UpdateContactDetails: React.FC = () => {
   const handleSave = async () => {
     await supabase.auth.updateUser({
       data: {
-        mobile_number: mobileNumber.trim(),
-        practice_name: practiceName.trim(),
-        street_address: streetAddress.trim(),
-        suburb: suburb.trim(),
-        state,
-        postcode: postcode.trim(),
+        mobile_number: sanitizeInput(mobileNumber.trim()),
+        practice_name: sanitizeInput(practiceName.trim()),
+        street_address: sanitizeInput(streetAddress.trim()),
+        suburb: sanitizeInput(suburb.trim()),
+        state: sanitizeInput(state),
+        postcode: sanitizeInput(postcode.trim()),
       },
     });
     navigate('/profile');
