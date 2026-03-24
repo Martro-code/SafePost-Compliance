@@ -173,7 +173,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       const userPlan = (user.user_metadata?.plan as string) || sessionStorage.getItem('safepost_plan') || 'starter';
       const limit = checksLimitForPlan(userPlan);
 
-      const { data: newAccount, error: upsertError } = await supabase
+      const { error: upsertError } = await supabase
         .from('accounts')
         .upsert(
           {
@@ -188,30 +188,27 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
             abn_entity_name: user.user_metadata?.abn_entity_name || null,
           },
           { onConflict: 'owner_user_id', ignoreDuplicates: true }
-        )
-        .select()
-        .single();
+        );
 
       if (upsertError) {
         console.error('Failed to create account:', upsertError);
       }
 
-      // If ignoreDuplicates fired, newAccount will be null — re-fetch existing
-      let resolvedAccount = newAccount;
-      if (!resolvedAccount) {
-        const { data: existingAccount, error: fetchError } = await supabase
-          .from('accounts')
-          .select('id, plan, billing_period, checks_used, checks_limit')
-          .eq('owner_user_id', user.id)
-          .single();
-        if (fetchError || !existingAccount) {
-          console.error('Failed to fetch existing account after upsert:', fetchError);
-          setPlan(userPlan);
-          setChecksLimit(limit);
-          setAccountLoading(false);
-          return;
-        }
-        resolvedAccount = existingAccount;
+      // Always re-fetch the account separately to avoid the PostgREST 406
+      // error caused by ignoreDuplicates + .select().single() returning
+      // zero rows when the row already exists.
+      const { data: resolvedAccount, error: fetchError } = await supabase
+        .from('accounts')
+        .select('id, plan, billing_period, checks_used, checks_limit')
+        .eq('owner_user_id', user.id)
+        .single();
+
+      if (fetchError || !resolvedAccount) {
+        console.error('Failed to fetch account after upsert:', fetchError);
+        setPlan(userPlan);
+        setChecksLimit(limit);
+        setAccountLoading(false);
+        return;
       }
 
       // Create account_members row
