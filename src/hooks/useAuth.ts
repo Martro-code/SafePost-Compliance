@@ -98,6 +98,7 @@ export function useAuth() {
   const suburb = (user?.user_metadata?.suburb as string) || '';
   const userState = (user?.user_metadata?.state as string) || '';
   const postcode = (user?.user_metadata?.postcode as string) || '';
+  const specialty = (user?.user_metadata?.specialty as string) || '';
 
   const signOut = async () => {
     isLoggingOut = true;
@@ -113,5 +114,5 @@ export function useAuth() {
     }
   };
 
-  return { user, userEmail, firstName, surname, mobileNumber, practiceName, streetAddress, suburb, userState, postcode, loading, signOut };
+  return { user, userEmail, firstName, surname, mobileNumber, practiceName, streetAddress, suburb, userState, postcode, specialty, loading, signOut };
 }

@@ -59,6 +59,13 @@ export interface AccountContextType {
   cancelDate: string;
   checksUsed: number;
   checksLimit: number | null;
+  mobile: string;
+  practiceName: string;
+  address: string;
+  suburb: string;
+  state: string;
+  postcode: string;
+  specialty: string;
   accountLoading: boolean;
   refreshAccount: () => Promise<void>;
 }
@@ -72,6 +79,13 @@ const AccountContext = createContext<AccountContextType>({
   cancelDate: '',
   checksUsed: 0,
   checksLimit: 3,
+  mobile: '',
+  practiceName: '',
+  address: '',
+  suburb: '',
+  state: '',
+  postcode: '',
+  specialty: '',
   accountLoading: true,
   refreshAccount: async () => {},
 });
@@ -86,6 +100,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [cancelDate, setCancelDate] = useState('');
   const [checksUsed, setChecksUsed] = useState(cached?.checksUsed ?? 0);
   const [checksLimit, setChecksLimit] = useState<number | null>(cached?.checksLimit ?? 3);
+  const [mobile, setMobile] = useState('');
+  const [practiceName, setPracticeName] = useState('');
+  const [address, setAddress] = useState('');
+  const [suburb, setSuburb] = useState('');
+  const [accountState, setAccountState] = useState('');
+  const [postcode, setPostcode] = useState('');
+  const [specialty, setSpecialty] = useState('');
   const [accountLoading, setAccountLoading] = useState(!cached);
 
   const loadAccount = useCallback(async () => {
@@ -121,7 +142,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // Found membership — load the account
         const { data: account, error: accountFetchError } = await supabase
           .from('accounts')
-          .select('id, plan, billing_period, checks_used, checks_limit')
+          .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty')
           .eq('id', membership.account_id)
           .single();
         if (accountFetchError) {
@@ -157,6 +178,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setCancelled(account.plan === 'starter' && !!account.billing_period);
           setChecksUsed(reconciledUsed);
           setChecksLimit(account.checks_limit);
+          setMobile(account.mobile || '');
+          setPracticeName(account.practice_name || '');
+          setAddress(account.address || '');
+          setSuburb(account.suburb || '');
+          setAccountState(account.state || '');
+          setPostcode(account.postcode || '');
+          setSpecialty(account.specialty || '');
           writeAccountCache({
             accountId: account.id,
             plan: account.plan || 'starter',
@@ -189,6 +217,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
             last_name: user.user_metadata?.surname || user.user_metadata?.last_name || '',
             abn: user.user_metadata?.abn || null,
             abn_entity_name: user.user_metadata?.abn_entity_name || null,
+            mobile: user.user_metadata?.mobile_number || null,
+            practice_name: user.user_metadata?.practice_name || null,
+            address: user.user_metadata?.street_address || null,
+            suburb: user.user_metadata?.suburb || null,
+            state: user.user_metadata?.state || null,
+            postcode: user.user_metadata?.postcode || null,
+            specialty: user.user_metadata?.specialty || null,
           }),
           { onConflict: 'owner_user_id', ignoreDuplicates: true }
         );
@@ -202,7 +237,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // zero rows when the row already exists.
       const { data: resolvedAccount, error: fetchError } = await supabase
         .from('accounts')
-        .select('id, plan, billing_period, checks_used, checks_limit')
+        .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty')
         .eq('owner_user_id', user.id)
         .single();
 
@@ -272,6 +307,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setBillingPeriod(resolvedAccount.billing_period || '');
       setChecksUsed(actualUsed);
       setChecksLimit(resolvedAccount.checks_limit ?? limit);
+      setMobile(resolvedAccount.mobile || '');
+      setPracticeName(resolvedAccount.practice_name || '');
+      setAddress(resolvedAccount.address || '');
+      setSuburb(resolvedAccount.suburb || '');
+      setAccountState(resolvedAccount.state || '');
+      setPostcode(resolvedAccount.postcode || '');
+      setSpecialty(resolvedAccount.specialty || '');
       writeAccountCache({
         accountId: resolvedAccount.id,
         plan: resolvedAccount.plan || provisionPlan,
@@ -315,7 +357,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!accountId) return;
     const { data: account } = await supabase
       .from('accounts')
-      .select('plan, billing_period, checks_used, checks_limit')
+      .select('plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty')
       .eq('id', accountId)
       .single();
 
@@ -335,6 +377,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setBillingPeriod(account.billing_period || '');
       setChecksUsed(reconciledUsed);
       setChecksLimit(account.checks_limit);
+      setMobile(account.mobile || '');
+      setPracticeName(account.practice_name || '');
+      setAddress(account.address || '');
+      setSuburb(account.suburb || '');
+      setAccountState(account.state || '');
+      setPostcode(account.postcode || '');
+      setSpecialty(account.specialty || '');
       writeAccountCache({
         accountId,
         plan: account.plan || 'starter',
@@ -346,7 +395,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [accountId]);
 
   return (
-    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, accountLoading, refreshAccount }}>
+    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, accountLoading, refreshAccount }}>
       {children}
     </AccountContext.Provider>
   );

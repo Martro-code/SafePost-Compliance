@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
+import { useAccount } from '../context/AccountContext';
 import { supabase } from '../services/supabaseClient';
 import { sanitizeInput } from '../utils/sanitizeInput';
 
@@ -16,18 +17,47 @@ const UpdateContactDetails: React.FC = () => {
     suburb: currentSuburb,
     userState: currentState,
     postcode: currentPostcode,
+    specialty: currentSpecialty,
   } = useAuth();
+  const {
+    accountId,
+    mobile: acctMobile,
+    practiceName: acctPractice,
+    address: acctAddress,
+    suburb: acctSuburb,
+    state: acctState,
+    postcode: acctPostcode,
+    specialty: acctSpecialty,
+    refreshAccount,
+  } = useAccount();
 
-  // Form state
+  // Form state — prefer account table values, fall back to user_metadata
   const [email, setEmail] = useState(userEmail);
-  const [mobileNumber, setMobileNumber] = useState(currentMobile);
-  const [practiceName, setPracticeName] = useState(currentPractice);
-  const [streetAddress, setStreetAddress] = useState(currentStreet);
-  const [suburb, setSuburb] = useState(currentSuburb);
-  const [state, setState] = useState(currentState);
-  const [postcode, setPostcode] = useState(currentPostcode);
+  const [mobileNumber, setMobileNumber] = useState(acctMobile || currentMobile);
+  const [practiceName, setPracticeName] = useState(acctPractice || currentPractice);
+  const [streetAddress, setStreetAddress] = useState(acctAddress || currentStreet);
+  const [suburb, setSuburb] = useState(acctSuburb || currentSuburb);
+  const [state, setState] = useState(acctState || currentState);
+  const [postcode, setPostcode] = useState(acctPostcode || currentPostcode);
+  const [specialty, setSpecialty] = useState(acctSpecialty || currentSpecialty);
+
+  const specialtyOptions = [
+    'General Practitioner',
+    'Specialist Physician',
+    'Surgeon',
+    'Dentist',
+    'Psychologist',
+    'Physiotherapist',
+    'Chiropractor',
+    'Optometrist',
+    'Pharmacist',
+    'Nurse Practitioner',
+    'Midwife',
+    'Other',
+  ];
 
   const handleSave = async () => {
+    // Update user_metadata
     await supabase.auth.updateUser({
       data: {
         mobile_number: sanitizeInput(mobileNumber.trim()),
@@ -36,8 +66,27 @@ const UpdateContactDetails: React.FC = () => {
         suburb: sanitizeInput(suburb.trim()),
         state: sanitizeInput(state),
         postcode: sanitizeInput(postcode.trim()),
+        specialty: sanitizeInput(specialty),
       },
     });
+
+    // Also persist to accounts table
+    if (accountId) {
+      await supabase
+        .from('accounts')
+        .update({
+          mobile: sanitizeInput(mobileNumber.trim()),
+          practice_name: sanitizeInput(practiceName.trim()),
+          address: sanitizeInput(streetAddress.trim()),
+          suburb: sanitizeInput(suburb.trim()),
+          state: sanitizeInput(state),
+          postcode: sanitizeInput(postcode.trim()),
+          specialty: sanitizeInput(specialty),
+        })
+        .eq('id', accountId);
+      await refreshAccount();
+    }
+
     navigate('/profile');
   };
 
@@ -152,6 +201,23 @@ const UpdateContactDetails: React.FC = () => {
                 placeholder="Enter your postcode"
                 className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
               />
+            </div>
+
+            <div>
+              <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Specialty</label>
+              <div className="relative">
+                <select
+                  value={specialty}
+                  onChange={(e) => setSpecialty(e.target.value)}
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none cursor-pointer dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                >
+                  <option value="" disabled>Select your specialty</option>
+                  {specialtyOptions.map((opt) => (
+                    <option key={opt} value={opt}>{opt}</option>
+                  ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              </div>
             </div>
           </div>
 
