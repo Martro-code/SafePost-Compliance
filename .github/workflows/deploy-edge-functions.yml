@@ -20,66 +20,66 @@ jobs:
         uses: supabase/setup-cli@v1
 
       - name: Deploy analyze-post
-        run: supabase functions deploy analyze-post --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy analyze-post --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy send-welcome-email
-        run: supabase functions deploy send-welcome-email --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy send-welcome-email --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy send-cancellation-email
-        run: supabase functions deploy send-cancellation-email --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy send-cancellation-email --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy create-checkout-session
-        run: supabase functions deploy create-checkout-session --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy create-checkout-session --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy cancel-subscription
-        run: supabase functions deploy cancel-subscription --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy cancel-subscription --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy stripe-webhook
-        run: supabase functions deploy stripe-webhook --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy stripe-webhook --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy submit-contact-form
-        run: supabase functions deploy submit-contact-form --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy submit-contact-form --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy initialise-onboarding-sequence
-        run: supabase functions deploy initialise-onboarding-sequence --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy initialise-onboarding-sequence --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy send-onboarding-email
-        run: supabase functions deploy send-onboarding-email --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy send-onboarding-email --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy process-onboarding-sequence
-        run: supabase functions deploy process-onboarding-sequence --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy process-onboarding-sequence --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy create-setup-intent
-        run: supabase functions deploy create-setup-intent --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy create-setup-intent --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy get-payment-method
-        run: supabase functions deploy get-payment-method --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy get-payment-method --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
 
       - name: Deploy send-limit-warning
-        run: supabase functions deploy send-limit-warning --no-verify-jwt --project-ref fdowzbqsytvzsaqaawds
+        run: supabase functions deploy send-limit-warning --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
