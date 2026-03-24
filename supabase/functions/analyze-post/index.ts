@@ -832,6 +832,16 @@ I. STAR RATINGS AND EMOJI AS TESTIMONIAL AMPLIFIERS:
      components and flagged as part of or in addition to any testimonial breach under AHPRA
      Section 133(1)(b). A star rating accompanying a patient quote is not a neutral design element.
 
+J. SUPERLATIVE AND COMPARATIVE CLAIMS:
+   - Superlative claims about a practitioner or their services — including but not limited to
+     'best', 'top', 'number one', 'leading', 'most experienced', 'most qualified', 'finest',
+     'greatest', 'premier', or any other language implying superiority over other practitioners
+     — must be flagged as NON_COMPLIANT under Section 133(1)(a). These claims create unreasonable
+     expectations and cannot be substantiated. Even when presented as personal opinion (e.g.
+     'I am the best doctor'), these statements constitute advertising of a regulated health
+     service and are subject to AHPRA guidelines when made by a registered health practitioner
+     in any public forum.
+
 VERDICT ASSIGNMENT RULES — YOU MUST FOLLOW THESE EXACTLY:
 - Return "CONDUCT_RISK" when the content describes actual sexual misconduct, violence, threats, or serious ethical violations as defined in Section E above. CONDUCT_RISK takes precedence over all other statuses.
 - Return "COMPLIANT" when NO issues are found. If your issues array is empty, status MUST be "COMPLIANT". Never return "WARNING" when no issues are found.
