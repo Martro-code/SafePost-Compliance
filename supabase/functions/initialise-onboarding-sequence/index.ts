@@ -24,17 +24,37 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  // Authenticate with service role key
+  // Authenticate: accept either the service role key (from Stripe webhook / internal calls)
+  // or a valid user JWT (from frontend, e.g. AccountContext for Starter users).
   const authHeader = req.headers.get('authorization');
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-  if (
-    !authHeader ||
-    (authHeader !== `Bearer ${serviceRoleKey}` && authHeader !== serviceRoleKey)
-  ) {
+  const isServiceRole =
+    authHeader === `Bearer ${serviceRoleKey}` || authHeader === serviceRoleKey;
+
+  let jwtUserId: string | null = null;
+
+  if (!authHeader) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
+  }
+
+  if (!isServiceRole) {
+    // Attempt to verify as a user JWT
+    const supabaseAuth = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } },
+    );
+    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser();
+    if (userError || !user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    jwtUserId = user.id;
   }
 
   try {
@@ -44,6 +64,15 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({ error: 'user_id and plan_tier are required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
+    // When called with a user JWT (not service role), enforce that the user
+    // can only initialise their own onboarding sequence.
+    if (jwtUserId && jwtUserId !== user_id) {
+      return new Response(
+        JSON.stringify({ error: 'Forbidden: user_id does not match authenticated user' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 

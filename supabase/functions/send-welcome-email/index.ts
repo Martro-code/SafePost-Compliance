@@ -26,6 +26,16 @@ function escapeHtml(str: string): string {
     .replace(/'/g, '&#x27;');
 }
 
+// IMPORTANT: This function requires a Supabase Database Webhook to be manually
+// configured in the Supabase Dashboard. The webhook must be set up as follows:
+//   - Table: public.accounts
+//   - Event: INSERT
+//   - Type: Edge Function (send-welcome-email)
+//   - Headers: Authorization = Bearer <SUPABASE_SERVICE_ROLE_KEY>
+// Without this webhook, welcome emails will NOT be sent on new account creation.
+// The webhook cannot be configured via migrations — it must be created manually
+// in the Supabase Dashboard under Database > Webhooks.
+
 serve(async (req) => {
   const corsHeaders = getCorsHeaders(req);
 
