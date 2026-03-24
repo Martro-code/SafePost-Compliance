@@ -170,16 +170,19 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         }
       }
 
-      // No account found — auto-provision for this user (new or legacy)
-      const userPlan = (user.user_metadata?.plan as string) || sessionStorage.getItem('safepost_plan') || 'starter';
-      const limit = checksLimitForPlan(userPlan);
+      // No account found — auto-provision for this user (new or legacy).
+      // SECURITY: Always default to 'starter' plan. Never trust client-side
+      // values (user_metadata.plan, sessionStorage) for plan tier — the
+      // authoritative plan must come from the database only.
+      const provisionPlan = 'starter';
+      const limit = checksLimitForPlan(provisionPlan);
 
       const { error: upsertError } = await supabase
         .from('accounts')
         .upsert(
           sanitizeObject({
             owner_user_id: user.id,
-            plan: userPlan,
+            plan: provisionPlan,
             checks_used: 0,
             checks_limit: limit,
             billing_email: user.email,
@@ -206,7 +209,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       if (fetchError || !resolvedAccount) {
         console.error('Failed to fetch account after upsert:', fetchError);
-        setPlan(userPlan);
+        setPlan(provisionPlan);
         setChecksLimit(limit);
         setAccountLoading(false);
         return;
@@ -230,7 +233,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       }
 
       // Initialise onboarding email sequence for new Starter (free) users
-      if (userPlan === 'starter') {
+      if (resolvedAccount.plan === 'starter' || provisionPlan === 'starter') {
         try {
           await supabase.functions.invoke('initialise-onboarding-sequence', {
             body: { user_id: user.id, plan_tier: 'starter' },
@@ -272,16 +275,16 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
       setAccountId(resolvedAccount.id);
       setRole('owner');
-      setPlan(userPlan);
-      setBillingPeriod('');
+      setPlan(resolvedAccount.plan || provisionPlan);
+      setBillingPeriod(resolvedAccount.billing_period || '');
       setChecksUsed(actualUsed);
-      setChecksLimit(limit);
+      setChecksLimit(resolvedAccount.checks_limit ?? limit);
       writeAccountCache({
         accountId: resolvedAccount.id,
-        plan: userPlan,
-        billingPeriod: '',
+        plan: resolvedAccount.plan || provisionPlan,
+        billingPeriod: resolvedAccount.billing_period || '',
         checksUsed: actualUsed,
-        checksLimit: limit,
+        checksLimit: resolvedAccount.checks_limit ?? limit,
       });
     } catch (err) {
       console.error('Failed to load account:', err);
