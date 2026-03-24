@@ -95,27 +95,24 @@ serve(async (req) => {
       });
       customerId = customer.id;
 
-      // Store the customer ID back on the account
       await supabase
         .from('accounts')
         .update({ stripe_customer_id: customerId })
         .eq('id', membership.account_id);
     }
 
-    const { setAsDefault } = await req.json().catch(() => ({ setAsDefault: true }));
-
-    const setupIntent = await stripe.setupIntents.create({
+    // Create a Stripe Billing Portal session
+    const portalSession = await stripe.billingPortal.sessions.create({
       customer: customerId,
-      payment_method_types: ['card'],
-      metadata: { set_as_default: String(setAsDefault) },
+      return_url: 'https://safepost.com.au/billing',
     });
 
-    return new Response(JSON.stringify({ clientSecret: setupIntent.client_secret }), {
+    return new Response(JSON.stringify({ url: portalSession.url }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error('SetupIntent error:', error);
+    console.error('Billing portal error:', error);
     return new Response(JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
