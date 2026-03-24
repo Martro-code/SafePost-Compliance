@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { ArrowLeft, CreditCard, Info, CheckCircle } from 'lucide-react';
+import { ArrowLeft, CreditCard, Info, CheckCircle, Loader2 } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { supabase } from '../services/supabaseClient';
 import { useAccount } from '../context/AccountContext';
@@ -35,8 +35,29 @@ const UpgradeConfirmation: React.FC = () => {
   const formattedPrice = `$${price.toFixed(2)}/${billingLabel}`;
 
   const [upgraded, setUpgraded] = useState(false);
-
   const [upgrading, setUpgrading] = useState(false);
+
+  const [cardInfo, setCardInfo] = useState<{ brand: string; last4: string; exp_month: number; exp_year: number } | null>(null);
+  const [cardLoading, setCardLoading] = useState(true);
+  const [cardError, setCardError] = useState(false);
+
+  useEffect(() => {
+    const fetchCard = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('get-payment-method');
+        if (error || !data?.card) {
+          setCardError(true);
+        } else {
+          setCardInfo(data.card);
+        }
+      } catch {
+        setCardError(true);
+      } finally {
+        setCardLoading(false);
+      }
+    };
+    fetchCard();
+  }, []);
 
   const handleConfirmUpgrade = async () => {
     if (!planKey || !accountId) return;
@@ -122,21 +143,42 @@ const UpgradeConfirmation: React.FC = () => {
               {/* Payment method */}
               <div className="p-6 md:p-8">
                 <p className="text-[11px] font-semibold text-gray-400 tracking-wider uppercase mb-3 dark:text-gray-500">Payment method</p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <CreditCard className="w-5 h-5 text-gray-400 dark:text-gray-500" />
-                    <div>
-                      <p className="text-[14px] font-medium text-gray-900 dark:text-white">Visa ending in 4242</p>
-                      <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">Expires 12/2027</p>
-                    </div>
+                {cardLoading ? (
+                  <div className="flex items-center gap-2 text-gray-400 dark:text-gray-500">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-[13px]">Loading payment method…</span>
                   </div>
-                  <button
-                    onClick={() => navigate('/update-card')}
-                    className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300"
-                  >
-                    Update
-                  </button>
-                </div>
+                ) : cardError || !cardInfo ? (
+                  <div className="flex items-center justify-between">
+                    <p className="text-[13px] text-gray-500 dark:text-gray-400">No payment method on file</p>
+                    <button
+                      onClick={() => navigate('/update-card')}
+                      className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300"
+                    >
+                      Add card
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <CreditCard className="w-5 h-5 text-gray-400 dark:text-gray-500" />
+                      <div>
+                        <p className="text-[14px] font-medium text-gray-900 dark:text-white">
+                          {cardInfo.brand.charAt(0).toUpperCase() + cardInfo.brand.slice(1)} ending in {cardInfo.last4}
+                        </p>
+                        <p className="text-[13px] text-gray-500 mt-0.5 dark:text-gray-400">
+                          Expires {String(cardInfo.exp_month).padStart(2, '0')}/{cardInfo.exp_year}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => navigate('/update-card')}
+                      className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300"
+                    >
+                      Update
+                    </button>
+                  </div>
+                )}
               </div>
 
               <div className="border-t border-black/[0.06] dark:border-gray-700" />
