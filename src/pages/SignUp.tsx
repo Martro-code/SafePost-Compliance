@@ -6,6 +6,7 @@ import PublicFooter from '../components/layout/PublicFooter';
 import { supabase } from '../services/supabaseClient';
 import { useGooglePlacesAutocomplete } from '../hooks/useGooglePlacesAutocomplete';
 import { trackSignUp } from '../services/analytics';
+import { sanitizeInput } from '../utils/sanitizeInput';
 
 const SignUp: React.FC = () => {
   const navigate = useNavigate();
@@ -144,21 +145,21 @@ const SignUp: React.FC = () => {
     ) {
       setIsSubmitting(true);
       const { error } = await supabase.auth.signUp({
-        email,
+        email: sanitizeInput(email),
         password,
         options: {
           emailRedirectTo: `${window.location.origin}/auth/callback`,
           data: {
-            first_name: firstName.trim(),
-            surname: surname.trim(),
-            mobile_number: mobileNumber.trim(),
-            practice_name: practiceName.trim(),
-            street_address: streetAddress.trim(),
-            suburb: suburb.trim(),
-            state,
-            postcode: postcode.trim(),
-            abn: abn.replace(/\s/g, ''),
-            abn_entity_name: abnEntityName,
+            first_name: sanitizeInput(firstName.trim()),
+            surname: sanitizeInput(surname.trim()),
+            mobile_number: sanitizeInput(mobileNumber.trim()),
+            practice_name: sanitizeInput(practiceName.trim()),
+            street_address: sanitizeInput(streetAddress.trim()),
+            suburb: sanitizeInput(suburb.trim()),
+            state: sanitizeInput(state),
+            postcode: sanitizeInput(postcode.trim()),
+            abn: sanitizeInput(abn.replace(/\s/g, '')),
+            abn_entity_name: sanitizeInput(abnEntityName),
             plan: plan || 'starter',
             billing: billing || 'monthly',
           },

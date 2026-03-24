@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
 import { supabase } from '../services/supabaseClient';
+import { sanitizeInput } from '../utils/sanitizeInput';
 
 const UpdatePersonalDetails: React.FC = () => {
   const navigate = useNavigate();
@@ -16,8 +17,8 @@ const UpdatePersonalDetails: React.FC = () => {
   const handleSave = async () => {
     await supabase.auth.updateUser({
       data: {
-        first_name: firstNameField.trim(),
-        surname: lastNameField.trim(),
+        first_name: sanitizeInput(firstNameField.trim()),
+        surname: sanitizeInput(lastNameField.trim()),
       },
     });
     navigate('/profile');
