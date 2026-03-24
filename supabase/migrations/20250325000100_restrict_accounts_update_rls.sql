@@ -20,14 +20,10 @@ create policy "Owners can update their own account"
 revoke update on public.accounts from authenticated;
 
 grant update (
-  practice_name,
+  account_name,
+  billing_email,
   first_name,
   last_name,
-  mobile,
-  address,
-  suburb,
-  state,
-  postcode,
   abn,
   abn_entity_name
 ) on public.accounts to authenticated;
