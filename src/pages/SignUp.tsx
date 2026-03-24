@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
-import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink, ArrowLeft, Loader2, CheckCircle2 } from 'lucide-react';
+import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink, ArrowLeft, Loader2, CheckCircle2, Stethoscope } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import PublicFooter from '../components/layout/PublicFooter';
 import { supabase } from '../services/supabaseClient';
@@ -23,6 +23,7 @@ const SignUp: React.FC = () => {
   const [suburb, setSuburb] = useState('');
   const [state, setState] = useState('');
   const [postcode, setPostcode] = useState('');
+  const [specialty, setSpecialty] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -66,6 +67,20 @@ const SignUp: React.FC = () => {
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
+  const specialtyOptions = [
+    'General Practitioner',
+    'Specialist Physician',
+    'Surgeon',
+    'Dentist',
+    'Psychologist',
+    'Physiotherapist',
+    'Chiropractor',
+    'Optometrist',
+    'Pharmacist',
+    'Nurse Practitioner',
+    'Midwife',
+    'Other',
+  ];
 
   // Validation helpers
   const isValidEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
@@ -160,6 +175,7 @@ const SignUp: React.FC = () => {
             postcode: sanitizeInput(postcode.trim()),
             abn: sanitizeInput(abn.replace(/\s/g, '')),
             abn_entity_name: sanitizeInput(abnEntityName),
+            specialty: sanitizeInput(specialty),
             plan: plan || 'starter',
             billing: billing || 'monthly',
           },
@@ -524,6 +540,27 @@ const SignUp: React.FC = () => {
                   onChange={(e) => setPracticeName(e.target.value)}
                   className={getInputClasses(practiceName, practiceName.trim().length > 0)}
                 />
+              </div>
+
+              {/* Specialty */}
+              <div>
+                <label htmlFor="specialty" className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                  Specialty
+                </label>
+                <div className="relative">
+                  <select
+                    id="specialty"
+                    value={specialty}
+                    onChange={(e) => setSpecialty(e.target.value)}
+                    className={`${getInputClasses(specialty, specialty.length > 0)} appearance-none cursor-pointer`}
+                  >
+                    <option value="" disabled>Select your specialty</option>
+                    {specialtyOptions.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                </div>
               </div>
 
               {/* ABN */}

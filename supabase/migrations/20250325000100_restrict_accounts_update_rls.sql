@@ -25,7 +25,14 @@ grant update (
   first_name,
   last_name,
   abn,
-  abn_entity_name
+  abn_entity_name,
+  mobile,
+  practice_name,
+  address,
+  suburb,
+  state,
+  postcode,
+  specialty
 ) on public.accounts to authenticated;
 
 -- 4. Add a decrement_checks_used RPC so the frontend can adjust the counter

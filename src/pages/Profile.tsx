@@ -8,8 +8,10 @@ import { getDisplayPlanName } from '../utils/planUtils';
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
-  const { userEmail, firstName, surname, mobileNumber, practiceName, streetAddress, suburb, userState, postcode, signOut } = useAuth();
-  const { plan: accountPlan, billingPeriod: accountBillingPeriod } = useAccount();
+  const { userEmail, firstName, surname, mobileNumber, practiceName, streetAddress, suburb, userState, postcode, specialty, signOut } = useAuth();
+  const { plan: accountPlan, billingPeriod: accountBillingPeriod, specialty: acctSpecialty } = useAccount();
+
+  const displaySpecialty = acctSpecialty || specialty;
 
   const planName = accountPlan || '';
   const billingPeriod = accountBillingPeriod || '';
@@ -113,6 +115,10 @@ const Profile: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="text-[13px] text-gray-500 dark:text-gray-400">Postcode</span>
                 <span className={`text-[14px] ${postcode ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{postcode || 'Not provided'}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] text-gray-500 dark:text-gray-400">Specialty</span>
+                <span className={`text-[14px] ${displaySpecialty ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>{displaySpecialty || 'Not provided'}</span>
               </div>
             </div>
           </div>
