@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   CheckCircle2, XCircle, AlertTriangle, ChevronDown, ChevronUp,
   Sparkles, Copy, Check, ArrowLeft, Loader2, Shield, ExternalLink,
@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { trackComplianceResultViewed, trackPdfExported } from '../../services/analytics';
 
 // ─── Types (mirror your existing types) ──────────────────────────────────────
 interface ComplianceIssue {
@@ -330,6 +331,12 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
 
   const resultsRef = useRef<HTMLDivElement>(null);
 
+  // Track compliance result viewed (once per render)
+  useEffect(() => {
+    const verdict = result.overall_status === 'compliant' ? 'compliant' : 'non_compliant';
+    trackComplianceResultViewed(verdict, result.issues.length);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const isUltra = planName.toLowerCase() === 'ultra';
 
   const verdict = verdictConfig[result.overall_status] ?? verdictConfig.warning;
@@ -405,6 +412,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
 
       const dateStr = new Date().toISOString().split('T')[0];
       pdf.save(`SafePost-Compliance-Check-${dateStr}.pdf`);
+      trackPdfExported();
     } catch (error) {
       console.error('PDF export failed:', error);
     } finally {

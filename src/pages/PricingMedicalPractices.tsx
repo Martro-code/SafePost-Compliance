@@ -4,6 +4,7 @@ import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-re
 import SafePostLogo from '../components/ui/SafePostLogo';
 import FAQSection from '../components/ui/FAQSection';
 import PublicFooter from '../components/layout/PublicFooter';
+import { trackUpgradeInitiated } from '../services/analytics';
 
 
 
@@ -371,7 +372,10 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
               </ul>
               <button
-                onClick={() => navigate(`/signup?plan=pro-plus&billing=${isYearly ? 'annual' : 'monthly'}`)}
+                onClick={() => {
+                  trackUpgradeInitiated('pro_plus', isYearly ? 'annual' : 'monthly');
+                  navigate(`/signup?plan=pro-plus&billing=${isYearly ? 'annual' : 'monthly'}`);
+                }}
                 className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
               >
                 Get Pro+
@@ -438,7 +442,10 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
               </ul>
               <button
-                onClick={() => navigate(`/signup?plan=ultra&billing=${isYearly ? 'annual' : 'monthly'}`)}
+                onClick={() => {
+                  trackUpgradeInitiated('ultra', isYearly ? 'annual' : 'monthly');
+                  navigate(`/signup?plan=ultra&billing=${isYearly ? 'annual' : 'monthly'}`);
+                }}
                 className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
               >
                 Get Ultra

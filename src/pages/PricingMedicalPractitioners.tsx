@@ -4,6 +4,7 @@ import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-re
 import SafePostLogo from '../components/ui/SafePostLogo';
 import FAQSection from '../components/ui/FAQSection';
 import PublicFooter from '../components/layout/PublicFooter';
+import { trackUpgradeInitiated } from '../services/analytics';
 
 
 
@@ -415,7 +416,10 @@ const PricingMedicalPractitioners: React.FC = () => {
                 </li>
               </ul>
               <button
-                onClick={() => navigate(`/signup?plan=professional&billing=${isYearly ? 'annual' : 'monthly'}`)}
+                onClick={() => {
+                  trackUpgradeInitiated('professional', isYearly ? 'annual' : 'monthly');
+                  navigate(`/signup?plan=professional&billing=${isYearly ? 'annual' : 'monthly'}`);
+                }}
                 className="w-full py-3 text-[15px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
               >
                 Get Professional

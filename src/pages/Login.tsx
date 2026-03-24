@@ -4,6 +4,7 @@ import { ChevronDown, Eye, EyeOff, Menu, X, ExternalLink, ArrowLeft } from 'luci
 import SafePostLogo from '../components/ui/SafePostLogo';
 import { supabase } from '../services/supabaseClient';
 import PublicFooter from '../components/layout/PublicFooter';
+import { trackLogin } from '../services/analytics';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -132,6 +133,8 @@ const Login: React.FC = () => {
     // Reset failed attempts on successful login
     setFailedAttempts(0);
     setLockoutUntil(null);
+
+    trackLogin('email');
 
     // Persist session preference based on "Remember me" checkbox
     if (rememberMe) {

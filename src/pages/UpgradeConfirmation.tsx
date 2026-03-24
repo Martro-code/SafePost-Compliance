@@ -4,6 +4,7 @@ import { ArrowLeft, CreditCard, Info, CheckCircle, Loader2 } from 'lucide-react'
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { supabase } from '../services/supabaseClient';
 import { useAccount } from '../context/AccountContext';
+import { trackUpgradeCompleted } from '../services/analytics';
 
 const plans: Record<string, { name: string; monthlyPrice: number; yearlyPrice: number }> = {
   professional: { name: 'SafePost Professional', monthlyPrice: 20, yearlyPrice: 200 },
@@ -81,6 +82,7 @@ const UpgradeConfirmation: React.FC = () => {
 
       // Refresh the AccountContext so Dashboard picks up the new plan
       await refreshAccount();
+      trackUpgradeCompleted(planKey, price);
       setUpgraded(true);
     } catch (err) {
       console.error('Upgrade failed:', err);

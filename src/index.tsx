@@ -6,12 +6,16 @@ import App from './App';
 import { ThemeProvider } from './context/ThemeContext';
 import { AccountProvider } from './context/AccountContext';
 import * as Sentry from "@sentry/react";
+import { initGA4 } from './services/analytics';
 
 Sentry.init({
   dsn: import.meta.env.VITE_GLITCHTIP_DSN,
   tracesSampleRate: 0.01,
   autoSessionTracking: false,
 });
+
+// Initialise GA4 analytics (only if measurement ID is set and cookies are accepted)
+initGA4();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

@@ -6,6 +6,7 @@ import { AnalysisProgress } from '../components/compliance/AnalysisProgress';
 import { ComplianceReport } from '../components/compliance/ComplianceReport';
 import { ComplianceHistory } from '../components/compliance/ComplianceHistory';
 import { Shield } from 'lucide-react';
+import { trackComplianceCheckRun } from '../services/analytics';
 
 type ActiveTab = 'checker' | 'history';
 
@@ -69,7 +70,10 @@ export function ComplianceCheckerPage() {
           <div className="space-y-6">
             {showForm && (
               <ContentInputForm
-                onSubmit={checker.runCheck}
+                onSubmit={(content, contentType, platform) => {
+                  trackComplianceCheckRun(platform, contentType);
+                  return checker.runCheck(content, contentType, platform);
+                }}
                 error={checker.error}
                 authError={checker.authError}
               />

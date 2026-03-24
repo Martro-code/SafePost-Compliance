@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { ArrowLeft, Check } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
+import { trackUpgradeInitiated } from '../services/analytics';
 
 const plans = [
   {
@@ -199,6 +200,7 @@ const ChangePlan: React.FC = () => {
               disabled={!selectedPlan}
               onClick={() => {
                 if (isUpgradeMode && selectedPlan) {
+                  trackUpgradeInitiated(selectedPlan, billingCycle === 'yearly' ? 'annual' : 'monthly');
                   navigate(`/upgrade-confirmation?plan=${selectedPlan}&billing=${billingCycle}`);
                 }
               }}
