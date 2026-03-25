@@ -9,7 +9,7 @@ import { getDisplayPlanName } from '../utils/planUtils';
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const { userEmail, firstName, surname, mobileNumber, practiceName, streetAddress, suburb, userState, postcode, specialty, signOut } = useAuth();
-  const { plan: accountPlan, billingPeriod: accountBillingPeriod, specialty: acctSpecialty } = useAccount();
+  const { plan: accountPlan, billingPeriod: accountBillingPeriod, specialty: acctSpecialty, abn: accountAbn, abnEntityName: accountAbnEntityName } = useAccount();
 
   const displaySpecialty = acctSpecialty || specialty;
 
@@ -57,6 +57,12 @@ const Profile: React.FC = () => {
               <div className="flex items-center justify-between">
                 <span className="text-[13px] text-gray-500 dark:text-gray-400">Last name</span>
                 <span className="text-[14px] font-medium text-gray-900 dark:text-white">{surname || '—'}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] text-gray-500 dark:text-gray-400">ABN</span>
+                <span className={`text-[14px] ${accountAbn ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>
+                  {accountAbn ? `${accountAbn}${accountAbnEntityName ? ` — ${accountAbnEntityName}` : ''}` : 'Not provided'}
+                </span>
               </div>
             </div>
           </div>
