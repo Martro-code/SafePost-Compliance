@@ -5,7 +5,7 @@
  */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle, Loader2 } from 'lucide-react';
+import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle, Loader2, AlertTriangle } from 'lucide-react';
 import SafePostLogo from '../ui/SafePostLogo';
 import LoggedInFooter from './LoggedInFooter';
 import { useAuth } from '../../hooks/useAuth';
@@ -21,7 +21,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, userEmail, signOut } = useAuth();
-  const { role, plan: accountPlan } = useAccount();
+  const { role, plan: accountPlan, abnRequired } = useAccount();
 
   // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
   // Only trust the database-backed value from AccountContext.
@@ -277,6 +277,26 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
           </div>
         </div>
       </header>
+
+      {/* ABN prompt banner */}
+      {abnRequired && (
+        <div className="bg-amber-50 border-b border-amber-200">
+          <div className="max-w-6xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0" />
+              <p className="text-[13px] text-amber-800">
+                Complete your profile — Add your ABN to ensure your account meets compliance requirements.
+              </p>
+            </div>
+            <button
+              onClick={() => navigate('/update-personal-details')}
+              className="flex-shrink-0 px-4 py-1.5 text-[13px] font-semibold text-amber-800 bg-amber-100 hover:bg-amber-200 rounded-lg border border-amber-300 transition-colors duration-200"
+            >
+              Add ABN &rarr;
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Page content */}
       <main className="flex-grow">
