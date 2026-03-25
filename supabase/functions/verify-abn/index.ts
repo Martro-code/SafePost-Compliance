@@ -39,18 +39,26 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: 'ABR lookup is not configured. Please contact support.' }, 500);
     }
 
-    const abrUrl = `https://abr.business.gov.au/json/AbnDetails.aspx?abn=${cleaned}&callback=callback&guid=${guid}`;
+    const abrUrl = `https://abr.business.gov.au/abrxmlsearch/AbrXmlSearch.asmx/SearchByABNv202001?searchString=${cleaned}&includeHistoricalDetails=N&authenticationGuid=${guid}`;
     const abrRes = await fetch(abrUrl);
-    const text = await abrRes.text();
+    const xml = await abrRes.text();
 
-    // Parse JSONP: strip "callback(" prefix and ")" suffix
-    const jsonStr = text.replace(/^callback\(/, '').replace(/\)$/, '');
-    const data = JSON.parse(jsonStr);
+    // Helper to extract text content from an XML element by tag name.
+    const tag = (name: string, src?: string): string => {
+      const match = (src ?? xml).match(new RegExp(`<${name}[^>]*>([^<]*)</${name}>`));
+      return match ? match[1].trim() : '';
+    };
 
-    // ABR returns Abn, AbnStatus, EntityName, EntityTypeName etc.
-    const abnStatus = data.AbnStatus ?? '';
-    const entityName = data.EntityName ?? data.BusinessName?.[0]?.Name ?? '';
-    const entityType = data.EntityTypeName ?? '';
+    // Extract entity name — prefer organisation name, fall back to
+    // individual name (given + family), then main trading name.
+    const orgName = tag('OrganisationName');
+    const givenName = tag('GivenName');
+    const familyName = tag('FamilyName');
+    const mainName = tag('OrganisationName', xml.match(/<MainName>[\s\S]*?<\/MainName>/)?.[0] ?? '');
+    const entityName = orgName || (givenName || familyName ? `${givenName} ${familyName}`.trim() : '') || mainName || '';
+
+    const entityType = tag('EntityDescription');
+    const abnStatus = tag('EntityStatusCode');
     const isActive = abnStatus === 'Active';
 
     if (!isActive) {
