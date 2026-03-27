@@ -18,7 +18,7 @@ const PublicFooter = () => {
         </div>
 
         {/* Footer Columns */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-10 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
           {/* Features */}
           <div>
             <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Features</h4>
@@ -44,6 +44,7 @@ const PublicFooter = () => {
             <ul className="space-y-2.5">
               <li><button onClick={() => navigate('/about')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">About Us</button></li>
               <li><button onClick={() => navigate('/news')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">News</button></li>
+              <li><button onClick={() => navigate('/contact')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Contact Us</button></li>
             </ul>
           </div>
 
@@ -62,19 +63,24 @@ const PublicFooter = () => {
           <div>
             <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Legal</h4>
             <ul className="space-y-2.5">
-              <li><button onClick={() => navigate('/terms-of-use')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Terms of Use</button></li>
+              <li><button onClick={() => navigate('/terms-of-use')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Software Terms of Use</button></li>
+              <li><button onClick={() => navigate('/website-terms')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Website Terms of Use</button></li>
               <li><button onClick={() => navigate('/privacy-policy')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Privacy Policy</button></li>
               <li><button onClick={() => navigate('/cookie-policy')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Cookie Policy</button></li>
             </ul>
           </div>
+        </div>
 
-          {/* Connect */}
-          <div>
-            <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Connect</h4>
-            <ul className="space-y-2.5">
-              <li><button onClick={() => navigate('/contact')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Contact Us</button></li>
-            </ul>
-            <div className="flex items-center gap-4 mt-4">
+        {/* Disclaimer + Copyright */}
+        <div className="mt-14 pt-6 border-t border-black/[0.06]">
+          <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
+            Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
+            AHPRA and the National Boards do not provide pre-approval for advertising.
+            Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009 and the Therapeutic Goods Act 1989.
+          </p>
+          <div className="flex items-center justify-between mt-4">
+            <p className="text-[11px] text-gray-400">&copy; 2026 SafePost Pty Ltd (ABN 17 695 801 604). All rights reserved.</p>
+            <div className="flex items-center gap-4">
               {/* X / Twitter */}
               <a href="https://x.com/SafePostAU" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-gray-900 transition-colors duration-200">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" aria-label="X / Twitter">
@@ -101,16 +107,6 @@ const PublicFooter = () => {
               </a>
             </div>
           </div>
-        </div>
-
-        {/* Disclaimer + Copyright */}
-        <div className="mt-14 pt-6 border-t border-black/[0.06]">
-          <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
-            Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
-            AHPRA and the National Boards do not provide pre-approval for advertising.
-            Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009 and the Therapeutic Goods Act 1989.
-          </p>
-          <p className="text-[11px] text-gray-400 mt-4">&copy; SafePost&trade; 2026</p>
         </div>
       </div>
     </footer>

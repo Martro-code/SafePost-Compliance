@@ -4,7 +4,7 @@ const LoggedInFooter = () => {
   return (
     <footer className="bg-[#f7f7f4] dark:bg-gray-900 border-t border-black/[0.06] dark:border-gray-700 pt-14 pb-10">
       <div className="max-w-6xl mx-auto px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr_1fr_1fr_1fr] gap-10 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.8fr_1fr_1fr_1fr] gap-10 lg:gap-12">
           <div>
             <div className="text-[20px] font-extrabold tracking-tight leading-none">
               <span className="text-gray-900 dark:text-white">Safe</span>
@@ -27,7 +27,8 @@ const LoggedInFooter = () => {
           <div>
             <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Legal</h4>
             <ul className="space-y-2.5">
-              <li><Link to="/terms-of-use" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Terms of Use</Link></li>
+              <li><Link to="/terms-of-use" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Software Terms of Use</Link></li>
+              <li><Link to="/website-terms" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Website Terms of Use</Link></li>
               <li><Link to="/privacy-policy" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Privacy Policy</Link></li>
               <li><Link to="/cookie-policy" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Cookie Policy</Link></li>
             </ul>
@@ -40,10 +41,17 @@ const LoggedInFooter = () => {
               <li><Link to="/faq" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">FAQ</Link></li>
             </ul>
           </div>
+        </div>
 
-          <div>
-            <h4 className="text-[13px] font-semibold text-gray-900 mb-4 dark:text-white">Follow us</h4>
-            <div className="flex items-center gap-4 mt-4">
+        <div className="mt-14 pt-6 border-t border-black/[0.06] dark:border-gray-700">
+          <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
+            Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
+            AHPRA and the National Boards do not provide pre-approval for advertising.
+            Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009 and the Therapeutic Goods Act 1989.
+          </p>
+          <div className="flex items-center justify-between mt-4">
+            <p className="text-[11px] text-gray-400 dark:text-gray-500">&copy; 2026 SafePost Pty Ltd (ABN 17 695 801 604). All rights reserved.</p>
+            <div className="flex items-center gap-4">
               {/* X / Twitter */}
               <a href="https://x.com/SafePostAU" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-gray-900 transition-colors duration-200">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" aria-label="X / Twitter">
@@ -70,15 +78,6 @@ const LoggedInFooter = () => {
               </a>
             </div>
           </div>
-        </div>
-
-        <div className="mt-14 pt-6 border-t border-black/[0.06] dark:border-gray-700">
-          <p className="text-[10px] text-gray-400 leading-relaxed tracking-wide">
-            Disclaimer: This application is an AI-powered guidance tool and does not constitute legal or regulatory advice.
-            AHPRA and the National Boards do not provide pre-approval for advertising.
-            Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009 and the Therapeutic Goods Act 1989.
-          </p>
-          <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-4">&copy; SafePost&trade; 2026</p>
         </div>
       </div>
     </footer>
