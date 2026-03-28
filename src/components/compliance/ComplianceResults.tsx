@@ -519,7 +519,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
               This content describes conduct that cannot be made compliant through editing. Content of this nature should not be published in any form.
             </p>
             <p className="text-[13px] text-gray-400 leading-relaxed">
-              If this content relates to real events or conduct, we strongly recommend seeking immediate advice from your medical defence organisation (MDO) such as MDA National or Avant.
+              If this content relates to real events or conduct, we strongly recommend seeking immediate advice from your medical defence organisation (MDO).
             </p>
           </div>
         )}
