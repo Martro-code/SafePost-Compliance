@@ -34,6 +34,7 @@ import Help from './pages/Help';
 import CookiePolicy from './pages/CookiePolicy';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
+import WebsiteTerms from './pages/WebsiteTerms';
 import ProtectedRoute from './pages/ProtectedRoute';
 import { ComplianceCheckerPage } from './pages/ComplianceCheckerPage';
 import TeamMembers from './pages/TeamMembers';
@@ -84,6 +85,7 @@ const App: React.FC = () => {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
+          <Route path="/website-terms" element={<WebsiteTerms />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/news/:slug" element={<NewsArticlePage />} />
