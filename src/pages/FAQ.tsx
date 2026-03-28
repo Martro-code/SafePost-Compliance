@@ -157,7 +157,7 @@ const FAQ: React.FC = () => {
                 Every compliance check is logged in your account history, giving you documented evidence of due diligence if AHPRA ever investigates.
               </p>
               <p className="text-[15px] text-gray-400 leading-relaxed">
-                174 AHPRA and TGA rules are built into every check. Paste your content and get a compliance verdict in seconds — no prompting, no expertise required.
+                174 AHPRA and TGA rules are built into every check. Paste your content and get a compliance assessment in seconds — no prompting, no expertise required.
               </p>
               <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 <button
