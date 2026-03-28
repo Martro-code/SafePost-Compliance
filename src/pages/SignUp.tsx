@@ -590,10 +590,14 @@ const SignUp: React.FC = () => {
                     className={getInputClasses(abn, abnVerified)}
                   />
                   {abnLoading && (
-                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-blue-500 animate-spin" />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                    </div>
                   )}
                   {abnVerified && !abnLoading && (
-                    <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-green-500" />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                    </div>
                   )}
                 </div>
                 {abnVerified && abnEntityName && (
