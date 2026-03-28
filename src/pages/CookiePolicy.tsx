@@ -145,25 +145,25 @@ const CookiePolicy: React.FC = () => {
                 <table className="w-full text-[14px] text-gray-500 border-collapse">
                   <thead>
                     <tr className="bg-gray-100">
-                      <th className="text-left text-gray-700 font-semibold px-4 py-3 border border-gray-200 w-[200px]">Cookie Type</th>
+                      <th className="text-left text-gray-700 font-semibold px-4 py-3 border border-gray-200 w-[200px]">Cookie type</th>
                       <th className="text-left text-gray-700 font-semibold px-4 py-3 border border-gray-200">Description</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="align-top">
-                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700 whitespace-nowrap">Strictly Necessary Cookies</td>
+                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700 whitespace-nowrap">Strictly necessary cookies</td>
                       <td className="px-4 py-3 border border-gray-200 leading-relaxed">
                         Certain cookies we use are essential for the proper functioning of our Website, without which our Website won&rsquo;t work or certain features won&rsquo;t be accessible to you. For example, we may need to remember data you&rsquo;ve inputted from one page to the next in a single session. This includes Supabase authentication session data stored in your browser&rsquo;s local storage, as well as session state flags. These are strictly essential for login, account access, and checkout processes.
                       </td>
                     </tr>
                     <tr className="align-top bg-gray-50">
-                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700 whitespace-nowrap">Performance Cookies</td>
+                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700 whitespace-nowrap">Performance cookies</td>
                       <td className="px-4 py-3 border border-gray-200 leading-relaxed">
                         Performance cookies collect information about your use of the Website to help enhance the services we provide to you. We collect information about how you interact with the Website, including the pages you visit and the frequency of your visits. This information helps us identify patterns of usage on the site, collect analytics data, identify issues you may have had on the Website, make changes to enhance your browsing experience, and analyse if our marketing is effective and relevant to you. Specifically, we use Google Analytics 4 to distinguish users and sessions. No personally identifiable information is collected, and these analytics only activate after you accept cookies.
                       </td>
                     </tr>
                     <tr className="align-top">
-                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700 whitespace-nowrap">Functional Cookies</td>
+                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700 whitespace-nowrap">Functional cookies</td>
                       <td className="px-4 py-3 border border-gray-200 leading-relaxed">
                         We use functional cookies to improve your experience on our Website and make things more convenient for you. These cookies personalise your experience on our Website based on your preferences, by remembering your details such as your login details or region.
                         <br /><br />
@@ -171,7 +171,7 @@ const CookiePolicy: React.FC = () => {
                       </td>
                     </tr>
                     <tr className="align-top bg-gray-50">
-                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700">Third Party Cookies &mdash; Stripe, Google Maps and GlitchTip</td>
+                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700">Third party cookies &mdash; Stripe, Google Maps and GlitchTip</td>
                       <td className="px-4 py-3 border border-gray-200 leading-relaxed">
                         <p className="mb-3">We use a few trusted third-party services to help our website run smoothly and securely.</p>
                         <ul className="list-disc pl-5 space-y-2">
