@@ -111,7 +111,7 @@ Deno.serve(async (req) => {
       const statusCode = statusBlock.match(/<entityStatusCode>(.*?)<\/entityStatusCode>/i)?.[1];
       if (effectiveTo === '0001-01-01') {
         abnStatus = statusCode ?? '';
-        if (statusCode === 'ACT') {
+        if (statusCode === 'ACT' || statusCode === 'Active') {
           isActive = true;
         }
         break;
