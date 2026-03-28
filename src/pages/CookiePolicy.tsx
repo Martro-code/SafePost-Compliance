@@ -25,166 +25,198 @@ const CookiePolicy: React.FC = () => {
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
-
   if (loading) return null;
 
   const contentSection = (
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pt-10 md:pt-14 pb-16 md:pb-24">
-          <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
+    <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+      <div className="max-w-6xl mx-auto px-6 pt-10 md:pt-14 pb-16 md:pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
 
-            {/* Sidebar Navigation */}
-            <nav className="flex md:flex-col gap-4 md:gap-2 md:pt-1">
-              <button
-                onClick={() => navigate('/terms-of-use')}
-                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
-                  location.pathname === '/terms-of-use' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
-                }`}
-              >
-                Terms of Use
-              </button>
-              <button
-                onClick={() => navigate('/privacy-policy')}
-                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
-                  location.pathname === '/privacy-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
-                }`}
-              >
-                Privacy Policy
-              </button>
-              <button
-                onClick={() => navigate('/cookie-policy')}
-                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
-                  location.pathname === '/cookie-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
-                }`}
-              >
-                Cookie Policy
-              </button>
-            </nav>
+          {/* Sidebar Navigation */}
+          <nav className="flex md:flex-col gap-4 md:gap-2 md:pt-1">
+            <button
+              onClick={() => navigate('/terms-of-use')}
+              className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                location.pathname === '/terms-of-use' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+              }`}
+            >
+              Terms of Use
+            </button>
+            <button
+              onClick={() => navigate('/privacy-policy')}
+              className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                location.pathname === '/privacy-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+              }`}
+            >
+              Privacy Policy
+            </button>
+            <button
+              onClick={() => navigate('/cookie-policy')}
+              className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                location.pathname === '/cookie-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+              }`}
+            >
+              Cookies Policy
+            </button>
+          </nav>
 
-            {/* Document Content */}
-            <div className="max-w-[800px] space-y-8">
+          {/* Document Content */}
+          <div className="max-w-[800px] space-y-8">
 
+            {/* Title */}
             <div>
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
-                Cookie Policy
+                Cookies Policy
               </h1>
               <p className="text-[14px] text-gray-500">
-                Last updated 23 February 2026
+                Last updated 23 March 2026
               </p>
             </div>
 
             {/* Introduction */}
             <div>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`SafePost uses cookies and similar tracking technologies to operate our platform, improve your experience, and understand how our platform is used. This Cookie Policy explains what cookies are, what cookies we use, and how you can manage them. This Cookie Policy should be read together with our Privacy Policy, which provides further information about how we handle your personal information.`}
-              </p>
-            </div>
-
-            {/* 1. What are cookies? */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">1. What are cookies?</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                Cookies are small text files that are stored on your device when you visit a website or use a web application. They are widely used to make websites and applications work efficiently and to provide information to the site operator.
-              </p>
-            </div>
-
-            {/* 2. What cookies does SafePost use? */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">{`2. What cookies does SafePost use?`}</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Introduction</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We use the following categories of cookies:
+                This document sets out the Cookies Policy of SafePost Pty Ltd (ABN 17 695 801 604 / ACN 695 801 604) (<strong>SafePost</strong>) (referred to in this cookies policy as &lsquo;we&rsquo;, &lsquo;us&rsquo;, or &lsquo;our&rsquo;).
               </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                This Cookies Policy applies when you use our website accessible at{' '}
+                <a href="https://www.safepost.com.au" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                  https://www.safepost.com.au
+                </a>{' '}
+                (&ldquo;Website&rdquo;) and describes the types of cookies we use on our Website, how we use them, and how you can control them.
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                We may update this Cookies Policy from time to time by posting an updated copy on our website and we encourage you to check our website regularly to ensure that you are aware of our most current Cookies Policy.
+              </p>
+            </div>
 
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Essential cookies</h3>
+            {/* Types of Cookies We Use */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Types of Cookies We Use</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-6">
-                {`These cookies are necessary for the SafePost platform to function. They enable core features such as authentication, session management, and security. You cannot opt out of essential cookies as the platform cannot function without them. Examples include cookies used by Supabase to manage your login session and keep you authenticated while you use the platform.`}
+                A cookie is a small file that&rsquo;s stored on your computer or device when you visit a website that uses cookies. We may use several different cookies on our Website, for the purposes of website functionality, performance, advertising, and social media or content cookies. Cookies enhance your experience on our Website, as it allows us to recognise you, remember your details and preferences (for example, your log-in details), and provide us with information on when you&rsquo;ve visited and how you&rsquo;ve interacted with our Website.
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                The below table sets out the type of cookies we may collect on our Website.
               </p>
 
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Preference cookies</h3>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-6">
-                These cookies remember your settings and preferences to improve your experience. For example, we use localStorage to remember whether you have accepted or declined our cookie consent banner, and to store your notification preferences and session data during your visit.
-              </p>
+              {/* Cookie table */}
+              <div className="overflow-x-auto">
+                <table className="w-full text-[14px] text-gray-500 border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="text-left text-gray-700 font-semibold px-4 py-3 border border-gray-200 w-[200px]">Cookie Type</th>
+                      <th className="text-left text-gray-700 font-semibold px-4 py-3 border border-gray-200">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="align-top">
+                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700 whitespace-nowrap">Strictly Necessary Cookies</td>
+                      <td className="px-4 py-3 border border-gray-200 leading-relaxed">
+                        Certain cookies we use are essential for the proper functioning of our Website, without which our Website won&rsquo;t work or certain features won&rsquo;t be accessible to you. For example, we may need to remember data you&rsquo;ve inputted from one page to the next in a single session. This includes Supabase authentication session data stored in your browser&rsquo;s local storage, as well as session state flags. These are strictly essential for login, account access, and checkout processes.
+                      </td>
+                    </tr>
+                    <tr className="align-top bg-gray-50">
+                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700 whitespace-nowrap">Performance Cookies</td>
+                      <td className="px-4 py-3 border border-gray-200 leading-relaxed">
+                        Performance cookies collect information about your use of the Website to help enhance the services we provide to you. We collect information about how you interact with the Website, including the pages you visit and the frequency of your visits. This information helps us identify patterns of usage on the site, collect analytics data, identify issues you may have had on the Website, make changes to enhance your browsing experience, and analyse if our marketing is effective and relevant to you. Specifically, we use Google Analytics 4 to distinguish users and sessions. No personally identifiable information is collected, and these analytics only activate after you accept cookies.
+                      </td>
+                    </tr>
+                    <tr className="align-top">
+                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700 whitespace-nowrap">Functional Cookies</td>
+                      <td className="px-4 py-3 border border-gray-200 leading-relaxed">
+                        We use functional cookies to improve your experience on our Website and make things more convenient for you. These cookies personalise your experience on our Website based on your preferences, by remembering your details such as your login details or region.
+                        <br /><br />
+                        Security cookies are a type of functional cookie, which assist with website and user account security. Load balancing session cookies are used for the duration of the session to distribute user requests across multiple servers to optimise website speed and capacity. We also use user interface customisation persistent cookies to store a user&rsquo;s preferred version of our Website, such as font and language preferences. Specifically, this category includes a &ldquo;stay signed in&rdquo; session cookie so you do not have to repeatedly log in, user preference storage for theme settings, your cookie consent choice, cached account information and session navigation state.
+                      </td>
+                    </tr>
+                    <tr className="align-top bg-gray-50">
+                      <td className="px-4 py-3 border border-gray-200 font-medium text-gray-700">Third Party Cookies &mdash; Stripe, Google Maps and GlitchTip</td>
+                      <td className="px-4 py-3 border border-gray-200 leading-relaxed">
+                        <p className="mb-3">We use a few trusted third-party services to help our website run smoothly and securely.</p>
+                        <ul className="list-disc pl-5 space-y-2">
+                          <li><strong>Stripe (Payment Processing):</strong> When you update your payment details, Stripe uses temporary cookies strictly to process your payment securely and prevent fraud. These do not identify you personally.</li>
+                          <li><strong>Google Maps (Address Autocomplete):</strong> To save you time during account setup, we use Google Maps to suggest and autocomplete your address. Google may set cookies on these specific pages to provide this feature.</li>
+                          <li><strong>GlitchTip (Error Monitoring):</strong> We use this service to automatically catch and fix technical errors on our website. GlitchTip does not set any cookies, nor does it track your behaviour or collect personally identifiable information.</li>
+                        </ul>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
 
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Analytics cookies</h3>
+            {/* How Long Will Cookies Remain on My Device? */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">How Long Will Cookies Remain on My Device?</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`We may use analytics tools to understand how users interact with SafePost \u2014 for example, which pages are visited most frequently and how users navigate through the platform. This information is collected in aggregate and de-identified form and is used solely to improve the platform. We do not currently use third-party advertising or tracking cookies.`}
+                The amount of time that a cookie remains on your computer or device depends on the type of cookie &mdash; cookies are either &ldquo;persistent&rdquo; or &ldquo;session&rdquo; cookies. Persistent cookies last until they expire or are deleted, so they may remain on your device for as little as 10 minutes to several years. Session cookies last until you stop browsing, so just for the relevant session.
               </p>
             </div>
 
-            {/* 3. Third-party cookies */}
+            {/* How Do Third Parties Use Cookies on the Website? */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">3. Third-party cookies</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">How Do Third Parties Use Cookies on the Website?</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We use a small number of third-party services that may set their own cookies:
+                We may use third party analytics cookies to collect information about your interaction with our Website.
               </p>
-              <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Supabase \u2014 our authentication and database provider, which uses cookies to manage secure login sessions.`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Stripe \u2014 our payment processor, which may set cookies when you interact with payment-related features of the platform.`}</li>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                We use Google Analytics and other third-party analytics providers to help process data. To find out more, see{' '}
+                <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                  How Google uses data when you use our partners&rsquo; sites or apps
+                </a>.
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                You can opt out of Google Analytics by declining cookies on our cookie banner or by installing the Google Analytics opt-out browser add-on available at{' '}
+                <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                  tools.google.com/dlpage/gaoptout
+                </a>.
+              </p>
+            </div>
+
+            {/* How Do I Control Cookies? */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">How Do I Control Cookies?</h2>
+              <ul className="list-disc pl-5 space-y-3 mb-4">
+                <li className="text-[14px] text-gray-500 leading-relaxed">
+                  Usually, you can control and manage cookies through your browser. You can control whether or not your browser accepts cookies, how to filter and manage cookies, and how to delete cookies at the end of a session.
+                </li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">
+                  If you remove or block cookies, this may negatively impact your experience of our Website and you may not be able to access all parts of our Website.
+                </li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">
+                  Many third party advertising services allow you to opt out of their tracking systems, by giving you the opportunity to opt out by way of a pop-up before downloading cookies to your device.
+                </li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">
+                  For more information about cookies and how to manage them, visit{' '}
+                  <a href="http://www.allaboutcookies.org" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                    www.allaboutcookies.org
+                  </a>.
+                </li>
               </ul>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                We do not use cookies from advertising networks, social media platforms, or data brokers.
-              </p>
             </div>
 
-            {/* 4. How long do cookies last? */}
+            {/* Contact Us */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">4. How long do cookies last?</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                Session cookies are temporary and are deleted when you close your browser. Persistent cookies remain on your device for a set period or until you delete them. The cookies we use are primarily session-based or tied to your authentication session.
-              </p>
-            </div>
-
-            {/* 5. How to manage cookies */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">5. How to manage cookies</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Contact Us</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                You can manage or disable cookies through your browser settings. Most browsers allow you to:
-              </p>
-              <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">View what cookies are stored and delete them individually</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Block cookies from specific websites</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Block all third-party cookies</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Block all cookies</li>
-              </ul>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`Please note that disabling essential cookies will affect the functionality of the SafePost platform \u2014 you may not be able to log in or use the compliance checker if essential cookies are blocked. For guidance on managing cookies in your specific browser, visit your browser\u2019s help documentation.`}
-              </p>
-            </div>
-
-            {/* 6. Your consent */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Your consent</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`When you first visit SafePost, you will be shown a cookie consent banner. By clicking Accept All, you consent to our use of all cookies described in this policy. By clicking Decline, only essential cookies required for the platform to function will be used. You can update your cookie preferences at any time by clearing your browser cookies and revisiting the platform, which will re-display the consent banner.`}
-              </p>
-            </div>
-
-            {/* 7. Changes to this Cookie Policy */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Changes to this Cookie Policy</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`We may update this Cookie Policy from time to time to reflect changes to our practices or for legal or operational reasons. When we make material changes, we will update the date at the top of this policy. Your continued use of SafePost after any changes constitutes your acceptance of the updated policy.`}
-              </p>
-            </div>
-
-            {/* 8. Contact us */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Contact us</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                If you have any questions about this Cookie Policy, please contact us:
+                For further information about our Cookies Policy or practices, please contact us using the details set out below:
               </p>
               <div className="text-[14px] text-gray-500 leading-relaxed">
-                <p className="font-medium text-gray-700">{`SafePost`}</p>
-                <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
-                <p>Website: <a href="https://www.safepost.com.au" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">www.safepost.com.au</a></p>
+                <p>Email: <a href="mailto:info@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">info@safepost.com.au</a></p>
+                <p className="mt-2">
+                  <a href="https://www.safepost.com.au/contact" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                    Contact Us
+                  </a>
+                </p>
               </div>
             </div>
 
           </div>
-          </div>
         </div>
-      </section>
-
+      </div>
+    </section>
   );
 
   if (user) {
@@ -396,7 +428,6 @@ const CookiePolicy: React.FC = () => {
       <PublicFooter />
     </div>
   );
-
 };
 
 export default CookiePolicy;

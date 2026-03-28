@@ -25,364 +25,244 @@ const PrivacyPolicy: React.FC = () => {
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
-
   if (loading) return null;
 
   const contentSection = (
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pt-10 md:pt-14 pb-16 md:pb-24">
-          <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
+    <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+      <div className="max-w-6xl mx-auto px-6 pt-10 md:pt-14 pb-16 md:pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 md:gap-12">
 
-            {/* Sidebar Navigation */}
-            <nav className="flex md:flex-col gap-4 md:gap-2 md:pt-1">
-              <button
-                onClick={() => navigate('/terms-of-use')}
-                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
-                  location.pathname === '/terms-of-use' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
-                }`}
-              >
-                Terms of Use
-              </button>
-              <button
-                onClick={() => navigate('/privacy-policy')}
-                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
-                  location.pathname === '/privacy-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
-                }`}
-              >
-                Privacy Policy
-              </button>
-              <button
-                onClick={() => navigate('/cookie-policy')}
-                className={`text-[13px] font-medium text-left transition-colors duration-200 ${
-                  location.pathname === '/cookie-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
-                }`}
-              >
-                Cookie Policy
-              </button>
-            </nav>
+          {/* Sidebar Navigation */}
+          <nav className="flex md:flex-col gap-4 md:gap-2 md:pt-1">
+            <button
+              onClick={() => navigate('/terms-of-use')}
+              className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                location.pathname === '/terms-of-use' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+              }`}
+            >
+              Terms of Use
+            </button>
+            <button
+              onClick={() => navigate('/privacy-policy')}
+              className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                location.pathname === '/privacy-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+              }`}
+            >
+              Privacy Policy
+            </button>
+            <button
+              onClick={() => navigate('/cookie-policy')}
+              className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                location.pathname === '/cookie-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+              }`}
+            >
+              Cookie Policy
+            </button>
+          </nav>
 
-            {/* Document Content */}
-            <div className="max-w-[800px] space-y-8">
+          {/* Document Content */}
+          <div className="max-w-[800px] space-y-8">
 
+            {/* Title */}
             <div>
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">
                 Privacy Policy
               </h1>
               <p className="text-[14px] text-gray-500">
-                Last updated 23 February 2026
+                Last updated 23 March 2026
               </p>
             </div>
 
             {/* Introduction */}
             <div>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`SafePost (\u201Cwe\u201D, \u201Cour\u201D, \u201Cus\u201D) is committed to protecting the privacy of our users and handling personal information responsibly and transparently. This Privacy Policy explains how we collect, use, store, and disclose your personal information when you use the SafePost platform, including our website and compliance checking tools.`}
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                We handle personal information in accordance with the Privacy Act 1988 (Cth) and the Australian Privacy Principles (APPs). This Privacy Policy may be updated from time to time.
-              </p>
-            </div>
-
-            {/* Who We Are */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">1. Who We Are</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`SafePost is an AI-powered compliance checking platform designed specifically for Australian medical practitioners and healthcare practices. Our platform helps users assess whether their social media posts and online advertising content comply with AHPRA advertising guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA requirements.`}
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                {`In this Privacy Policy, \u201CSafePost\u201D refers to the entity operating the SafePost platform. If you have any questions about this Privacy Policy or our privacy practices, please contact us at privacy@safepost.com.au.`}
-              </p>
-            </div>
-
-            {/* Information We Collect */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">2. Information We Collect</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Introduction</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We may collect the following types of personal information:
+                This document sets out the privacy policy of SafePost Pty Ltd (ABN 17 695 801 604 / ACN 695 801 604) (referred to in this privacy policy as &lsquo;we&rsquo;, &lsquo;us&rsquo;, or &lsquo;our&rsquo;).
               </p>
-
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.1 Account and Identity Information</h3>
-              <ul className="list-disc pl-5 space-y-1.5 mb-6">
-                <li className="text-[14px] text-gray-500 leading-relaxed">Full name (first name and surname)</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Email address</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Mobile number</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Password (stored in encrypted form \u2014 we never store passwords in plain text)`}</li>
-              </ul>
-
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.2 Practice Information</h3>
-              <ul className="list-disc pl-5 space-y-1.5 mb-6">
-                <li className="text-[14px] text-gray-500 leading-relaxed">Practice name</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Practice street address, suburb, state and postcode</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Profession type and registration details where voluntarily provided</li>
-              </ul>
-
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.3 Compliance Check Content</h3>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-2">
-                {`When you use the SafePost compliance checker, we collect and process:`}
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                We take our privacy obligations seriously and we&rsquo;ve created this privacy policy to explain how we store, maintain, use and disclose personal information.
               </p>
-              <ul className="list-disc pl-5 space-y-1.5 mb-6">
-                <li className="text-[14px] text-gray-500 leading-relaxed">The social media or advertising content you submit for compliance checking</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Any images you upload as part of a compliance check</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">The compliance verdict, identified issues and recommended actions generated by our AI system</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Your compliance check history, stored to power the History feature in your dashboard</li>
-              </ul>
-
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.4 Billing and Payment Information</h3>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-2">
-                We collect billing-related information to process your subscription payments. Payment processing is handled by Stripe. We do not store your full credit card details on our systems. We retain:
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                We are committed to preventing serious invasions of privacy and ensuring the protection of your personal information, so you can contact us using the details below if you have any questions or concerns.
               </p>
-              <ul className="list-disc pl-5 space-y-1.5 mb-6">
-                <li className="text-[14px] text-gray-500 leading-relaxed">Your billing email address</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Partial card details (last four digits and card type) for display purposes</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Your selected subscription plan and billing cycle</li>
-              </ul>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                By providing personal information to us, you consent to our storage, maintenance, use and disclosing of personal information in accordance with this privacy policy.
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                We may change this privacy policy from time to time by posting an updated copy on our website and we encourage you to check our website regularly to ensure that you are aware of our most current privacy policy.
+              </p>
+            </div>
 
-              <h3 className="text-[15px] font-semibold text-gray-800 mb-2">2.5 Technical and Usage Information</h3>
+            {/* Types of Personal Information We Collect */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Types of Personal Information We Collect</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                The personal information we collect may include the following:
+              </p>
               <ul className="list-disc pl-5 space-y-1.5">
-                <li className="text-[14px] text-gray-500 leading-relaxed">IP address and device information</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Browser type and version</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Pages visited and time spent on the platform</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Cookies and similar tracking technologies (see Section 8)</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">name;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">name of your medical practice or organisation;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">mailing or street address for your medical practice or organisation;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">your company&rsquo;s ACN or your business&rsquo; ABN;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">email address;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">telephone number and other contact details;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">credit card or other payment information through our third party payment platform, Stripe;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">information about your business or personal circumstances;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">information in connection with client surveys, questionnaires and promotions;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">your device identity and type, I.P. address, geo-location information, page view statistics, advertising data and standard web log information;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">information about third parties; and</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">any other information provided by you to us via our website or our online presence, or otherwise required by us or provided by you.</li>
               </ul>
             </div>
 
-            {/* How We Collect Information */}
+            {/* No Sensitive Information */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">3. How We Collect Information</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">No Sensitive Information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We collect your personal information in the following ways:
+                We only collect personal information that is reasonably necessary for our functions and activities.
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                We do not intentionally collect sensitive information (including health information) within the meaning of the <em>Privacy Act 1988</em> (Cth).
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                You (users) must not upload or submit any sensitive information, including health information, relating to yourself or any third party when using our platform or website. You are responsible for ensuring that any information you provide complies with applicable privacy laws and does not include sensitive information unless you are authorised to provide it.
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                If we become aware that sensitive information has been submitted to us in circumstances where we did not request it, we will take reasonable steps to delete or de-identify that information as soon as practicable, unless we are required or authorised by law to retain it.
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                To the extent that you provide personal information about a third party, you warrant that you have obtained any necessary consents and have made any required disclosures to that individual.
+              </p>
+            </div>
+
+            {/* How We Collect Personal Information */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">How We Collect Personal Information</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                We may collect personal information either directly from you, or from third parties, including where you:
               </p>
               <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">Directly from you when you create an account, complete your profile, or update your settings</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">When you submit content through our compliance checker</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">When you contact us for support or enquiries</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Automatically through cookies and usage analytics when you use our platform</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">From Stripe, our payment processor, in relation to billing and subscription management</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">contact us through our website;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">receive goods or services from us;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">submit any of our online sign up forms;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">communicate with us via email, telephone, SMS, social applications (such as LinkedIn or Facebook) or otherwise;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">interact with our website, social applications, services, content and advertising; and</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">invest in our business or enquire as to a potential purchase in our business.</li>
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`You are not required to provide your personal information. However, if you choose not to, we may not be able to provide you with access to the SafePost platform or its features.`}
+                We may also collect personal information from you when you use or access our website or our social media pages. This may be done through use of web analytics tools, &lsquo;cookies&rsquo; or other similar tracking technologies that allow us to track and analyse your website usage. Cookies are small files that store information on your computer, mobile phone or other device and enable and allow the creator of the cookie to identify when you visit different websites. If you do not wish information to be stored as a cookie, you can disable cookies in your web browser.
               </p>
             </div>
 
-            {/* How We Use Your Information */}
+            {/* Use of Your Personal Information */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">4. How We Use Your Information</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Use of Your Personal Information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We use your personal information for the following purposes:
+                We collect and use personal information for the following purposes:
               </p>
               <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`To create and manage your SafePost account`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">To provide and operate the compliance checking service</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">To store and display your compliance check history in your dashboard</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">To process your subscription payments and manage your billing</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">To send you service-related communications including receipts, account notifications and product updates</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`To improve and develop the SafePost platform and our AI compliance models`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">To respond to your enquiries and provide customer support</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">To comply with our legal and regulatory obligations</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">To conduct research and statistical analysis in de-identified form</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">to provide goods, services or information to you;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">to verify your business identity and credentials, including validating your Australian Business Number (ABN) or Australian Company Number (ACN) against the official Australian Business Register or other relevant government databases;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">for record keeping and administrative purposes;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">to provide information about you to our contractors, employees, consultants, agents or other third parties for the purpose of providing goods or services to you;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">to improve and optimise our service offering and customer experience;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">to comply with our legal obligations, resolve disputes or enforce our agreements with third parties;</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">to send you administrative messages, reminders, notices, updates, security alerts, and other information requested by you; and</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">to consider an application of employment from you.</li>
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                We will only use your personal information for the purposes for which it was collected, purposes you would reasonably expect, any purpose you consent to, or as required or permitted by law.
+                We may disclose your personal information to cloud-providers, contractors and other third parties located inside or outside of Australia. If we do so, we will take reasonable steps to ensure that any overseas recipient has similar legal safeguards and deals with such personal information in a manner consistent with how we deal with it.
               </p>
             </div>
 
-            {/* AI Processing and Compliance Content */}
+            {/* Automated Decision-Making */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">5. AI Processing and Compliance Content</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Automated Decision-Making</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                We use automated systems, including artificial intelligence similar to widely used search and evaluation tools, to assess whether content complies with applicable laws and regulations. These automated processes may involve the use of personal information to evaluate content and its compliance status.
+              </p>
+            </div>
+
+            {/* Marketing */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Marketing</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                {`SafePost uses artificial intelligence to analyse content submitted through the compliance checker. When you submit content for a compliance check:`}
+                We may at times send you marketing communications which will be done in accordance with the <em>Spam Act 2003</em> (Cth).
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                If we do, we may use email, SMS, social media, phone or mail to send you direct marketing communications.
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                Where consent is needed, we will ask you for your consent before sending you marketing communications, except where you:
               </p>
               <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">Your content is processed by our AI model and assessed against AHPRA guidelines, the Health Practitioner Regulation National Law Act 2009, and TGA requirements stored in our compliance database</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">The results of your compliance check are stored in our database and linked to your account to power the History feature</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Content submitted through the compliance checker may be used in de-identified form to improve the accuracy of our compliance models</li>
-              </ul>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                <strong className="text-gray-700">
-                  {`Important disclaimer: SafePost is an AI-powered guidance tool and does not constitute legal or regulatory advice. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners are ultimately responsible for ensuring their social media activities and advertising complies with the Health Practitioner Regulation National Law Act 2009 and the Therapeutic Goods Act 1989.`}
-                </strong>
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                You retain ownership of the content you submit. We do not claim any intellectual property rights over your content.
-              </p>
-            </div>
-
-            {/* Sharing and Disclosure of Information */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Sharing and Disclosure of Information</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We may disclose your personal information to the following types of third parties:
-              </p>
-              <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Stripe \u2014 our payment processor, for the purpose of processing subscription payments and managing billing`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Supabase \u2014 our database and authentication provider, for secure storage of your account information and compliance check history`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`AI model providers \u2014 for the purpose of processing content submitted through the compliance checker`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Technology and infrastructure service providers who assist us in operating the SafePost platform`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Professional advisers including legal practitioners, accountants and auditors, on a confidential basis</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Government agencies, regulators or law enforcement bodies where required or authorised by law</li>
-              </ul>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We do not sell your personal information to third parties. We do not share your personal information with advertising networks or data brokers.
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                All third-party service providers we engage are required to handle your personal information in accordance with the Privacy Act and Australian Privacy Principles, or equivalent standards.
-              </p>
-            </div>
-
-            {/* Overseas Disclosure */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Overseas Disclosure</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                Some of our third-party service providers are located overseas, including in the United States of America. For example, Supabase stores data in cloud infrastructure that may be located internationally, and our AI processing providers may operate outside Australia.
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`Where we disclose personal information to overseas recipients, we take reasonable steps to ensure those recipients handle your personal information in a manner consistent with the Australian Privacy Principles. By using SafePost, you consent to the transfer of your personal information to our overseas service providers for the purposes described in this Privacy Policy.`}
-              </p>
-            </div>
-
-            {/* Cookies and Tracking Technologies */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Cookies and Tracking Technologies</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                Our platform uses cookies and similar technologies to improve your experience and help us understand how our platform is used. Cookies are small text files stored on your device.
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We use the following types of cookies:
-              </p>
-              <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Essential cookies \u2014 necessary for the platform to function, including authentication session management`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Analytics cookies \u2014 to understand how users interact with our platform so we can improve it`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Preference cookies \u2014 to remember your settings and preferences`}</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">have explicitly opted-in to receiving email marketing from us in the past; or</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">were given the option to opt-out of email marketing when you initially signed up for one of our platforms and you did not do so.</li>
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`You can manage your cookie preferences through your browser settings. Disabling certain cookies may affect the functionality of the SafePost platform.`}
+                You can, at any time, opt out of receiving marketing materials from us by using the opt-out facility provided (e.g., an unsubscribe link on emails we send you) or by contacting us via the details provided at the end of this privacy policy. We will implement such a request as soon as possible, however, cannot guarantee that such a response will be immediate.
               </p>
             </div>
 
             {/* Security */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">9. Security</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Security</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We take the security of your personal information seriously. We implement reasonable technical and organisational measures to protect your information from unauthorised access, disclosure, alteration or destruction. These measures include:
+                We take reasonable steps to ensure your personal information is secure and protected from misuse or unauthorised access. To support our compliance with the Australian Privacy Principles and ensure data sovereignty for our users, our backend infrastructure and user data are hosted locally on secure Amazon Web Services (AWS) servers located in Sydney, Australia.
               </p>
-              <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">SSL/TLS encryption for all data transmitted between your browser and our platform</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">{`Encrypted password storage \u2014 passwords are never stored in plain text`}</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Row-level security on our database, ensuring users can only access their own data</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Secure authentication through Supabase Auth</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Regular security reviews and updates</li>
-              </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                While we take all reasonable steps to protect your information, no method of transmission over the internet or electronic storage is completely secure. We cannot guarantee absolute security.
+                Our information technology systems utilise a range of robust administrative and technical measures, including password protection and restricted access protocols. However, while we employ industry-standard security practices, no electronic storage or internet transmission is completely impenetrable, and we cannot guarantee the absolute security of your personal information.
               </p>
             </div>
 
-            {/* Retention of Information */}
+            {/* Links */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">10. Retention of Information</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We retain your personal information for as long as your account is active or as needed to provide you with our services. If you close your account, we will delete or de-identify your personal information within a reasonable period, unless we are required to retain it by law or for legitimate business purposes such as resolving disputes or complying with legal obligations.
-              </p>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Links</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Compliance check history is retained for the duration of your subscription to power the History feature. You may request deletion of your compliance check history at any time by contacting us.
+                Our website may contain links to other websites. Those links are provided for convenience and may not remain current or be maintained. We are not responsible for the privacy practices of those linked websites and we suggest you review the privacy policies of those websites before using them.
               </p>
             </div>
 
-            {/* Marketing Communications */}
+            {/* Requesting Access or Correcting Your Personal Information */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">11. Marketing Communications</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Requesting Access or Correcting Your Personal Information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                {`We may send you marketing communications about SafePost products, features and updates by email. You may opt out of marketing communications at any time by:`}
+                If you wish to request access to the personal information we hold about you, please contact us using the contact details set out below including your name and contact details. We may need to verify your identity before providing you with your personal information. In some cases, we may be unable to provide you with access to all your personal information and where this occurs, we will explain why. We will deal with all requests for access to personal information within a reasonable timeframe.
               </p>
-              <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">Clicking the unsubscribe link in any marketing email we send you</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Updating your communication preferences in your account Settings</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Contacting us directly at privacy@safepost.com.au</li>
-              </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                We will always send you essential service communications such as account notifications, receipts and security alerts regardless of your marketing preferences.
-              </p>
-            </div>
-
-            {/* Accessing, Updating and Correcting Your Information */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">12. Accessing, Updating and Correcting Your Information</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                {`You have the right to access, update and correct the personal information we hold about you. You can manage most of your personal information directly through your SafePost account, including:`}
-              </p>
-              <ul className="list-disc pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">Updating your personal details through the Profile section of your dashboard</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Updating your practice information through the Profile section</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Updating your billing email and payment method through the Billing section</li>
-              </ul>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                If you wish to access information we hold about you that is not available through your account, or if you believe any information we hold is incorrect or incomplete, please contact us at:
-              </p>
-              <div className="text-[14px] text-gray-500 leading-relaxed">
-                <p className="font-medium text-gray-700">Privacy Officer</p>
-                <p>{`SafePost`}</p>
-                <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
-              </div>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                We will respond to access and correction requests within a reasonable timeframe. We may need to verify your identity before providing access to your personal information.
+                If you think that any personal information we hold about you is inaccurate, please contact us using the contact details set out below and we will take reasonable steps to ensure that it is corrected.
               </p>
             </div>
 
             {/* Complaints */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">13. Complaints</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                If you have a complaint about how we have handled your personal information, or believe we have breached the Australian Privacy Principles, please contact us in the first instance at:
-              </p>
-              <div className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                <p className="font-medium text-gray-700">Privacy Officer</p>
-                <p>{`SafePost`}</p>
-                <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
-              </div>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We will acknowledge receipt of your complaint promptly and endeavour to resolve it within 30 days. If we are unable to resolve your complaint within this timeframe, we will advise you of the reason for the delay in writing.
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                If you are not satisfied with our response, you may refer your complaint to the Office of the Australian Information Commissioner (OAIC):
-              </p>
-              <ul className="list-disc pl-5 space-y-1.5">
-                <li className="text-[14px] text-gray-500 leading-relaxed">Website: www.oaic.gov.au</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Telephone: 1300 363 992</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">In writing: GPO Box 5218, Sydney NSW 2001</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">Email: enquiries@oaic.gov.au</li>
-              </ul>
-            </div>
-
-            {/* Changes to This Privacy Policy */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">14. Changes to This Privacy Policy</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We reserve the right to update this Privacy Policy from time to time to reflect changes to our practices, technology or legal requirements. When we make material changes, we will notify you by posting an updated version on our website and, where appropriate, by sending you an email notification.
-              </p>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Complaints</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {`Your continued use of SafePost after the effective date of the updated Privacy Policy constitutes your acceptance of the changes.`}
+                If you wish to complain about how we handle your personal information or believe your privacy has been seriously invaded, please contact us using the details provided below with your name and contact details. We will investigate your complaint promptly and respond within a reasonable timeframe.
               </p>
             </div>
 
             {/* Contact Us */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">15. Contact Us</h2>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Contact Us</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                If you have any questions, concerns or requests regarding this Privacy Policy or our privacy practices, please contact us:
+                For further information about our privacy policy or practices, or to access or correct your personal information, or make a complaint, please contact us using the details set out below:
               </p>
               <div className="text-[14px] text-gray-500 leading-relaxed">
-                <p className="font-medium text-gray-700">Privacy Officer</p>
-                <p>{`SafePost`}</p>
+                <p className="font-medium text-gray-700">SafePost Privacy Officer</p>
                 <p>Email: <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a></p>
-                <p>Website: <a href="https://www.safepost.com.au" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">www.safepost.com.au</a></p>
+                <p className="mt-2">
+                  <a href="https://www.safepost.com.au/contact" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                    Contact Us
+                  </a>
+                </p>
               </div>
             </div>
 
           </div>
-          </div>
         </div>
-      </section>
-
+      </div>
+    </section>
   );
 
   if (user) {
@@ -600,7 +480,6 @@ const PrivacyPolicy: React.FC = () => {
       <PublicFooter />
     </div>
   );
-
 };
 
 export default PrivacyPolicy;
