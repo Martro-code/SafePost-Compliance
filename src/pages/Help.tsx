@@ -10,7 +10,7 @@ const faqs = [
     answer: "SafePost checks your content against 174 verified rules drawn from primary AHPRA and TGA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and the TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Therapeutic Goods Act 1989, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, guidelines for cosmetic procedures and cosmetic surgery advertising, AHPRA's acceptable evidence standard for therapeutic and efficacy claims, and TGA therapeutic goods advertising rules including the November 2025 social media advertising guidance."
   },
   {
-    question: "Does a 'Compliant' result mean I am guaranteed to be compliant?",
+    question: "Does a 'No issues detected' result mean I am guaranteed to be compliant?",
     answer: "No. A compliant result from SafePost means no issues were identified based on our current knowledge base — it does not constitute legal advice or guarantee compliance with all applicable laws and regulations. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain solely responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009, the Therapeutic Goods Act 1989, and AHPRA and TGA guidelines. If in doubt, seek independent legal advice before publishing."
   },
   {
