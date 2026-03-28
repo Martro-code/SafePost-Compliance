@@ -48,16 +48,16 @@ const Help: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  const [userName, setUserName] = useState('');
+  const [userFirstName, setUserFirstName] = useState('');
+  const [userLastName, setUserLastName] = useState('');
   const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     const loadUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const firstName = user.user_metadata?.firstName || user.user_metadata?.first_name || '';
-        const lastName = user.user_metadata?.lastName || user.user_metadata?.last_name || '';
-        setUserName(`${firstName} ${lastName}`.trim());
+        setUserFirstName(user.user_metadata?.firstName || user.user_metadata?.first_name || '');
+        setUserLastName(user.user_metadata?.lastName || user.user_metadata?.last_name || '');
         setUserEmail(user.email || '');
       }
     };
@@ -71,15 +71,12 @@ const Help: React.FC = () => {
     setErrorMessage('');
 
     const categoryLabel = categoryDisplayMap[subject] || subject;
-    const nameParts = userName.trim().split(/\s+/);
-    const firstName = nameParts[0] || '';
-    const lastName = nameParts.slice(1).join(' ') || '';
 
     try {
       const { data, error } = await supabase.functions.invoke('submit-contact-form', {
         body: {
-          first_name: firstName,
-          last_name: lastName,
+          first_name: userFirstName || 'Unknown',
+          last_name: userLastName || 'User',
           email: userEmail,
           category: categoryLabel,
           message: message.trim(),
@@ -219,8 +216,8 @@ const Help: React.FC = () => {
         {/* Section 3 — Direct contact fallback */}
         <p className="text-center text-[13px] text-gray-400 mt-4">
           Or email us directly at{' '}
-          <a href="mailto:info@safepost.com.au" className="text-blue-500 hover:text-blue-700">
-            info@safepost.com.au
+          <a href="mailto:support@safepost.com.au" className="text-blue-500 hover:text-blue-700">
+            support@safepost.com.au
           </a>
         </p>
       </div>
