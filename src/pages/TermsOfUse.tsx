@@ -64,25 +64,25 @@ const SoftwareTerms: React.FC = () => {
               >
                 <ol className="px-5 pb-4 pt-1 space-y-1.5 list-decimal list-inside">
                   {[
-                    ['Reading and Accepting These Terms', '#reading-and-accepting-these-terms'],
-                    ['Eligibility', '#eligibility'],
-                    ['Duration of Your Subscription', '#duration-of-your-subscription'],
-                    ['The Software', '#the-software'],
-                    ['Data Hosting', '#data-hosting'],
-                    ['Client Obligations', '#client-obligations'],
-                    ['Fees and Payment', '#fees-and-payment'],
-                    ['Intellectual Property and Data', '#intellectual-property-and-data'],
-                    ['Third Party Software & Terms', '#third-party-software-and-terms'],
-                    ['Confidentiality', '#confidentiality'],
-                    ['Privacy', '#privacy'],
-                    ['Liability', '#liability'],
-                    ['Upgrades and Downgrades', '#upgrades-and-downgrades'],
-                    ['Cancellation', '#cancellation'],
-                    ['Dispute Resolution', '#dispute-resolution'],
-                    ['Force Majeure', '#force-majeure'],
-                    ['Notices', '#notices'],
-                    ['General', '#general'],
-                    ['Definitions', '#definitions'],
+                    ['1. Reading and accepting these terms', '#reading-and-accepting-these-terms'],
+                    ['2. Eligibility', '#eligibility'],
+                    ['3. Duration of your subscription', '#duration-of-your-subscription'],
+                    ['4. The software', '#the-software'],
+                    ['5. Data hosting', '#data-hosting'],
+                    ['6. Client obligations', '#client-obligations'],
+                    ['7. Fees and payment', '#fees-and-payment'],
+                    ['8. Intellectual property and data', '#intellectual-property-and-data'],
+                    ['9. Third party software & terms', '#third-party-software-and-terms'],
+                    ['10. Confidentiality', '#confidentiality'],
+                    ['11. Privacy', '#privacy'],
+                    ['12. Liability', '#liability'],
+                    ['13. Upgrades and downgrades', '#upgrades-and-downgrades'],
+                    ['14. Cancellation', '#cancellation'],
+                    ['15. Dispute resolution', '#dispute-resolution'],
+                    ['16. Force majeure', '#force-majeure'],
+                    ['17. Notices', '#notices'],
+                    ['18. General', '#general'],
+                    ['19. Definitions', '#definitions'],
                   ].map(([label, href]) => (
                     <li key={href} className="text-[13px] text-gray-500">
                       <a href={href} className="hover:text-[#2563EB] transition-colors duration-150">{label}</a>
@@ -110,7 +110,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 1 */}
             <div>
-              <h2 id="reading-and-accepting-these-terms" className="text-lg font-bold text-gray-900 leading-snug mb-3">1. Reading and Accepting These Terms</h2>
+              <h2 id="reading-and-accepting-these-terms" className="text-lg font-bold text-gray-900 leading-snug mb-3">1. Reading and accepting these terms</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">In these Terms, capitalised words and phrases have the meanings given to them where they are followed by bolded brackets, or as set out in the Definitions table at the end of these Terms.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">By clicking the &ldquo;I accept these Terms&rdquo; button on our Website, paying for your Subscription or otherwise accepting the benefit of any part of your Subscription, you agree to be bound by these Terms which form a binding contractual agreement between you the person acquiring a Subscription or the company you represent and are acquiring the Subscription on behalf of (<strong>&lsquo;you&rsquo;</strong> or <strong>&lsquo;your&rsquo;</strong>) and us.</li>
@@ -145,7 +145,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 3 */}
             <div>
-              <h2 id="duration-of-your-subscription" className="text-lg font-bold text-gray-900 leading-snug mb-3">3. Duration of Your Subscription</h2>
+              <h2 id="duration-of-your-subscription" className="text-lg font-bold text-gray-900 leading-snug mb-3">3. Duration of your subscription</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">Your Subscription and these Terms commence on the date you agree to be bound by these Terms and continues for the Subscription Period and any Renewal Periods applicable, unless terminated earlier in accordance with clause 14.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Subject to clause 3(c), upon expiration of the Subscription Period, this agreement will automatically and indefinitely renew on an ongoing basis for a period equal to the Subscription Period (<strong>Renewal Period</strong>).</li>
@@ -156,7 +156,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 4 */}
             <div>
-              <h2 id="the-software" className="text-lg font-bold text-gray-900 leading-snug mb-3">4. The Software</h2>
+              <h2 id="the-software" className="text-lg font-bold text-gray-900 leading-snug mb-3">4. The software</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Scope of Your Subscription and the Software</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -199,7 +199,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 5 */}
             <div>
-              <h2 id="data-hosting" className="text-lg font-bold text-gray-900 leading-snug mb-3">5. Data Hosting</h2>
+              <h2 id="data-hosting" className="text-lg font-bold text-gray-900 leading-snug mb-3">5. Data hosting</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-3">We will store User Data you upload to the Software using a third party hosting service selected by us (<strong>Hosting Services</strong>), subject to the following terms:</p>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed"><strong>(hosting location)</strong> You acknowledge and agree that we may use storage servers to host the Software through cloud-based services, and potentially other locations outside Australia.</li>
@@ -211,7 +211,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 6 */}
             <div>
-              <h2 id="client-obligations" className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Client Obligations</h2>
+              <h2 id="client-obligations" className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Client obligations</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Client Material</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -261,7 +261,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 7 */}
             <div>
-              <h2 id="fees-and-payment" className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Fees and Payment</h2>
+              <h2 id="fees-and-payment" className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Fees and payment</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Free Trial</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -314,7 +314,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 8 */}
             <div>
-              <h2 id="intellectual-property-and-data" className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Intellectual Property and Data</h2>
+              <h2 id="intellectual-property-and-data" className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Intellectual property and data</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Software Content Intellectual Property</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -344,7 +344,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 9 */}
             <div>
-              <h2 id="third-party-software-and-terms" className="text-lg font-bold text-gray-900 leading-snug mb-3">9. Third Party Software &amp; Terms</h2>
+              <h2 id="third-party-software-and-terms" className="text-lg font-bold text-gray-900 leading-snug mb-3">9. Third party software &amp; terms</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Third Party Terms</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -453,7 +453,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 13 */}
             <div>
-              <h2 id="upgrades-and-downgrades" className="text-lg font-bold text-gray-900 leading-snug mb-3">13. Upgrades and Downgrades</h2>
+              <h2 id="upgrades-and-downgrades" className="text-lg font-bold text-gray-900 leading-snug mb-3">13. Upgrades and downgrades</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">You may notify us that you would like to upgrade or downgrade your Subscription Tier or the Number of Software Users at any time. If you do, we will:
                   <ul className="list-[lower-roman] pl-5 space-y-2 mt-2">
@@ -500,7 +500,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 15 */}
             <div>
-              <h2 id="dispute-resolution" className="text-lg font-bold text-gray-900 leading-snug mb-3">15. Dispute Resolution</h2>
+              <h2 id="dispute-resolution" className="text-lg font-bold text-gray-900 leading-snug mb-3">15. Dispute resolution</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">A party claiming that a dispute has arisen under or in connection with this agreement must not commence court proceedings arising from or relating to the dispute, other than a claim for urgent interlocutory relief, unless that party has complied with the requirements of this clause.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">A party that requires resolution of a dispute which arises under or in connection with this agreement must give the other party or parties to the dispute written notice containing reasonable details of the dispute and requiring its resolution under this clause.</li>
@@ -510,7 +510,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 16 */}
             <div>
-              <h2 id="force-majeure" className="text-lg font-bold text-gray-900 leading-snug mb-3">16. Force Majeure</h2>
+              <h2 id="force-majeure" className="text-lg font-bold text-gray-900 leading-snug mb-3">16. Force majeure</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">We will not be liable for any delay or failure to perform its obligations under this agreement if such delay or failure arises out of a Force Majeure Event.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">If a Force Majeure Event occurs, we must use reasonable endeavours to notify you of:
@@ -591,7 +591,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* Definitions */}
             <div>
-              <h2 id="definitions" className="text-lg font-bold text-gray-900 leading-snug mb-3">Definitions</h2>
+              <h2 id="definitions" className="text-lg font-bold text-gray-900 leading-snug mb-3">19. Definitions</h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-[14px] text-gray-500 border-collapse">
                   <thead>
