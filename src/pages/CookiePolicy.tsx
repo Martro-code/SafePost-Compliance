@@ -18,6 +18,7 @@ const CookiePolicy: React.FC = () => {
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
+  const [tocOpen, setTocOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
 
   const resourceLinks = [
     { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
@@ -81,9 +82,39 @@ const CookiePolicy: React.FC = () => {
               </p>
             </div>
 
+            {/* Table of Contents */}
+            <div className="border border-black/[0.08] rounded-xl overflow-hidden">
+              <button
+                onClick={() => setTocOpen(!tocOpen)}
+                className="w-full flex items-center justify-between px-5 py-3.5 text-[13px] font-semibold text-gray-700 hover:bg-black/[0.02] transition-colors duration-150"
+              >
+                Contents
+                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${tocOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{ maxHeight: tocOpen ? '400px' : '0px', opacity: tocOpen ? 1 : 0 }}
+              >
+                <ol className="px-5 pb-4 pt-1 space-y-1.5 list-decimal list-inside">
+                  {[
+                    ['Introduction', '#introduction'],
+                    ['Types of Cookies We Use', '#types-of-cookies'],
+                    ['How Long Will Cookies Remain on My Device?', '#how-long-will-cookies-remain'],
+                    ['How Do Third Parties Use Cookies on the Website?', '#how-do-third-parties-use-cookies'],
+                    ['How Do I Control Cookies?', '#how-do-i-control-cookies'],
+                    ['Contact Us', '#contact-us'],
+                  ].map(([label, href]) => (
+                    <li key={href} className="text-[13px] text-gray-500">
+                      <a href={href} className="hover:text-[#2563EB] transition-colors duration-150">{label}</a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+
             {/* Introduction */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Introduction</h2>
+              <h2 id="introduction" className="text-lg font-bold text-gray-900 leading-snug mb-3">Introduction</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 This document sets out the Cookies Policy of SafePost Pty Ltd (ABN 17 695 801 604 / ACN 695 801 604) (<strong>SafePost</strong>) (referred to in this cookies policy as &lsquo;we&rsquo;, &lsquo;us&rsquo;, or &lsquo;our&rsquo;).
               </p>
@@ -101,7 +132,7 @@ const CookiePolicy: React.FC = () => {
 
             {/* Types of Cookies We Use */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Types of Cookies We Use</h2>
+              <h2 id="types-of-cookies" className="text-lg font-bold text-gray-900 leading-snug mb-3">Types of Cookies We Use</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-6">
                 A cookie is a small file that&rsquo;s stored on your computer or device when you visit a website that uses cookies. We may use several different cookies on our Website, for the purposes of website functionality, performance, advertising, and social media or content cookies. Cookies enhance your experience on our Website, as it allows us to recognise you, remember your details and preferences (for example, your log-in details), and provide us with information on when you&rsquo;ve visited and how you&rsquo;ve interacted with our Website.
               </p>
@@ -157,7 +188,7 @@ const CookiePolicy: React.FC = () => {
 
             {/* How Long Will Cookies Remain on My Device? */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">How Long Will Cookies Remain on My Device?</h2>
+              <h2 id="how-long-will-cookies-remain" className="text-lg font-bold text-gray-900 leading-snug mb-3">How Long Will Cookies Remain on My Device?</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 The amount of time that a cookie remains on your computer or device depends on the type of cookie &mdash; cookies are either &ldquo;persistent&rdquo; or &ldquo;session&rdquo; cookies. Persistent cookies last until they expire or are deleted, so they may remain on your device for as little as 10 minutes to several years. Session cookies last until you stop browsing, so just for the relevant session.
               </p>
@@ -165,7 +196,7 @@ const CookiePolicy: React.FC = () => {
 
             {/* How Do Third Parties Use Cookies on the Website? */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">How Do Third Parties Use Cookies on the Website?</h2>
+              <h2 id="how-do-third-parties-use-cookies" className="text-lg font-bold text-gray-900 leading-snug mb-3">How Do Third Parties Use Cookies on the Website?</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We may use third party analytics cookies to collect information about your interaction with our Website.
               </p>
@@ -185,7 +216,7 @@ const CookiePolicy: React.FC = () => {
 
             {/* How Do I Control Cookies? */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">How Do I Control Cookies?</h2>
+              <h2 id="how-do-i-control-cookies" className="text-lg font-bold text-gray-900 leading-snug mb-3">How Do I Control Cookies?</h2>
               <ul className="list-disc pl-5 space-y-3 mb-4">
                 <li className="text-[14px] text-gray-500 leading-relaxed">
                   Usually, you can control and manage cookies through your browser. You can control whether or not your browser accepts cookies, how to filter and manage cookies, and how to delete cookies at the end of a session.
@@ -207,7 +238,7 @@ const CookiePolicy: React.FC = () => {
 
             {/* Contact Us */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Contact Us</h2>
+              <h2 id="contact-us" className="text-lg font-bold text-gray-900 leading-snug mb-3">Contact Us</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 Please contact us at <a href="mailto:info@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">info@safepost.com.au</a> if you have any questions about our Cookies Policy or practices.
               </p>
