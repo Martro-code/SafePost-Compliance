@@ -341,6 +341,10 @@ const PricingMedicalPractitioners: React.FC = () => {
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">1 user included</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                   <span className="text-[14px] text-gray-600">3 compliance checks</span>
                 </li>
                 <li className="flex items-start gap-3">
@@ -394,6 +398,10 @@ const PricingMedicalPractitioners: React.FC = () => {
                 )}
               </div>
               <ul className="space-y-3.5 mb-10 flex-grow">
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">1 user included</span>
+                </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                   <span className="text-[14px] text-gray-600">30 compliance checks per month</span>
