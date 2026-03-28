@@ -239,7 +239,7 @@ const NewsPage: React.FC = () => {
                 <button
                   key={article.slug}
                   onClick={() => navigate(`/news/${article.slug}`)}
-                  className="text-left bg-white rounded-2xl border border-black/[0.06] p-8 hover:shadow-lg hover:shadow-black/[0.06] transition-all duration-300 group"
+                  className="text-left bg-white rounded-2xl border border-black/[0.06] p-8 hover:shadow-lg hover:shadow-black/[0.06] transition-all duration-300 group h-full flex flex-col"
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <span className={`inline-block px-2.5 py-1 text-[11px] font-semibold rounded-full ${categoryColors[article.category] || 'bg-gray-100 text-gray-600'}`}>
@@ -249,16 +249,18 @@ const NewsPage: React.FC = () => {
                       {new Date(article.date).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' })}
                     </span>
                   </div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-[#2563EB] transition-colors duration-200 leading-snug">
-                    {article.title}
-                  </h2>
-                  <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                    {article.excerpt}
-                  </p>
-                  <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#2563EB]">
-                    Read more
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
-                  </span>
+                  <div className="flex flex-col flex-1">
+                    <h2 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-[#2563EB] transition-colors duration-200 leading-snug">
+                      {article.title}
+                    </h2>
+                    <p className="text-[14px] text-gray-500 leading-relaxed mb-4 flex-1">
+                      {article.excerpt}
+                    </p>
+                    <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#2563EB]">
+                      Read more
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+                    </span>
+                  </div>
                 </button>
               ))}
             </div>
