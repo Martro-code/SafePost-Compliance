@@ -97,13 +97,34 @@ Deno.serve(async (req) => {
 
     const entityType = tag('EntityDescription');
 
-    // Extract EntityStatusCode scoped within an EntityStatus block.
-    // The v202001 ABR API returns "ACT" for active entities; older formats
-    // may return "Active". Accept both values.
-    const entityStatusBlock =
-      xml.match(/<EntityStatus>[\s\S]*?<\/EntityStatus>/)?.[0] ?? '';
-    const abnStatus = tag('EntityStatusCode', entityStatusBlock) || tag('EntityStatusCode');
-    const isActive = abnStatus === 'Active' || abnStatus === 'ACT';
+    // The ABR XML response may contain multiple entityStatus elements — one
+    // per status period in the ABN's history. Find the current record by
+    // looking for effectiveTo = '0001-01-01', which means no end date.
+    // The ABN is active if that record's entityStatusCode is 'ACT'.
+    const statusElements = xml.match(/<entityStatus>[\s\S]*?<\/entityStatus>/gi) || [];
+    console.log('ABR entityStatus elements found:', statusElements.length, JSON.stringify(statusElements));
+
+    let isActive = false;
+    let abnStatus = '';
+    for (const statusBlock of statusElements) {
+      const effectiveTo = statusBlock.match(/<effectiveTo>(.*?)<\/effectiveTo>/i)?.[1];
+      const statusCode = statusBlock.match(/<entityStatusCode>(.*?)<\/entityStatusCode>/i)?.[1];
+      if (effectiveTo === '0001-01-01') {
+        abnStatus = statusCode ?? '';
+        if (statusCode === 'ACT') {
+          isActive = true;
+        }
+        break;
+      }
+    }
+
+    // Fallback: if no current-record found via effectiveTo, accept any ACT/Active code.
+    if (!abnStatus) {
+      const entityStatusBlock = xml.match(/<[Ee]ntity[Ss]tatus>[\s\S]*?<\/[Ee]ntity[Ss]tatus>/)?.[0] ?? '';
+      abnStatus = tag('EntityStatusCode', entityStatusBlock) || tag('EntityStatusCode');
+      isActive = abnStatus === 'Active' || abnStatus === 'ACT';
+      console.log('ABR status fallback used — abnStatus:', abnStatus);
+    }
 
     if (!isActive) {
       return jsonResponse({
