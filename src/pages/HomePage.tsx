@@ -296,7 +296,7 @@ const HomePage: React.FC = () => {
           <div className="max-w-3xl">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-gray-900 mb-6 text-balance">
               Navigate your online presence. Stay{' '}
-              <span className="text-[#2563EB]">AHPRA and TGA compliant.</span>
+              <span className="text-[#2563EB]">Check your AHPRA and TGA compliance.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
               Instant social media and online advertising compliance checks for Australian medical practitioners and practices.
@@ -396,10 +396,10 @@ const HomePage: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
               <div className="text-5xl font-extrabold text-blue-600/20 mb-5">3</div>
               <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
-                Receive compliant alternatives
+                Receive suggested alternatives
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Get ready-to-use rewritten versions of your content that meet AHPRA and TGA regulatory requirements — so you can post with confidence.
+                Get ready-to-use rewritten versions of your content designed to reduce AHPRA and TGA regulatory risk — so you can post with confidence.
               </p>
             </div>
           </div>
@@ -473,10 +473,10 @@ const HomePage: React.FC = () => {
                   See SafePost in action
                 </h2>
                 <p className="text-lg text-gray-500 leading-relaxed">
-                  Watch how SafePost identifies AHPRA and TGA compliance issues and generates compliant alternatives in seconds.
+                  Watch how SafePost identifies AHPRA and TGA compliance issues and generates suggested alternatives in seconds.
                 </p>
                 <p className="text-[15px] text-gray-400 leading-relaxed">
-                  SafePost analyses your social media posts and advertising content against AHPRA and TGA advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
+                  SafePost analyses your social media posts and advertising content against AHPRA and TGA advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use suggested alternatives.
                 </p>
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
                   <button

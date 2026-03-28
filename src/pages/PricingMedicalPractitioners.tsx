@@ -349,11 +349,11 @@ const PricingMedicalPractitioners: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Identify non-compliant content</span>
+                  <span className="text-[14px] text-gray-600">Identify potentially non-compliant content</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">AI-powered compliant content rewrites</span>
+                  <span className="text-[14px] text-gray-600">AI-powered suggested content rewrites</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -408,7 +408,7 @@ const PricingMedicalPractitioners: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">AI-powered compliant content rewrites</span>
+                  <span className="text-[14px] text-gray-600">AI-powered suggested content rewrites</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />

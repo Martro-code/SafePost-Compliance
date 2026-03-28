@@ -73,7 +73,7 @@ const FAQ: React.FC = () => {
         },
         {
           question: 'How does SafePost handle before/after photos?',
-          answer: 'Before/after photos are assessed under AHPRA\u2019s specific prohibition on such imagery in health practitioner advertising. SafePost flags these under the correct AHPRA framework and provides guidance on compliant alternatives.',
+          answer: 'Before/after photos are assessed under AHPRA\u2019s specific prohibition on such imagery in health practitioner advertising. SafePost flags these under the correct AHPRA framework and provides guidance on suggested alternatives.',
         },
         {
           question: 'How current are the compliance rules?',
