@@ -465,10 +465,10 @@ const PricingMedicalPractices: React.FC = () => {
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to stay compliant?
+            Ready to check your compliance?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Get your practice set up with SafePost and keep your entire team compliant
+            Get your practice set up with SafePost and keep your entire team across AHPRA and TGA requirements
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
