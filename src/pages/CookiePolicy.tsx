@@ -208,17 +208,9 @@ const CookiePolicy: React.FC = () => {
             {/* Contact Us */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Contact Us</h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                For further information about our Cookies Policy or practices, please contact us using the details set out below:
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                Please contact us at <a href="mailto:info@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">info@safepost.com.au</a> if you have any questions about our Cookies Policy or practices.
               </p>
-              <div className="text-[14px] text-gray-500 leading-relaxed">
-                <p>Email: <a href="mailto:info@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">info@safepost.com.au</a></p>
-                <p className="mt-2">
-                  <a href="https://www.safepost.com.au/contact" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                    Contact Us
-                  </a>
-                </p>
-              </div>
             </div>
 
           </div>
