@@ -96,8 +96,14 @@ Deno.serve(async (req) => {
     const entityName = orgName || (givenName || familyName ? `${givenName} ${familyName}`.trim() : '') || mainName || '';
 
     const entityType = tag('EntityDescription');
-    const abnStatus = tag('EntityStatusCode');
-    const isActive = abnStatus === 'Active';
+
+    // Extract EntityStatusCode scoped within an EntityStatus block.
+    // The v202001 ABR API returns "ACT" for active entities; older formats
+    // may return "Active". Accept both values.
+    const entityStatusBlock =
+      xml.match(/<EntityStatus>[\s\S]*?<\/EntityStatus>/)?.[0] ?? '';
+    const abnStatus = tag('EntityStatusCode', entityStatusBlock) || tag('EntityStatusCode');
+    const isActive = abnStatus === 'Active' || abnStatus === 'ACT';
 
     if (!isActive) {
       return jsonResponse({
