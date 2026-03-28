@@ -35,12 +35,20 @@ const PrivacyPolicy: React.FC = () => {
           {/* Sidebar Navigation */}
           <nav className="flex md:flex-col gap-4 md:gap-2 md:pt-1">
             <button
-              onClick={() => navigate('/terms-of-use')}
+              onClick={() => navigate('/software-terms')}
               className={`text-[13px] font-medium text-left transition-colors duration-200 ${
-                location.pathname === '/terms-of-use' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+                location.pathname === '/software-terms' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
               }`}
             >
-              Terms of Use
+              Software Terms of Use
+            </button>
+            <button
+              onClick={() => navigate('/website-terms')}
+              className={`text-[13px] font-medium text-left transition-colors duration-200 ${
+                location.pathname === '/website-terms' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+              }`}
+            >
+              Website Terms of Use
             </button>
             <button
               onClick={() => navigate('/privacy-policy')}
@@ -56,7 +64,7 @@ const PrivacyPolicy: React.FC = () => {
                 location.pathname === '/cookie-policy' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
               }`}
             >
-              Cookie Policy
+              Cookies Policy
             </button>
           </nav>
 
