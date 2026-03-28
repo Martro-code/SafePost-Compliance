@@ -35,9 +35,9 @@ const CookiePolicy: React.FC = () => {
           {/* Sidebar Navigation */}
           <nav className="flex md:flex-col gap-4 md:gap-2 md:pt-1">
             <button
-              onClick={() => navigate('/software-terms')}
+              onClick={() => navigate('/terms-of-use')}
               className={`text-[13px] font-medium text-left transition-colors duration-200 ${
-                location.pathname === '/software-terms' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
+                location.pathname === '/terms-of-use' ? 'text-[#2563EB]' : 'text-gray-400 hover:text-gray-900'
               }`}
             >
               Software Terms of Use
