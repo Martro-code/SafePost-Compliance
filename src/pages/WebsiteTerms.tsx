@@ -253,7 +253,7 @@ const WebsiteTerms: React.FC = () => {
               <h2 id="general" className="text-lg font-bold text-gray-900 leading-snug mb-3">11. General</h2>
               <div className="space-y-4">
                 <p className="text-[14px] text-gray-500 leading-relaxed">
-                  <span className="font-semibold text-gray-700">Governing Law and Jurisdiction:</span> This agreement is governed by the law applying in New South Wales. Each party irrevocably submits to the exclusive jurisdiction of the courts of New South Wales and courts of appeal from them. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.
+                  <span className="font-semibold text-gray-700">Governing law and jurisdiction:</span> This agreement is governed by the law applying in New South Wales. Each party irrevocably submits to the exclusive jurisdiction of the courts of New South Wales and courts of appeal from them. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.
                 </p>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
                   <span className="font-semibold text-gray-700">Waiver:</span> No party to this agreement may rely on the words or conduct of any other party as a waiver of any right unless the waiver is in writing and signed by the party granting the waiver.
@@ -262,13 +262,13 @@ const WebsiteTerms: React.FC = () => {
                   <span className="font-semibold text-gray-700">Severance:</span> Any term of this agreement which is wholly or partially void or unenforceable is severed to the extent that it is void or unenforceable. The validity and enforceability of the remainder of this agreement is not limited or otherwise affected.
                 </p>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
-                  <span className="font-semibold text-gray-700">Joint and Several Liability:</span> An obligation or a liability assumed by, or a right conferred on, two or more persons binds or benefits them jointly and severally.
+                  <span className="font-semibold text-gray-700">Joint and several liability:</span> An obligation or a liability assumed by, or a right conferred on, two or more persons binds or benefits them jointly and severally.
                 </p>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
                   <span className="font-semibold text-gray-700">Assignment:</span> A party cannot assign, novate or otherwise transfer any of its rights or obligations under this agreement without the prior written consent of the other party.
                 </p>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
-                  <span className="font-semibold text-gray-700">Entire Agreement:</span> This agreement embodies the entire agreement between the parties and supersedes any prior negotiation, conduct, arrangement, understanding or agreement, express or implied, in relation to the subject matter of this agreement.
+                  <span className="font-semibold text-gray-700">Entire agreement:</span> This agreement embodies the entire agreement between the parties and supersedes any prior negotiation, conduct, arrangement, understanding or agreement, express or implied, in relation to the subject matter of this agreement.
                 </p>
                 <div>
                   <p className="text-[14px] text-gray-500 leading-relaxed mb-3">
