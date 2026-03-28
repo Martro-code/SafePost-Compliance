@@ -95,7 +95,7 @@ const CookiePolicy: React.FC = () => {
                 className="overflow-hidden transition-all duration-300 ease-in-out"
                 style={{ maxHeight: tocOpen ? '400px' : '0px', opacity: tocOpen ? 1 : 0 }}
               >
-                <ol className="px-5 pb-4 pt-1 space-y-1.5 list-decimal list-inside">
+                <ul className="px-5 pb-4 pt-1 space-y-1.5 list-none">
                   {[
                     ['1. Introduction', '#introduction'],
                     ['2. Types of cookies we use', '#types-of-cookies'],
@@ -108,7 +108,7 @@ const CookiePolicy: React.FC = () => {
                       <a href={href} className="hover:text-[#2563EB] transition-colors duration-150">{label}</a>
                     </li>
                   ))}
-                </ol>
+                </ul>
               </div>
             </div>
 
