@@ -234,7 +234,7 @@ const NewsPage: React.FC = () => {
           {articles.length === 0 ? (
             <p className="text-gray-500 text-[14px]">No articles yet. Check back soon.</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
               {articles.map((article) => (
                 <button
                   key={article.slug}
