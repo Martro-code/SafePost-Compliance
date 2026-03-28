@@ -62,7 +62,7 @@ const SoftwareTerms: React.FC = () => {
                 className="overflow-hidden transition-all duration-300 ease-in-out"
                 style={{ maxHeight: tocOpen ? '900px' : '0px', opacity: tocOpen ? 1 : 0 }}
               >
-                <ol className="px-5 pb-4 pt-1 space-y-1.5 list-decimal list-inside">
+                <ul className="px-5 pb-4 pt-1 space-y-1.5 list-none">
                   {[
                     ['1. Reading and accepting these terms', '#reading-and-accepting-these-terms'],
                     ['2. Eligibility', '#eligibility'],
@@ -88,7 +88,7 @@ const SoftwareTerms: React.FC = () => {
                       <a href={href} className="hover:text-[#2563EB] transition-colors duration-150">{label}</a>
                     </li>
                   ))}
-                </ol>
+                </ul>
               </div>
             </div>
 
