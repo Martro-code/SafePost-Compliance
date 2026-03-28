@@ -18,6 +18,7 @@ const SoftwareTerms: React.FC = () => {
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
+  const [tocOpen, setTocOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
 
   const resourceLinks = [
     { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
@@ -48,6 +49,49 @@ const SoftwareTerms: React.FC = () => {
               <p className="text-[14px] text-gray-500">Last updated 23 March 2026</p>
             </div>
 
+            {/* Table of Contents */}
+            <div className="border border-black/[0.08] rounded-xl overflow-hidden">
+              <button
+                onClick={() => setTocOpen(!tocOpen)}
+                className="w-full flex items-center justify-between px-5 py-3.5 text-[13px] font-semibold text-gray-700 hover:bg-black/[0.02] transition-colors duration-150"
+              >
+                Contents
+                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${tocOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{ maxHeight: tocOpen ? '900px' : '0px', opacity: tocOpen ? 1 : 0 }}
+              >
+                <ol className="px-5 pb-4 pt-1 space-y-1.5 list-decimal list-inside">
+                  {[
+                    ['Reading and Accepting These Terms', '#reading-and-accepting-these-terms'],
+                    ['Eligibility', '#eligibility'],
+                    ['Duration of Your Subscription', '#duration-of-your-subscription'],
+                    ['The Software', '#the-software'],
+                    ['Data Hosting', '#data-hosting'],
+                    ['Client Obligations', '#client-obligations'],
+                    ['Fees and Payment', '#fees-and-payment'],
+                    ['Intellectual Property and Data', '#intellectual-property-and-data'],
+                    ['Third Party Software & Terms', '#third-party-software-and-terms'],
+                    ['Confidentiality', '#confidentiality'],
+                    ['Privacy', '#privacy'],
+                    ['Liability', '#liability'],
+                    ['Upgrades and Downgrades', '#upgrades-and-downgrades'],
+                    ['Cancellation', '#cancellation'],
+                    ['Dispute Resolution', '#dispute-resolution'],
+                    ['Force Majeure', '#force-majeure'],
+                    ['Notices', '#notices'],
+                    ['General', '#general'],
+                    ['Definitions', '#definitions'],
+                  ].map(([label, href]) => (
+                    <li key={href} className="text-[13px] text-gray-500">
+                      <a href={href} className="hover:text-[#2563EB] transition-colors duration-150">{label}</a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+
             {/* Preamble */}
             <div>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
@@ -66,7 +110,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 1 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">1. Reading and Accepting These Terms</h2>
+              <h2 id="reading-and-accepting-these-terms" className="text-lg font-bold text-gray-900 leading-snug mb-3">1. Reading and Accepting These Terms</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">In these Terms, capitalised words and phrases have the meanings given to them where they are followed by bolded brackets, or as set out in the Definitions table at the end of these Terms.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">By clicking the &ldquo;I accept these Terms&rdquo; button on our Website, paying for your Subscription or otherwise accepting the benefit of any part of your Subscription, you agree to be bound by these Terms which form a binding contractual agreement between you the person acquiring a Subscription or the company you represent and are acquiring the Subscription on behalf of (<strong>&lsquo;you&rsquo;</strong> or <strong>&lsquo;your&rsquo;</strong>) and us.</li>
@@ -76,7 +120,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 2 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">2. Eligibility</h2>
+              <h2 id="eligibility" className="text-lg font-bold text-gray-900 leading-snug mb-3">2. Eligibility</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">By accepting these Terms, you represent and warrant that:
                   <ul className="list-[lower-roman] pl-5 space-y-2 mt-2">
@@ -101,7 +145,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 3 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">3. Duration of Your Subscription</h2>
+              <h2 id="duration-of-your-subscription" className="text-lg font-bold text-gray-900 leading-snug mb-3">3. Duration of Your Subscription</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">Your Subscription and these Terms commence on the date you agree to be bound by these Terms and continues for the Subscription Period and any Renewal Periods applicable, unless terminated earlier in accordance with clause 14.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Subject to clause 3(c), upon expiration of the Subscription Period, this agreement will automatically and indefinitely renew on an ongoing basis for a period equal to the Subscription Period (<strong>Renewal Period</strong>).</li>
@@ -112,7 +156,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 4 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">4. The Software</h2>
+              <h2 id="the-software" className="text-lg font-bold text-gray-900 leading-snug mb-3">4. The Software</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Scope of Your Subscription and the Software</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -155,7 +199,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 5 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">5. Data Hosting</h2>
+              <h2 id="data-hosting" className="text-lg font-bold text-gray-900 leading-snug mb-3">5. Data Hosting</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-3">We will store User Data you upload to the Software using a third party hosting service selected by us (<strong>Hosting Services</strong>), subject to the following terms:</p>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed"><strong>(hosting location)</strong> You acknowledge and agree that we may use storage servers to host the Software through cloud-based services, and potentially other locations outside Australia.</li>
@@ -167,7 +211,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 6 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Client Obligations</h2>
+              <h2 id="client-obligations" className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Client Obligations</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Client Material</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -217,7 +261,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 7 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Fees and Payment</h2>
+              <h2 id="fees-and-payment" className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Fees and Payment</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Free Trial</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -270,7 +314,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 8 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Intellectual Property and Data</h2>
+              <h2 id="intellectual-property-and-data" className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Intellectual Property and Data</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Software Content Intellectual Property</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -300,7 +344,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 9 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">9. Third Party Software &amp; Terms</h2>
+              <h2 id="third-party-software-and-terms" className="text-lg font-bold text-gray-900 leading-snug mb-3">9. Third Party Software &amp; Terms</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Third Party Terms</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -335,7 +379,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 10 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">10. Confidentiality</h2>
+              <h2 id="confidentiality" className="text-lg font-bold text-gray-900 leading-snug mb-3">10. Confidentiality</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">Except as contemplated by these Terms, a party must not, and must not permit any of its Personnel, use or disclose to any person any Confidential Information disclosed to it by the other party without the disclosing party&rsquo;s prior written consent.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Each party must promptly notify the other party if it learns of any potential, actual or suspected loss, misappropriation or unauthorised access to, or disclosure or use of Confidential Information or other compromise of the security, confidentiality, or integrity of Confidential Information.</li>
@@ -345,7 +389,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 11 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">11. Privacy</h2>
+              <h2 id="privacy" className="text-lg font-bold text-gray-900 leading-snug mb-3">11. Privacy</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">We collect personal information about you in the course of providing you with the Software, to contact and communicate with you, to respond to your enquiries and for other purposes set out in our Privacy Policy which can be found at <a href="https://www.safepost.com.au/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">www.safepost.com.au/privacy-policy</a>.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">Our Privacy Policy contains more information about how we use, disclose and store your personal information and details how you can access and correct your personal information.</li>
@@ -355,7 +399,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 12 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">12. Liability</h2>
+              <h2 id="liability" className="text-lg font-bold text-gray-900 leading-snug mb-3">12. Liability</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Warranties and Limitations</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -409,7 +453,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 13 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">13. Upgrades and Downgrades</h2>
+              <h2 id="upgrades-and-downgrades" className="text-lg font-bold text-gray-900 leading-snug mb-3">13. Upgrades and Downgrades</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">You may notify us that you would like to upgrade or downgrade your Subscription Tier or the Number of Software Users at any time. If you do, we will:
                   <ul className="list-[lower-roman] pl-5 space-y-2 mt-2">
@@ -424,7 +468,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 14 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">14. Cancellation</h2>
+              <h2 id="cancellation" className="text-lg font-bold text-gray-900 leading-snug mb-3">14. Cancellation</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Cancellation at Any Time</h3>
               <ul className="list-[lower-alpha] pl-5 space-y-3 mb-6">
@@ -456,7 +500,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 15 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">15. Dispute Resolution</h2>
+              <h2 id="dispute-resolution" className="text-lg font-bold text-gray-900 leading-snug mb-3">15. Dispute Resolution</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">A party claiming that a dispute has arisen under or in connection with this agreement must not commence court proceedings arising from or relating to the dispute, other than a claim for urgent interlocutory relief, unless that party has complied with the requirements of this clause.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">A party that requires resolution of a dispute which arises under or in connection with this agreement must give the other party or parties to the dispute written notice containing reasonable details of the dispute and requiring its resolution under this clause.</li>
@@ -466,7 +510,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 16 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">16. Force Majeure</h2>
+              <h2 id="force-majeure" className="text-lg font-bold text-gray-900 leading-snug mb-3">16. Force Majeure</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">We will not be liable for any delay or failure to perform its obligations under this agreement if such delay or failure arises out of a Force Majeure Event.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">If a Force Majeure Event occurs, we must use reasonable endeavours to notify you of:
@@ -489,7 +533,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 17 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">17. Notices</h2>
+              <h2 id="notices" className="text-lg font-bold text-gray-900 leading-snug mb-3">17. Notices</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">A notice or other communication to a party under these Terms must be:
                   <ul className="list-[lower-roman] pl-5 space-y-2 mt-2">
@@ -509,7 +553,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* 18 */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">18. General</h2>
+              <h2 id="general" className="text-lg font-bold text-gray-900 leading-snug mb-3">18. General</h2>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">Governing Law and Jurisdiction</h3>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-6">This agreement is governed by the law applying in New South Wales, Australia. Each party irrevocably submits to the exclusive jurisdiction of the courts of New South Wales, Australia and courts of appeal from them in respect of any proceedings arising out of or in connection with this agreement. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.</p>
@@ -547,7 +591,7 @@ const SoftwareTerms: React.FC = () => {
 
             {/* Definitions */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Definitions</h2>
+              <h2 id="definitions" className="text-lg font-bold text-gray-900 leading-snug mb-3">Definitions</h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-[14px] text-gray-500 border-collapse">
                   <thead>
