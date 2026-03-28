@@ -18,6 +18,7 @@ const WebsiteTerms: React.FC = () => {
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
+  const [tocOpen, setTocOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 768);
 
   const resourceLinks = [
     { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
@@ -81,9 +82,44 @@ const WebsiteTerms: React.FC = () => {
               </p>
             </div>
 
+            {/* Table of Contents */}
+            <div className="border border-black/[0.08] rounded-xl overflow-hidden">
+              <button
+                onClick={() => setTocOpen(!tocOpen)}
+                className="w-full flex items-center justify-between px-5 py-3.5 text-[13px] font-semibold text-gray-700 hover:bg-black/[0.02] transition-colors duration-150"
+              >
+                Contents
+                <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${tocOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{ maxHeight: tocOpen ? '600px' : '0px', opacity: tocOpen ? 1 : 0 }}
+              >
+                <ol className="px-5 pb-4 pt-1 space-y-1.5 list-decimal list-inside">
+                  {[
+                    ['Introduction', '#introduction'],
+                    ['Access and Use of the Website', '#access-and-use'],
+                    ['Your Obligations', '#your-obligations'],
+                    ['Information on the Website', '#information-on-the-website'],
+                    ['Intellectual Property', '#intellectual-property'],
+                    ['Links to Other Websites', '#links-to-other-websites'],
+                    ['Security', '#security'],
+                    ['Reporting Misuse', '#reporting-misuse'],
+                    ['Privacy', '#privacy'],
+                    ['Liability', '#liability'],
+                    ['General', '#general'],
+                  ].map(([label, href]) => (
+                    <li key={href} className="text-[13px] text-gray-500">
+                      <a href={href} className="hover:text-[#2563EB] transition-colors duration-150">{label}</a>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </div>
+
             {/* Introduction */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Introduction</h2>
+              <h2 id="introduction" className="text-lg font-bold text-gray-900 leading-snug mb-3">Introduction</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">
                   These terms of use (<strong>Terms</strong>) apply when you use this website, Safepost.com.au (<strong>Website</strong>).
@@ -102,7 +138,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* Access and Use */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Access and Use of the Website</h2>
+              <h2 id="access-and-use" className="text-lg font-bold text-gray-900 leading-snug mb-3">Access and Use of the Website</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 You must only use the Website in accordance with these Terms and any applicable laws, and must ensure that your employees, sub-contractors and any other agents who use or access the Website comply with the Terms and any applicable laws.
               </p>
@@ -110,7 +146,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* Your Obligations */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Your Obligations</h2>
+              <h2 id="your-obligations" className="text-lg font-bold text-gray-900 leading-snug mb-3">Your Obligations</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">You must not:</p>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">
@@ -145,7 +181,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* Information on the Website */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Information on the Website</h2>
+              <h2 id="information-on-the-website" className="text-lg font-bold text-gray-900 leading-snug mb-3">Information on the Website</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 While we will use our best endeavours to ensure the Website is as up-to-date and accurate as possible, you acknowledge and agree that from time to time: (a) the Website may have errors or defects; (b) the Website may not be accessible at times; (c) messages sent through the Website may not be delivered promptly, or delivered at all; (d) any information you transmit to or receive from our public Website is done at your own risk; or (e) any information provided through the Website may not be accurate or true. We reserve the right to change any information or functionality on the Website by updating the Website at any time without notice.
               </p>
@@ -153,7 +189,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* Intellectual Property */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Intellectual Property</h2>
+              <h2 id="intellectual-property" className="text-lg font-bold text-gray-900 leading-snug mb-3">Intellectual Property</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">
                   We retain ownership of the Website and all materials on the Website (including text, graphics, logos, design, icons, images, sound and video recordings, pricing, downloads and software) (<strong>Website Content</strong>) and reserve all rights in any intellectual property rights owned or licensed by it not expressly granted to you.
@@ -166,7 +202,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* Links to Other Websites */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Links to Other Websites</h2>
+              <h2 id="links-to-other-websites" className="text-lg font-bold text-gray-900 leading-snug mb-3">Links to Other Websites</h2>
               <ul className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">
                   The Website may contain links to other websites that are not our responsibility. We have no control over the content of the linked websites and we are not responsible for it.
@@ -179,7 +215,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* Security */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Security</h2>
+              <h2 id="security" className="text-lg font-bold text-gray-900 leading-snug mb-3">Security</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 We do not accept responsibility for loss or damage to computer systems, mobile phones or other electronic devices arising in connection with use of the Website. You should take your own precautions to ensure that the process that you employ for accessing the Website does not expose you to risk of viruses, malicious computer code or other forms of interference.
               </p>
@@ -187,7 +223,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* Reporting Misuse */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Reporting Misuse</h2>
+              <h2 id="reporting-misuse" className="text-lg font-bold text-gray-900 leading-snug mb-3">Reporting Misuse</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 If you become aware of misuse of the Website by any person, any errors in the material on the Website or any difficulty in accessing or using the Website, please contact us immediately using the contact details or form provided on our Website.
               </p>
@@ -195,7 +231,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* Privacy */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Privacy</h2>
+              <h2 id="privacy" className="text-lg font-bold text-gray-900 leading-snug mb-3">Privacy</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 You agree to be bound by our Privacy Policy, which can be found at{' '}
                 <a href="https://www.safepost.com.au/privacy-policy" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
@@ -206,7 +242,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* Liability */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">Liability</h2>
+              <h2 id="liability" className="text-lg font-bold text-gray-900 leading-snug mb-3">Liability</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 We make no warranties or representations about this Website or any of its content and will not be responsible to you or any third party for any direct or consequential loss suffered in connection with the use of this Website. To the maximum extent permitted by law, we exclude any liability that may arise due to your use of our Website and/or the information or materials contained on it. You agree to indemnify us for any loss or liability arising out of your use of this Website.
               </p>
@@ -214,7 +250,7 @@ const WebsiteTerms: React.FC = () => {
 
             {/* General */}
             <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">General</h2>
+              <h2 id="general" className="text-lg font-bold text-gray-900 leading-snug mb-3">General</h2>
               <div className="space-y-4">
                 <p className="text-[14px] text-gray-500 leading-relaxed">
                   <span className="font-semibold text-gray-700">Governing Law and Jurisdiction:</span> This agreement is governed by the law applying in New South Wales. Each party irrevocably submits to the exclusive jurisdiction of the courts of New South Wales and courts of appeal from them. Each party irrevocably waives any objection to the venue of any legal process on the basis that the process has been brought in an inconvenient forum.
