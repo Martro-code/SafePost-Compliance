@@ -600,12 +600,12 @@ const SignUp: React.FC = () => {
                     </div>
                   )}
                 </div>
-                {abnVerified && abnEntityName && (
+                {abnVerified && !abnLoading && (
                   <p className="text-[13px] text-green-600 font-medium mt-1.5 flex items-center gap-1">
-                    <span>&#10003;</span> {abnEntityName} — {abnStatus}
+                    <span>&#10003;</span> {abnEntityName ? `${abnEntityName} — ${abnStatus}` : 'ABN verified'}
                   </p>
                 )}
-                {abnError && !abnLoading && (
+                {!abnVerified && abnError && !abnLoading && (
                   <p className="text-[13px] text-red-600 font-medium mt-1.5">{abnError}</p>
                 )}
                 {submitted && !abnVerified && !abnError && abn.replace(/\s/g, '').length === 0 && (
