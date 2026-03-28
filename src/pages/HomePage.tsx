@@ -295,7 +295,7 @@ const HomePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20">
           <div className="max-w-3xl">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-gray-900 mb-6 text-balance">
-              Navigate your online presence. Stay{' '}
+              Navigate your online presence.{' '}
               <span className="text-[#2563EB]">Check your AHPRA and TGA compliance.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
