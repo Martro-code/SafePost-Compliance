@@ -47,7 +47,7 @@ const Features: React.FC = () => {
     {
       icon: <Wand2 className="w-7 h-7 text-blue-500/80" />,
       heading: 'AI-powered rewrites',
-      description: 'Three compliant alternatives generated instantly. Available on all plans including Starter.',
+      description: 'Three suggested alternatives generated instantly. Available on all plans including Starter.',
     },
     {
       icon: <Scale className="w-7 h-7 text-blue-500/80" />,

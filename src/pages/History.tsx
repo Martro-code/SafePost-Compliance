@@ -53,6 +53,16 @@ function getStatusConfig(status: string) {
   return statusConfig[status] ?? statusConfig.warning;
 }
 
+function getStatusDisplayLabel(status: string): string {
+  const statusMap: Record<string, string> = {
+    'Compliant': 'No issues detected',
+    'Non-compliant': 'Potential breaches detected',
+    'Requires review': 'Requires review',
+    'Conduct Risk': 'Conduct risk',
+  };
+  return statusMap[status] || status;
+}
+
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
   return date.toLocaleDateString('en-AU', {
@@ -104,7 +114,7 @@ const CheckRow: React.FC<{
 
         {/* Status badge */}
         <span className={`inline-flex items-center justify-center min-w-[140px] px-2 py-0.5 rounded-md text-[11px] font-semibold whitespace-nowrap flex-shrink-0 ${cfg.badge}`}>
-          {cfg.label}
+          {getStatusDisplayLabel(cfg.label)}
         </span>
 
         {/* Relative timestamp with absolute-date tooltip */}
@@ -318,10 +328,10 @@ const History: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
             {[
               { label: 'Total checks', value: totalChecks, color: 'text-gray-700', darkColor: '', bg: 'bg-white', darkBg: '' },
-              { label: 'Compliant', value: compliantCount, color: 'text-emerald-700', darkColor: '', bg: 'bg-emerald-50', darkBg: '' },
-              { label: 'Non-compliant', value: nonCompliantCount, color: 'text-red-700', darkColor: '', bg: 'bg-red-50', darkBg: '' },
+              { label: 'No issues detected', value: compliantCount, color: 'text-emerald-700', darkColor: '', bg: 'bg-emerald-50', darkBg: '' },
+              { label: 'Potential breaches detected', value: nonCompliantCount, color: 'text-red-700', darkColor: '', bg: 'bg-red-50', darkBg: '' },
               { label: 'Requires review', value: reviewCount, color: 'text-amber-700', darkColor: '', bg: 'bg-amber-50', darkBg: '' },
-              { label: 'Conduct Risk', value: conductRiskCount, color: 'text-purple-700', darkColor: 'dark:text-purple-400', bg: 'bg-purple-50', darkBg: 'dark:bg-purple-900/20' },
+              { label: 'Conduct risk', value: conductRiskCount, color: 'text-purple-700', darkColor: 'dark:text-purple-400', bg: 'bg-purple-50', darkBg: 'dark:bg-purple-900/20' },
             ].map(stat => (
               <div key={stat.label} className={`${stat.bg} ${stat.darkBg} rounded-xl border border-black/[0.06] p-4`}>
                 <p className={`text-2xl font-extrabold ${stat.color} ${stat.darkColor}`}>{stat.value}</p>
@@ -357,16 +367,16 @@ const History: React.FC = () => {
                 }`}
               >
                 <Filter className="w-3.5 h-3.5" />
-                {statusFilter === 'all' ? 'All' : getStatusConfig(statusFilter).label}
+                {statusFilter === 'all' ? 'All' : getStatusDisplayLabel(getStatusConfig(statusFilter).label)}
               </button>
               {filterOpen && (
                 <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg py-1.5 z-10">
                   {[
                     { value: 'all', label: 'All checks' },
-                    { value: 'compliant', label: 'Compliant' },
-                    { value: 'non_compliant', label: 'Non-compliant' },
+                    { value: 'compliant', label: 'No issues detected' },
+                    { value: 'non_compliant', label: 'Potential breaches detected' },
                     { value: 'requires_review', label: 'Requires review' },
-                    { value: 'conduct_risk', label: 'Conduct Risk' },
+                    { value: 'conduct_risk', label: 'Conduct risk' },
                   ].map(option => (
                     <button
                       key={option.value}
