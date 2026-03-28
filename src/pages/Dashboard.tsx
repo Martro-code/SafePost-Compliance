@@ -638,7 +638,7 @@ const Dashboard: React.FC = () => {
                   </li>
                   <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                     <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    AI-powered compliant rewrites
+                    AI-powered suggested rewrites
                   </li>
                   <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                     <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
