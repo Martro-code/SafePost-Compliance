@@ -32,7 +32,9 @@ function escapeHtml(str: string): string {
 //   - Table: public.accounts
 //   - Event: INSERT
 //   - Type: Edge Function (send-welcome-email)
-//   - Headers: Authorization = Bearer <SUPABASE_SERVICE_ROLE_KEY>
+//   - Headers: Authorization = Bearer <WEBHOOK_AUTH_SECRET>
+// WEBHOOK_AUTH_SECRET must be set as an Edge Function secret:
+//   supabase secrets set WEBHOOK_AUTH_SECRET="<value>" --project-ref acvcwzaipsxyrwbxithc
 // Without this webhook, welcome emails will NOT be sent on new account creation.
 // The webhook cannot be configured via migrations — it must be created manually
 // in the Supabase Dashboard under Database > Webhooks.
@@ -44,14 +46,12 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  // Only allow requests authenticated with the service role key.
-  // This covers both internal Edge Function calls and Supabase database webhooks.
+  // Only allow requests authenticated with the webhook secret.
+  // Set WEBHOOK_AUTH_SECRET via: supabase secrets set WEBHOOK_AUTH_SECRET="<value>"
+  // Configure the database webhook Authorization header to: Bearer <same-value>
   const authHeader = req.headers.get('authorization');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-  if (
-    !authHeader ||
-    (authHeader !== `Bearer ${serviceRoleKey}` && authHeader !== serviceRoleKey)
-  ) {
+  const webhookSecret = Deno.env.get('WEBHOOK_AUTH_SECRET') ?? '';
+  if (!authHeader || authHeader !== `Bearer ${webhookSecret}`) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
