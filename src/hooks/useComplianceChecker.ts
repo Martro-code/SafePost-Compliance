@@ -402,40 +402,6 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
             sessionStorage.setItem(SESSION_KEY_CHECK_ID, insertResult.data.id);
           }
 
-          // Insert in-app notification if user has the preference enabled
-          if (insertResult.data) {
-            try {
-              const { data: prefs } = await supabase
-                .from('user_preferences')
-                .select('notif_compliance_results')
-                .eq('user_id', user.id)
-                .maybeSingle();
-
-              // Send notification if preference is enabled (default true if no row)
-              if (!prefs || prefs.notif_compliance_results) {
-                const statusLabel = normaliseStatus(analysisResult.status) === 'compliant'
-                  ? 'Compliant'
-                  : normaliseStatus(analysisResult.status) === 'non_compliant'
-                  ? 'Non-compliant'
-                  : normaliseStatus(analysisResult.status) === 'conduct_risk'
-                  ? 'Conduct risk'
-                  : 'Requires review';
-
-                await supabase.from('notifications').insert({
-                  user_id: user.id,
-                  type: 'compliance_complete',
-                  title: 'Compliance check complete',
-                  message: `Your post has been reviewed — ${statusLabel}.`,
-                });
-
-                // Update bell count via event
-                window.dispatchEvent(new Event('safepost-notifications-updated'));
-              }
-            } catch (notifErr) {
-              console.error('Failed to insert notification:', notifErr);
-            }
-          }
-
           // Increment account-level usage counter via server-side RPC
           // (checks_used is a restricted column — never update directly)
           if (accountId) {
