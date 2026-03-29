@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
@@ -68,6 +69,10 @@ const Features: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>Features — SafePost Compliance Checker</title>
+        <meta name="description" content="Instant compliance checks, detailed verdicts, team management and history. See everything SafePost's AI compliance platform can do for your practice." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">

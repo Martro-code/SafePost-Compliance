@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
@@ -644,6 +645,10 @@ const SoftwareTerms: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>Terms of Use — SafePost</title>
+        <meta name="description" content="The terms governing your use of the SafePost compliance checking service." />
+      </Helmet>
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/"><SafePostLogo /></Link>
