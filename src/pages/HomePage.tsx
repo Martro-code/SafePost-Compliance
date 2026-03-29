@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, ShieldAlert, Star, Compass, Play, Layers, FileText, BadgeCheck, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
@@ -61,6 +62,10 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>SafePost — AI-Powered AHPRA &amp; TGA Compliance Checker</title>
+        <meta name="description" content="Check your social media posts for AHPRA and TGA compliance in seconds. AI-powered analysis built for Australian medical practitioners and practices." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
