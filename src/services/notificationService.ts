@@ -10,6 +10,16 @@ export interface Notification {
   created_at: string;
 }
 
+export interface Announcement {
+  id: string;
+  title: string;
+  message: string;
+  link_text: string | null;
+  link_url: string | null;
+  active: boolean;
+  created_at: string;
+}
+
 /** Get the count of unread notifications for the given user. */
 export async function getUnreadCount(userId: string): Promise<number> {
   const { count, error } = await supabase
@@ -26,6 +36,23 @@ export async function getUnreadCount(userId: string): Promise<number> {
   return count ?? 0;
 }
 
+/** Fetch the last 3 notifications for the bell dropdown preview. */
+export async function getNotificationsPreview(userId: string): Promise<Notification[]> {
+  const { data, error } = await supabase
+    .from('notifications')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  if (error) {
+    console.error('Error fetching notifications preview:', error);
+    return [];
+  }
+
+  return data ?? [];
+}
+
 /** Fetch the most recent 20 notifications for the given user. */
 export async function getNotifications(userId: string): Promise<Notification[]> {
   const { data, error } = await supabase
@@ -37,6 +64,22 @@ export async function getNotifications(userId: string): Promise<Notification[]> 
 
   if (error) {
     console.error('Error fetching notifications:', error);
+    return [];
+  }
+
+  return data ?? [];
+}
+
+/** Fetch all active announcements (broadcast messages from SafePost). */
+export async function getAnnouncements(): Promise<Announcement[]> {
+  const { data, error } = await supabase
+    .from('announcements')
+    .select('*')
+    .eq('active', true)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching announcements:', error);
     return [];
   }
 
