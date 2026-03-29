@@ -42,6 +42,7 @@ import AcceptInvitation from './pages/AcceptInvitation';
 import NewsPage from './pages/NewsPage';
 import NewsArticlePage from './pages/NewsArticlePage';
 import NotFound from './pages/NotFound';
+import ComplianceResultAsset from './components/marketing/ComplianceResultAsset'; {/* TEMPORARY - remove after screenshotting */}
 import CookieBanner from './components/ui/CookieBanner';
 import BackToTop from './components/ui/BackToTop';
 
@@ -113,6 +114,7 @@ const App: React.FC = () => {
           <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
           <Route path="/compliance-checker" element={<ProtectedRoute><ComplianceCheckerPage /></ProtectedRoute>} />
           <Route path="/accept-invitation" element={<AcceptInvitation />} />
+          <Route path="/marketing/compliance-result" element={<ComplianceResultAsset />} /> {/* TEMPORARY - remove after screenshotting */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
