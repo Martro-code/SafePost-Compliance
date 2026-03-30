@@ -260,7 +260,7 @@ const About: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            About SafePost
+            About SafePost: AHPRA &amp; TGA compliance for Australian healthcare
           </h1>
           <p className="text-lg text-gray-500">
             Supporting Australian medical practitioners and practices with compliance confidence

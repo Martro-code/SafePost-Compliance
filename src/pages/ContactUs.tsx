@@ -155,6 +155,7 @@ const ContactUs: React.FC = () => {
             )}
 
             {/* Form */}
+            <h2 className="sr-only">Contact SafePost about AHPRA and TGA compliance</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* First name */}
               <div>

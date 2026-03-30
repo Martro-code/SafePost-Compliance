@@ -128,7 +128,7 @@ const FAQ: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Got questions? We've got answers.
+            Got questions about AHPRA &amp; TGA compliance? We've got answers.
           </h1>
           <p className="text-lg text-gray-500">
             Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works.
