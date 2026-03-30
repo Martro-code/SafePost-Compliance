@@ -130,7 +130,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'SafePost <support@safepost.com.au>',
+        from: 'SafePost <noreply@safepost.com.au>',
         to: billing_email,
         subject: "You're approaching your SafePost check limit",
         html: `
