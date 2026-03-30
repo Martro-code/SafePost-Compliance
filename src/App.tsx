@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { trackPageView, isGA4Initialised } from './services/analytics';
 import HomePage from './pages/HomePage';
 import SignUp from './pages/SignUp';
@@ -70,6 +71,11 @@ const PageViewTracker: React.FC = () => {
 const App: React.FC = () => {
   return (
     <>
+      {import.meta.env.VITE_GOOGLE_VERIFICATION && (
+        <Helmet>
+          <meta name="google-site-verification" content={import.meta.env.VITE_GOOGLE_VERIFICATION} />
+        </Helmet>
+      )}
       <ScrollToTop />
       <PageViewTracker />
       <div className="page-transition">
