@@ -2,13 +2,10 @@ import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 serve(async (req) => {
-  // Authenticate with service role key
+  // Authenticate with webhook secret
   const authHeader = req.headers.get('authorization');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-  if (
-    !authHeader ||
-    (authHeader !== `Bearer ${serviceRoleKey}` && authHeader !== serviceRoleKey)
-  ) {
+  const webhookSecret = Deno.env.get('WEBHOOK_AUTH_SECRET') ?? '';
+  if (!authHeader || authHeader !== `Bearer ${webhookSecret}`) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { 'Content-Type': 'application/json' },
@@ -147,7 +144,7 @@ serve(async (req) => {
           {
             method: 'POST',
             headers: {
-              'Authorization': `Bearer ${serviceRoleKey}`,
+              'Authorization': `Bearer ${webhookSecret}`,
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
