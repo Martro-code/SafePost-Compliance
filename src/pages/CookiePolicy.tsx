@@ -78,7 +78,7 @@ const CookiePolicy: React.FC = () => {
                 Cookies Policy
               </h1>
               <p className="text-[14px] text-gray-500">
-                Last updated 23 March 2026
+                Last updated 30 March 2026
               </p>
             </div>
 
@@ -200,16 +200,13 @@ const CookiePolicy: React.FC = () => {
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We may use third party analytics cookies to collect information about your interaction with our Website.
               </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                We use Google Analytics and other third-party analytics providers to help process data. To find out more, see{' '}
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                We use Google Analytics 4 to collect information about how visitors use SafePost. This helps us understand user behaviour, improve our platform, and measure the effectiveness of our marketing. Google Analytics uses cookies to collect this data anonymously. You can opt out of Google Analytics by declining cookies on our cookie banner or by installing the Google Analytics opt-out browser add-on{' '}
+                <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                  here
+                </a>. To find out more, see{' '}
                 <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
                   How Google uses data when you use our partners&rsquo; sites or apps
-                </a>.
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                You can opt out of Google Analytics by declining cookies on our cookie banner or by installing the Google Analytics opt-out browser add-on available at{' '}
-                <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                  tools.google.com/dlpage/gaoptout
                 </a>.
               </p>
             </div>
