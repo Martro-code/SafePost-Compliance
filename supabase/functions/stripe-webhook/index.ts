@@ -168,7 +168,7 @@ serve(async (req: Request) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'SafePost <support@safepost.com.au>',
+          from: 'SafePost <noreply@safepost.com.au>',
           to: session.customer_email,
           subject: 'Your SafePost subscription is confirmed',
           html: `
