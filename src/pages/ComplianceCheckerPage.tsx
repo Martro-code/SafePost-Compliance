@@ -12,10 +12,11 @@ type ActiveTab = 'checker' | 'history';
 
 export function ComplianceCheckerPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('checker');
-  const { accountId, plan, checksUsed, checksLimit, refreshAccount } = useAccount();
+  const { accountId, plan, checksUsed, checksLimit, specialty, refreshAccount } = useAccount();
   const checker = useComplianceChecker({
     planName: plan,
     accountId,
+    specialty,
     checksUsed,
     checksLimit,
     onCheckComplete: refreshAccount,

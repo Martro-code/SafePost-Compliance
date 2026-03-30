@@ -148,6 +148,7 @@ export type CheckerStep = 'idle' | 'analyzing' | 'complete' | 'error';
 interface UseComplianceCheckerOptions {
   planName?: string;
   accountId?: string | null;
+  specialty?: string | null;
   checksUsed?: number;
   checksLimit?: number | null;
   onCheckComplete?: () => Promise<void>;
@@ -162,6 +163,7 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
   const {
     planName = 'free',
     accountId = null,
+    specialty = null,
     checksUsed: accountChecksUsed,
     checksLimit: accountChecksLimit,
     onCheckComplete,
@@ -382,11 +384,20 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
             overall_status: normaliseStatus(analysisResult.status),
             compliance_score: complianceScore,
             result_json: analysisResult,
+            // Analytics columns
+            ai_status: analysisResult.status,
+            critical_issue_count: analysisResult.issues.filter((i: any) => i.severity === 'Critical').length,
+            warning_issue_count: analysisResult.issues.filter((i: any) => i.severity === 'Warning').length,
+            breach_categories: analysisResult.breach_categories ?? [],
+            frameworks_triggered: analysisResult.frameworks_triggered ?? [],
           };
 
-          // Include account_id if available
+          // Include account_id and specialty if available
           if (accountId) {
             insertPayload.account_id = accountId;
+          }
+          if (specialty) {
+            insertPayload.specialty = specialty;
           }
 
           const insertResult = await supabase
