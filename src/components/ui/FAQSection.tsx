@@ -94,9 +94,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({ title, subtitle, items, groups 
           <div className="flex flex-col gap-10">
             {groups.map((group, groupIndex) => (
               <div key={groupIndex}>
-                <div className="text-[11px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-4 px-1">
+                <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-4 px-1">
                   {group.label}
-                </div>
+                </h3>
                 <div className="flex flex-col gap-4">
                   {group.items.map((item, itemIndex) => {
                     const key = `${groupIndex}-${itemIndex}`;
