@@ -57,6 +57,11 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://www.safepost.com.au/news/ahpra-social-media-guidelines-doctors-2026</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://www.safepost.com.au/contact</loc>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
