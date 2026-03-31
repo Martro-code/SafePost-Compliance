@@ -290,6 +290,14 @@ const NewsArticlePage: React.FC = () => {
           ">
             <Component />
           </div>
+
+          {/* Standardised article disclaimer */}
+          <div className="mt-12 pt-8 border-t border-black/[0.08]">
+            <p className="text-[13px] font-bold text-gray-700 mb-2">Disclaimer</p>
+            <p className="text-[13px] text-gray-500 leading-relaxed italic">
+              SafePost is an independent compliance tool. It is not affiliated with, endorsed by, or connected to AHPRA or the TGA in any way. This article is for general information purposes only and does not constitute legal or regulatory advice. The regulatory landscape may change — always refer to the current AHPRA advertising guidelines and TGA advertising code for the most up-to-date requirements. For advice specific to your situation, consult a qualified healthcare lawyer or your medical defence organisation.
+            </p>
+          </div>
         </div>
       </section>
 
