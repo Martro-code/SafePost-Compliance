@@ -241,18 +241,18 @@ const NewsPage: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
               {articles.map((article) => (
-                <button
+                <Link
                   key={article.slug}
-                  onClick={() => navigate(`/news/${article.slug}`)}
+                  to={`/news/${article.slug}`}
                   className="text-left bg-white rounded-2xl border border-black/[0.06] p-8 hover:shadow-lg hover:shadow-black/[0.06] transition-all duration-300 group h-full flex flex-col"
                 >
                   <div className="flex items-center gap-3 mb-4">
                     <span className={`inline-block px-2.5 py-1 text-[11px] font-semibold rounded-full ${categoryColors[article.category] || 'bg-gray-100 text-gray-600'}`}>
                       {article.category}
                     </span>
-                    <span className="text-[12px] text-gray-400">
+                    <time dateTime={article.date} className="text-[12px] text-gray-400">
                       {new Date(article.date).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' })}
-                    </span>
+                    </time>
                   </div>
                   <div className="flex flex-col flex-1">
                     <h2 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-[#2563EB] transition-colors duration-200 leading-snug">
@@ -266,7 +266,7 @@ const NewsPage: React.FC = () => {
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
                     </span>
                   </div>
-                </button>
+                </Link>
               ))}
             </div>
           )}
