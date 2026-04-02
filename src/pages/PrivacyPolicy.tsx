@@ -79,7 +79,7 @@ const PrivacyPolicy: React.FC = () => {
                 Privacy Policy
               </h1>
               <p className="text-[14px] text-gray-500">
-                Last updated 23 March 2026
+                Last updated 3 April 2026
               </p>
             </div>
 
@@ -103,13 +103,14 @@ const PrivacyPolicy: React.FC = () => {
                     ['3. No sensitive information', '#no-sensitive-information'],
                     ['4. How we collect personal information', '#how-we-collect-personal-information'],
                     ['5. Use of your personal information', '#use-of-your-personal-information'],
-                    ['6. Automated decision-making', '#automated-decision-making'],
-                    ['7. Marketing', '#marketing'],
-                    ['8. Security', '#security'],
-                    ['9. Links', '#links'],
-                    ['10. Requesting access or correcting your personal information', '#requesting-access'],
-                    ['11. Complaints', '#complaints'],
-                    ['12. Contact us', '#contact-us'],
+                    ['6. De-identified data', '#de-identified-data'],
+                    ['7. Automated decision-making', '#automated-decision-making'],
+                    ['8. Marketing', '#marketing'],
+                    ['9. Security', '#security'],
+                    ['10. Links', '#links'],
+                    ['11. Requesting access or correcting your personal information', '#requesting-access'],
+                    ['12. Complaints', '#complaints'],
+                    ['13. Contact us', '#contact-us'],
                   ].map(([label, href]) => (
                     <li key={href} className="text-[13px] text-gray-500">
                       <a href={href} className="hover:text-[#2563EB] transition-colors duration-150">{label}</a>
@@ -221,9 +222,29 @@ const PrivacyPolicy: React.FC = () => {
               </p>
             </div>
 
+            {/* De-identified Data */}
+            <div>
+              <h2 id="de-identified-data" className="text-lg font-bold text-gray-900 leading-snug mb-3">6. De-identified data</h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                (a) We may use the content data you submit to SafePost for regulatory assessment (including post text, assessment results, and related metadata) for the purposes of improving, developing, and refining our platform and AI assessment capabilities. Before using any submitted content for these purposes, we will de-identify it by removing all information that could reasonably identify you or your practice.
+              </p>
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-2">
+                (b) De-identified data may be used to:
+              </p>
+              <ul className="list-none pl-5 space-y-1.5 mb-4">
+                <li className="text-[14px] text-gray-500 leading-relaxed">(i) analyse patterns in regulatory issues identified across the platform</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">(ii) improve the accuracy and relevance of our AI-powered assessments</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">(iii) develop new assessment categories and regulatory coverage</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">(iv) produce aggregated, non-identifiable insights about advertising trends among Australian medical practitioners</li>
+              </ul>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                (c) We will not use your submitted content in a way that could reasonably identify you, your practice, or your patients. We will not sell de-identified data to third parties.
+              </p>
+            </div>
+
             {/* Automated Decision-Making */}
             <div>
-              <h2 id="automated-decision-making" className="text-lg font-bold text-gray-900 leading-snug mb-3">6. Automated decision-making</h2>
+              <h2 id="automated-decision-making" className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Automated decision-making</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 We use automated systems, including artificial intelligence similar to widely used search and evaluation tools, to assess whether content complies with applicable laws and regulations. These automated processes may involve the use of personal information to evaluate content and its compliance status.
               </p>
@@ -231,7 +252,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Marketing */}
             <div>
-              <h2 id="marketing" className="text-lg font-bold text-gray-900 leading-snug mb-3">7. Marketing</h2>
+              <h2 id="marketing" className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Marketing</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We may at times send you marketing communications which will be done in accordance with the <em>Spam Act 2003</em> (Cth).
               </p>
@@ -252,7 +273,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Security */}
             <div>
-              <h2 id="security" className="text-lg font-bold text-gray-900 leading-snug mb-3">8. Security</h2>
+              <h2 id="security" className="text-lg font-bold text-gray-900 leading-snug mb-3">9. Security</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 We take reasonable steps to ensure your personal information is secure and protected from misuse or unauthorised access. To support our compliance with the Australian Privacy Principles and ensure data sovereignty for our users, our backend infrastructure and user data are hosted locally on secure Amazon Web Services (AWS) servers located in Sydney, Australia.
               </p>
@@ -263,7 +284,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Links */}
             <div>
-              <h2 id="links" className="text-lg font-bold text-gray-900 leading-snug mb-3">9. Links</h2>
+              <h2 id="links" className="text-lg font-bold text-gray-900 leading-snug mb-3">10. Links</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 Our website may contain links to other websites. Those links are provided for convenience and may not remain current or be maintained. We are not responsible for the privacy practices of those linked websites and we suggest you review the privacy policies of those websites before using them.
               </p>
@@ -271,7 +292,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Requesting Access or Correcting Your Personal Information */}
             <div>
-              <h2 id="requesting-access" className="text-lg font-bold text-gray-900 leading-snug mb-3">10. Requesting access or correcting your personal information</h2>
+              <h2 id="requesting-access" className="text-lg font-bold text-gray-900 leading-snug mb-3">11. Requesting access or correcting your personal information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
                 If you wish to request access to the personal information we hold about you, please contact us using the contact details set out below including your name and contact details. We may need to verify your identity before providing you with your personal information. In some cases, we may be unable to provide you with access to all your personal information and where this occurs, we will explain why. We will deal with all requests for access to personal information within a reasonable timeframe.
               </p>
@@ -282,7 +303,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Complaints */}
             <div>
-              <h2 id="complaints" className="text-lg font-bold text-gray-900 leading-snug mb-3">11. Complaints</h2>
+              <h2 id="complaints" className="text-lg font-bold text-gray-900 leading-snug mb-3">12. Complaints</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 If you wish to complain about how we handle your personal information or believe your privacy has been seriously invaded, please contact us using the details provided below with your name and contact details. We will investigate your complaint promptly and respond within a reasonable timeframe.
               </p>
@@ -290,7 +311,7 @@ const PrivacyPolicy: React.FC = () => {
 
             {/* Contact Us */}
             <div>
-              <h2 id="contact-us" className="text-lg font-bold text-gray-900 leading-snug mb-3">12. Contact us</h2>
+              <h2 id="contact-us" className="text-lg font-bold text-gray-900 leading-snug mb-3">13. Contact us</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 Please contact us at <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a> if you have any questions about our Privacy Policy or practices, or to access or correct your personal information, or to make a complaint.
               </p>
