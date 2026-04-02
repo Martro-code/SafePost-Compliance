@@ -4,7 +4,7 @@ export interface NewsArticle {
   slug: string;
   title: string;
   date: string;
-  category: 'Press Release' | 'Blog' | 'Industry News' | 'Regulatory Update';
+  category?: string;
   author: string;
   excerpt: string;
   Component: ComponentType;
@@ -15,7 +15,7 @@ interface MdxModule {
   frontmatter: {
     title: string;
     date: string;
-    category: 'Press Release' | 'Blog' | 'Industry News' | 'Regulatory Update';
+    category?: string;
     author: string;
     excerpt: string;
   };
@@ -36,7 +36,7 @@ export function getAllArticles(): NewsArticle[] {
       slug,
       title: frontmatter.title,
       date: frontmatter.date,
-      category: frontmatter.category,
+      category: frontmatter.category ?? 'Blog',
       author: frontmatter.author,
       excerpt: frontmatter.excerpt,
       Component: mod.default,
