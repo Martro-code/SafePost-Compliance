@@ -73,47 +73,43 @@ const AuditWaitlistSection: React.FC<AuditWaitlistSectionProps> = ({ plan }) => 
   return (
     <>
       {/* Waitlist Section */}
-      <section className="w-full bg-blue-50 border-y border-blue-100">
-        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-blue-600 bg-blue-100 rounded-full px-3 py-1 mb-5">
-              Coming soon
-            </span>
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Is your website already compliant?
-            </h2>
-            <p className="text-[16px] text-gray-500 mb-10 leading-relaxed">
-              We're launching a one-off <strong className="text-gray-700">Website Compliance Audit</strong> service — a thorough, expert review of your practice website against AHPRA advertising guidelines and TGA regulations.
+      <section className="w-full bg-white border-t border-slate-200">
+        <div className="max-w-6xl mx-auto px-6 pt-20 pb-20">
+          <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-blue-600 bg-blue-100 rounded-full px-3 py-1 mb-5">
+            Coming soon
+          </span>
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4 text-center md:text-left">
+            Is your website already compliant?
+          </h2>
+          <p className="text-[16px] text-gray-500 mb-10 leading-relaxed text-center md:text-left max-w-2xl">
+            We're launching a one-off <strong className="text-gray-700">Website Compliance Audit</strong> service — a thorough, expert review of your practice website against AHPRA advertising guidelines and TGA regulations.
+          </p>
+
+          <ul className="space-y-3.5 mb-10 max-w-xl">
+            {features.map((f) => (
+              <li key={f} className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                <span className="text-[14px] text-gray-600 leading-snug">{f}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="inline-flex flex-col items-center gap-2 bg-white rounded-2xl border border-black/[0.06] shadow-sm px-8 py-5 mb-8">
+            <p className="text-[13px] font-medium text-gray-500 uppercase tracking-wider">One-time fee</p>
+            <p className="text-4xl font-extrabold text-gray-900">$149</p>
+            <p className="text-[13px] text-gray-400">per practice website</p>
+          </div>
+
+          <div className="flex flex-col items-start gap-3">
+            <button
+              onClick={openModal}
+              className="inline-flex items-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+            >
+              Register your interest
+            </button>
+            <p className="text-[12px] text-gray-400">
+              We'll notify you when the service is available. No payment required.
             </p>
-
-            <ul className="text-left space-y-3 mb-10 max-w-xl mx-auto">
-              {features.map((f) => (
-                <li key={f} className="flex items-start gap-3">
-                  <span className="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center">
-                    <Check className="w-3 h-3 text-white" strokeWidth={3} />
-                  </span>
-                  <span className="text-[14px] text-gray-600 leading-snug">{f}</span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="inline-flex flex-col items-center gap-2 bg-white border border-blue-200 rounded-2xl px-8 py-5 mb-8 shadow-sm">
-              <p className="text-[13px] font-medium text-gray-500 uppercase tracking-wider">One-time fee</p>
-              <p className="text-4xl font-extrabold text-gray-900">$149</p>
-              <p className="text-[13px] text-gray-400">per practice website</p>
-            </div>
-
-            <div className="flex flex-col items-center gap-3">
-              <button
-                onClick={openModal}
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
-              >
-                Register your interest
-              </button>
-              <p className="text-[12px] text-gray-400">
-                We'll notify you when the service is available. No payment required.
-              </p>
-            </div>
           </div>
         </div>
       </section>
