@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
@@ -28,18 +28,37 @@ const UpdateContactDetails: React.FC = () => {
     state: acctState,
     postcode: acctPostcode,
     specialty: acctSpecialty,
+    accountLoading,
     refreshAccount,
   } = useAccount();
 
-  // Form state — prefer account table values, fall back to user_metadata
+  // Form state — initialised with whatever is already available synchronously;
+  // the useEffect below re-populates once the account fetch completes.
   const [email, setEmail] = useState(userEmail);
-  const [mobileNumber, setMobileNumber] = useState(acctMobile || currentMobile);
-  const [practiceName, setPracticeName] = useState(acctPractice || currentPractice);
-  const [streetAddress, setStreetAddress] = useState(acctAddress || currentStreet);
-  const [suburb, setSuburb] = useState(acctSuburb || currentSuburb);
-  const [state, setState] = useState(acctState || currentState);
-  const [postcode, setPostcode] = useState(acctPostcode || currentPostcode);
-  const [specialty, setSpecialty] = useState(acctSpecialty || currentSpecialty);
+  const [mobileNumber, setMobileNumber] = useState(acctMobile || currentMobile || '');
+  const [practiceName, setPracticeName] = useState(acctPractice || currentPractice || '');
+  const [streetAddress, setStreetAddress] = useState(acctAddress || currentStreet || '');
+  const [suburb, setSuburb] = useState(acctSuburb || currentSuburb || '');
+  const [state, setState] = useState(acctState || currentState || '');
+  const [postcode, setPostcode] = useState(acctPostcode || currentPostcode || '');
+  const [specialty, setSpecialty] = useState(acctSpecialty || currentSpecialty || '');
+
+  // Re-populate all fields once account data finishes loading.
+  // useState runs once at mount; if the AccountContext async fetch hasn't
+  // completed yet the initial values above are empty strings. This effect
+  // fires when accountLoading transitions to false and sets the real values.
+  useEffect(() => {
+    if (!accountLoading) {
+      setMobileNumber(acctMobile || currentMobile || '');
+      setPracticeName(acctPractice || currentPractice || '');
+      setStreetAddress(acctAddress || currentStreet || '');
+      setSuburb(acctSuburb || currentSuburb || '');
+      setState(acctState || currentState || '');
+      setPostcode(acctPostcode || currentPostcode || '');
+      setSpecialty(acctSpecialty || currentSpecialty || '');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountLoading]);
 
   const specialtyOptions = [
     'General Practitioner',
@@ -57,32 +76,51 @@ const UpdateContactDetails: React.FC = () => {
   ];
 
   const handleSave = async () => {
+    // Fetch the current DB values first so that any field left blank in the
+    // form (e.g. because the account context hadn't loaded yet) falls back to
+    // the existing saved value rather than overwriting it with an empty string.
+    let current: Record<string, string | null> = {};
+    if (accountId) {
+      const { data } = await supabase
+        .from('accounts')
+        .select('mobile, practice_name, address, suburb, state, postcode, specialty')
+        .eq('id', accountId)
+        .single();
+      if (data) current = data;
+    }
+
+    // Use the form value when non-empty; otherwise preserve the existing DB value.
+    const merged = (formVal: string, dbKey: string) =>
+      formVal.trim() ? sanitizeInput(formVal.trim()) : (current[dbKey] ?? null);
+
+    const accountUpdate = {
+      mobile:        merged(mobileNumber,  'mobile'),
+      practice_name: merged(practiceName,  'practice_name'),
+      address:       merged(streetAddress, 'address'),
+      suburb:        merged(suburb,        'suburb'),
+      state:         state || current.state || null,
+      postcode:      merged(postcode,      'postcode'),
+      specialty:     specialty || current.specialty || null,
+    };
+
     // Update user_metadata
     await supabase.auth.updateUser({
       data: {
-        mobile_number: sanitizeInput(mobileNumber.trim()),
-        practice_name: sanitizeInput(practiceName.trim()),
-        street_address: sanitizeInput(streetAddress.trim()),
-        suburb: sanitizeInput(suburb.trim()),
-        state: sanitizeInput(state),
-        postcode: sanitizeInput(postcode.trim()),
-        specialty: sanitizeInput(specialty),
+        mobile_number: accountUpdate.mobile,
+        practice_name: accountUpdate.practice_name,
+        street_address: accountUpdate.address,
+        suburb: accountUpdate.suburb,
+        state: accountUpdate.state,
+        postcode: accountUpdate.postcode,
+        specialty: accountUpdate.specialty,
       },
     });
 
-    // Also persist to accounts table
+    // Persist to accounts table
     if (accountId) {
       await supabase
         .from('accounts')
-        .update({
-          mobile: sanitizeInput(mobileNumber.trim()),
-          practice_name: sanitizeInput(practiceName.trim()),
-          address: sanitizeInput(streetAddress.trim()),
-          suburb: sanitizeInput(suburb.trim()),
-          state: sanitizeInput(state),
-          postcode: sanitizeInput(postcode.trim()),
-          specialty: sanitizeInput(specialty),
-        })
+        .update(accountUpdate)
         .eq('id', accountId);
       await refreshAccount();
     }
