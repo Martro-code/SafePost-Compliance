@@ -63,53 +63,62 @@ const AuditWaitlistSection: React.FC<AuditWaitlistSectionProps> = ({ plan }) => 
   };
 
   const features = [
-    'Full audit of your practice website for AHPRA advertising guideline compliance',
-    'Checks for prohibited testimonials, therapeutic claims, and comparison advertising',
-    'Checks for TGA-regulated advertising compliance for medical devices and treatments',
-    'Detailed written report with page-by-page findings and remediation guidance',
-    'One-time fixed fee — no ongoing subscription required',
+    'Guided page-by-page assessment of your website content',
+    'Checked against 172 verified AHPRA and TGA rules',
+    'Severity-rated findings for every page',
+    'Recommended actions for each issue identified',
+    'Consolidated PDF audit report for your records',
   ];
 
   return (
     <>
       {/* Waitlist Section */}
       <section className="w-full bg-white border-t border-slate-200">
-        <div className="max-w-6xl mx-auto px-6 pt-20 pb-20">
-          <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-blue-600 bg-blue-100 rounded-full px-3 py-1 mb-5">
-            Coming soon
-          </span>
-          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4 text-center md:text-left">
-            Is your website already compliant?
-          </h2>
-          <p className="text-[16px] text-gray-500 mb-10 leading-relaxed text-center md:text-left max-w-2xl">
-            We're launching a one-off <strong className="text-gray-700">Website Compliance Audit</strong> service — a thorough, expert review of your practice website against AHPRA advertising guidelines and TGA regulations.
-          </p>
+        <div className="max-w-6xl mx-auto px-6 pt-20 pb-24">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 
-          <ul className="space-y-3.5 mb-10 max-w-xl">
-            {features.map((f) => (
-              <li key={f} className="flex items-start gap-3">
-                <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <span className="text-[14px] text-gray-600 leading-snug">{f}</span>
-              </li>
-            ))}
-          </ul>
+            {/* Left column */}
+            <div>
+              <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-blue-600 bg-blue-100 rounded-full px-3 py-1 mb-5">
+                Coming soon
+              </span>
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+                Is your website already compliant?
+              </h2>
+              <p className="text-[16px] text-gray-500 mb-10 leading-relaxed">
+                We're launching a one-off <strong className="text-gray-700">Website Compliance Audit</strong> service — a thorough, expert review of your practice website against AHPRA advertising guidelines and TGA regulations.
+              </p>
+              <ul className="space-y-3.5">
+                {features.map((f) => (
+                  <li key={f} className="flex items-start gap-3">
+                    <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-[14px] text-gray-600 leading-snug">{f}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className="inline-flex flex-col items-center gap-2 bg-white rounded-2xl border border-black/[0.06] shadow-sm px-8 py-5 mb-8">
-            <p className="text-[13px] font-medium text-gray-500 uppercase tracking-wider">One-time fee</p>
-            <p className="text-4xl font-extrabold text-gray-900">$149</p>
-            <p className="text-[13px] text-gray-400">per practice website</p>
-          </div>
+            {/* Right column */}
+            <div className="flex flex-col justify-center">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 mb-4">
+                <p className="text-xs font-semibold tracking-widest text-slate-500 uppercase mb-3">One-time fee</p>
+                <p className="text-5xl font-bold text-slate-900 mb-1">$149</p>
+                <p className="text-sm text-slate-500">per practice website</p>
+              </div>
+              <button
+                onClick={openModal}
+                className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+              >
+                Register your interest
+              </button>
+              <p className="text-[12px] text-gray-400 text-center mt-3">
+                We'll notify you when the service is available. No payment required.
+              </p>
+              <p className="text-xs text-slate-400 mt-4 leading-relaxed">
+                By registering, you agree to receive a one-time notification email about this service. We won't add you to any mailing list without your consent.
+              </p>
+            </div>
 
-          <div className="flex flex-col items-start gap-3">
-            <button
-              onClick={openModal}
-              className="inline-flex items-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
-            >
-              Register your interest
-            </button>
-            <p className="text-[12px] text-gray-400">
-              We'll notify you when the service is available. No payment required.
-            </p>
           </div>
         </div>
       </section>
