@@ -1,0 +1,195 @@
+import React, { useState } from 'react';
+import { Check, X } from 'lucide-react';
+import { supabase } from '../../services/supabaseClient';
+
+interface AuditWaitlistSectionProps {
+  plan?: string;
+}
+
+const AuditWaitlistSection: React.FC<AuditWaitlistSectionProps> = ({ plan }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+
+  const openModal = async () => {
+    // Pre-populate email if logged in
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.email) {
+        setEmail(session.user.email);
+      }
+    } catch {
+      // ignore — email stays empty
+    }
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setError('');
+    if (!submitted) setEmail('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed) {
+      setError('Please enter your email address.');
+      return;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmed)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    setSubmitting(true);
+    setError('');
+
+    const { error: dbError } = await supabase
+      .from('audit_waitlist')
+      .insert({ email: trimmed, plan: plan ?? null });
+
+    setSubmitting(false);
+
+    if (dbError) {
+      setError('Something went wrong. Please try again.');
+      return;
+    }
+
+    setSubmitted(true);
+  };
+
+  const features = [
+    'Full audit of your practice website for AHPRA advertising guideline compliance',
+    'Checks for prohibited testimonials, therapeutic claims, and comparison advertising',
+    'Checks for TGA-regulated advertising compliance for medical devices and treatments',
+    'Detailed written report with page-by-page findings and remediation guidance',
+    'One-time fixed fee — no ongoing subscription required',
+  ];
+
+  return (
+    <>
+      {/* Waitlist Section */}
+      <section className="w-full bg-blue-50 border-y border-blue-100">
+        <div className="max-w-6xl mx-auto px-6 py-20 md:py-28">
+          <div className="max-w-3xl mx-auto text-center">
+            <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-blue-600 bg-blue-100 rounded-full px-3 py-1 mb-5">
+              Coming soon
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+              Is your website already compliant?
+            </h2>
+            <p className="text-[16px] text-gray-500 mb-10 leading-relaxed">
+              We're launching a one-off <strong className="text-gray-700">Website Compliance Audit</strong> service — a thorough, expert review of your practice website against AHPRA advertising guidelines and TGA regulations.
+            </p>
+
+            <ul className="text-left space-y-3 mb-10 max-w-xl mx-auto">
+              {features.map((f) => (
+                <li key={f} className="flex items-start gap-3">
+                  <span className="flex-shrink-0 mt-0.5 w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-white" strokeWidth={3} />
+                  </span>
+                  <span className="text-[14px] text-gray-600 leading-snug">{f}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="inline-flex flex-col items-center gap-2 bg-white border border-blue-200 rounded-2xl px-8 py-5 mb-8 shadow-sm">
+              <p className="text-[13px] font-medium text-gray-500 uppercase tracking-wider">One-time fee</p>
+              <p className="text-4xl font-extrabold text-gray-900">$149</p>
+              <p className="text-[13px] text-gray-400">per practice website</p>
+            </div>
+
+            <div className="flex flex-col items-center gap-3">
+              <button
+                onClick={openModal}
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+              >
+                Register your interest
+              </button>
+              <p className="text-[12px] text-gray-400">
+                We'll notify you when the service is available. No payment required.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Modal */}
+      {modalOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+          onClick={(e) => { if (e.target === e.currentTarget) closeModal(); }}
+        >
+          <div className="relative w-full max-w-md bg-white rounded-2xl shadow-2xl p-8">
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {submitted ? (
+              <div className="text-center py-4">
+                <div className="w-14 h-14 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Check className="w-7 h-7 text-green-600" strokeWidth={2.5} />
+                </div>
+                <h3 className="text-[20px] font-bold text-gray-900 mb-2">You're on the list!</h3>
+                <p className="text-[14px] text-gray-500 mb-6">
+                  We'll email you at <strong>{email}</strong> when the Website Compliance Audit service is ready.
+                </p>
+                <button
+                  onClick={closeModal}
+                  className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-lg transition-colors"
+                >
+                  Done
+                </button>
+              </div>
+            ) : (
+              <>
+                <h3 className="text-[20px] font-bold text-gray-900 mb-1">Register your interest</h3>
+                <p className="text-[14px] text-gray-500 mb-6">
+                  Enter your email and we'll notify you when the Website Compliance Audit service launches.
+                </p>
+
+                <form onSubmit={handleSubmit} noValidate>
+                  <label className="block text-[13px] font-medium text-gray-700 mb-1.5">
+                    Email address
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 mb-4"
+                    autoFocus
+                  />
+                  {error && (
+                    <p className="text-[13px] text-red-600 mb-3">{error}</p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="w-full h-11 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-[14px] font-semibold rounded-lg transition-colors"
+                  >
+                    {submitting ? 'Submitting…' : 'Notify me when available'}
+                  </button>
+                </form>
+
+                <p className="text-[11px] text-gray-400 mt-4 leading-relaxed">
+                  By registering, you agree to receive a one-time notification email about this service. We won't add you to any mailing list without your consent.
+                </p>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default AuditWaitlistSection;

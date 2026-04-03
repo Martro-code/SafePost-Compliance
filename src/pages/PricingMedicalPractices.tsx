@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import FAQSection from '../components/ui/FAQSection';
+import AuditWaitlistSection from '../components/ui/AuditWaitlistSection';
 import PublicFooter from '../components/layout/PublicFooter';
 import { trackUpgradeInitiated } from '../services/analytics';
 
@@ -459,6 +460,9 @@ const PricingMedicalPractices: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Website Compliance Audit Waitlist */}
+      <AuditWaitlistSection plan="medical_practice" />
 
       {/* FAQ Section */}
       <FAQSection
