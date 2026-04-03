@@ -325,9 +325,13 @@ const SoftwareTerms: React.FC = () => {
               </ul>
 
               <h3 className="text-[15px] font-semibold text-gray-800 mb-2">8.2 User data</h3>
-              <ul className="list-[lower-alpha] pl-5 space-y-3">
+              <h4 className="text-[15px] font-semibold text-gray-800 mb-2">Our rights and obligations</h4>
+              <ol className="list-[lower-alpha] pl-5 space-y-3">
                 <li className="text-[14px] text-gray-500 leading-relaxed">You grant to us (and our Personnel) a non-exclusive, royalty free, non-transferable, worldwide and irrevocable licence to use User Data to the extent reasonably required to provide the Software, and for our internal business purposes, including to improve the Software and our other products and services, and including to apply machine learning and other analytics processes to the User Data.</li>
                 <li className="text-[14px] text-gray-500 leading-relaxed">We reserve the right to remove any User Data at any time, for any reason, including where we deem User Data to be inappropriate, offensive, illicit, illegal, pornographic, sexist, homophobic or racist.</li>
+              </ol>
+              <h4 className="text-[15px] font-semibold text-gray-800 mb-2 mt-4">Your obligations and grant of licence to us</h4>
+              <ol className="list-[lower-alpha] pl-5 space-y-3" start={3}>
                 <li className="text-[14px] text-gray-500 leading-relaxed">You are responsible for ensuring that:
                   <ul className="list-[lower-roman] pl-5 space-y-2 mt-2">
                     <li className="text-[14px] text-gray-500 leading-relaxed">you share User Data only with intended recipients; and</li>
@@ -340,7 +344,20 @@ const SoftwareTerms: React.FC = () => {
                     <li className="text-[14px] text-gray-500 leading-relaxed">indemnify us from and against all losses, claims, expenses, damages and liabilities (including any taxes, fees or costs) which arise out of such infringement.</li>
                   </ul>
                 </li>
-              </ul>
+              </ol>
+              <h4 className="text-[15px] font-semibold text-gray-800 mb-2 mt-4">Use of de-identified user data for platform improvement</h4>
+              <ol className="list-[lower-alpha] pl-5 space-y-3" start={5}>
+                <li className="text-[14px] text-gray-500 leading-relaxed">We may use the User Data you submit to SafePost for regulatory assessment (including post text, assessment results, and related metadata) for the purposes of improving, developing, and refining our platform and AI assessment capabilities. Before using any User Data for these purposes, we will de-identify it by removing all information that could reasonably identify you or your practice.</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">De-identified User Data may be used to:
+                  <ul className="list-[lower-roman] pl-5 space-y-2 mt-2">
+                    <li className="text-[14px] text-gray-500 leading-relaxed">analyse patterns in regulatory issues identified across the platform</li>
+                    <li className="text-[14px] text-gray-500 leading-relaxed">improve the accuracy and relevance of our AI-powered assessments</li>
+                    <li className="text-[14px] text-gray-500 leading-relaxed">develop new assessment categories and regulatory coverage</li>
+                    <li className="text-[14px] text-gray-500 leading-relaxed">produce aggregated, non-identifiable insights about advertising trends among Australian medical practitioners</li>
+                  </ul>
+                </li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">All uses will be in accordance with our Privacy Policy, and we will not use your submitted content in a way that could reasonably identify you, your practice, or your patients. We will not sell de-identified data to third parties.</li>
+              </ol>
             </div>
 
             {/* 9 */}
