@@ -100,7 +100,7 @@ const Dashboard: React.FC = () => {
       setAttachedFile(null);
       setDocumentFile(null);
       setExtractionError(null);
-      setPdfError(false);
+      setPdfBase64(null);
       setView('input');
       checker.resetChecker();
     };
