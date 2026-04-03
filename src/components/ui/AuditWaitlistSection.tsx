@@ -73,8 +73,8 @@ const AuditWaitlistSection: React.FC<AuditWaitlistSectionProps> = ({ plan }) => 
   return (
     <>
       {/* Waitlist Section */}
-      <section className="w-full bg-white border-t border-slate-200">
-        <div className="max-w-6xl mx-auto px-6 pt-20 pb-24">
+      <section className="w-full bg-white border-t border-slate-200 mb-32">
+        <div className="max-w-6xl mx-auto px-6 pt-20 pb-0">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 
             {/* Left column */}
@@ -100,23 +100,26 @@ const AuditWaitlistSection: React.FC<AuditWaitlistSectionProps> = ({ plan }) => 
 
             {/* Right column */}
             <div className="flex flex-col justify-center">
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 mb-4">
-                <p className="text-xs font-semibold tracking-widest text-slate-500 uppercase mb-3">One-time fee</p>
-                <p className="text-5xl font-bold text-slate-900 mb-1">$149</p>
-                <p className="text-sm text-slate-500">per practice website</p>
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col gap-6 self-start sticky top-8">
+                <div>
+                  <p className="text-xs font-semibold tracking-widest text-slate-500 uppercase mb-3">One-time fee</p>
+                  <p className="text-5xl font-bold text-slate-900 mb-1">$149</p>
+                  <p className="text-sm text-slate-500">per practice website</p>
+                </div>
+                <hr className="border-slate-200" />
+                <button
+                  onClick={openModal}
+                  className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+                >
+                  Register your interest
+                </button>
+                <p className="text-sm text-slate-500 text-center">
+                  We'll notify you when the service is available. No payment required.
+                </p>
+                <p className="text-xs text-slate-400 leading-relaxed">
+                  By registering, you agree to receive a one-time notification email about this service. We won't add you to any mailing list without your consent.
+                </p>
               </div>
-              <button
-                onClick={openModal}
-                className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
-              >
-                Register your interest
-              </button>
-              <p className="text-[12px] text-gray-400 text-center mt-3">
-                We'll notify you when the service is available. No payment required.
-              </p>
-              <p className="text-xs text-slate-400 mt-4 leading-relaxed">
-                By registering, you agree to receive a one-time notification email about this service. We won't add you to any mailing list without your consent.
-              </p>
             </div>
 
           </div>
