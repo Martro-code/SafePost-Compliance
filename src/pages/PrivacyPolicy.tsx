@@ -226,19 +226,19 @@ const PrivacyPolicy: React.FC = () => {
             <div>
               <h2 id="de-identified-data" className="text-lg font-bold text-gray-900 leading-snug mb-3">6. De-identified data</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                (a) We may use the content data you submit to SafePost for regulatory assessment (including post text, assessment results, and related metadata) for the purposes of improving, developing, and refining our platform and AI assessment capabilities. Before using any submitted content for these purposes, we will de-identify it by removing all information that could reasonably identify you or your practice.
+                We may use the content data you submit to SafePost for regulatory assessment (including post text, assessment results, and related metadata) for the purposes of improving, developing, and refining our platform and AI assessment capabilities. Before using any submitted content for these purposes, we will de-identify it by removing all information that could reasonably identify you or your practice.
               </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mb-2">
-                (b) De-identified data may be used to:
+              <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
+                De-identified data may be used to:
               </p>
-              <ul className="list-none pl-5 space-y-1.5 mb-4">
-                <li className="text-[14px] text-gray-500 leading-relaxed">(i) analyse patterns in regulatory issues identified across the platform</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">(ii) improve the accuracy and relevance of our AI-powered assessments</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">(iii) develop new assessment categories and regulatory coverage</li>
-                <li className="text-[14px] text-gray-500 leading-relaxed">(iv) produce aggregated, non-identifiable insights about advertising trends among Australian medical practitioners</li>
+              <ul className="list-disc pl-5 space-y-1.5 mb-4">
+                <li className="text-[14px] text-gray-500 leading-relaxed">analyse patterns in regulatory issues identified across the platform</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">improve the accuracy and relevance of our AI-powered assessments</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">develop new assessment categories and regulatory coverage</li>
+                <li className="text-[14px] text-gray-500 leading-relaxed">produce aggregated, non-identifiable insights about advertising trends among Australian medical practitioners</li>
               </ul>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                (c) We will not use your submitted content in a way that could reasonably identify you, your practice, or your patients. We will not sell de-identified data to third parties.
+                We will not use your submitted content in a way that could reasonably identify you, your practice, or your patients. We will not sell de-identified data to third parties.
               </p>
             </div>
 
