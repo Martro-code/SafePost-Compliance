@@ -265,7 +265,7 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
   const checkInProgressRef = useRef(false);
 
   // ── Run a compliance check ─────────────────────────────────────────────
-  const runCheck = useCallback(async (content: string, contentType: string = 'social_media_post', platform: string = 'general') => {
+  const runCheck = useCallback(async (content: string, contentType: string = 'social_media_post', platform: string = 'general', options?: { pdfBase64?: string; onExtractedText?: (text: string) => void }) => {
     // Prevent concurrent checks from bypassing the limit
     if (checkInProgressRef.current) return;
     checkInProgressRef.current = true;
@@ -309,26 +309,36 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
       setResult(null);
       setLastContent(content);
 
-      // Guard: reject empty or very short content that would produce meaningless results
+      const pdfBase64 = options?.pdfBase64;
       const trimmed = content.trim();
-      if (!trimmed || trimmed.length < 10) {
-        setError("We couldn't extract text from your file. Please check the file is not empty or try copying the content into the text area directly.");
-        setStep('error');
-        return;
+
+      // Guard: reject empty or very short content (skip for PDF uploads — Claude extracts the text)
+      if (!pdfBase64) {
+        if (!trimmed || trimmed.length < 10) {
+          setError("We couldn't extract text from your file. Please check the file is not empty or try copying the content into the text area directly.");
+          setStep('error');
+          return;
+        }
       }
 
       // Guard: truncate excessively long content to stay within API token limits.
       // .docx files can be very large; truncate aggressively to avoid response truncation.
       const MAX_CONTENT_LENGTH = 2_000;
       let contentToAnalyze = trimmed;
-      if (trimmed.length > MAX_CONTENT_LENGTH) {
+      if (!pdfBase64 && trimmed.length > MAX_CONTENT_LENGTH) {
         console.warn(
           `[useComplianceChecker] Content length (${trimmed.length} chars) exceeds limit. Truncating to ${MAX_CONTENT_LENGTH} chars.`,
         );
         contentToAnalyze = trimmed.slice(0, MAX_CONTENT_LENGTH) + '... [content truncated]';
       }
 
-      const analysisResult = await analyzePost(contentToAnalyze);
+      const analysisResult = await analyzePost(contentToAnalyze, { pdfBase64 });
+
+      // For PDF uploads, pass extracted text back to the caller to populate the input field
+      const extractedText = analysisResult.extractedText;
+      if (extractedText && options?.onExtractedText) {
+        options.onExtractedText(extractedText);
+      }
 
       const normalisedResult = {
         ...analysisResult,
@@ -336,8 +346,9 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
       };
 
       // Persist to sessionStorage so result survives navigation
+      const contentForStorage = extractedText ?? content;
       sessionStorage.setItem(SESSION_KEY_RESULT, JSON.stringify(normalisedResult));
-      sessionStorage.setItem(SESSION_KEY_CONTENT, content);
+      sessionStorage.setItem(SESSION_KEY_CONTENT, contentForStorage);
 
       setResult(normalisedResult as any);
 
@@ -378,7 +389,7 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
         try {
           const insertPayload: Record<string, any> = {
             user_id: user.id,
-            content_text: content,
+            content_text: extractedText ?? content,
             content_type: contentType,
             platform: platform,
             overall_status: normaliseStatus(analysisResult.status),

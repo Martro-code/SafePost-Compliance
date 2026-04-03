@@ -952,7 +952,7 @@ serve(async (req) => {
     }
 
     // --- Validate body ---
-    const { content, imageBase64, action, issues } = await req.json();
+    const { content, imageBase64, pdfBase64, action, issues } = await req.json();
 
     if (action === 'rewrite') {
       // --- Generate compliant rewrites ---
@@ -1020,8 +1020,8 @@ Return only a JSON array with no markdown in this format:
     }
 
     // --- Default action: analyze ---
-    if (!content) {
-      return jsonResponse({ error: 'content is required' }, 400);
+    if (!content && !pdfBase64) {
+      return jsonResponse({ error: 'content or pdfBase64 is required' }, 400);
     }
 
     const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
@@ -1030,36 +1030,59 @@ Return only a JSON array with no markdown in this format:
       return jsonResponse({ error: 'An unexpected error occurred. Please try again.' }, 500);
     }
 
-    const MAX_CONTENT_LENGTH = 3000;
-    const truncatedContent = content.length > MAX_CONTENT_LENGTH
-      ? content.slice(0, MAX_CONTENT_LENGTH) + '... [content truncated for analysis]'
-      : content;
+    const userContent: Array<Record<string, unknown>> = [];
 
-    const userContent: Array<Record<string, unknown>> = [
-      {
-        type: 'text',
-        text: `Analyse this social media post for Ahpra compliance and return only a JSON object: "${truncatedContent}"`,
-      },
-    ];
-
-    if (imageBase64) {
+    if (pdfBase64) {
+      // PDF analysis: pass the document natively to Claude for extraction + compliance check
       userContent.push({
-        type: 'image',
+        type: 'document',
         source: {
           type: 'base64',
-          media_type: 'image/png',
-          data: imageBase64,
+          media_type: 'application/pdf',
+          data: pdfBase64,
         },
       });
+      userContent.push({
+        type: 'text',
+        text: 'Analyse this PDF document for AHPRA and TGA advertising compliance. Return a JSON object in the same format as specified in the system instructions. Additionally, include an "extractedText" field in the JSON containing the complete text extracted from the PDF document.',
+      });
+    } else {
+      const MAX_CONTENT_LENGTH = 3000;
+      const truncatedContent = content.length > MAX_CONTENT_LENGTH
+        ? content.slice(0, MAX_CONTENT_LENGTH) + '... [content truncated for analysis]'
+        : content;
+
+      userContent.push({
+        type: 'text',
+        text: `Analyse this social media post for Ahpra compliance and return only a JSON object: "${truncatedContent}"`,
+      });
+
+      if (imageBase64) {
+        userContent.push({
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: 'image/png',
+            data: imageBase64,
+          },
+        });
+      }
+    }
+
+    const anthropicRequestHeaders: Record<string, string> = {
+      'Content-Type': 'application/json',
+      'x-api-key': anthropicApiKey,
+      'anthropic-version': '2023-06-01',
+    };
+
+    // PDF document blocks require the pdfs beta header
+    if (pdfBase64) {
+      anthropicRequestHeaders['anthropic-beta'] = 'pdfs-2024-09-25';
     }
 
     const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': anthropicApiKey,
-        'anthropic-version': '2023-06-01',
-      },
+      headers: anthropicRequestHeaders,
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 8000,
@@ -1084,8 +1107,15 @@ Return only a JSON array with no markdown in this format:
       return jsonResponse({ error: 'No valid JSON found in AI response' }, 502);
     }
 
-    const analysis = JSON.parse(jsonMatch[0]);
-    return jsonResponse({ analysis });
+    const parsedResult = JSON.parse(jsonMatch[0]);
+
+    if (pdfBase64) {
+      // Separate extractedText from the compliance analysis object
+      const { extractedText, ...analysis } = parsedResult;
+      return jsonResponse({ analysis, extractedText: extractedText ?? '' });
+    }
+
+    return jsonResponse({ analysis: parsedResult });
   } catch (error) {
     console.error('analyze-post error:', error instanceof Error ? { message: error.message, stack: error.stack } : error);
     return jsonResponse({ error: 'An unexpected error occurred. Please try again.' }, 500);
