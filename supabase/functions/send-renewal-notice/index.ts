@@ -150,7 +150,8 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Sent renewal notice to ${billing_email} for account owner ${owner_user_id} (${planDisplay}, renews ${renewalDate})`);
+    const maskedEmail = billing_email.slice(0, 3) + '***@***';
+    console.log(`Sent renewal notice to ${maskedEmail} for account ${owner_user_id.slice(0, 8)}... (${planDisplay}, renews ${renewalDate})`);
     return new Response(
       JSON.stringify({ success: true, owner_user_id, plan: planDisplay, renewal_date: renewalDate }),
       { status: 200, headers: { 'Content-Type': 'application/json' } },

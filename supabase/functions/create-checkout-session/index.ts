@@ -48,6 +48,33 @@ serve(async (req) => {
       });
     }
 
+    // --- Rate limiting: 10 requests per 60 seconds per user ---
+    const windowStart = new Date(Date.now() - 60 * 1000).toISOString();
+    const { count: recentCount, error: rateLimitError } = await supabaseAdmin
+      .from('rate_limit_events')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .eq('function_name', 'create-checkout-session')
+      .gte('created_at', windowStart);
+
+    if (rateLimitError) {
+      console.error('Rate limit check error:', rateLimitError);
+    }
+
+    if ((recentCount ?? 0) >= 10) {
+      return new Response(JSON.stringify({ error: 'Too many requests. Please wait a moment before trying again.' }), {
+        status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    const { error: insertRateLimitError } = await supabaseAdmin
+      .from('rate_limit_events')
+      .insert({ user_id: user.id, function_name: 'create-checkout-session' });
+
+    if (insertRateLimitError) {
+      console.error('Rate limit insert error:', insertRateLimitError);
+    }
+
     const stripeSecretKey = Deno.env.get('STRIPE_SECRET_KEY');
     if (!stripeSecretKey) {
       console.error('STRIPE_SECRET_KEY is not configured');

@@ -56,19 +56,13 @@ Deno.serve(async (req) => {
       xml = await abrRes.text();
     } catch (fetchErr) {
       const msg = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
-      console.error('ABR API fetch failed:', msg);
-      return jsonResponse({
-        valid: false,
-        error: `ABR API request failed: ${msg}`,
-      });
+      console.error(`ABR API request failed: ${msg}`);
+      return jsonResponse({ valid: false, error: 'ABN verification service unavailable. Please try again.' });
     }
 
     if (!abrRes.ok) {
-      console.error(`ABR API returned HTTP ${abrRes.status}:`, xml);
-      return jsonResponse({
-        valid: false,
-        error: `ABR API returned HTTP ${abrRes.status}. Response: ${xml.slice(0, 200)}`,
-      });
+      console.error(`ABR API returned HTTP ${abrRes.status}. Response: ${xml.slice(0, 200)}`);
+      return jsonResponse({ valid: false, error: 'ABN verification service unavailable. Please try again.' });
     }
 
     // Helper to extract text content from an XML element by tag name.
@@ -81,10 +75,7 @@ Deno.serve(async (req) => {
     const exceptionDesc = tag('exceptionDescription');
     if (exceptionDesc) {
       console.error('ABR API exception:', exceptionDesc);
-      return jsonResponse({
-        valid: false,
-        error: `ABR API error: ${exceptionDesc}`,
-      });
+      return jsonResponse({ valid: false, error: 'ABN verification service unavailable. Please try again.' });
     }
 
     // Extract entity name — prefer organisation name, fall back to
@@ -145,6 +136,6 @@ Deno.serve(async (req) => {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error('verify-abn unhandled error:', msg);
-    return jsonResponse({ valid: false, error: `Unexpected error: ${msg}` });
+    return jsonResponse({ valid: false, error: 'An unexpected error occurred. Please try again.' });
   }
 });

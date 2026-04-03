@@ -1007,6 +1007,16 @@ Return only a JSON array with no markdown in this format:
       return jsonResponse({ error: 'content or pdfBase64 is required' }, 400);
     }
 
+    // --- Binary payload size validation ---
+    const MAX_IMAGE_BASE64_LENGTH = 6_800_000;  // ~5 MB raw
+    const MAX_PDF_BASE64_LENGTH   = 13_600_000; // ~10 MB raw
+    if (imageBase64 && imageBase64.length > MAX_IMAGE_BASE64_LENGTH) {
+      return jsonResponse({ error: 'File is too large. Please upload a smaller file.' }, 400);
+    }
+    if (pdfBase64 && pdfBase64.length > MAX_PDF_BASE64_LENGTH) {
+      return jsonResponse({ error: 'File is too large. Please upload a smaller file.' }, 400);
+    }
+
     const anthropicApiKey = Deno.env.get('ANTHROPIC_API_KEY');
     if (!anthropicApiKey) {
       console.error('ANTHROPIC_API_KEY is not configured');
@@ -1031,9 +1041,10 @@ Return only a JSON array with no markdown in this format:
       });
     } else {
       const MAX_CONTENT_LENGTH = 3000;
-      const truncatedContent = content.length > MAX_CONTENT_LENGTH
-        ? content.slice(0, MAX_CONTENT_LENGTH) + '... [content truncated for analysis]'
-        : content;
+      if (content.length > MAX_CONTENT_LENGTH) {
+        return jsonResponse({ error: 'Content exceeds the maximum allowed length. Please shorten your submission.' }, 400);
+      }
+      const truncatedContent = content;
 
       userContent.push({
         type: 'text',

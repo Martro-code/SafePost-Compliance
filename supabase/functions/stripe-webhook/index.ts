@@ -59,8 +59,8 @@ serve(async (req: Request) => {
     // requires Node.js crypto which is not available in Deno
     event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
   } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+    console.error('Stripe webhook error:', err.message);
+    return new Response('Webhook error', { status: 400 });
   }
 
   // ── Idempotency check: skip already-processed events ──────────────────
