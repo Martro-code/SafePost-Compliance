@@ -4,6 +4,8 @@ import { AnalysisResult, ComplianceStatus } from '../types';
 import { supabase } from '../services/supabaseClient';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
+export const MAX_AUDIT_CONTENT_LENGTH = 10_000;
+
 // Session storage keys for persisting last result across navigation
 const SESSION_KEY_RESULT = 'safepost_last_result';
 const SESSION_KEY_CONTENT = 'safepost_last_content';
