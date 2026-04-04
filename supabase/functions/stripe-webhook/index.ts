@@ -80,6 +80,42 @@ serve(async (req: Request) => {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
+
+    // ── Audit one-time payment branch ──────────────────────────────────────
+    // Must be checked before the subscription path — audit sessions carry
+    // account_id (not userId) in metadata and must not fall through to the
+    // subscription handler.
+    if (session.mode === 'payment' && session.metadata?.product_type === 'audit') {
+      const accountId = session.metadata.account_id;
+      const paymentIntentId = session.payment_intent as string;
+
+      const { error } = await supabase
+        .from('accounts')
+        .update({
+          audit_purchased: true,
+          audit_payment_intent_id: paymentIntentId,
+        })
+        .eq('id', accountId);
+
+      if (error) {
+        console.error('Failed to update audit_purchased:', error);
+        return new Response('Webhook handler failed', { status: 500 });
+      }
+
+      console.log(`Audit purchase confirmed for account ${accountId.slice(0, 8)}...`);
+
+      // Record this event as processed before returning
+      await supabase
+        .from('processed_webhook_events')
+        .insert({ event_id: event.id, processed_at: new Date().toISOString() });
+
+      return new Response(JSON.stringify({ received: true }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    }
+
+    // ── Subscription checkout (existing logic unchanged) ───────────────────
     const userId = session.metadata?.userId || session.client_reference_id;
 
     if (!userId) {
