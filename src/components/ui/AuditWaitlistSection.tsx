@@ -73,8 +73,8 @@ const AuditWaitlistSection: React.FC<AuditWaitlistSectionProps> = ({ plan }) => 
   return (
     <>
       {/* Waitlist Section */}
-      <section className="w-full bg-white border-t border-slate-200 mb-32">
-        <div className="max-w-6xl mx-auto px-6 pt-20 pb-0">
+      <section className="w-full bg-white border-t border-slate-200">
+        <div className="max-w-6xl mx-auto px-6 pt-20 pb-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 
             {/* Left column */}
@@ -100,7 +100,7 @@ const AuditWaitlistSection: React.FC<AuditWaitlistSectionProps> = ({ plan }) => 
 
             {/* Right column */}
             <div className="flex flex-col justify-center">
-              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col gap-6 self-start sticky top-8">
+              <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 flex flex-col gap-6 self-start">
                 <div>
                   <p className="text-xs font-semibold tracking-widest text-slate-500 uppercase mb-3">One-time fee</p>
                   <p className="text-5xl font-bold text-slate-900 mb-1">$149</p>
