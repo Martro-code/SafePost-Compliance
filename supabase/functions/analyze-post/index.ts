@@ -952,7 +952,7 @@ serve(async (req) => {
     }
 
     // --- Validate body ---
-    const { content, imageBase64, pdfBase64, action, issues } = await req.json();
+    const { content, imageBase64, pdfBase64, action, issues, isAuditCheck } = await req.json();
 
     if (action === 'rewrite') {
       // --- Generate compliant rewrites ---
@@ -1058,8 +1058,10 @@ Return only a JSON array with no markdown in this format:
       });
     } else {
       const MAX_CONTENT_LENGTH = 3000;
-      if (content.length > MAX_CONTENT_LENGTH) {
-        return jsonResponse({ error: 'Content exceeds the maximum allowed length. Please shorten your submission.' }, 400);
+      const MAX_AUDIT_CONTENT_LENGTH = 10_000;
+      const effectiveLimit = isAuditCheck ? MAX_AUDIT_CONTENT_LENGTH : MAX_CONTENT_LENGTH;
+      if (content && content.length > effectiveLimit) {
+        return jsonResponse({ error: 'Content exceeds maximum length' }, 400);
       }
       const truncatedContent = content;
 
@@ -1096,7 +1098,7 @@ Return only a JSON array with no markdown in this format:
       headers: anthropicRequestHeaders,
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 8000,
+        max_tokens: isAuditCheck ? 12000 : 8000,
         system: SYSTEM_INSTRUCTION,
         messages: [{ role: 'user', content: userContent }],
       }),
