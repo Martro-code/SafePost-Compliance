@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
-import Stripe from 'https://esm.sh/stripe@17.7.0?target=deno&deno-std=0.177.0&no-check=true';
+import Stripe from 'https://esm.sh/stripe@17.7.0?target=deno&deno-std=0.224.0&no-check=true';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
@@ -13,6 +13,9 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 );
+
+// Alias used throughout the checkout handler for clarity
+const supabaseAdmin = supabase;
 
 const priceIdToPlan: Record<string, string> = {
   'price_1TAHuHJAm9wjk5YfCqAF30bc': 'starter',
@@ -80,6 +83,43 @@ serve(async (req: Request) => {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
+
+    // ── AUDIT BRANCH ── must be first, returns before any subscription logic ──
+    if (
+      session.mode === 'payment' &&
+      session.metadata?.product_type === 'audit'
+    ) {
+      const accountId = session.metadata.account_id;
+      const paymentIntentId = session.payment_intent as string;
+
+      if (!accountId) {
+        console.error('Audit webhook: no account_id in metadata');
+        return new Response('Missing account_id', { status: 400 });
+      }
+
+      const { error: dbError } = await supabaseAdmin
+        .from('accounts')
+        .update({
+          audit_purchased: true,
+          audit_payment_intent_id: paymentIntentId,
+        })
+        .eq('id', accountId);
+
+      if (dbError) {
+        console.error('Audit webhook: database update failed:', dbError.message);
+        return new Response('Database update failed', { status: 500 });
+      }
+
+      await supabaseAdmin
+        .from('processed_webhook_events')
+        .insert({ event_id: event.id });
+
+      console.log(`Audit purchase confirmed for account ${accountId.slice(0, 8)}...`);
+      return new Response(JSON.stringify({ received: true }), { status: 200 });
+    }
+
+    // ── SUBSCRIPTION BRANCH ── existing logic below, completely unchanged ──
+    // All userId extraction and subscription handling stays exactly as it was
     const userId = session.metadata?.userId || session.client_reference_id;
 
     if (!userId) {
