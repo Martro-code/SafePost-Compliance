@@ -52,7 +52,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, userEmail, signOut } = useAuth();
-  const { role, plan: accountPlan, abnRequired } = useAccount();
+  const { role, plan: accountPlan, abnRequired, auditPurchased } = useAccount();
 
   // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
   // Only trust the database-backed value from AccountContext.
@@ -187,10 +187,11 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
   const isUltra = planName.toLowerCase() === 'ultra';
 
   const navLinks = [
-    { label: 'Dashboard', path: '/dashboard' },
-    { label: 'History', path: '/history' },
-    { label: 'Settings', path: '/settings' },
-    ...(isUltra && isOwner ? [{ label: 'Team', path: '/settings/team' }] : []),
+    { label: 'Dashboard', path: '/dashboard', locked: false },
+    { label: 'Website Audit', path: auditPurchased ? '/audit/start' : '/audit', locked: !auditPurchased },
+    { label: 'History', path: '/history', locked: false },
+    { label: 'Settings', path: '/settings', locked: false },
+    ...(isUltra && isOwner ? [{ label: 'Team', path: '/settings/team', locked: false }] : []),
   ];
 
   return (
@@ -208,13 +209,14 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                 <button
                   key={link.path}
                   onClick={() => navigate(link.path)}
-                  className={`px-3.5 py-2 text-[13px] font-medium rounded-lg transition-colors duration-200 ${
-                    location.pathname === link.path
+                  className={`flex items-center gap-1.5 px-3.5 py-2 text-[13px] font-medium rounded-lg transition-colors duration-200 ${
+                    location.pathname === link.path || location.pathname.startsWith(link.path + '/')
                       ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
                       : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-gray-900'
                   }`}
                 >
                   {link.label}
+                  {link.locked && <Lock className="w-3 h-3 opacity-60" />}
                 </button>
               ))}
             </nav>
@@ -409,13 +411,14 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
               <button
                 key={link.path}
                 onClick={() => { navigate(link.path); setMobileMenuOpen(false); }}
-                className={`block w-full text-left px-3 py-2.5 text-[13px] font-medium rounded-lg transition-colors duration-200 ${
-                  location.pathname === link.path
+                className={`flex items-center gap-1.5 w-full text-left px-3 py-2.5 text-[13px] font-medium rounded-lg transition-colors duration-200 ${
+                  location.pathname === link.path || location.pathname.startsWith(link.path + '/')
                     ? 'text-gray-900 bg-black/[0.04] dark:bg-gray-100 dark:text-gray-900'
                     : 'text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] dark:text-gray-400 dark:hover:text-gray-900'
                 }`}
               >
                 {link.label}
+                {link.locked && <Lock className="w-3 h-3 opacity-60" />}
               </button>
             ))}
             <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />
