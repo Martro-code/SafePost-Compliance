@@ -14,6 +14,9 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 );
 
+// Alias used throughout the checkout handler for clarity
+const supabaseAdmin = supabase;
+
 const priceIdToPlan: Record<string, string> = {
   'price_1TAHuHJAm9wjk5YfCqAF30bc': 'starter',
   'price_1TAI1AJAm9wjk5Yf5b68eoVw': 'starter',
