@@ -24,12 +24,11 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  // Authenticate: accept either the service role key (from Stripe webhook / internal calls)
+  // Authenticate: accept either the webhook secret (from Stripe webhook / internal calls)
   // or a valid user JWT (from frontend, e.g. AccountContext for Starter users).
   const authHeader = req.headers.get('authorization');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-  const isServiceRole =
-    authHeader === `Bearer ${serviceRoleKey}` || authHeader === serviceRoleKey;
+  const webhookSecret = Deno.env.get('WEBHOOK_AUTH_SECRET') ?? '';
+  const isServiceRole = authHeader === `Bearer ${webhookSecret}`;
 
   let jwtUserId: string | null = null;
 

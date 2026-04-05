@@ -861,8 +861,25 @@ You must return a valid JSON object in this exact structure with no markdown, no
       "severity": "Critical" or "Warning",
       "recommendation": "How to fix the content to be compliant."
     }
-  ]
+  ],
+  "breach_categories": ["testimonial", "tga_advertising"],
+  "frameworks_triggered": ["ahpra", "tga"]
 }
+
+STRUCTURED TAXONOMY RULES — YOU MUST FOLLOW THESE EXACTLY:
+
+breach_categories: Always include this field. Use an empty array [] when status is COMPLIANT or NOT_HEALTHCARE. For all other statuses, populate with one or more of the following values that best describe the issues found:
+- "testimonial" — content includes patient reviews, quotes, or endorsements
+- "tga_advertising" — content advertises therapeutic goods subject to TGA rules
+- "misleading_claims" — unsubstantiated, exaggerated, or false claims about outcomes
+- "before_after" — before/after images or comparative outcome content
+- "patient_privacy" — content that identifies or implies details about a patient
+- "fee_advertising" — advertising specific fees, discounts, or financial incentives
+- "title_misuse" — incorrect use of specialist or protected title
+- "social_media_conduct" — conduct-related issues specific to social media behaviour
+- "other" — issues that do not fit any category above
+
+frameworks_triggered: Always include this field. Use an empty array [] when status is COMPLIANT or NOT_HEALTHCARE. For all other statuses, include "ahpra" if AHPRA rules are engaged, "tga" if TGA rules are engaged, or both if applicable. Only valid values are "ahpra" and "tga".
 
 ${FAQ_CONTEXT}
 
@@ -935,7 +952,7 @@ serve(async (req) => {
     }
 
     // --- Validate body ---
-    const { content, imageBase64, pdfBase64, action, issues } = await req.json();
+    const { content, imageBase64, pdfBase64, action, issues, isAuditCheck } = await req.json();
 
     if (action === 'rewrite') {
       // --- Generate compliant rewrites ---
@@ -1041,8 +1058,10 @@ Return only a JSON array with no markdown in this format:
       });
     } else {
       const MAX_CONTENT_LENGTH = 3000;
-      if (content.length > MAX_CONTENT_LENGTH) {
-        return jsonResponse({ error: 'Content exceeds the maximum allowed length. Please shorten your submission.' }, 400);
+      const MAX_AUDIT_CONTENT_LENGTH = 10_000;
+      const effectiveLimit = isAuditCheck ? MAX_AUDIT_CONTENT_LENGTH : MAX_CONTENT_LENGTH;
+      if (content && content.length > effectiveLimit) {
+        return jsonResponse({ error: 'Content exceeds maximum length' }, 400);
       }
       const truncatedContent = content;
 
@@ -1079,7 +1098,7 @@ Return only a JSON array with no markdown in this format:
       headers: anthropicRequestHeaders,
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
-        max_tokens: 8000,
+        max_tokens: isAuditCheck ? 12000 : 8000,
         system: SYSTEM_INSTRUCTION,
         messages: [{ role: 'user', content: userContent }],
       }),
