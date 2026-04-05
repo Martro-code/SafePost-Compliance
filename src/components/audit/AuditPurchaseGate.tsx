@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { Check, Lock, Loader2 } from 'lucide-react';
+import { Check, LockIcon, Loader2 } from 'lucide-react';
 import { useAccount } from '../../context/AccountContext';
 import { supabase } from '../../services/supabaseClient';
 import LoggedInLayout from '../layout/LoggedInLayout';
@@ -74,7 +74,7 @@ const AuditPurchaseGate: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full mb-5">
-            <Lock className="w-3.5 h-3.5 text-blue-600" />
+            <LockIcon className="w-3.5 h-3.5 text-blue-600" />
             <span className="text-[12px] font-semibold text-blue-700 uppercase tracking-wider">
               Website Compliance Audit
             </span>
@@ -98,7 +98,7 @@ const AuditPurchaseGate: React.FC = () => {
               </div>
             </div>
             <div className="bg-blue-50 rounded-xl p-3">
-              <Lock className="w-5 h-5 text-blue-600" />
+              <LockIcon className="w-5 h-5 text-blue-600" />
             </div>
           </div>
 
