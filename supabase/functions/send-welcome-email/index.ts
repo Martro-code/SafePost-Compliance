@@ -110,7 +110,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'SafePost <support@safepost.com.au>',
+        from: 'SafePost <noreply@safepost.com.au>',
         to: email,
         subject: 'Welcome to SafePost — you\'re in',
         html: `

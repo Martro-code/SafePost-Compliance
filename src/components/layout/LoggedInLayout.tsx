@@ -5,13 +5,44 @@
  */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle, Loader2, AlertTriangle, LockIcon } from 'lucide-react';
+import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle, Loader2, AlertTriangle, LockIcon, Info } from 'lucide-react';
 import SafePostLogo from '../ui/SafePostLogo';
 import LoggedInFooter from './LoggedInFooter';
 import { useAuth } from '../../hooks/useAuth';
 import { useAccount } from '../../context/AccountContext';
 import { getDisplayPlanName } from '../../utils/planUtils';
-import { getUnreadCount, markAllNotificationsRead } from '../../services/notificationService';
+import {
+  getUnreadCount,
+  getNotificationsPreview,
+  getAnnouncements,
+  markAsRead,
+  markAllNotificationsRead,
+  type Notification,
+  type Announcement,
+} from '../../services/notificationService';
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function timeAgo(dateStr: string): string {
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}
+
+const DISMISSED_KEY = 'safepost_dismissed_announcements';
+
+function getDismissedIds(): string[] {
+  try { return JSON.parse(localStorage.getItem(DISMISSED_KEY) ?? '[]'); } catch { return []; }
+}
+
+function persistDismissed(ids: string[]): void {
+  localStorage.setItem(DISMISSED_KEY, JSON.stringify(ids));
+}
 
 interface LoggedInLayoutProps {
   children: React.ReactNode;
@@ -38,6 +69,9 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
     const saved = sessionStorage.getItem('safepost_notification_count');
     return saved !== null ? parseInt(saved, 10) : 0;
   });
+  const [previewNotifications, setPreviewNotifications] = useState<Notification[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [dropdownLoading, setDropdownLoading] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
   const accountDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -54,33 +88,86 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch unread count from Supabase on mount/login
-  useEffect(() => {
+  // Calculate and cache the total notification count (unread + non-dismissed announcements).
+  const refreshCount = useCallback(async () => {
     if (!user) return;
-    getUnreadCount(user.id).then(count => {
-      setNotificationCount(count);
-      sessionStorage.setItem('safepost_notification_count', String(count));
-    }).catch(err => {
-      console.error('Failed to fetch notification count:', err);
-    });
+    try {
+      const [unreadCount, allAnnouncements] = await Promise.all([
+        getUnreadCount(user.id),
+        getAnnouncements(),
+      ]);
+      const dismissed = getDismissedIds();
+      const visibleAnnouncements = allAnnouncements.filter(a => !dismissed.includes(a.id));
+      const total = unreadCount + visibleAnnouncements.length;
+      setNotificationCount(total);
+      sessionStorage.setItem('safepost_notification_count', String(total));
+    } catch {
+      // Non-fatal — keep previous count
+    }
   }, [user]);
 
+  // Fetch count on mount/login
   useEffect(() => {
-    const handleNotificationUpdate = () => {
-      // Re-read from sessionStorage for immediate UI updates from inbox page
-      const saved = sessionStorage.getItem('safepost_notification_count');
-      setNotificationCount(saved !== null ? parseInt(saved, 10) : 0);
-      // Also re-fetch from Supabase for accuracy (e.g. after new notification inserted)
-      if (user) {
-        getUnreadCount(user.id).then(count => {
-          setNotificationCount(count);
-          sessionStorage.setItem('safepost_notification_count', String(count));
-        }).catch(() => {});
-      }
-    };
+    refreshCount();
+  }, [refreshCount]);
+
+  // Re-fetch count when other parts of the app dispatch the update event
+  useEffect(() => {
+    const handleNotificationUpdate = () => { refreshCount(); };
     window.addEventListener('safepost-notifications-updated', handleNotificationUpdate);
     return () => window.removeEventListener('safepost-notifications-updated', handleNotificationUpdate);
-  }, [user]);
+  }, [refreshCount]);
+
+  // Lazily load dropdown content when it opens
+  useEffect(() => {
+    if (!notificationDropdownOpen || !user) return;
+    setDropdownLoading(true);
+    Promise.all([
+      getNotificationsPreview(user.id),
+      getAnnouncements(),
+    ]).then(([notifs, allAnnouncements]) => {
+      setPreviewNotifications(notifs);
+      const dismissed = getDismissedIds();
+      setAnnouncements(allAnnouncements.filter(a => !dismissed.includes(a.id)));
+    }).catch(() => {}).finally(() => setDropdownLoading(false));
+  }, [notificationDropdownOpen, user]);
+
+  const handleNotificationClick = useCallback(async (notif: Notification) => {
+    if (!notif.read) {
+      await markAsRead(notif.id);
+      setPreviewNotifications(prev => prev.map(n => n.id === notif.id ? { ...n, read: true } : n));
+      setNotificationCount(prev => {
+        const next = Math.max(0, prev - 1);
+        sessionStorage.setItem('safepost_notification_count', String(next));
+        return next;
+      });
+    }
+  }, []);
+
+  const handleDismissAnnouncement = useCallback((id: string) => {
+    const ids = getDismissedIds();
+    if (!ids.includes(id)) persistDismissed([...ids, id]);
+    setAnnouncements(prev => prev.filter(a => a.id !== id));
+    setNotificationCount(prev => {
+      const next = Math.max(0, prev - 1);
+      sessionStorage.setItem('safepost_notification_count', String(next));
+      return next;
+    });
+  }, []);
+
+  const handleMarkAllRead = useCallback(async () => {
+    // Dismiss all visible announcements
+    const dismissed = getDismissedIds();
+    const newDismissed = [...new Set([...dismissed, ...announcements.map(a => a.id)])];
+    persistDismissed(newDismissed);
+    setAnnouncements([]);
+    // Mark all user notifications read
+    setPreviewNotifications(prev => prev.map(n => ({ ...n, read: true })));
+    setNotificationCount(0);
+    sessionStorage.setItem('safepost_notification_count', '0');
+    window.dispatchEvent(new Event('safepost-notifications-updated'));
+    if (user) await markAllNotificationsRead(user.id);
+  }, [announcements, user]);
 
   const [loggingOut, setLoggingOut] = useState(false);
 
@@ -152,19 +239,97 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
               </button>
               {notificationDropdownOpen && (
                 <div className="absolute top-full right-0 mt-1 w-80 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in dark:bg-gray-800 dark:border-gray-700 z-50">
+                  {/* Header */}
                   <div className="flex items-center justify-between px-4 py-2.5">
                     <p className="text-[13px] font-semibold text-gray-900 dark:text-white">Notifications</p>
-                    <button onClick={() => { setNotificationCount(0); sessionStorage.setItem('safepost_notification_count', '0'); window.dispatchEvent(new Event('safepost-notifications-updated')); if (user) { markAllNotificationsRead(user.id); } }} className="text-[12px] text-blue-600 hover:text-blue-700 font-medium transition-colors dark:text-blue-400">
+                    <button
+                      onClick={handleMarkAllRead}
+                      className="text-[12px] text-blue-600 hover:text-blue-700 font-medium transition-colors dark:text-blue-400"
+                    >
                       Mark all as read
                     </button>
                   </div>
                   <div className="border-t border-black/[0.06] dark:border-gray-700" />
-                  <div className="py-1">
-                    <div className="px-4 py-6 text-center">
-                      <p className="text-[13px] text-gray-400">No new notifications</p>
+
+                  {/* Body */}
+                  {dropdownLoading ? (
+                    <div className="flex items-center justify-center py-6">
+                      <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
                     </div>
-                  </div>
-                  <div className="border-t border-black/[0.06] dark:border-gray-700" />
+                  ) : (
+                    <div>
+                      {/* Announcements — blue info banners */}
+                      {announcements.map(a => (
+                        <div key={a.id} className="mx-2 mt-2 rounded-lg bg-blue-50 border border-blue-100 px-3 py-2.5">
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex items-start gap-2 min-w-0">
+                              <Info className="w-3.5 h-3.5 text-blue-500 flex-shrink-0 mt-0.5" />
+                              <div className="min-w-0">
+                                <p className="text-[12px] font-semibold text-blue-900 leading-snug">{a.title}</p>
+                                <p className="text-[12px] text-blue-700 mt-0.5 leading-snug">{a.message}</p>
+                                {a.link_url && a.link_text && (
+                                  <a
+                                    href={a.link_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-[11px] font-medium text-blue-600 hover:text-blue-800 underline mt-1 inline-block"
+                                    onClick={() => setNotificationDropdownOpen(false)}
+                                  >
+                                    {a.link_text}
+                                  </a>
+                                )}
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => handleDismissAnnouncement(a.id)}
+                              className="flex-shrink-0 text-blue-400 hover:text-blue-600 transition-colors"
+                              aria-label="Dismiss"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+
+                      {/* User notifications */}
+                      {previewNotifications.length > 0 ? (
+                        <div className={announcements.length > 0 ? 'mt-2' : ''}>
+                          {previewNotifications.map(notif => (
+                            <button
+                              key={notif.id}
+                              onClick={() => handleNotificationClick(notif)}
+                              className={`w-full text-left px-4 py-3 hover:bg-black/[0.03] transition-colors dark:hover:bg-white/[0.04] ${
+                                !notif.read ? 'bg-blue-50/60 dark:bg-blue-900/10' : ''
+                              }`}
+                            >
+                              <div className="flex items-start gap-2.5">
+                                {!notif.read && (
+                                  <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5" />
+                                )}
+                                <div className={`min-w-0 ${notif.read ? 'pl-4' : ''}`}>
+                                  <p className={`text-[12px] leading-snug truncate ${notif.read ? 'text-gray-600 dark:text-gray-400' : 'font-semibold text-gray-900 dark:text-white'}`}>
+                                    {notif.title}
+                                  </p>
+                                  <p className="text-[11px] text-gray-400 mt-0.5 line-clamp-2 leading-snug">
+                                    {notif.message}
+                                  </p>
+                                  <p className="text-[11px] text-gray-300 dark:text-gray-600 mt-0.5">
+                                    {timeAgo(notif.created_at)}
+                                  </p>
+                                </div>
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      ) : announcements.length === 0 ? (
+                        <div className="px-4 py-6 text-center">
+                          <p className="text-[13px] text-gray-400">No new notifications</p>
+                        </div>
+                      ) : null}
+                    </div>
+                  )}
+
+                  <div className="border-t border-black/[0.06] dark:border-gray-700 mt-1.5" />
                   <button
                     onClick={() => { navigate('/notifications'); setNotificationDropdownOpen(false); }}
                     className="block w-full text-center px-4 py-2.5 text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400"

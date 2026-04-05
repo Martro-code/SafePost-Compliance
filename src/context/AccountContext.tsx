@@ -379,7 +379,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!accountId) return;
     const { data: account } = await supabase
       .from('accounts')
-      .select('plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name')
+      .select('plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id')
       .eq('id', accountId)
       .single();
 

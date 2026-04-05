@@ -4,6 +4,8 @@ import { AnalysisResult, ComplianceStatus } from '../types';
 import { supabase } from '../services/supabaseClient';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
+export const MAX_AUDIT_CONTENT_LENGTH = 10_000;
+
 // Session storage keys for persisting last result across navigation
 const SESSION_KEY_RESULT = 'safepost_last_result';
 const SESSION_KEY_CONTENT = 'safepost_last_content';
@@ -148,6 +150,7 @@ export type CheckerStep = 'idle' | 'analyzing' | 'complete' | 'error';
 interface UseComplianceCheckerOptions {
   planName?: string;
   accountId?: string | null;
+  specialty?: string | null;
   checksUsed?: number;
   checksLimit?: number | null;
   onCheckComplete?: () => Promise<void>;
@@ -162,6 +165,7 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
   const {
     planName = 'free',
     accountId = null,
+    specialty = null,
     checksUsed: accountChecksUsed,
     checksLimit: accountChecksLimit,
     onCheckComplete,
@@ -393,11 +397,20 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
             overall_status: normaliseStatus(analysisResult.status),
             compliance_score: complianceScore,
             result_json: analysisResult,
+            // Analytics columns
+            ai_status: analysisResult.status,
+            critical_issue_count: analysisResult.issues.filter((i: any) => i.severity === 'Critical').length,
+            warning_issue_count: analysisResult.issues.filter((i: any) => i.severity === 'Warning').length,
+            breach_categories: analysisResult.breach_categories ?? [],
+            frameworks_triggered: analysisResult.frameworks_triggered ?? [],
           };
 
-          // Include account_id if available
+          // Include account_id and specialty if available
           if (accountId) {
             insertPayload.account_id = accountId;
+          }
+          if (specialty) {
+            insertPayload.specialty = specialty;
           }
 
           const insertResult = await supabase
@@ -411,40 +424,6 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
           } else if (insertResult.data) {
             lastCheckIdRef.current = insertResult.data.id;
             sessionStorage.setItem(SESSION_KEY_CHECK_ID, insertResult.data.id);
-          }
-
-          // Insert in-app notification if user has the preference enabled
-          if (insertResult.data) {
-            try {
-              const { data: prefs } = await supabase
-                .from('user_preferences')
-                .select('notif_compliance_results')
-                .eq('user_id', user.id)
-                .maybeSingle();
-
-              // Send notification if preference is enabled (default true if no row)
-              if (!prefs || prefs.notif_compliance_results) {
-                const statusLabel = normaliseStatus(analysisResult.status) === 'compliant'
-                  ? 'Compliant'
-                  : normaliseStatus(analysisResult.status) === 'non_compliant'
-                  ? 'Non-compliant'
-                  : normaliseStatus(analysisResult.status) === 'conduct_risk'
-                  ? 'Conduct risk'
-                  : 'Requires review';
-
-                await supabase.from('notifications').insert({
-                  user_id: user.id,
-                  type: 'compliance_complete',
-                  title: 'Compliance check complete',
-                  message: `Your post has been reviewed — ${statusLabel}.`,
-                });
-
-                // Update bell count via event
-                window.dispatchEvent(new Event('safepost-notifications-updated'));
-              }
-            } catch (notifErr) {
-              console.error('Failed to insert notification:', notifErr);
-            }
           }
 
           // Increment account-level usage counter via server-side RPC
