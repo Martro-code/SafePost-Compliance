@@ -43,6 +43,9 @@ import AcceptInvitation from './pages/AcceptInvitation';
 import NewsPage from './pages/NewsPage';
 import NewsArticlePage from './pages/NewsArticlePage';
 import NotFound from './pages/NotFound';
+import AuditPurchaseGate from './components/audit/AuditPurchaseGate';
+import AuditFlow from './components/audit/AuditFlow';
+import AuditReport from './components/audit/AuditReport';
 import CookieBanner from './components/ui/CookieBanner';
 import BackToTop from './components/ui/BackToTop';
 
@@ -118,6 +121,9 @@ const App: React.FC = () => {
           <Route path="/notifications" element={<ProtectedRoute><NotificationsInbox /></ProtectedRoute>} />
           <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
           <Route path="/compliance-checker" element={<ProtectedRoute><ComplianceCheckerPage /></ProtectedRoute>} />
+          <Route path="/audit" element={<ProtectedRoute><AuditPurchaseGate /></ProtectedRoute>} />
+          <Route path="/audit/start" element={<ProtectedRoute><AuditFlow /></ProtectedRoute>} />
+          <Route path="/audit/report" element={<ProtectedRoute><AuditReport /></ProtectedRoute>} />
           <Route path="/accept-invitation" element={<AcceptInvitation />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

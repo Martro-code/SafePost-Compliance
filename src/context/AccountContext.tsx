@@ -69,6 +69,8 @@ export interface AccountContextType {
   abn: string;
   abnEntityName: string;
   abnRequired: boolean;
+  auditPurchased: boolean;
+  auditPaymentIntentId: string | null;
   accountLoading: boolean;
   refreshAccount: () => Promise<void>;
 }
@@ -92,6 +94,8 @@ const AccountContext = createContext<AccountContextType>({
   abn: '',
   abnEntityName: '',
   abnRequired: false,
+  auditPurchased: false,
+  auditPaymentIntentId: null,
   accountLoading: true,
   refreshAccount: async () => {},
 });
@@ -115,6 +119,8 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [specialty, setSpecialty] = useState('');
   const [abn, setAbn] = useState('');
   const [abnEntityName, setAbnEntityName] = useState('');
+  const [auditPurchased, setAuditPurchased] = useState(false);
+  const [auditPaymentIntentId, setAuditPaymentIntentId] = useState<string | null>(null);
   const [accountLoading, setAccountLoading] = useState(!cached);
 
   const loadAccount = useCallback(async () => {
@@ -150,7 +156,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // Found membership — load the account
         const { data: account, error: accountFetchError } = await supabase
           .from('accounts')
-          .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name')
+          .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id')
           .eq('id', membership.account_id)
           .single();
         if (accountFetchError) {
@@ -195,6 +201,8 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setSpecialty(account.specialty || '');
           setAbn(account.abn || '');
           setAbnEntityName(account.abn_entity_name || '');
+          setAuditPurchased(account.audit_purchased ?? false);
+          setAuditPaymentIntentId(account.audit_payment_intent_id ?? null);
           writeAccountCache({
             accountId: account.id,
             plan: account.plan || 'starter',
@@ -247,7 +255,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // zero rows when the row already exists.
       const { data: resolvedAccount, error: fetchError } = await supabase
         .from('accounts')
-        .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name')
+        .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id')
         .eq('owner_user_id', user.id)
         .single();
 
@@ -326,6 +334,8 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setSpecialty(resolvedAccount.specialty || '');
       setAbn(resolvedAccount.abn || '');
       setAbnEntityName(resolvedAccount.abn_entity_name || '');
+      setAuditPurchased(resolvedAccount.audit_purchased ?? false);
+      setAuditPaymentIntentId(resolvedAccount.audit_payment_intent_id ?? null);
       writeAccountCache({
         accountId: resolvedAccount.id,
         plan: resolvedAccount.plan || provisionPlan,
@@ -398,6 +408,8 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setSpecialty(account.specialty || '');
       setAbn(account.abn || '');
       setAbnEntityName(account.abn_entity_name || '');
+      setAuditPurchased(account.audit_purchased ?? false);
+      setAuditPaymentIntentId(account.audit_payment_intent_id ?? null);
       writeAccountCache({
         accountId,
         plan: account.plan || 'starter',
@@ -409,7 +421,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [accountId]);
 
   return (
-    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, accountLoading, refreshAccount }}>
+    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, auditPurchased, auditPaymentIntentId, accountLoading, refreshAccount }}>
       {children}
     </AccountContext.Provider>
   );
