@@ -26,13 +26,10 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  // Only allow requests authenticated with the service role key.
+  // Only allow requests authenticated with the webhook secret.
   const authHeader = req.headers.get('authorization');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
-  if (
-    !authHeader ||
-    (authHeader !== `Bearer ${serviceRoleKey}` && authHeader !== serviceRoleKey)
-  ) {
+  const webhookSecret = Deno.env.get('WEBHOOK_AUTH_SECRET') ?? '';
+  if (!authHeader || authHeader !== `Bearer ${webhookSecret}`) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), {
       status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -133,7 +130,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'SafePost <support@safepost.com.au>',
+        from: 'SafePost <noreply@safepost.com.au>',
         to: billing_email,
         subject: "You're approaching your SafePost check limit",
         html: `

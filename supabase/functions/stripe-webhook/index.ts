@@ -84,20 +84,17 @@ serve(async (req: Request) => {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
 
-    // ── AUDIT BRANCH ── must be first, returns before any subscription logic ──
-    if (
-      session.mode === 'payment' &&
-      session.metadata?.product_type === 'audit'
-    ) {
+    // AUDIT BRANCH — must be first, before any userId extraction
+    if (session.mode === 'payment' && session.metadata?.product_type === 'audit') {
       const accountId = session.metadata.account_id;
       const paymentIntentId = session.payment_intent as string;
 
       if (!accountId) {
-        console.error('Audit webhook: no account_id in metadata');
+        console.error('No account_id in audit payment metadata');
         return new Response('Missing account_id', { status: 400 });
       }
 
-      const { error: dbError } = await supabaseAdmin
+      const { error } = await supabase
         .from('accounts')
         .update({
           audit_purchased: true,
@@ -105,21 +102,22 @@ serve(async (req: Request) => {
         })
         .eq('id', accountId);
 
-      if (dbError) {
-        console.error('Audit webhook: database update failed:', dbError.message);
+      if (error) {
+        console.error('Failed to update audit_purchased:', error.message);
         return new Response('Database update failed', { status: 500 });
       }
 
-      await supabaseAdmin
+      // Insert idempotency record
+      await supabase
         .from('processed_webhook_events')
         .insert({ event_id: event.id });
 
-      console.log(`Audit purchase confirmed for account ${accountId.slice(0, 8)}...`);
+      const maskedAccount = accountId.slice(0, 8) + '...';
+      console.log(`Audit purchase confirmed for account ${maskedAccount}`);
       return new Response(JSON.stringify({ received: true }), { status: 200 });
     }
 
-    // ── SUBSCRIPTION BRANCH ── existing logic below, completely unchanged ──
-    // All userId extraction and subscription handling stays exactly as it was
+    // SUBSCRIPTION BRANCH — existing logic unchanged below this point
     const userId = session.metadata?.userId || session.client_reference_id;
 
     if (!userId) {
@@ -208,7 +206,7 @@ serve(async (req: Request) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'SafePost <support@safepost.com.au>',
+          from: 'SafePost <noreply@safepost.com.au>',
           to: session.customer_email,
           subject: 'Your SafePost subscription is confirmed',
           html: `

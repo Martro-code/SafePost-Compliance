@@ -100,7 +100,52 @@ serve(async (req) => {
       });
     }
 
-    const { priceId } = await req.json();
+    const { priceId, productType } = await req.json();
+
+    // ── Audit one-time payment ─────────────────────────────────────────────
+    if (productType === 'audit') {
+      const auditPriceId = Deno.env.get('AUDIT_PRICE_ID');
+      if (!auditPriceId) {
+        console.error('AUDIT_PRICE_ID is not configured');
+        return new Response(JSON.stringify({ error: 'An unexpected error occurred. Please try again.' }), {
+          status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      // Look up account to get account_id (for webhook) and stripe_customer_id
+      const { data: account, error: accountError } = await supabaseAdmin
+        .from('accounts')
+        .select('id, stripe_customer_id')
+        .eq('owner_user_id', user.id)
+        .single();
+
+      if (accountError || !account) {
+        console.error('Account not found for audit checkout:', accountError);
+        return new Response(JSON.stringify({ error: 'Account not found' }), {
+          status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      const siteUrl = Deno.env.get('SITE_URL') ?? 'https://www.safepost.com.au';
+      const auditSession = await stripe.checkout.sessions.create({
+        ...(account.stripe_customer_id && { customer: account.stripe_customer_id }),
+        payment_method_types: ['card'],
+        line_items: [{ price: auditPriceId, quantity: 1 }],
+        mode: 'payment',
+        success_url: `${siteUrl}/audit?purchase=success`,
+        cancel_url: `${siteUrl}/audit?purchase=cancelled`,
+        metadata: {
+          account_id: account.id,
+          product_type: 'audit',
+        },
+      });
+
+      return new Response(JSON.stringify({ url: auditSession.url }), {
+        status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // ── Subscription checkout (existing logic unchanged) ───────────────────
     if (!priceId) {
       return new Response(JSON.stringify({ error: 'priceId is required' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
