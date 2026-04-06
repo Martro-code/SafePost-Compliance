@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { Check, LockIcon, Loader2 } from 'lucide-react';
 import { useAccount } from '../../context/AccountContext';
 import { supabase } from '../../services/supabaseClient';
@@ -7,14 +7,15 @@ import LoggedInLayout from '../layout/LoggedInLayout';
 
 const FEATURES = [
   'Guided page-by-page assessment across 6 key website sections',
-  'Checked against 172 verified AHPRA and TGA rules',
-  'Severity-rated findings for every page',
+  'Checked against AHPRA advertising guidelines and TGA rules',
+  'Severity-rated findings — High, Medium, and Low',
   'Recommended actions for each issue identified',
-  'Consolidated PDF audit report for your records',
+  'Downloadable audit report for your records',
 ];
 
 const AuditPurchaseGate: React.FC = () => {
-  const { auditPurchased, accountLoading, refreshAccount } = useAccount();
+  const { auditPurchased, accountLoading, refreshAccount, plan } = useAccount();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isPurchaseReturn = searchParams.get('purchase') === 'success';
 
@@ -46,9 +47,57 @@ const AuditPurchaseGate: React.FC = () => {
     );
   }
 
+  // Already purchased — go straight to the audit
   if (auditPurchased) {
     return <Navigate to="/audit/start" replace />;
   }
+
+  const hasActiveSubscription = plan !== 'starter';
+
+  // ── No active subscription ─────────────────────────────────────────────────
+
+  if (!hasActiveSubscription) {
+    return (
+      <LoggedInLayout>
+        <div className="max-w-3xl mx-auto px-6 py-16">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full mb-5">
+              <LockIcon className="w-3.5 h-3.5 text-blue-600" />
+              <span className="text-[12px] font-semibold text-blue-700 uppercase tracking-wider">
+                Website Compliance Audit
+              </span>
+            </div>
+            <h1 className="text-[32px] font-bold text-gray-900 leading-tight mb-4">
+              Subscription Required
+            </h1>
+            <p className="text-[16px] text-gray-500 max-w-xl mx-auto leading-relaxed">
+              The Website Compliance Audit is available exclusively to active SafePost subscribers. Please subscribe to a plan to unlock this feature.
+            </p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 mb-8 flex flex-col gap-4">
+            <button
+              onClick={() => navigate('/pricing/medical-practitioners')}
+              className="w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl transition-colors duration-200"
+            >
+              View Plans
+            </button>
+            <button
+              onClick={() => navigate('/pricing/medical-practices')}
+              className="w-full py-3.5 px-6 bg-white hover:bg-slate-50 text-gray-700 text-[15px] font-semibold rounded-xl border border-slate-200 hover:border-slate-300 transition-colors duration-200"
+            >
+              View Plans for Practices
+            </button>
+            <p className="text-center text-[12px] text-gray-400 mt-1">
+              Already subscribed? Your access will activate automatically.
+            </p>
+          </div>
+        </div>
+      </LoggedInLayout>
+    );
+  }
+
+  // ── Active subscriber, not yet purchased ───────────────────────────────────
 
   const handlePurchase = async () => {
     setError(null);
