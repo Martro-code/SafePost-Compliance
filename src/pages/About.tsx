@@ -263,7 +263,7 @@ const About: React.FC = () => {
             About SafePost: AHPRA &amp; TGA compliance for Australian healthcare
           </h1>
           <p className="text-lg text-gray-500">
-            Supporting Australian medical practitioners and practices with compliance confidence across everything they publish online.
+            Supporting Australian medical practitioners and practices with compliance confidence across everything they publish online
           </p>
         </div>
       </section>

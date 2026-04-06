@@ -131,7 +131,7 @@ const FAQ: React.FC = () => {
             Got questions about AHPRA &amp; TGA compliance? We've got answers.
           </h1>
           <p className="text-lg text-gray-500">
-            Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works.
+            Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works
           </p>
         </div>
       </section>
