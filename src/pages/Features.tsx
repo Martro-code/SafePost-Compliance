@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History, Check } from 'lucide-react';
+import { ChevronDown, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History, Globe, AlertTriangle, ClipboardList, FileText, Shield, BadgeCheck } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import heroImage from '../assets/features-hero.png';
 import PublicFooter from '../components/layout/PublicFooter';
@@ -33,6 +33,39 @@ const Features: React.FC = () => {
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
+
+  const auditFeatures = [
+    {
+      icon: <Globe className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Page-by-page analysis',
+      description: 'Check up to 6 pages from your practice website — homepage, services, about, testimonials, pricing, and more.',
+    },
+    {
+      icon: <AlertTriangle className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Severity-rated findings',
+      description: 'Every issue rated High, Medium, or Low with a plain-English explanation of the breach and the specific guideline it relates to.',
+    },
+    {
+      icon: <ClipboardList className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Actionable recommendations',
+      description: 'Each finding includes a specific recommendation so you know exactly what needs to change and why.',
+    },
+    {
+      icon: <FileText className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Downloadable audit report',
+      description: 'Receive a professionally formatted audit report you can save, share with your team, or use as a compliance record.',
+    },
+    {
+      icon: <Shield className="w-7 h-7 text-blue-500/80" />,
+      heading: 'AHPRA and TGA rules',
+      description: 'Checked against AHPRA advertising guidelines and TGA therapeutic goods advertising rules — the same primary sources used for post checking.',
+    },
+    {
+      icon: <BadgeCheck className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Subscriber add-on',
+      description: 'Available to all active SafePost subscribers as a one-time add-on for $149 AUD (incl. GST) per website audit.',
+    },
+  ];
 
   const features = [
     {
@@ -398,89 +431,31 @@ const Features: React.FC = () => {
       {/* Website Compliance Audit */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
-
-            {/* Left — mock audit result card */}
-            <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-6">
-              <div className="flex items-center justify-between mb-5">
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Audit report</p>
-                  <p className="text-[15px] font-bold text-slate-800">drsarahchen.com.au</p>
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+              Website Compliance Audit
+            </h2>
+            <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
+              Your practice website is subject to the same AHPRA and TGA advertising rules as your social media posts. The Website Compliance Audit checks your existing website page by page — and tells you exactly what to fix.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {auditFeatures.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm"
+              >
+                <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                  {feature.icon}
                 </div>
-                <div className="text-right">
-                  <p className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 mb-1">Score</p>
-                  <p className="text-2xl font-extrabold text-slate-800">74<span className="text-[14px] font-semibold text-slate-400">/100</span></p>
-                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
+                  {feature.heading}
+                </h3>
+                <p className="text-[14px] text-gray-500 leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
-
-              <div className="flex gap-3 mb-5">
-                <div className="flex-1 bg-green-50 border border-green-100 rounded-xl p-3 text-center">
-                  <p className="text-xl font-extrabold text-green-700">12</p>
-                  <p className="text-[11px] font-semibold text-green-600 uppercase tracking-widest mt-0.5">Pass</p>
-                </div>
-                <div className="flex-1 bg-amber-50 border border-amber-100 rounded-xl p-3 text-center">
-                  <p className="text-xl font-extrabold text-amber-600">3</p>
-                  <p className="text-[11px] font-semibold text-amber-500 uppercase tracking-widest mt-0.5">Warning</p>
-                </div>
-                <div className="flex-1 bg-red-50 border border-red-100 rounded-xl p-3 text-center">
-                  <p className="text-xl font-extrabold text-red-600">2</p>
-                  <p className="text-[11px] font-semibold text-red-500 uppercase tracking-widest mt-0.5">Fail</p>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="border-l-4 border-red-400 bg-red-50 rounded-r-xl px-4 py-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-[13px] font-bold text-slate-800">Homepage — Before &amp; After claim</p>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-red-600 bg-red-100 rounded-full px-2 py-0.5">High</span>
-                  </div>
-                  <p className="text-[12px] text-slate-500">Testimonial implies a guaranteed outcome. Likely breaches AHPRA advertising guidelines.</p>
-                </div>
-                <div className="border-l-4 border-amber-400 bg-amber-50 rounded-r-xl px-4 py-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-[13px] font-bold text-slate-800">Services page — Unqualified superlative</p>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 bg-amber-100 rounded-full px-2 py-0.5">Medium</span>
-                  </div>
-                  <p className="text-[12px] text-slate-500">"Leading provider" language requires substantiation under TGA guidelines.</p>
-                </div>
-                <div className="border-l-4 border-amber-400 bg-amber-50 rounded-r-xl px-4 py-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-[13px] font-bold text-slate-800">About page — Unapproved indication</p>
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-amber-600 bg-amber-100 rounded-full px-2 py-0.5">Medium</span>
-                  </div>
-                  <p className="text-[12px] text-slate-500">Treatment described for an indication not listed on the TGA register.</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Right — feature text */}
-            <div className="md:pt-2">
-              <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-blue-600 bg-blue-100 rounded-full px-3 py-1 mb-5">New</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-5 leading-[1.15]">
-                Your website is advertising too
-              </h2>
-              <p className="text-[16px] md:text-[17px] text-gray-500 leading-relaxed mb-8">
-                Every page of your practice website is subject to AHPRA and TGA advertising rules — not just your social posts. The Website Compliance Audit scans your entire site and surfaces issues before a regulator does.
-              </p>
-              <ul className="space-y-3 mb-8">
-                {[
-                  'Scans every page of your practice website',
-                  'Identifies before & after claims, testimonials, and superlatives',
-                  'Checks for unapproved TGA indications',
-                  'Flags unsubstantiated comparative language',
-                  'Delivers a scored report with per-page findings',
-                ].map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <Check className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
-                    <span className="text-[14px] text-gray-600">{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <Link to="/pricing/medical-practitioners" className="text-[14px] font-medium text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                View pricing and add to your subscription →
-              </Link>
-            </div>
-
+            ))}
           </div>
         </div>
       </section>
