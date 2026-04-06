@@ -10,7 +10,7 @@ const faqs = [
     answer: "SafePost checks your content against 174 verified rules drawn from primary AHPRA and TGA regulatory documents, two VCAT enforcement tribunal judgements, and guidance from the AMA and the TGA. This includes the Health Practitioner Regulation National Law Act 2009, the Therapeutic Goods Act 1989, the Good Medical Practice Code of Conduct, AHPRA advertising guidelines, guidelines for cosmetic procedures and cosmetic surgery advertising, AHPRA's acceptable evidence standard for therapeutic and efficacy claims, and TGA therapeutic goods advertising rules including the November 2025 social media advertising guidance."
   },
   {
-    question: "Does a 'Compliant' result mean I am guaranteed to be compliant?",
+    question: "Does a 'No issues detected' result mean I am guaranteed to be compliant?",
     answer: "No. A compliant result from SafePost means no issues were identified based on our current knowledge base — it does not constitute legal advice or guarantee compliance with all applicable laws and regulations. AHPRA and the National Boards do not provide pre-approval for advertising. Registered health practitioners remain solely responsible for ensuring their content complies with the Health Practitioner Regulation National Law Act 2009, the Therapeutic Goods Act 1989, and AHPRA and TGA guidelines. If in doubt, seek independent legal advice before publishing."
   },
   {
@@ -48,16 +48,16 @@ const Help: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [subject, setSubject] = useState('');
   const [message, setMessage] = useState('');
-  const [userName, setUserName] = useState('');
+  const [userFirstName, setUserFirstName] = useState('');
+  const [userLastName, setUserLastName] = useState('');
   const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     const loadUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const firstName = user.user_metadata?.firstName || user.user_metadata?.first_name || '';
-        const lastName = user.user_metadata?.lastName || user.user_metadata?.last_name || '';
-        setUserName(`${firstName} ${lastName}`.trim());
+        setUserFirstName(user.user_metadata?.firstName || user.user_metadata?.first_name || '');
+        setUserLastName(user.user_metadata?.lastName || user.user_metadata?.last_name || '');
         setUserEmail(user.email || '');
       }
     };
@@ -71,15 +71,12 @@ const Help: React.FC = () => {
     setErrorMessage('');
 
     const categoryLabel = categoryDisplayMap[subject] || subject;
-    const nameParts = userName.trim().split(/\s+/);
-    const firstName = nameParts[0] || '';
-    const lastName = nameParts.slice(1).join(' ') || '';
 
     try {
       const { data, error } = await supabase.functions.invoke('submit-contact-form', {
         body: {
-          first_name: firstName,
-          last_name: lastName,
+          first_name: userFirstName || 'Unknown',
+          last_name: userLastName || 'User',
           email: userEmail,
           category: categoryLabel,
           message: message.trim(),
@@ -219,8 +216,8 @@ const Help: React.FC = () => {
         {/* Section 3 — Direct contact fallback */}
         <p className="text-center text-[13px] text-gray-400 mt-4">
           Or email us directly at{' '}
-          <a href="mailto:info@safepost.com.au" className="text-blue-500 hover:text-blue-700">
-            info@safepost.com.au
+          <a href="mailto:support@safepost.com.au" className="text-blue-500 hover:text-blue-700">
+            support@safepost.com.au
           </a>
         </p>
       </div>

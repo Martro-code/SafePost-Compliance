@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import FAQSection from '../components/ui/FAQSection';
+import AuditWaitlistSection from '../components/ui/AuditWaitlistSection';
 import PublicFooter from '../components/layout/PublicFooter';
 import { trackUpgradeInitiated } from '../services/analytics';
 
@@ -55,6 +57,10 @@ const PricingMedicalPractitioners: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>Pricing for Practitioners — SafePost</title>
+        <meta name="description" content="Simple, transparent pricing for individual Australian medical practitioners. Start checking your posts for AHPRA and TGA compliance today." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -78,7 +84,7 @@ const PricingMedicalPractitioners: React.FC = () => {
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${pricingDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {pricingDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in z-50">
                   <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     Practitioners
                   </button>
@@ -288,7 +294,7 @@ const PricingMedicalPractitioners: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-10 md:pb-12 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Pricing for practitioners
+            AHPRA &amp; TGA compliance pricing for practitioners
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
             Choose the plan that's right for you
@@ -341,15 +347,19 @@ const PricingMedicalPractitioners: React.FC = () => {
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">1 user included</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                   <span className="text-[14px] text-gray-600">5 compliance checks</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Identify non-compliant content</span>
+                  <span className="text-[14px] text-gray-600">Identify potentially non-compliant content</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">AI-powered compliant content rewrites</span>
+                  <span className="text-[14px] text-gray-600">AI-powered suggested content rewrites</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -396,11 +406,15 @@ const PricingMedicalPractitioners: React.FC = () => {
               <ul className="space-y-3.5 mb-10 flex-grow">
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <span className="text-[14px] text-gray-600">1 user included</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
                   <span className="text-[14px] text-gray-600">20 compliance checks per month</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">AI-powered compliant content rewrites</span>
+                  <span className="text-[14px] text-gray-600">AI-powered suggested content rewrites</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
@@ -428,6 +442,9 @@ const PricingMedicalPractitioners: React.FC = () => {
           </div>
         </div>
       </section>
+
+      {/* Website Compliance Audit Waitlist */}
+      <AuditWaitlistSection plan="medical_practitioner" />
 
       {/* FAQ Section */}
       <FAQSection
