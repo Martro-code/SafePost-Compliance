@@ -67,7 +67,7 @@ const verdictConfig = {
     border: 'border-emerald-200',
     iconBg: 'bg-emerald-100',
     icon: <CheckCircle2 className="w-6 h-6 text-emerald-600" />,
-    label: 'Compliant',
+    label: 'No issues detected',
     labelColor: 'text-emerald-700',
     tagColor: 'text-emerald-500',
     summaryColor: 'text-emerald-800/75',
@@ -78,7 +78,7 @@ const verdictConfig = {
     border: 'border-red-200',
     iconBg: 'bg-red-100',
     icon: <XCircle className="w-6 h-6 text-red-600" />,
-    label: 'Non-compliant',
+    label: 'Potential breaches detected',
     labelColor: 'text-red-700',
     tagColor: 'text-red-500',
     summaryColor: 'text-red-800/75',
@@ -481,7 +481,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
           </div>
           <div>
             <p className={`text-[10px] font-bold uppercase tracking-[0.12em] ${verdict.tagColor}`}>
-              Verdict
+              Assessment
             </p>
             <h3 className={`text-xl font-extrabold tracking-tight ${verdict.labelColor}`}>
               {verdict.label}
@@ -519,7 +519,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
               This content describes conduct that cannot be made compliant through editing. Content of this nature should not be published in any form.
             </p>
             <p className="text-[13px] text-gray-400 leading-relaxed">
-              If this content relates to real events or conduct, we strongly recommend seeking immediate advice from your medical defence organisation (MDO) such as MDA National or Avant.
+              If this content relates to real events or conduct, we strongly recommend seeking immediate advice from your medical defence organisation (MDO).
             </p>
           </div>
         )}
@@ -554,7 +554,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
       {result.overall_status === 'conduct_risk' && (
         <div className="bg-gray-100 rounded-2xl border border-gray-200 dark:bg-purple-900/30 dark:border-purple-500 p-6 text-center">
           <p className="text-[14px] text-gray-500 font-medium">
-            Compliant rewrites are not available for this content. This content should be omitted entirely.
+            Suggested rewrites are not available for this content. This content should be omitted entirely.
           </p>
         </div>
       )}
@@ -567,7 +567,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
             <p className="text-[14px] font-semibold">Want to fix these issues automatically?</p>
           </div>
           <p className="text-[13px] text-gray-400 max-w-sm mx-auto">
-            SafePost will generate 3 compliant rewrite options based on the issues identified above.
+            SafePost will generate 3 suggested rewrite options based on the issues identified above.
           </p>
           <button
             onClick={handleGenerateRewrites}
@@ -576,7 +576,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
           >
             {isGenerating
               ? <><Loader2 className="w-4 h-4 animate-spin" />Generating rewrites...</>
-              : <><Sparkles className="w-4 h-4" />Generate compliant rewrites</>
+              : <><Sparkles className="w-4 h-4" />Generate suggested rewrites</>
             }
           </button>
           {rewriteError && (
@@ -592,7 +592,7 @@ export const ComplianceResults: React.FC<ComplianceResultsProps> = ({
           <div className="flex items-center gap-2 px-1">
             <Sparkles className="w-4 h-4 text-blue-500" />
             <h4 className="text-[11px] font-bold uppercase tracking-[0.1em] text-gray-400">
-              Compliant rewrite options
+              Suggested rewrite options
             </h4>
           </div>
 
