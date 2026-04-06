@@ -18,6 +18,8 @@ export interface AnalysisResult {
   summary: string;
   issues: ComplianceIssue[];
   overallVerdict: string;
+  breach_categories: string[];
+  frameworks_triggered: string[];
 }
 
 export interface RewrittenPost {

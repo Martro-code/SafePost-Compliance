@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
@@ -27,6 +28,10 @@ const About: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>About SafePost — AHPRA &amp; TGA Compliance for Healthcare</title>
+        <meta name="description" content="SafePost is an Australian AI compliance platform helping medical practitioners and practices avoid AHPRA and TGA advertising breaches." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -255,7 +260,7 @@ const About: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            About SafePost
+            About SafePost: AHPRA &amp; TGA compliance for Australian healthcare
           </h1>
           <p className="text-lg text-gray-500">
             Supporting Australian medical practitioners and practices with compliance confidence

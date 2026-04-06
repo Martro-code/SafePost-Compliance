@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { trackPageView, isGA4Initialised } from './services/analytics';
 import HomePage from './pages/HomePage';
 import SignUp from './pages/SignUp';
@@ -34,6 +35,7 @@ import Help from './pages/Help';
 import CookiePolicy from './pages/CookiePolicy';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfUse from './pages/TermsOfUse';
+import WebsiteTerms from './pages/WebsiteTerms';
 import ProtectedRoute from './pages/ProtectedRoute';
 import { ComplianceCheckerPage } from './pages/ComplianceCheckerPage';
 import TeamMembers from './pages/TeamMembers';
@@ -41,6 +43,9 @@ import AcceptInvitation from './pages/AcceptInvitation';
 import NewsPage from './pages/NewsPage';
 import NewsArticlePage from './pages/NewsArticlePage';
 import NotFound from './pages/NotFound';
+import AuditPurchaseGate from './components/audit/AuditPurchaseGate';
+import AuditFlow from './components/audit/AuditFlow';
+import AuditReport from './components/audit/AuditReport';
 import CookieBanner from './components/ui/CookieBanner';
 import BackToTop from './components/ui/BackToTop';
 
@@ -69,6 +74,11 @@ const PageViewTracker: React.FC = () => {
 const App: React.FC = () => {
   return (
     <>
+      {import.meta.env.VITE_GOOGLE_VERIFICATION && (
+        <Helmet>
+          <meta name="google-site-verification" content={import.meta.env.VITE_GOOGLE_VERIFICATION} />
+        </Helmet>
+      )}
       <ScrollToTop />
       <PageViewTracker />
       <div className="page-transition">
@@ -84,9 +94,12 @@ const App: React.FC = () => {
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-use" element={<TermsOfUse />} />
+          <Route path="/website-terms" element={<WebsiteTerms />} />
           <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/news/:slug" element={<NewsArticlePage />} />
+          <Route path="/content/news" element={<NewsPage />} />
+          <Route path="/content/news/:slug" element={<NewsArticlePage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/mfa-challenge" element={<MFAChallenge />} />
           <Route path="/update-password" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />
@@ -110,6 +123,9 @@ const App: React.FC = () => {
           <Route path="/notifications" element={<ProtectedRoute><NotificationsInbox /></ProtectedRoute>} />
           <Route path="/help" element={<ProtectedRoute><Help /></ProtectedRoute>} />
           <Route path="/compliance-checker" element={<ProtectedRoute><ComplianceCheckerPage /></ProtectedRoute>} />
+          <Route path="/audit" element={<ProtectedRoute><AuditPurchaseGate /></ProtectedRoute>} />
+          <Route path="/audit/start" element={<ProtectedRoute><AuditFlow /></ProtectedRoute>} />
+          <Route path="/audit/report" element={<ProtectedRoute><AuditReport /></ProtectedRoute>} />
           <Route path="/accept-invitation" element={<AcceptInvitation />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

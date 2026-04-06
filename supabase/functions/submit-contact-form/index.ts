@@ -1,3 +1,5 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+
 // Follow-along: https://supabase.com/docs/guides/functions/cors
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -28,6 +30,40 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // --- Rate limiting: 5 requests per 60 seconds per IP ---
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
+
+    const windowStart = new Date(Date.now() - 60 * 1000).toISOString();
+    const { count: recentCount, error: rateLimitError } = await supabaseAdmin
+      .from('rate_limit_events')
+      .select('id', { count: 'exact', head: true })
+      .eq('user_id', clientIp)
+      .eq('function_name', 'submit-contact-form')
+      .gte('created_at', windowStart);
+
+    if (rateLimitError) {
+      console.error('Rate limit check error:', rateLimitError);
+    }
+
+    if ((recentCount ?? 0) >= 5) {
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please wait a moment before trying again.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
+    const { error: insertRateLimitError } = await supabaseAdmin
+      .from('rate_limit_events')
+      .insert({ user_id: clientIp, function_name: 'submit-contact-form' });
+
+    if (insertRateLimitError) {
+      console.error('Rate limit insert error:', insertRateLimitError);
+    }
+
     const body = await req.json();
     const { first_name, last_name, email, phone, subject, category, message } = body;
 
