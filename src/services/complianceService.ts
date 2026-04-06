@@ -8,30 +8,37 @@ export class SessionExpiredError extends Error {
   }
 }
 
-export const analyzePost = async (postContent: string, image?: { base64: string, mimeType: string }): Promise<AnalysisResult> => {
+export const analyzePost = async (
+  postContent: string,
+  options?: { image?: { base64: string; mimeType: string }; pdfBase64?: string },
+): Promise<AnalysisResult & { extractedText?: string }> => {
   console.log('[analyzePost] received content:', {
     length: postContent.length,
     preview: postContent.slice(0, 200),
     isEmpty: !postContent.trim(),
+    isPdf: !!options?.pdfBase64,
   });
 
   try {
     const body: Record<string, unknown> = { content: postContent };
-    if (image) {
-      body.imageBase64 = image.base64;
+    if (options?.image) {
+      body.imageBase64 = options.image.base64;
+    }
+    if (options?.pdfBase64) {
+      body.pdfBase64 = options.pdfBase64;
     }
 
     const { data, error } = await supabase.functions.invoke('analyze-post', { body });
 
     if (error) throw error;
 
-    const { analysis } = data as { analysis: AnalysisResult };
+    const { analysis, extractedText } = data as { analysis: AnalysisResult; extractedText?: string };
 
     if (analysis.status === ComplianceStatus.NOT_HEALTHCARE) {
       throw new Error(analysis.summary);
     }
 
-    return analysis;
+    return { ...analysis, extractedText };
   } catch (error: any) {
     if (error instanceof SessionExpiredError || error.name === 'SessionExpiredError') {
       throw error;

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import FAQSection from '../components/ui/FAQSection';
+import AuditWaitlistSection from '../components/ui/AuditWaitlistSection';
 import PublicFooter from '../components/layout/PublicFooter';
 import { trackUpgradeInitiated } from '../services/analytics';
 
@@ -55,6 +57,10 @@ const PricingMedicalPractices: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>Pricing for Medical Practices — SafePost</title>
+        <meta name="description" content="Team plans for Australian medical practices. Check all your staff's social media posts for AHPRA and TGA compliance from one account." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -78,7 +84,7 @@ const PricingMedicalPractices: React.FC = () => {
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${pricingDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {pricingDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in z-50">
                   <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     Practitioners
                   </button>
@@ -288,7 +294,7 @@ const PricingMedicalPractices: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-10 md:pb-12 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Pricing for practices
+            AHPRA &amp; TGA compliance pricing for practices
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
             Choose the right plan for your practice
@@ -455,6 +461,9 @@ const PricingMedicalPractices: React.FC = () => {
         </div>
       </section>
 
+      {/* Website Compliance Audit Waitlist */}
+      <AuditWaitlistSection plan="medical_practice" />
+
       {/* FAQ Section */}
       <FAQSection
         title="Frequently asked questions"
@@ -465,10 +474,10 @@ const PricingMedicalPractices: React.FC = () => {
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to stay compliant?
+            Ready to check your compliance?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Get your practice set up with SafePost and keep your entire team compliant
+            Get your practice set up with SafePost and keep your entire team across AHPRA and TGA requirements
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button

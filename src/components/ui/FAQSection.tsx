@@ -76,7 +76,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({ title, subtitle, items, groups 
 
   return (
     <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-      <div className="max-w-4xl mx-auto px-6 pb-24 md:pb-32">
+      <div className="max-w-4xl mx-auto px-6 pt-16 pb-24 md:pb-32">
         {subtitle ? (
           <div className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
@@ -94,9 +94,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({ title, subtitle, items, groups 
           <div className="flex flex-col gap-10">
             {groups.map((group, groupIndex) => (
               <div key={groupIndex}>
-                <div className="text-[11px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-4 px-1">
+                <h3 className="text-[11px] font-bold uppercase tracking-[0.15em] text-gray-400 mb-4 px-1">
                   {group.label}
-                </div>
+                </h3>
                 <div className="flex flex-col gap-4">
                   {group.items.map((item, itemIndex) => {
                     const key = `${groupIndex}-${itemIndex}`;
