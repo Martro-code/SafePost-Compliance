@@ -78,21 +78,18 @@ async function generatePdf(session: AuditSession, practiceName: string) {
   };
 
   // ── Cover header ──────────────────────────────────────────────────────────
-  // Dark navy banner (full width, 25mm tall)
-  const BANNER_H = 25;
-  doc.setFillColor(15, 23, 42); // slate-900
+  // Dark navy (#0f172a) banner — full page width, 28mm tall
+  const BANNER_H = 28;
+  doc.setFillColor(15, 23, 42); // #0f172a
   doc.rect(0, 0, PDF_PAGE_W, BANNER_H, 'F');
 
-  // Load logo via canvas → base64 so we can pass it to addImage
+  // Convert logo to base64 via canvas so jsPDF can embed it
   try {
     const logoBase64 = await new Promise<string>((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
       img.onload = () => {
-        const LOGO_W_MM = 40;
-        const aspectRatio = img.naturalWidth / img.naturalHeight;
-        const LOGO_H_MM = LOGO_W_MM / aspectRatio;
-        // Scale canvas to 2× for crisp rendering
+        // 2× canvas scale for crisp output
         const scale = 2;
         const canvas = document.createElement('canvas');
         canvas.width  = img.naturalWidth  * scale;
@@ -106,22 +103,22 @@ async function generatePdf(session: AuditSession, practiceName: string) {
       img.src = safepostLogoUrl;
     });
 
-    // Measure rendered dimensions to keep aspect ratio
-    const tempImg = new Image();
-    await new Promise<void>((res) => { tempImg.onload = () => res(); tempImg.src = safepostLogoUrl; });
-    const LOGO_W_MM = 40;
-    const LOGO_H_MM = LOGO_W_MM / (tempImg.naturalWidth / tempImg.naturalHeight);
+    // Determine rendered height from natural aspect ratio
+    const dimImg = new Image();
+    await new Promise<void>((res) => { dimImg.onload = () => res(); dimImg.src = safepostLogoUrl; });
+    const LOGO_W_MM = 50;
+    const LOGO_H_MM = LOGO_W_MM / (dimImg.naturalWidth / dimImg.naturalHeight);
     const logoY = (BANNER_H - LOGO_H_MM) / 2; // vertically centred in banner
     doc.addImage(logoBase64, 'PNG', PDF_MARGIN, logoY, LOGO_W_MM, LOGO_H_MM);
   } catch {
-    // Fallback: white text wordmark if image load fails
+    // Fallback wordmark if image load fails
     doc.setFontSize(16);
     doc.setTextColor(255, 255, 255);
     doc.setFont('helvetica', 'bold');
-    doc.text('SafePost', PDF_MARGIN, 14);
+    doc.text('SafePost', PDF_MARGIN, 16);
   }
 
-  // "Website Compliance Audit Report" subtitle below the banner
+  // "Website Compliance Audit Report" title sits below the banner
   y = BANNER_H + 8;
   doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');

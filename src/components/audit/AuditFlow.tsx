@@ -133,17 +133,34 @@ const AuditFlow: React.FC = () => {
     }
 
     if (existing && existing.steps && existing.steps.length > 0) {
-      // Resume existing session — skip setup
       const loadedSteps: AuditStep[] = existing.steps;
-      setSessionId(existing.id);
-      setSteps(loadedSteps);
-      const resumeIdx = loadedSteps.findIndex((s) => s.status !== 'complete');
-      setCurrentStepIndex(resumeIdx >= 0 ? resumeIdx : loadedSteps.length - 1);
-      setPhase('auditing');
-      return;
+
+      // Only resume if the session has actual user data:
+      // - at least one completed step, OR
+      // - at least one step with a URL the user entered during setup.
+      // Sessions from old code had url:'' on every step and no completed
+      // steps — those should be abandoned so the setup screen shows fresh.
+      const hasProgress = loadedSteps.some((s) => s.status === 'complete');
+      const hasUserDefinedUrls = loadedSteps.some((s) => s.url && s.url.trim() !== '');
+
+      if (hasProgress || hasUserDefinedUrls) {
+        setSessionId(existing.id);
+        setSteps(loadedSteps);
+        const resumeIdx = loadedSteps.findIndex((s) => s.status !== 'complete');
+        setCurrentStepIndex(resumeIdx >= 0 ? resumeIdx : loadedSteps.length - 1);
+        setPhase('auditing');
+        return;
+      }
+
+      // Stale session with no user data — mark as abandoned so it doesn't
+      // interfere with the new session the user is about to create.
+      await supabase
+        .from('audit_sessions')
+        .update({ status: 'abandoned' })
+        .eq('id', existing.id);
     }
 
-    // No in-progress session — show setup
+    // No resumable session — show setup screen
     setPhase('setup');
   }, [accountId]);
 
