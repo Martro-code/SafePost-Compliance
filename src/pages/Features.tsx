@@ -433,10 +433,10 @@ const Features: React.FC = () => {
         <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Website Compliance Audit
+              Your website needs compliance checking too
             </h2>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-              Your practice website is subject to the same AHPRA and TGA advertising rules as your social media posts. The Website Compliance Audit checks your existing website page by page — and tells you exactly what to fix.
+              Check your practice website page by page against AHPRA and TGA rules — and get a clear report on exactly what to fix.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
