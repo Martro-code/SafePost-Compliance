@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import { Check, LockIcon, Loader2 } from 'lucide-react';
+import { Check, CheckCircle, LockIcon, Loader2 } from 'lucide-react';
 import { useAccount } from '../../context/AccountContext';
 import { supabase } from '../../services/supabaseClient';
 import LoggedInLayout from '../layout/LoggedInLayout';
@@ -11,6 +11,12 @@ const FEATURES = [
   'Severity-rated findings — High, Medium, and Low',
   'Recommended actions for each issue identified',
   'Downloadable audit report for your records',
+];
+
+const STEPS = [
+  'Set up your audit — enter your page names and URLs',
+  'We analyse each page — AI checks against AHPRA and TGA rules',
+  'Download your report — get a full findings report with recommendations',
 ];
 
 const AuditPurchaseGate: React.FC = () => {
@@ -44,6 +50,61 @@ const AuditPurchaseGate: React.FC = () => {
           )}
         </div>
       </LoggedInLayout>
+    );
+  }
+
+  // ── Post-purchase confirmation screen ──────────────────────────────────────
+  // Show this when returning from Stripe with ?purchase=success, even if
+  // auditPurchased has already resolved — keeps the user on a focused screen.
+
+  if (isPurchaseReturn) {
+    return (
+      <div className="min-h-screen bg-[#f7f7f4] flex items-center justify-center px-6 py-16">
+        <div className="w-full max-w-lg">
+          {/* Icon */}
+          <div className="flex justify-center mb-6">
+            <CheckCircle className="w-16 h-16 text-green-500" />
+          </div>
+
+          {/* Heading + paragraph */}
+          <div className="text-center mb-10">
+            <h1 className="text-[28px] font-bold text-gray-900 leading-tight mb-3">
+              Payment confirmed — you're ready to audit
+            </h1>
+            <p className="text-[16px] text-gray-500 leading-relaxed">
+              Your Website Compliance Audit has been unlocked. Enter the URLs of up to 6 pages from your practice website and we'll check each one against AHPRA and TGA compliance rules.
+            </p>
+          </div>
+
+          {/* What happens next box */}
+          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8 mb-6">
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-5">
+              What happens next:
+            </p>
+            <div className="flex flex-col gap-4">
+              {STEPS.map((step, idx) => (
+                <div key={idx} className="flex items-start gap-4">
+                  <div className="w-6 h-6 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-[11px] font-bold text-blue-600">{idx + 1}</span>
+                  </div>
+                  <span className="text-[14px] text-gray-700 leading-relaxed">{step}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA */}
+          <button
+            onClick={() => navigate('/audit/start')}
+            className="w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-700 text-white text-[15px] font-semibold rounded-xl transition-colors duration-200"
+          >
+            Start your audit
+          </button>
+          <p className="text-center text-[12px] text-gray-400 mt-3">
+            Your audit results are saved automatically and accessible any time from your dashboard.
+          </p>
+        </div>
+      </div>
     );
   }
 
