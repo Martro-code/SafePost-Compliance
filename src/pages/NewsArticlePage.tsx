@@ -287,6 +287,7 @@ const NewsArticlePage: React.FC = () => {
             [&>blockquote>p]:text-[15px] [&>blockquote>p]:text-gray-600 [&>blockquote>p]:leading-relaxed
             [&>ul]:list-disc [&>ul]:pl-6 [&>ul]:mb-6 [&>ul>li]:text-[15px] [&>ul>li]:text-gray-600 [&>ul>li]:mb-2
             [&>ol]:list-decimal [&>ol]:pl-6 [&>ol]:mb-6 [&>ol>li]:text-[15px] [&>ol>li]:text-gray-600 [&>ol>li]:mb-2
+            [&_a]:text-blue-600 [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-blue-700
           ">
             <Component />
           </div>
