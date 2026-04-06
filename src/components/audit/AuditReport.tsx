@@ -5,6 +5,7 @@ import { supabase } from '../../services/supabaseClient';
 import { useAccount } from '../../context/AccountContext';
 import { AuditSession, AuditStep } from '../../types/audit';
 import LoggedInLayout from '../layout/LoggedInLayout';
+import safepostLogoUrl from '../../assets/safepost-logo.png';
 
 // ── PDF generation ────────────────────────────────────────────────────────────
 
@@ -77,16 +78,56 @@ async function generatePdf(session: AuditSession, practiceName: string) {
   };
 
   // ── Cover header ──────────────────────────────────────────────────────────
-  doc.setFillColor(37, 99, 235);
-  doc.rect(0, 0, PDF_PAGE_W, 28, 'F');
-  doc.setFontSize(16);
-  doc.setTextColor(255, 255, 255);
-  doc.setFont('helvetica', 'bold');
-  doc.text('SafePost', PDF_MARGIN, 12);
-  doc.setFontSize(10);
+  // Dark navy banner (full width, 25mm tall)
+  const BANNER_H = 25;
+  doc.setFillColor(15, 23, 42); // slate-900
+  doc.rect(0, 0, PDF_PAGE_W, BANNER_H, 'F');
+
+  // Load logo via canvas → base64 so we can pass it to addImage
+  try {
+    const logoBase64 = await new Promise<string>((resolve, reject) => {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = () => {
+        const LOGO_W_MM = 40;
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+        const LOGO_H_MM = LOGO_W_MM / aspectRatio;
+        // Scale canvas to 2× for crisp rendering
+        const scale = 2;
+        const canvas = document.createElement('canvas');
+        canvas.width  = img.naturalWidth  * scale;
+        canvas.height = img.naturalHeight * scale;
+        const ctx = canvas.getContext('2d')!;
+        ctx.scale(scale, scale);
+        ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
+        resolve(canvas.toDataURL('image/png'));
+      };
+      img.onerror = reject;
+      img.src = safepostLogoUrl;
+    });
+
+    // Measure rendered dimensions to keep aspect ratio
+    const tempImg = new Image();
+    await new Promise<void>((res) => { tempImg.onload = () => res(); tempImg.src = safepostLogoUrl; });
+    const LOGO_W_MM = 40;
+    const LOGO_H_MM = LOGO_W_MM / (tempImg.naturalWidth / tempImg.naturalHeight);
+    const logoY = (BANNER_H - LOGO_H_MM) / 2; // vertically centred in banner
+    doc.addImage(logoBase64, 'PNG', PDF_MARGIN, logoY, LOGO_W_MM, LOGO_H_MM);
+  } catch {
+    // Fallback: white text wordmark if image load fails
+    doc.setFontSize(16);
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.text('SafePost', PDF_MARGIN, 14);
+  }
+
+  // "Website Compliance Audit Report" subtitle below the banner
+  y = BANNER_H + 8;
+  doc.setFontSize(11);
   doc.setFont('helvetica', 'normal');
-  doc.text('Website Compliance Audit Report', PDF_MARGIN, 20);
-  y = 36;
+  doc.setTextColor(71, 85, 105); // slate-500
+  doc.text('Website Compliance Audit Report', PDF_MARGIN, y);
+  y += 8;
 
   // Practice name + date
   writeText(practiceName || 'Your Practice', PDF_MARGIN, 14, [17, 24, 39], true, 2);
