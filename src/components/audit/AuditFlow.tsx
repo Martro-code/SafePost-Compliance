@@ -106,7 +106,7 @@ type Phase = 'loading' | 'setup' | 'auditing';
 
 const AuditFlow: React.FC = () => {
   const navigate = useNavigate();
-  const { accountId, auditPurchased, accountLoading, refreshAccount } = useAccount();
+  const { accountId, auditPurchased, accountLoading } = useAccount();
 
   const [phase, setPhase] = useState<Phase>('loading');
   const [pageSetups, setPageSetups] = useState<PageSetup[]>(DEFAULT_PAGE_SETUPS);
@@ -236,25 +236,11 @@ const AuditFlow: React.FC = () => {
     setSteps(updatedSteps);
     setSaveError(null);
 
-    const isLast = currentStepIndex === steps.length - 1;
-    await saveSteps(updatedSteps, isLast ? 'complete' : 'in_progress');
-
-    if (isLast) {
-      // Reset audit_purchased so the user must re-purchase for a new audit
-      const { error: resetErr } = await supabase
-        .from('accounts')
-        .update({ audit_purchased: false })
-        .eq('id', accountId);
-      if (resetErr) {
-        console.error('Could not reset audit_purchased:', resetErr.message);
-      }
-      await refreshAccount();
-      navigate('/audit/report');
-      return;
-    }
-
+    // Always save as in_progress here; session becomes 'complete' when the
+    // user clicks "View Full Report" (handled in handleNext).
+    await saveSteps(updatedSteps, 'in_progress');
     setShowingResult(true);
-  }, [steps, currentStepIndex, saveSteps, accountId, refreshAccount, navigate]);
+  }, [steps, currentStepIndex, saveSteps]);
 
   const handleSkip = useCallback(async () => {
     const skippedResult: AuditStepResult = {
@@ -277,14 +263,6 @@ const AuditFlow: React.FC = () => {
     await saveSteps(updatedSteps, isLast ? 'complete' : 'in_progress');
 
     if (isLast) {
-      const { error: resetErr } = await supabase
-        .from('accounts')
-        .update({ audit_purchased: false })
-        .eq('id', accountId);
-      if (resetErr) {
-        console.error('Could not reset audit_purchased:', resetErr.message);
-      }
-      await refreshAccount();
       navigate('/audit/report');
       return;
     }
@@ -293,17 +271,20 @@ const AuditFlow: React.FC = () => {
     const nextIndex = currentStepIndex + 1;
     setCurrentStepIndex(nextIndex);
     setShowingResult(false);
-  }, [steps, currentStepIndex, saveSteps, accountId, refreshAccount, navigate]);
+  }, [steps, currentStepIndex, saveSteps, navigate]);
 
-  const handleNext = useCallback(() => {
+  // Called when user clicks "Next Page" or "View Full Report" on the result screen.
+  const handleNext = useCallback(async () => {
     const isLast = currentStepIndex === steps.length - 1;
     if (isLast) {
+      // Mark session complete and navigate when the user explicitly clicks "View Full Report"
+      await saveSteps(steps, 'complete');
       navigate('/audit/report');
       return;
     }
     setCurrentStepIndex(currentStepIndex + 1);
     setShowingResult(false);
-  }, [currentStepIndex, steps.length, navigate]);
+  }, [currentStepIndex, steps, saveSteps, navigate]);
 
   const progressSteps = steps.map((step, idx) => ({
     name: step.name,

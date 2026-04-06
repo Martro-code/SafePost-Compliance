@@ -5,136 +5,13 @@ import { supabase } from '../../services/supabaseClient';
 import { useAccount } from '../../context/AccountContext';
 import { AuditSession, AuditStep } from '../../types/audit';
 import LoggedInLayout from '../layout/LoggedInLayout';
-import safepostLogoUrl from '../../assets/safepost-logo.png';
 
-// ── PDF generation ────────────────────────────────────────────────────────────
+// ── Markdown generation ───────────────────────────────────────────────────────
 
-const PDF_MARGIN = 20;       // mm left/right
-const PDF_PAGE_W = 210;      // A4 width mm
-const PDF_CONTENT_W = PDF_PAGE_W - PDF_MARGIN * 2;  // 170mm
-const PDF_BOTTOM = 282;      // mm — content stops here, footer lives at 288
-
-/** Convert pt font-size → mm line height with 1.5× spacing */
-const lineHeightMm = (fontSize: number) => fontSize * 0.352778 * 1.5;
-
-async function generatePdf(session: AuditSession, practiceName: string) {
-  const { jsPDF } = await import('jspdf');
-  const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-
-  let y = PDF_MARGIN;
-
-  /** Ensure there is `needed` mm of vertical space; add page if not. */
-  const ensureSpace = (needed: number) => {
-    if (y + needed > PDF_BOTTOM) {
-      doc.addPage();
-      y = PDF_MARGIN;
-    }
-  };
-
-  /**
-   * Write wrapped text and advance y.
-   * x       — left edge in mm (must be >= PDF_MARGIN)
-   * fontSize — in pt
-   * Returns the height consumed.
-   */
-  const writeText = (
-    text: string,
-    x: number,
-    fontSize: number,
-    color: [number, number, number],
-    bold = false,
-    extraSpacingMm = 1
-  ): number => {
-    doc.setFontSize(fontSize);
-    doc.setFont('helvetica', bold ? 'bold' : 'normal');
-    doc.setTextColor(color[0], color[1], color[2]);
-
-    const availableWidth = PDF_CONTENT_W - (x - PDF_MARGIN);
-    const lines: string[] = doc.splitTextToSize(text, availableWidth);
-    const lh = lineHeightMm(fontSize);
-    const blockH = lines.length * lh + extraSpacingMm;
-
-    ensureSpace(blockH);
-    lines.forEach((line: string, i: number) => {
-      doc.text(line, x, y + i * lh);
-    });
-    y += blockH;
-    return blockH;
-  };
-
-  /**
-   * Write a section heading — ensure there is enough room for the heading
-   * PLUS at least one body line (orphan guard).
-   */
-  const writeHeading = (
-    text: string,
-    x: number,
-    fontSize: number,
-    color: [number, number, number],
-    orphanGuardMm = 12
-  ) => {
-    ensureSpace(lineHeightMm(fontSize) + orphanGuardMm);
-    writeText(text, x, fontSize, color, true, 2);
-  };
-
-  // ── Cover header ──────────────────────────────────────────────────────────
-  // Dark navy (#0f172a) banner — full page width, 28mm tall
-  const BANNER_H = 28;
-  doc.setFillColor(15, 23, 42); // #0f172a
-  doc.rect(0, 0, PDF_PAGE_W, BANNER_H, 'F');
-
-  // Convert logo to base64 via canvas so jsPDF can embed it
-  try {
-    const logoBase64 = await new Promise<string>((resolve, reject) => {
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = () => {
-        // 2× canvas scale for crisp output
-        const scale = 2;
-        const canvas = document.createElement('canvas');
-        canvas.width  = img.naturalWidth  * scale;
-        canvas.height = img.naturalHeight * scale;
-        const ctx = canvas.getContext('2d')!;
-        ctx.scale(scale, scale);
-        ctx.drawImage(img, 0, 0, img.naturalWidth, img.naturalHeight);
-        resolve(canvas.toDataURL('image/png'));
-      };
-      img.onerror = reject;
-      img.src = safepostLogoUrl;
-    });
-
-    // Determine rendered height from natural aspect ratio
-    const dimImg = new Image();
-    await new Promise<void>((res) => { dimImg.onload = () => res(); dimImg.src = safepostLogoUrl; });
-    const LOGO_W_MM = 50;
-    const LOGO_H_MM = LOGO_W_MM / (dimImg.naturalWidth / dimImg.naturalHeight);
-    const logoY = (BANNER_H - LOGO_H_MM) / 2; // vertically centred in banner
-    doc.addImage(logoBase64, 'PNG', PDF_MARGIN, logoY, LOGO_W_MM, LOGO_H_MM);
-  } catch {
-    // Fallback wordmark if image load fails
-    doc.setFontSize(16);
-    doc.setTextColor(255, 255, 255);
-    doc.setFont('helvetica', 'bold');
-    doc.text('SafePost', PDF_MARGIN, 16);
-  }
-
-  // "Website Compliance Audit Report" title sits below the banner
-  y = BANNER_H + 8;
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(71, 85, 105); // slate-500
-  doc.text('Website Compliance Audit Report', PDF_MARGIN, y);
-  y += 8;
-
-  // Practice name + date
-  writeText(practiceName || 'Your Practice', PDF_MARGIN, 14, [17, 24, 39], true, 2);
-  const dateStr = new Date(session.created_at).toLocaleDateString('en-AU', {
-    day: 'numeric', month: 'long', year: 'numeric',
-  });
-  writeText(`Audit completed: ${dateStr}`, PDF_MARGIN, 10, [107, 114, 128], false, 6);
-
-  // ── Summary box ───────────────────────────────────────────────────────────
-  const analysedSteps = session.steps.filter((s) => s.status === 'complete' && s.result && s.result.complianceStatus !== 'skipped');
+function generateMarkdown(session: AuditSession, practiceName: string): string {
+  const analysedSteps = session.steps.filter(
+    (s) => s.status === 'complete' && s.result && s.result.complianceStatus !== 'skipped'
+  );
   const passCount  = analysedSteps.filter((s) => s.result?.complianceStatus === 'pass').length;
   const warnCount  = analysedSteps.filter((s) => s.result?.complianceStatus === 'warning').length;
   const failCount  = analysedSteps.filter((s) => s.result?.complianceStatus === 'fail').length;
@@ -142,91 +19,88 @@ async function generatePdf(session: AuditSession, practiceName: string) {
   const score = analysedSteps.length > 0
     ? Math.round(((passCount + warnCount * 0.5) / analysedSteps.length) * 100)
     : 0;
-  const skippedCount = session.steps.filter((s) => s.result?.complianceStatus === 'skipped').length;
 
-  ensureSpace(32);
-  doc.setFillColor(248, 250, 252);
-  doc.roundedRect(PDF_MARGIN, y, PDF_CONTENT_W, 30, 3, 3, 'F');
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(17, 24, 39);
-  doc.text(`Overall Compliance Score: ${score}%`, PDF_MARGIN + 6, y + 9);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(75, 85, 99);
-  const summaryLine1 = `Pages analysed: ${analysedSteps.length}${skippedCount > 0 ? `   Skipped: ${skippedCount}` : ''}   Total findings: ${totalIssues}`;
-  const summaryLine2 = `Compliant: ${passCount}   Warnings: ${warnCount}   Issues found: ${failCount}`;
-  doc.text(summaryLine1, PDF_MARGIN + 6, y + 18);
-  doc.text(summaryLine2, PDF_MARGIN + 6, y + 25);
-  y += 36;
+  const completedDate = new Date(session.updated_at || session.created_at);
+  const dateStr = completedDate.toLocaleDateString('en-AU', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  });
 
-  // ── Page-by-page findings ─────────────────────────────────────────────────
-  writeHeading('Page-by-Page Findings', PDF_MARGIN, 13, [17, 24, 39]);
+  const statusLabel = (status: string) => {
+    if (status === 'pass') return 'Compliant';
+    if (status === 'warning') return 'Warnings';
+    if (status === 'fail') return 'Issues Found';
+    return 'Not Analysed';
+  };
+
+  const lines: string[] = [
+    '# SafePost Website Compliance Audit Report',
+    '',
+    `**Practice:** ${practiceName || 'Your Practice'}`,
+    `**Audit completed:** ${dateStr}`,
+    `**Overall Compliance Score:** ${score}%`,
+    '',
+    '---',
+    '',
+    '## Summary',
+    '',
+    '| Metric | Result |',
+    '|--------|--------|',
+    `| Pages Analysed | ${analysedSteps.length} |`,
+    `| Compliant | ${passCount} |`,
+    `| Warnings | ${warnCount} |`,
+    `| Issues Found | ${failCount} |`,
+    `| Total Findings | ${totalIssues} |`,
+    '',
+    '---',
+    '',
+    '## Page-by-Page Findings',
+    '',
+  ];
 
   for (const step of session.steps) {
     if (step.status !== 'complete' || !step.result) continue;
 
     const isSkipped = step.result.complianceStatus === 'skipped';
-    const statusColor: [number, number, number] = isSkipped
-      ? [156, 163, 175]
-      : step.result.complianceStatus === 'pass' ? [22, 163, 74]
-      : step.result.complianceStatus === 'warning' ? [217, 119, 6]
-      : [220, 38, 38];
 
-    const statusLabel = isSkipped ? 'Not analysed'
-      : step.result.complianceStatus === 'pass' ? 'Compliant'
-      : step.result.complianceStatus === 'warning' ? 'Warnings identified'
-      : 'Issues found';
-
-    // Heading guard: heading + status line + summary line
-    ensureSpace(lineHeightMm(11) + lineHeightMm(9) * 3 + 4);
-
-    writeText(step.name, PDF_MARGIN, 11, [17, 24, 39], true, 1);
-    writeText(`Status: ${statusLabel}`, PDF_MARGIN + 4, 9, statusColor, false, 1);
+    lines.push(`### ${step.name}`);
+    lines.push(`**Status:** ${statusLabel(step.result.complianceStatus)}`);
 
     if (step.result.url && !isSkipped) {
-      writeText(step.result.url, PDF_MARGIN + 4, 8, [156, 163, 175], false, 1);
+      lines.push(`**URL:** ${step.result.url}`);
     }
 
-    writeText(step.result.summary, PDF_MARGIN + 4, 9, [75, 85, 99], false, 2);
+    lines.push('');
+    lines.push(step.result.summary);
 
     if (!isSkipped && step.result.issues.length > 0) {
+      lines.push('');
+      lines.push('#### Findings');
+      lines.push('');
       for (const issue of step.result.issues) {
-        const sevColor: [number, number, number] =
-          issue.severity === 'high' ? [220, 38, 38]
-          : issue.severity === 'medium' ? [217, 119, 6]
-          : [107, 114, 128];
-
-        ensureSpace(lineHeightMm(8) * 4 + 4);
-        writeText(
-          `[${issue.severity.toUpperCase()}]  ${issue.description}`,
-          PDF_MARGIN + 8, 8, sevColor, false, 1
-        );
-        writeText(
-          `Recommendation: ${issue.recommendation}`,
-          PDF_MARGIN + 8, 8, [75, 85, 99], false, 2
-        );
+        lines.push(`**[${issue.severity.toUpperCase()}] ${issue.description}**`);
+        lines.push('');
+        lines.push(`> Recommendation: ${issue.recommendation}`);
+        lines.push('');
       }
     }
-    y += 4; // inter-page gap
+
+    lines.push('');
+    lines.push('---');
+    lines.push('');
   }
 
-  // ── Page footers ──────────────────────────────────────────────────────────
-  const totalPages = doc.getNumberOfPages();
-  for (let i = 1; i <= totalPages; i++) {
-    doc.setPage(i);
-    doc.setDrawColor(226, 232, 240);
-    doc.line(PDF_MARGIN, 286, PDF_PAGE_W - PDF_MARGIN, 286);
-    doc.setFontSize(8);
-    doc.setTextColor(156, 163, 175);
-    doc.setFont('helvetica', 'normal');
-    doc.text(
-      `SafePost Website Compliance Audit  ·  ${dateStr}  ·  Page ${i} of ${totalPages}`,
-      PDF_MARGIN, 291
-    );
-  }
+  lines.push(
+    '## Disclaimer',
+    '',
+    'This report has been generated by SafePost using AI-powered analysis of publicly available website content. It is intended as a general compliance screening tool only and does not constitute legal advice. AHPRA and TGA advertising regulations are complex and subject to change. SafePost accepts no liability for any decisions made based on this report. Practitioners should seek independent legal or compliance advice before making changes to their advertising materials. For the most current AHPRA advertising guidelines, visit www.ahpra.gov.au.',
+    '',
+    '---',
+    '',
+    '*Generated by SafePost — AI-powered AHPRA and TGA compliance for Australian medical practitioners*',
+    '*www.safepost.com.au*',
+  );
 
-  doc.save(`SafePost-Audit-${dateStr.replace(/[\s,]+/g, '-')}.pdf`);
+  return lines.join('\n');
 }
 
 // ── Status icon helper ────────────────────────────────────────────────────────
@@ -310,7 +184,7 @@ const AuditReport: React.FC = () => {
   const { accountId, practiceName, accountLoading } = useAccount();
   const [session, setSession] = useState<AuditSession | null>(null);
   const [loading, setLoading] = useState(true);
-  const [pdfLoading, setPdfLoading] = useState(false);
+  const [downloadLoading, setDownloadLoading] = useState(false);
 
   const loadSession = useCallback(async () => {
     if (!accountId) return;
@@ -335,15 +209,26 @@ const AuditReport: React.FC = () => {
     }
   }, [accountLoading, accountId, loadSession]);
 
-  const handleDownloadPdf = async () => {
+  const handleDownloadMarkdown = () => {
     if (!session) return;
-    setPdfLoading(true);
+    setDownloadLoading(true);
     try {
-      await generatePdf(session, practiceName);
+      const md = generateMarkdown(session, practiceName);
+      const d = new Date(session.updated_at || session.created_at);
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = d.toLocaleDateString('en-AU', { month: 'long' });
+      const year = d.getFullYear();
+      const blob = new Blob([md], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `SafePost-Audit-${day}-${month}-${year}.md`;
+      a.click();
+      URL.revokeObjectURL(url);
     } catch (err) {
-      console.error('PDF generation failed:', err);
+      console.error('Markdown generation failed:', err);
     } finally {
-      setPdfLoading(false);
+      setDownloadLoading(false);
     }
   };
 
@@ -398,20 +283,31 @@ const AuditReport: React.FC = () => {
           <div>
             <h1 className="text-[24px] font-bold text-gray-900 mb-1">Audit Report</h1>
             <p className="text-[13px] text-gray-400">
-              {new Date(session.created_at).toLocaleDateString('en-AU', {
+              {new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
                 day: 'numeric', month: 'long', year: 'numeric',
               })}
               {practiceName && ` — ${practiceName}`}
             </p>
           </div>
-          <button
-            onClick={handleDownloadPdf}
-            disabled={pdfLoading}
-            className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-60"
-          >
-            {pdfLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-            Download PDF Report
-          </button>
+          <div className="flex flex-col items-end gap-3">
+            <button
+              onClick={handleDownloadMarkdown}
+              disabled={downloadLoading}
+              className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-60"
+            >
+              {downloadLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              Download Markdown Report
+            </button>
+            <div className="flex flex-col items-end gap-1">
+              <button
+                onClick={() => navigate('/audit')}
+                className="px-4 py-2 text-[13px] font-medium text-gray-700 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-xl transition-colors"
+              >
+                Run New Audit — $149
+              </button>
+              <p className="text-[11px] text-gray-400">Each audit is a one-time purchase</p>
+            </div>
+          </div>
         </div>
 
         {/* Score summary */}
@@ -471,16 +367,23 @@ const AuditReport: React.FC = () => {
         <div className="mt-8 bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
           <p className="text-[14px] font-semibold text-blue-900 mb-1">Save a copy for your records</p>
           <p className="text-[13px] text-blue-600 mb-4">
-            Download the full branded PDF report to share with your team or compliance advisor.
+            Download the full report as a Markdown file to share with your team or compliance advisor.
           </p>
           <button
-            onClick={handleDownloadPdf}
-            disabled={pdfLoading}
+            onClick={handleDownloadMarkdown}
+            disabled={downloadLoading}
             className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-colors disabled:opacity-60"
           >
-            {pdfLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-            Download PDF Report
+            {downloadLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+            Download Markdown Report
           </button>
+        </div>
+
+        {/* Disclaimer */}
+        <div className="mt-6 p-5 border border-slate-200 rounded-xl bg-slate-50">
+          <p className="text-[12px] text-gray-500 leading-relaxed">
+            This report has been generated by SafePost using AI-powered analysis of publicly available website content. It is intended as a general compliance screening tool only and does not constitute legal advice. AHPRA and TGA advertising regulations are complex and subject to change. SafePost accepts no liability for any decisions made based on this report. Practitioners should seek independent legal or compliance advice before making changes to their advertising materials.
+          </p>
         </div>
       </div>
     </LoggedInLayout>
