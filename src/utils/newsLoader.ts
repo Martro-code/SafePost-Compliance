@@ -21,7 +21,7 @@ interface MdxModule {
   };
 }
 
-const mdxModules = import.meta.glob('../content/news/*.mdx', { eager: true }) as Record<string, MdxModule>;
+const mdxModules = import.meta.glob('/src/content/news/*.mdx', { eager: true }) as Record<string, MdxModule>;
 
 export function getAllArticles(): NewsArticle[] {
   const articles: NewsArticle[] = [];
