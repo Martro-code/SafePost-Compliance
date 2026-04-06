@@ -2,6 +2,7 @@ import './index.css';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import App from './App';
 import { ThemeProvider } from './context/ThemeContext';
 import { AccountProvider } from './context/AccountContext';
@@ -25,14 +26,16 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <ThemeProvider>
-        <AccountProvider>
-          <Sentry.ErrorBoundary fallback={<p>Something went wrong. Please refresh the page.</p>}>
-            <App />
-          </Sentry.ErrorBoundary>
-        </AccountProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <ThemeProvider>
+          <AccountProvider>
+            <Sentry.ErrorBoundary fallback={<p>Something went wrong. Please refresh the page.</p>}>
+              <App />
+            </Sentry.ErrorBoundary>
+          </AccountProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </HelmetProvider>
   </React.StrictMode>
 );

@@ -1,5 +1,5 @@
 import { serve } from 'https://deno.land/std@0.224.0/http/server.ts';
-import Stripe from 'https://esm.sh/stripe@17.7.0?target=deno&deno-std=0.177.0&no-check=true';
+import Stripe from 'https://esm.sh/stripe@17.7.0?target=deno&deno-std=0.224.0&no-check=true';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
@@ -13,6 +13,9 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
 );
+
+// Alias used throughout the checkout handler for clarity
+const supabaseAdmin = supabase;
 
 const priceIdToPlan: Record<string, string> = {
   'price_1TAHuHJAm9wjk5YfCqAF30bc': 'starter',
@@ -59,8 +62,8 @@ serve(async (req: Request) => {
     // requires Node.js crypto which is not available in Deno
     event = await stripe.webhooks.constructEventAsync(body, signature, webhookSecret);
   } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
-    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
+    console.error('Stripe webhook error:', err.message);
+    return new Response('Webhook error', { status: 400 });
   }
 
   // ── Idempotency check: skip already-processed events ──────────────────
@@ -80,6 +83,41 @@ serve(async (req: Request) => {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
+
+    // AUDIT BRANCH — must be first, before any userId extraction
+    if (session.mode === 'payment' && session.metadata?.product_type === 'audit') {
+      const accountId = session.metadata.account_id;
+      const paymentIntentId = session.payment_intent as string;
+
+      if (!accountId) {
+        console.error('No account_id in audit payment metadata');
+        return new Response('Missing account_id', { status: 400 });
+      }
+
+      const { error } = await supabase
+        .from('accounts')
+        .update({
+          audit_purchased: true,
+          audit_payment_intent_id: paymentIntentId,
+        })
+        .eq('id', accountId);
+
+      if (error) {
+        console.error('Failed to update audit_purchased:', error.message);
+        return new Response('Database update failed', { status: 500 });
+      }
+
+      // Insert idempotency record
+      await supabase
+        .from('processed_webhook_events')
+        .insert({ event_id: event.id });
+
+      const maskedAccount = accountId.slice(0, 8) + '...';
+      console.log(`Audit purchase confirmed for account ${maskedAccount}`);
+      return new Response(JSON.stringify({ received: true }), { status: 200 });
+    }
+
+    // SUBSCRIPTION BRANCH — existing logic unchanged below this point
     const userId = session.metadata?.userId || session.client_reference_id;
 
     if (!userId) {
@@ -168,7 +206,7 @@ serve(async (req: Request) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          from: 'SafePost <support@safepost.com.au>',
+          from: 'SafePost <noreply@safepost.com.au>',
           to: session.customer_email,
           subject: 'Your SafePost subscription is confirmed',
           html: `

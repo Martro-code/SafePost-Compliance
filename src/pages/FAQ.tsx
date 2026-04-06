@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink, CheckCircle } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
@@ -73,7 +74,7 @@ const FAQ: React.FC = () => {
         },
         {
           question: 'How does SafePost handle before/after photos?',
-          answer: 'Before/after photos are assessed under AHPRA\u2019s specific prohibition on such imagery in health practitioner advertising. SafePost flags these under the correct AHPRA framework and provides guidance on compliant alternatives.',
+          answer: 'Before/after photos are assessed under AHPRA\u2019s specific prohibition on such imagery in health practitioner advertising. SafePost flags these under the correct AHPRA framework and provides guidance on suggested alternatives.',
         },
         {
           question: 'How current are the compliance rules?',
@@ -127,7 +128,7 @@ const FAQ: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Got questions? We've got answers.
+            Got questions about AHPRA &amp; TGA compliance? We've got answers.
           </h1>
           <p className="text-lg text-gray-500">
             Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works.
@@ -157,7 +158,7 @@ const FAQ: React.FC = () => {
                 Every compliance check is logged in your account history, giving you documented evidence of due diligence if AHPRA ever investigates.
               </p>
               <p className="text-[15px] text-gray-400 leading-relaxed">
-                174 AHPRA and TGA rules are built into every check. Paste your content and get a compliance verdict in seconds — no prompting, no expertise required.
+                174 AHPRA and TGA rules are built into every check. Paste your content and get a compliance assessment in seconds — no prompting, no expertise required.
               </p>
               <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 <button
@@ -238,6 +239,10 @@ const FAQ: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>FAQ — SafePost Compliance Checker</title>
+        <meta name="description" content="Answers to common questions about how SafePost works, what it checks, AHPRA and TGA advertising rules, and your subscription." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
