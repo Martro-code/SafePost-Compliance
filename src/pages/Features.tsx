@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
@@ -47,7 +48,7 @@ const Features: React.FC = () => {
     {
       icon: <Wand2 className="w-7 h-7 text-blue-500/80" />,
       heading: 'AI-powered rewrites',
-      description: 'Three compliant alternatives generated instantly. Available on all plans including Starter.',
+      description: 'Three suggested alternatives generated instantly. Available on all plans including Starter.',
     },
     {
       icon: <Scale className="w-7 h-7 text-blue-500/80" />,
@@ -68,6 +69,10 @@ const Features: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>Features — SafePost Compliance Checker</title>
+        <meta name="description" content="Instant compliance checks, detailed verdicts, team management and history. See everything SafePost's AI compliance platform can do for your practice." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -301,7 +306,7 @@ const Features: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Powerful compliance checking, simplified
+            Powerful AHPRA and TGA compliance checking, simplified
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
             Everything you need to ensure your content meets AHPRA and TGA guidelines
@@ -314,7 +319,7 @@ const Features: React.FC = () => {
         <div className="max-w-2xl mx-auto px-6 mb-16 md:mb-20">
           <img
             src={heroImage}
-            alt="SafePost Features"
+            alt="SafePost AHPRA and TGA compliance checking interface showing a post analysis result"
             loading="eager"
             fetchPriority="high"
             width={1507}

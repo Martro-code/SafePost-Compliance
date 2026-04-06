@@ -68,17 +68,63 @@ const SignUp: React.FC = () => {
   ];
 
   const specialtyOptions = [
-    'General Practitioner',
-    'Specialist Physician',
-    'Surgeon',
-    'Dentist',
-    'Psychologist',
-    'Physiotherapist',
+    'Anaesthetist',
+    'Cardiologist',
+    'Cardiothoracic Surgeon',
     'Chiropractor',
-    'Optometrist',
-    'Pharmacist',
-    'Nurse Practitioner',
+    'Colorectal Surgeon',
+    'Cosmetic Medicine',
+    'Dentist (General)',
+    'Dental Specialist',
+    'Dermatologist',
+    'Emergency Medicine',
+    'Endocrinologist',
+    'Gastroenterologist',
+    'General Practitioner',
+    'General Practice (Obstetrics)',
+    'General Practice (Procedural)',
+    'General Practice (Skin Cancer Medicine)',
+    'Geriatrician',
+    'Haematologist',
+    'Immunologist / Allergist',
+    'Infectious Diseases Physician',
+    'Intensive Care',
     'Midwife',
+    'Nephrologist',
+    'Neurologist',
+    'Neurosurgeon',
+    'Nurse Practitioner',
+    'Obstetrics & Gynaecology',
+    'Occupational Therapist',
+    'Oncologist',
+    'Ophthalmologist (Non-Procedural)',
+    'Ophthalmologist (Procedural)',
+    'Optometrist',
+    'Oral & Maxillofacial Surgeon',
+    'Orthopaedic Surgeon',
+    'Otolaryngologist (ENT)',
+    'Paediatrician',
+    'Paediatric Surgeon',
+    'Pain Management',
+    'Palliative Care',
+    'Pathologist',
+    'Pharmacist',
+    'Physician (General / Internal Medicine)',
+    'Physiotherapist',
+    'Plastic & Reconstructive Surgeon',
+    'Psychiatrist',
+    'Psychologist',
+    'Radiation Oncologist',
+    'Radiographer',
+    'Radiologist',
+    'Rehabilitation Medicine',
+    'Respiratory Physician',
+    'Rheumatologist',
+    'Speech Pathologist',
+    'Sports Medicine',
+    'Surgeon (General)',
+    'Urologist',
+    'Vascular Surgeon',
     'Other',
   ];
 
@@ -590,18 +636,22 @@ const SignUp: React.FC = () => {
                     className={getInputClasses(abn, abnVerified)}
                   />
                   {abnLoading && (
-                    <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-blue-500 animate-spin" />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
+                    </div>
                   )}
                   {abnVerified && !abnLoading && (
-                    <CheckCircle2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-green-500" />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <CheckCircle2 className="w-4 h-4 text-green-500" />
+                    </div>
                   )}
                 </div>
-                {abnVerified && abnEntityName && (
+                {abnVerified && !abnLoading && (
                   <p className="text-[13px] text-green-600 font-medium mt-1.5 flex items-center gap-1">
-                    <span>&#10003;</span> {abnEntityName} — {abnStatus}
+                    <span>&#10003;</span> {abnEntityName ? `${abnEntityName} — ${abnStatus}` : 'ABN verified'}
                   </p>
                 )}
-                {abnError && !abnLoading && (
+                {!abnVerified && abnError && !abnLoading && (
                   <p className="text-[13px] text-red-600 font-medium mt-1.5">{abnError}</p>
                 )}
                 {submitted && !abnVerified && !abnError && abn.replace(/\s/g, '').length === 0 && (
@@ -733,6 +783,11 @@ const SignUp: React.FC = () => {
                 </div>
               </div>
 
+              {/* Auth Error */}
+              {authError && (
+                <p className="text-[13px] text-red-600 font-medium">{authError}</p>
+              )}
+
               {/* Terms Checkbox */}
               <div className="pt-2">
                 <div className="flex items-start gap-3">
@@ -745,12 +800,16 @@ const SignUp: React.FC = () => {
                   />
                   <label htmlFor="terms" className="text-[13px] text-gray-600 leading-relaxed cursor-pointer">
                     I agree to the{' '}
-                    <a href="/terms-of-use" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                      Terms of Use
-                    </a>{' '}
-                    and{' '}
-                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                    <a href="https://www.safepost.com.au/terms-of-use" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                      Software Terms and Conditions
+                    </a>
+                    ,{' '}
+                    <a href="https://www.safepost.com.au/privacy-policy" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
                       Privacy Policy
+                    </a>
+                    , and{' '}
+                    <a href="https://www.safepost.com.au/website-terms" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                      Website Terms of Use
                     </a>
                   </label>
                 </div>
@@ -761,16 +820,11 @@ const SignUp: React.FC = () => {
                 )}
               </div>
 
-              {/* Auth Error */}
-              {authError && (
-                <p className="text-[13px] text-red-600 font-medium">{authError}</p>
-              )}
-
               {/* Submit Button */}
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={isSubmitting || !abnVerified}
+                  disabled={isSubmitting || !abnVerified || !agreedToTerms}
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
                   {isSubmitting ? 'Creating account...' : 'Create account'}

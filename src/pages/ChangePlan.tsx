@@ -14,7 +14,7 @@ const plans = [
     yearlyMonthlyEquivalent: '~$16',
     features: [
       '30 compliance checks per month',
-      'AI-powered compliant content rewrites',
+      'AI-powered suggested content rewrites',
       'Image and video content analysis',
       'Compliance history (last 30 checks)',
       'Email support',
