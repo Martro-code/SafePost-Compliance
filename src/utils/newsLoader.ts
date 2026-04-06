@@ -21,7 +21,7 @@ interface MdxModule {
   };
 }
 
-const mdxModules = import.meta.glob('/src/content/news/*.mdx', { eager: true }) as Record<string, MdxModule>;
+const mdxModules = import.meta.glob('../content/news/*.mdx', { eager: true }) as Record<string, MdxModule>;
 
 export function getAllArticles(): NewsArticle[] {
   const articles: NewsArticle[] = [];
@@ -30,7 +30,7 @@ export function getAllArticles(): NewsArticle[] {
     const mod = mdxModules[path];
     const { frontmatter } = mod;
     if (!frontmatter) continue;
-    const slug = path.replace('/src/content/news/', '').replace('.mdx', '');
+    const slug = path.replace('../content/news/', '').replace('.mdx', '');
 
     articles.push({
       slug,
