@@ -263,7 +263,7 @@ const About: React.FC = () => {
             About SafePost: AHPRA &amp; TGA compliance for Australian healthcare
           </h1>
           <p className="text-lg text-gray-500">
-            Supporting Australian medical practitioners and practices with compliance confidence
+            Supporting Australian medical practitioners and practices with compliance confidence across everything they publish online.
           </p>
         </div>
       </section>
@@ -278,7 +278,7 @@ const About: React.FC = () => {
                 {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
+                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts, online advertising and website content can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
               </p>
             </div>
 
@@ -288,7 +288,7 @@ const About: React.FC = () => {
                 {"We founded SafePost because compliance shouldn\u2019t hold you back from connecting with patients"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Social media and digital marketing are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post can put your registration at risk."}
+                {"Social media, digital marketing and your practice website are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post or non-compliant webpage can put your registration at risk."}
               </p>
             </div>
 
@@ -298,17 +298,17 @@ const About: React.FC = () => {
                 Our mission is to help Australian medical practitioners and practices communicate confidently, compliantly and authentically
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations."}
+                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post or services page will trigger an investigation. SafePost provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations \u2014 across your social media, online advertising and practice website."}
               </p>
             </div>
 
             {/* Section 4 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re not lawyers. We\u2019re your compliance partner"}
+                {"We\u2019re not lawyers. We\u2019re your compliance platform."}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns, we\u2019re here to support you at every step."}
+                {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns and website audits, we\u2019re here to support you at every step."}
               </p>
             </div>
 
