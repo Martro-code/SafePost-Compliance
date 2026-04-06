@@ -227,7 +227,7 @@ const NewsPage: React.FC = () => {
               AHPRA &amp; TGA compliance news
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
-              The latest updates, press releases, and industry insights from SafePost.
+              The latest updates, press releases, and industry insights from SafePost
             </p>
           </div>
         </div>
