@@ -14,15 +14,33 @@ const FEATURES = [
 ];
 
 const AuditPurchaseGate: React.FC = () => {
-  const { auditPurchased, accountLoading } = useAccount();
+  const { auditPurchased, accountLoading, refreshAccount } = useAccount();
+  const [searchParams] = useSearchParams();
+  const isPurchaseReturn = searchParams.get('purchase') === 'success';
+
   const [loading, setLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(isPurchaseReturn);
   const [error, setError] = useState<string | null>(null);
 
-  if (accountLoading) {
+  // When returning from a successful Stripe payment, refresh the account so
+  // audit_purchased updates without a manual page reload.
+  useEffect(() => {
+    if (!isPurchaseReturn) return;
+    (async () => {
+      setRefreshing(true);
+      await refreshAccount();
+      setRefreshing(false);
+    })();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (accountLoading || refreshing) {
     return (
       <LoggedInLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="w-6 h-6 animate-spin text-gray-400" />
+        <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+          <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+          {refreshing && (
+            <p className="text-[14px] text-gray-500">Confirming your purchase…</p>
+          )}
         </div>
       </LoggedInLayout>
     );

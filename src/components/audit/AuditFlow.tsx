@@ -1,67 +1,124 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Globe } from 'lucide-react';
 import { supabase } from '../../services/supabaseClient';
 import { useAccount } from '../../context/AccountContext';
-import { AuditStep, AuditStepResult, AuditSession } from '../../types/audit';
+import { AuditStep, AuditStepResult } from '../../types/audit';
 import LoggedInLayout from '../layout/LoggedInLayout';
 import AuditProgressBar from './AuditProgressBar';
 import AuditStepInput from './AuditStepInput';
 import AuditStepResultComponent from './AuditStepResult';
 
-const STEP_DEFINITIONS: { name: string; description: string }[] = [
-  {
-    name: 'Homepage',
-    description: 'Analyse your homepage for general medical claims, before/after imagery, testimonials, and any content that could be considered advertising of regulated health services.',
-  },
-  {
-    name: 'Services / Treatments Page',
-    description: 'Review your services or treatments page for procedure descriptions, outcome claims, and any language that may breach AHPRA or TGA advertising guidelines.',
-  },
-  {
-    name: 'About / Team Page',
-    description: 'Check your about or team page for practitioner credential claims, qualification representations, and any statements that could mislead patients about expertise or scope.',
-  },
-  {
-    name: 'Testimonials / Reviews Page',
-    description: 'Examine your testimonials or reviews page for patient testimonials, before/after photos, and endorsements that may breach AHPRA guidelines on testimonial advertising.',
-  },
-  {
-    name: 'Pricing / Specials Page',
-    description: 'Inspect your pricing or specials page for promotional offers, discounts, inducements, and any content that could constitute prohibited advertising under TGA or AHPRA rules.',
-  },
-  {
-    name: 'Blog / Articles Page',
-    description: 'Review your blog or educational articles for treatment claims, health benefit assertions, and any content that could be interpreted as regulated therapeutic advertising.',
-  },
+// ── Default page suggestions shown in the setup screen ───────────────────────
+
+const DEFAULT_PAGE_SETUPS: { name: string; url: string }[] = [
+  { name: 'Homepage', url: '' },
+  { name: 'Services', url: '' },
+  { name: 'About Us', url: '' },
+  { name: 'Testimonials', url: '' },
+  { name: 'Pricing', url: '' },
+  { name: 'Blog', url: '' },
 ];
 
-function buildInitialSteps(): AuditStep[] {
-  return STEP_DEFINITIONS.map((def) => ({
-    name: def.name,
-    description: def.description,
-    url: '',
-    status: 'pending',
-  }));
+// ── Setup screen ─────────────────────────────────────────────────────────────
+
+interface PageSetup {
+  name: string;
+  url: string;
 }
+
+interface SetupScreenProps {
+  pageSetups: PageSetup[];
+  onChange: (setups: PageSetup[]) => void;
+  onStart: () => void;
+}
+
+const SetupScreen: React.FC<SetupScreenProps> = ({ pageSetups, onChange, onStart }) => {
+  const hasAtLeastOneComplete = pageSetups.some(
+    (p) => p.name.trim() !== '' && p.url.trim() !== ''
+  );
+
+  const handleFieldChange = (idx: number, field: 'name' | 'url', value: string) => {
+    const updated = pageSetups.map((p, i) => (i === idx ? { ...p, [field]: value } : p));
+    onChange(updated);
+  };
+
+  return (
+    <div className="flex flex-col gap-6">
+      <div>
+        <p className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider mb-1">
+          Before you start
+        </p>
+        <h2 className="text-[20px] font-semibold text-gray-900 mb-2">Set Up Your Audit</h2>
+        <p className="text-[14px] text-gray-500 leading-relaxed">
+          Enter the name and URL for each page you'd like to audit. You can leave rows blank to skip them, or change the suggested names to match your site.
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        {/* Column labels */}
+        <div className="grid grid-cols-[1fr_1.4fr] gap-3 px-1">
+          <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">Page Name</p>
+          <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">URL</p>
+        </div>
+
+        {pageSetups.map((page, idx) => (
+          <div key={idx} className="grid grid-cols-[1fr_1.4fr] gap-3">
+            <input
+              type="text"
+              value={page.name}
+              onChange={(e) => handleFieldChange(idx, 'name', e.target.value)}
+              placeholder={`Page ${idx + 1}`}
+              className="px-3 py-2.5 text-[13px] bg-white border border-slate-200 rounded-xl text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+            />
+            <div className="relative">
+              <Globe className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+              <input
+                type="url"
+                value={page.url}
+                onChange={(e) => handleFieldChange(idx, 'url', e.target.value)}
+                placeholder="https://yoursite.com.au/page"
+                className="w-full pl-8 pr-3 py-2.5 text-[13px] bg-white border border-slate-200 rounded-xl text-gray-900 placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-[12px] text-gray-400 -mt-1">
+        Fill in at least one complete row to start. Rows left empty will be skipped.
+      </p>
+
+      <button
+        onClick={onStart}
+        disabled={!hasAtLeastOneComplete}
+        className="w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-[14px] font-semibold rounded-xl transition-colors duration-200"
+      >
+        Start Audit
+      </button>
+    </div>
+  );
+};
+
+// ── Main component ────────────────────────────────────────────────────────────
+
+type Phase = 'loading' | 'setup' | 'auditing';
 
 const AuditFlow: React.FC = () => {
   const navigate = useNavigate();
-  const { accountId, auditPurchased, accountLoading } = useAccount();
+  const { accountId, auditPurchased, accountLoading, refreshAccount } = useAccount();
 
+  const [phase, setPhase] = useState<Phase>('loading');
+  const [pageSetups, setPageSetups] = useState<PageSetup[]>(DEFAULT_PAGE_SETUPS);
   const [sessionId, setSessionId] = useState<string | null>(null);
-  const [steps, setSteps] = useState<AuditStep[]>(buildInitialSteps());
+  const [steps, setSteps] = useState<AuditStep[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [showingResult, setShowingResult] = useState(false);
-  const [sessionLoading, setSessionLoading] = useState(true);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  // Load or create an audit session
   const initSession = useCallback(async () => {
     if (!accountId) return;
-    setSessionLoading(true);
 
-    // Look for an existing in-progress session
     const { data: existing, error } = await supabase
       .from('audit_sessions')
       .select('*')
@@ -75,43 +132,19 @@ const AuditFlow: React.FC = () => {
       console.error('Failed to load audit session:', error);
     }
 
-    if (existing) {
-      // Resume existing session
-      const loadedSteps: AuditStep[] = existing.steps && existing.steps.length > 0
-        ? existing.steps
-        : buildInitialSteps();
-
+    if (existing && existing.steps && existing.steps.length > 0) {
+      // Resume existing session — skip setup
+      const loadedSteps: AuditStep[] = existing.steps;
       setSessionId(existing.id);
       setSteps(loadedSteps);
-
-      // Find the first non-complete step
       const resumeIdx = loadedSteps.findIndex((s) => s.status !== 'complete');
       setCurrentStepIndex(resumeIdx >= 0 ? resumeIdx : loadedSteps.length - 1);
-      setSessionLoading(false);
+      setPhase('auditing');
       return;
     }
 
-    // Create a new session
-    const initialSteps = buildInitialSteps();
-    const { data: newSession, error: createError } = await supabase
-      .from('audit_sessions')
-      .insert({
-        account_id: accountId,
-        status: 'in_progress',
-        steps: initialSteps,
-      })
-      .select('id')
-      .single();
-
-    if (createError || !newSession) {
-      console.error('Failed to create audit session:', createError);
-    } else {
-      setSessionId(newSession.id);
-    }
-
-    setSteps(initialSteps);
-    setCurrentStepIndex(0);
-    setSessionLoading(false);
+    // No in-progress session — show setup
+    setPhase('setup');
   }, [accountId]);
 
   useEffect(() => {
@@ -124,7 +157,46 @@ const AuditFlow: React.FC = () => {
     }
   }, [accountLoading, auditPurchased, initSession, navigate]);
 
-  const saveSteps = useCallback(async (updatedSteps: AuditStep[], status: 'in_progress' | 'complete') => {
+  const handleSetupStart = useCallback(async () => {
+    if (!accountId) return;
+
+    // Build steps only from complete rows
+    const completedSetups = pageSetups.filter(
+      (p) => p.name.trim() !== '' && p.url.trim() !== ''
+    );
+    if (completedSetups.length === 0) return;
+
+    const initialSteps: AuditStep[] = completedSetups.map((p) => ({
+      name: p.name.trim(),
+      url: p.url.trim(),
+      status: 'pending',
+    }));
+
+    const { data: newSession, error: createError } = await supabase
+      .from('audit_sessions')
+      .insert({
+        account_id: accountId,
+        status: 'in_progress',
+        steps: initialSteps,
+      })
+      .select('id')
+      .single();
+
+    if (createError || !newSession) {
+      console.error('Failed to create audit session:', createError);
+      return;
+    }
+
+    setSessionId(newSession.id);
+    setSteps(initialSteps);
+    setCurrentStepIndex(0);
+    setPhase('auditing');
+  }, [accountId, pageSetups]);
+
+  const saveSteps = useCallback(async (
+    updatedSteps: AuditStep[],
+    status: 'in_progress' | 'complete'
+  ) => {
     if (!sessionId) return;
     const { error } = await supabase
       .from('audit_sessions')
@@ -138,12 +210,11 @@ const AuditFlow: React.FC = () => {
   }, [sessionId]);
 
   const handleStepComplete = useCallback(async (result: AuditStepResult) => {
-    const updatedSteps = steps.map((step, idx) => {
-      if (idx === currentStepIndex) {
-        return { ...step, url: result.url, status: 'complete' as const, result };
-      }
-      return step;
-    });
+    const updatedSteps = steps.map((step, idx) =>
+      idx === currentStepIndex
+        ? { ...step, url: result.url, status: 'complete' as const, result }
+        : step
+    );
 
     setSteps(updatedSteps);
     setSaveError(null);
@@ -151,8 +222,61 @@ const AuditFlow: React.FC = () => {
     const isLast = currentStepIndex === steps.length - 1;
     await saveSteps(updatedSteps, isLast ? 'complete' : 'in_progress');
 
+    if (isLast) {
+      // Reset audit_purchased so the user must re-purchase for a new audit
+      const { error: resetErr } = await supabase
+        .from('accounts')
+        .update({ audit_purchased: false })
+        .eq('id', accountId);
+      if (resetErr) {
+        console.error('Could not reset audit_purchased:', resetErr.message);
+      }
+      await refreshAccount();
+      navigate('/audit/report');
+      return;
+    }
+
     setShowingResult(true);
-  }, [steps, currentStepIndex, saveSteps]);
+  }, [steps, currentStepIndex, saveSteps, accountId, refreshAccount, navigate]);
+
+  const handleSkip = useCallback(async () => {
+    const skippedResult: AuditStepResult = {
+      url: steps[currentStepIndex]?.url || '',
+      complianceStatus: 'skipped',
+      issues: [],
+      summary: 'This page was not analysed.',
+    };
+
+    const updatedSteps = steps.map((step, idx) =>
+      idx === currentStepIndex
+        ? { ...step, status: 'complete' as const, result: skippedResult }
+        : step
+    );
+
+    setSteps(updatedSteps);
+    setSaveError(null);
+
+    const isLast = currentStepIndex === steps.length - 1;
+    await saveSteps(updatedSteps, isLast ? 'complete' : 'in_progress');
+
+    if (isLast) {
+      const { error: resetErr } = await supabase
+        .from('accounts')
+        .update({ audit_purchased: false })
+        .eq('id', accountId);
+      if (resetErr) {
+        console.error('Could not reset audit_purchased:', resetErr.message);
+      }
+      await refreshAccount();
+      navigate('/audit/report');
+      return;
+    }
+
+    // Auto-advance without showing a result screen for skipped steps
+    const nextIndex = currentStepIndex + 1;
+    setCurrentStepIndex(nextIndex);
+    setShowingResult(false);
+  }, [steps, currentStepIndex, saveSteps, accountId, refreshAccount, navigate]);
 
   const handleNext = useCallback(() => {
     const isLast = currentStepIndex === steps.length - 1;
@@ -160,21 +284,10 @@ const AuditFlow: React.FC = () => {
       navigate('/audit/report');
       return;
     }
-
-    const nextIndex = currentStepIndex + 1;
-    const updatedSteps = steps.map((step, idx) => {
-      if (idx === nextIndex) {
-        return { ...step, status: 'active' as const };
-      }
-      return step;
-    });
-
-    setSteps(updatedSteps);
-    setCurrentStepIndex(nextIndex);
+    setCurrentStepIndex(currentStepIndex + 1);
     setShowingResult(false);
-  }, [currentStepIndex, steps, navigate]);
+  }, [currentStepIndex, steps.length, navigate]);
 
-  // Map steps to progress bar format
   const progressSteps = steps.map((step, idx) => ({
     name: step.name,
     status: step.status === 'complete'
@@ -184,7 +297,7 @@ const AuditFlow: React.FC = () => {
       : 'pending',
   })) as { name: string; status: 'pending' | 'complete' | 'active' }[];
 
-  if (accountLoading || sessionLoading) {
+  if (phase === 'loading' || accountLoading) {
     return (
       <LoggedInLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -194,9 +307,6 @@ const AuditFlow: React.FC = () => {
     );
   }
 
-  const currentStep = steps[currentStepIndex];
-  const currentStepDef = STEP_DEFINITIONS[currentStepIndex];
-
   return (
     <LoggedInLayout>
       <div className="max-w-2xl mx-auto px-6 py-12">
@@ -204,14 +314,18 @@ const AuditFlow: React.FC = () => {
         <div className="mb-8">
           <h1 className="text-[24px] font-bold text-gray-900 mb-1">Website Compliance Audit</h1>
           <p className="text-[14px] text-gray-500">
-            Enter the URL for each page of your website to analyse it for AHPRA and TGA compliance.
+            {phase === 'setup'
+              ? "Tell us which pages to audit, then we'll check each one against AHPRA and TGA rules."
+              : 'Enter the URL for each page of your website to analyse it for AHPRA and TGA compliance.'}
           </p>
         </div>
 
-        {/* Progress */}
-        <div className="mb-8">
-          <AuditProgressBar currentStep={currentStepIndex} steps={progressSteps} />
-        </div>
+        {/* Progress bar — only shown during auditing */}
+        {phase === 'auditing' && steps.length > 0 && (
+          <div className="mb-8">
+            <AuditProgressBar currentStep={currentStepIndex} steps={progressSteps} />
+          </div>
+        )}
 
         {saveError && (
           <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
@@ -219,29 +333,34 @@ const AuditFlow: React.FC = () => {
           </div>
         )}
 
-        {/* Step content */}
+        {/* Main content card */}
         <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-8">
-          {showingResult && currentStep.result ? (
-            <AuditStepResultComponent
-              result={currentStep.result}
-              onNext={handleNext}
-              isLastStep={currentStepIndex === steps.length - 1}
-            />
-          ) : (
-            <AuditStepInput
-              step={currentStepDef}
-              stepIndex={currentStepIndex}
-              onStepComplete={handleStepComplete}
+          {phase === 'setup' && (
+            <SetupScreen
+              pageSetups={pageSetups}
+              onChange={setPageSetups}
+              onStart={handleSetupStart}
             />
           )}
-        </div>
 
-        {/* Skip note */}
-        {!showingResult && currentStepIndex < steps.length - 1 && (
-          <p className="text-center text-[12px] text-gray-400 mt-4">
-            If you don't have this page, you can skip it — enter your homepage URL instead.
-          </p>
-        )}
+          {phase === 'auditing' && steps.length > 0 && (
+            showingResult && steps[currentStepIndex]?.result ? (
+              <AuditStepResultComponent
+                result={steps[currentStepIndex].result!}
+                onNext={handleNext}
+                isLastStep={currentStepIndex === steps.length - 1}
+              />
+            ) : (
+              <AuditStepInput
+                stepName={steps[currentStepIndex]?.name ?? ''}
+                stepIndex={currentStepIndex}
+                initialUrl={steps[currentStepIndex]?.url ?? ''}
+                onStepComplete={handleStepComplete}
+                onSkip={handleSkip}
+              />
+            )
+          )}
+        </div>
       </div>
     </LoggedInLayout>
   );
