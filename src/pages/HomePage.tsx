@@ -379,10 +379,10 @@ const HomePage: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
               <div className="text-5xl font-extrabold text-blue-600/20 mb-5">1</div>
               <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
-                Paste your content
+                Add your content or URLs
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Copy and paste your social media post, ad copy, or marketing content directly into the tool — no setup required.
+                Paste your social media post, ad copy or website page URL directly into SafePost — no setup required.
               </p>
             </div>
 
@@ -390,10 +390,10 @@ const HomePage: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
               <div className="text-5xl font-extrabold text-blue-600/20 mb-5">2</div>
               <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
-                Get instant analysis
+                Get instant compliance analysis
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                SafePost analyses your content against AHPRA and TGA compliance guidelines and flags specific issues with direct references to the relevant rules and sections.
+                SafePost analyses your content against 174 AHPRA and TGA rules and flags specific issues with direct references to the relevant guidelines.
               </p>
             </div>
 
@@ -401,10 +401,10 @@ const HomePage: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
               <div className="text-5xl font-extrabold text-blue-600/20 mb-5">3</div>
               <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
-                Receive suggested alternatives
+                Act on your results
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Get ready-to-use rewritten versions of your content designed to reduce AHPRA and TGA regulatory risk — so you can post with confidence.
+                Receive severity-rated findings, suggested alternatives for posts and ads, and a full downloadable report for website audits — so you can publish with confidence.
               </p>
             </div>
           </div>
@@ -481,7 +481,7 @@ const HomePage: React.FC = () => {
                   Watch how SafePost identifies AHPRA and TGA compliance issues and generates suggested alternatives in seconds.
                 </p>
                 <p className="text-[15px] text-gray-400 leading-relaxed">
-                  SafePost analyses your social media posts and advertising content against AHPRA and TGA advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use suggested alternatives.
+                  SafePost analyses your social media posts, advertising content and practice website against AHPRA and TGA advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use suggested alternatives.
                 </p>
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
                   <button
@@ -544,7 +544,7 @@ const HomePage: React.FC = () => {
                   Comprehensive coverage
                 </h3>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
-                  Analyses posts against Section 133 of the Health Practitioner Regulation National Law Act 2009, testimonial restrictions, before/after photo regulations, cosmetic procedure advertising rules, and professional conduct standards.
+                  Analyses your posts, ads and website pages against Section 133 of the Health Practitioner Regulation National Law Act 2009, testimonial restrictions, before/after photo regulations, cosmetic procedure advertising rules, and professional conduct standards.
                 </p>
               </div>
 
