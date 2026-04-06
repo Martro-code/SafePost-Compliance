@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Navigate, useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import { Check, LockIcon, Loader2 } from 'lucide-react';
 import { useAccount } from '../../context/AccountContext';
 import { supabase } from '../../services/supabaseClient';
