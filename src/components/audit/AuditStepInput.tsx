@@ -4,19 +4,15 @@ import { supabase } from '../../services/supabaseClient';
 import { AuditStepResult } from '../../types/audit';
 import { ComplianceStatus } from '../../types';
 
-interface StepDef {
-  name: string;
-  description: string;
-}
-
 interface AuditStepInputProps {
-  step: StepDef;
+  stepName: string;
   stepIndex: number;
+  initialUrl?: string;
   onStepComplete: (result: AuditStepResult) => void;
+  onSkip: () => void;
 }
 
 function mapAnalysisToAuditResult(url: string, analysis: any): AuditStepResult {
-  // Determine overall compliance status from analyze-post response
   const status = analysis.status as ComplianceStatus;
   let complianceStatus: 'pass' | 'warning' | 'fail';
   if (status === ComplianceStatus.COMPLIANT) {
@@ -41,8 +37,14 @@ function mapAnalysisToAuditResult(url: string, analysis: any): AuditStepResult {
   };
 }
 
-const AuditStepInput: React.FC<AuditStepInputProps> = ({ step, stepIndex, onStepComplete }) => {
-  const [url, setUrl] = useState('');
+const AuditStepInput: React.FC<AuditStepInputProps> = ({
+  stepName,
+  stepIndex,
+  initialUrl = '',
+  onStepComplete,
+  onSkip,
+}) => {
+  const [url, setUrl] = useState(initialUrl);
   const [loadingFetch, setLoadingFetch] = useState(false);
   const [loadingAnalysis, setLoadingAnalysis] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +61,6 @@ const AuditStepInput: React.FC<AuditStepInputProps> = ({ step, stepIndex, onStep
       return;
     }
 
-    // Basic URL validation
     try {
       const parsed = new URL(trimmedUrl.startsWith('http') ? trimmedUrl : `https://${trimmedUrl}`);
       if (!['http:', 'https:'].includes(parsed.protocol)) {
@@ -67,14 +68,13 @@ const AuditStepInput: React.FC<AuditStepInputProps> = ({ step, stepIndex, onStep
         return;
       }
     } catch {
-      setError('Please enter a valid URL (e.g. https://yoursite.com.au/services).');
+      setError('Please enter a valid URL (e.g. https://yourpractice.com.au/services).');
       return;
     }
 
     const normalizedUrl = trimmedUrl.startsWith('http') ? trimmedUrl : `https://${trimmedUrl}`;
 
     try {
-      // Step 1: Fetch page content via edge function
       setLoadingFetch(true);
       const { data: fetchData, error: fetchError } = await supabase.functions.invoke('fetch-url-content', {
         body: { url: normalizedUrl },
@@ -87,13 +87,12 @@ const AuditStepInput: React.FC<AuditStepInputProps> = ({ step, stepIndex, onStep
         return;
       }
 
-      // Step 2: Analyse the content
       setLoadingAnalysis(true);
       const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-post', {
         body: {
           content: fetchData.content,
           isAuditCheck: true,
-          pageContext: step.name,
+          pageContext: stepName,
         },
       });
       setLoadingAnalysis(false);
@@ -120,8 +119,10 @@ const AuditStepInput: React.FC<AuditStepInputProps> = ({ step, stepIndex, onStep
         <p className="text-[11px] font-semibold text-blue-600 uppercase tracking-wider mb-1">
           Step {stepIndex + 1}
         </p>
-        <h3 className="text-[18px] font-semibold text-gray-900 mb-2">{step.name}</h3>
-        <p className="text-[14px] text-gray-500 leading-relaxed">{step.description}</p>
+        <h3 className="text-[18px] font-semibold text-gray-900 mb-2">{stepName}</h3>
+        <p className="text-[14px] text-gray-500 leading-relaxed">
+          Analyse this page for AHPRA and TGA compliance issues.
+        </p>
       </div>
 
       {/* URL input form */}
@@ -174,6 +175,19 @@ const AuditStepInput: React.FC<AuditStepInputProps> = ({ step, stepIndex, onStep
               ? 'Retrieving and extracting visible text from the page.'
               : 'Checking against 172 verified AHPRA and TGA rules. This may take 20–30 seconds.'}
           </p>
+        </div>
+      )}
+
+      {/* Skip */}
+      {!isLoading && (
+        <div className="text-center">
+          <button
+            type="button"
+            onClick={onSkip}
+            className="text-[13px] text-gray-400 hover:text-gray-600 underline underline-offset-2 transition-colors"
+          >
+            Skip this page
+          </button>
         </div>
       )}
     </div>

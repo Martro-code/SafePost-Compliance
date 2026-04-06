@@ -5,7 +5,7 @@
  */
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle, Loader2, AlertTriangle, Lock } from 'lucide-react';
+import { ChevronDown, Menu, X, LogOut, Bell, HelpCircle, Loader2, AlertTriangle, LockIcon } from 'lucide-react';
 import SafePostLogo from '../ui/SafePostLogo';
 import LoggedInFooter from './LoggedInFooter';
 import { useAuth } from '../../hooks/useAuth';
@@ -129,7 +129,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                   }`}
                 >
                   {link.label}
-                  {link.locked && <Lock className="w-3 h-3 opacity-60" />}
+                  {link.locked && <LockIcon className="w-3 h-3 opacity-60" />}
                 </button>
               ))}
             </nav>
@@ -253,7 +253,7 @@ const LoggedInLayout: React.FC<LoggedInLayoutProps> = ({ children }) => {
                 }`}
               >
                 {link.label}
-                {link.locked && <Lock className="w-3 h-3 opacity-60" />}
+                {link.locked && <LockIcon className="w-3 h-3 opacity-60" />}
               </button>
             ))}
             <div className="border-t border-black/[0.06] dark:border-gray-700 my-1" />

@@ -1,6 +1,6 @@
 export interface AuditStep {
   name: string;
-  description: string;
+  description?: string;
   url: string;
   status: 'pending' | 'active' | 'complete';
   result?: AuditStepResult;
@@ -8,7 +8,7 @@ export interface AuditStep {
 
 export interface AuditStepResult {
   url: string;
-  complianceStatus: 'pass' | 'warning' | 'fail';
+  complianceStatus: 'pass' | 'warning' | 'fail' | 'skipped';
   issues: {
     severity: 'low' | 'medium' | 'high';
     description: string;

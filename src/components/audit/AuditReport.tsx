@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Download, RefreshCw, CheckCircle, AlertTriangle, XCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Loader2, Download, CheckCircle, AlertTriangle, XCircle, MinusCircle, ChevronDown, ChevronUp } from 'lucide-react';
 import { supabase } from '../../services/supabaseClient';
 import { useAccount } from '../../context/AccountContext';
 import { AuditSession, AuditStep } from '../../types/audit';
@@ -8,131 +8,207 @@ import LoggedInLayout from '../layout/LoggedInLayout';
 
 // ── PDF generation ────────────────────────────────────────────────────────────
 
+const PDF_MARGIN = 20;       // mm left/right
+const PDF_PAGE_W = 210;      // A4 width mm
+const PDF_CONTENT_W = PDF_PAGE_W - PDF_MARGIN * 2;  // 170mm
+const PDF_BOTTOM = 282;      // mm — content stops here, footer lives at 288
+
+/** Convert pt font-size → mm line height with 1.5× spacing */
+const lineHeightMm = (fontSize: number) => fontSize * 0.352778 * 1.5;
+
 async function generatePdf(session: AuditSession, practiceName: string) {
   const { jsPDF } = await import('jspdf');
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-  const PAGE_W = 210;
-  const MARGIN = 20;
-  const CONTENT_W = PAGE_W - MARGIN * 2;
-  let y = MARGIN;
+  let y = PDF_MARGIN;
 
+  /** Ensure there is `needed` mm of vertical space; add page if not. */
   const ensureSpace = (needed: number) => {
-    if (y + needed > 277) {
+    if (y + needed > PDF_BOTTOM) {
       doc.addPage();
-      y = MARGIN;
+      y = PDF_MARGIN;
     }
   };
 
-  const writeText = (text: string, x: number, fontSize: number, color: [number, number, number], bold = false) => {
+  /**
+   * Write wrapped text and advance y.
+   * x       — left edge in mm (must be >= PDF_MARGIN)
+   * fontSize — in pt
+   * Returns the height consumed.
+   */
+  const writeText = (
+    text: string,
+    x: number,
+    fontSize: number,
+    color: [number, number, number],
+    bold = false,
+    extraSpacingMm = 1
+  ): number => {
     doc.setFontSize(fontSize);
-    doc.setTextColor(...color);
     doc.setFont('helvetica', bold ? 'bold' : 'normal');
-    const lines = doc.splitTextToSize(text, CONTENT_W - (x - MARGIN));
-    ensureSpace(lines.length * (fontSize * 0.4) + 2);
-    doc.text(lines, x, y);
-    y += lines.length * (fontSize * 0.4) + 2;
+    doc.setTextColor(color[0], color[1], color[2]);
+
+    const availableWidth = PDF_CONTENT_W - (x - PDF_MARGIN);
+    const lines: string[] = doc.splitTextToSize(text, availableWidth);
+    const lh = lineHeightMm(fontSize);
+    const blockH = lines.length * lh + extraSpacingMm;
+
+    ensureSpace(blockH);
+    lines.forEach((line: string, i: number) => {
+      doc.text(line, x, y + i * lh);
+    });
+    y += blockH;
+    return blockH;
   };
 
-  // Header
+  /**
+   * Write a section heading — ensure there is enough room for the heading
+   * PLUS at least one body line (orphan guard).
+   */
+  const writeHeading = (
+    text: string,
+    x: number,
+    fontSize: number,
+    color: [number, number, number],
+    orphanGuardMm = 12
+  ) => {
+    ensureSpace(lineHeightMm(fontSize) + orphanGuardMm);
+    writeText(text, x, fontSize, color, true, 2);
+  };
+
+  // ── Cover header ──────────────────────────────────────────────────────────
   doc.setFillColor(37, 99, 235);
-  doc.rect(0, 0, PAGE_W, 28, 'F');
+  doc.rect(0, 0, PDF_PAGE_W, 28, 'F');
   doc.setFontSize(16);
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
-  doc.text('SafePost', MARGIN, 12);
+  doc.text('SafePost', PDF_MARGIN, 12);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.text('Website Compliance Audit Report', MARGIN, 20);
-  y = 38;
+  doc.text('Website Compliance Audit Report', PDF_MARGIN, 20);
+  y = 36;
 
-  // Practice + date
-  writeText(practiceName || 'Your Practice', MARGIN, 14, [17, 24, 39], true);
+  // Practice name + date
+  writeText(practiceName || 'Your Practice', PDF_MARGIN, 14, [17, 24, 39], true, 2);
   const dateStr = new Date(session.created_at).toLocaleDateString('en-AU', {
     day: 'numeric', month: 'long', year: 'numeric',
   });
-  writeText(`Audit date: ${dateStr}`, MARGIN, 10, [107, 114, 128]);
-  y += 4;
+  writeText(`Audit completed: ${dateStr}`, PDF_MARGIN, 10, [107, 114, 128], false, 6);
 
-  // Summary section
-  const completedSteps = session.steps.filter((s) => s.status === 'complete' && s.result);
-  const passCount = completedSteps.filter((s) => s.result?.complianceStatus === 'pass').length;
-  const warnCount = completedSteps.filter((s) => s.result?.complianceStatus === 'warning').length;
-  const failCount = completedSteps.filter((s) => s.result?.complianceStatus === 'fail').length;
-  const totalIssues = completedSteps.reduce((acc, s) => acc + (s.result?.issues.length ?? 0), 0);
-  const score = completedSteps.length > 0
-    ? Math.round(((passCount + warnCount * 0.5) / completedSteps.length) * 100)
+  // ── Summary box ───────────────────────────────────────────────────────────
+  const analysedSteps = session.steps.filter((s) => s.status === 'complete' && s.result && s.result.complianceStatus !== 'skipped');
+  const passCount  = analysedSteps.filter((s) => s.result?.complianceStatus === 'pass').length;
+  const warnCount  = analysedSteps.filter((s) => s.result?.complianceStatus === 'warning').length;
+  const failCount  = analysedSteps.filter((s) => s.result?.complianceStatus === 'fail').length;
+  const totalIssues = analysedSteps.reduce((acc, s) => acc + (s.result?.issues.length ?? 0), 0);
+  const score = analysedSteps.length > 0
+    ? Math.round(((passCount + warnCount * 0.5) / analysedSteps.length) * 100)
     : 0;
+  const skippedCount = session.steps.filter((s) => s.result?.complianceStatus === 'skipped').length;
 
-  ensureSpace(30);
+  ensureSpace(32);
   doc.setFillColor(248, 250, 252);
-  doc.roundedRect(MARGIN, y, CONTENT_W, 28, 3, 3, 'F');
-  doc.setFontSize(11);
+  doc.roundedRect(PDF_MARGIN, y, PDF_CONTENT_W, 30, 3, 3, 'F');
+  doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(17, 24, 39);
-  doc.text(`Overall Score: ${score}%`, MARGIN + 6, y + 8);
+  doc.text(`Overall Compliance Score: ${score}%`, PDF_MARGIN + 6, y + 9);
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(75, 85, 99);
-  doc.text(`Pages analysed: ${completedSteps.length}   Compliant: ${passCount}   Warnings: ${warnCount}   Issues: ${failCount}   Total findings: ${totalIssues}`, MARGIN + 6, y + 17);
-  y += 34;
+  const summaryLine1 = `Pages analysed: ${analysedSteps.length}${skippedCount > 0 ? `   Skipped: ${skippedCount}` : ''}   Total findings: ${totalIssues}`;
+  const summaryLine2 = `Compliant: ${passCount}   Warnings: ${warnCount}   Issues found: ${failCount}`;
+  doc.text(summaryLine1, PDF_MARGIN + 6, y + 18);
+  doc.text(summaryLine2, PDF_MARGIN + 6, y + 25);
+  y += 36;
 
-  // Per-page breakdown
-  writeText('Page-by-Page Findings', MARGIN, 13, [17, 24, 39], true);
-  y += 2;
+  // ── Page-by-page findings ─────────────────────────────────────────────────
+  writeHeading('Page-by-Page Findings', PDF_MARGIN, 13, [17, 24, 39]);
 
-  for (const step of completedSteps) {
-    if (!step.result) continue;
-    ensureSpace(20);
+  for (const step of session.steps) {
+    if (step.status !== 'complete' || !step.result) continue;
 
-    const statusColor: [number, number, number] =
-      step.result.complianceStatus === 'pass' ? [22, 163, 74] :
-      step.result.complianceStatus === 'warning' ? [217, 119, 6] : [220, 38, 38];
+    const isSkipped = step.result.complianceStatus === 'skipped';
+    const statusColor: [number, number, number] = isSkipped
+      ? [156, 163, 175]
+      : step.result.complianceStatus === 'pass' ? [22, 163, 74]
+      : step.result.complianceStatus === 'warning' ? [217, 119, 6]
+      : [220, 38, 38];
 
-    writeText(step.name, MARGIN, 11, [17, 24, 39], true);
-    const statusLabel = step.result.complianceStatus === 'pass' ? 'Compliant' :
-      step.result.complianceStatus === 'warning' ? 'Warnings' : 'Issues Found';
-    writeText(`Status: ${statusLabel}`, MARGIN + 4, 9, statusColor);
-    writeText(step.result.summary, MARGIN + 4, 9, [75, 85, 99]);
+    const statusLabel = isSkipped ? 'Not analysed'
+      : step.result.complianceStatus === 'pass' ? 'Compliant'
+      : step.result.complianceStatus === 'warning' ? 'Warnings identified'
+      : 'Issues found';
 
-    if (step.result.issues.length > 0) {
+    // Heading guard: heading + status line + summary line
+    ensureSpace(lineHeightMm(11) + lineHeightMm(9) * 3 + 4);
+
+    writeText(step.name, PDF_MARGIN, 11, [17, 24, 39], true, 1);
+    writeText(`Status: ${statusLabel}`, PDF_MARGIN + 4, 9, statusColor, false, 1);
+
+    if (step.result.url && !isSkipped) {
+      writeText(step.result.url, PDF_MARGIN + 4, 8, [156, 163, 175], false, 1);
+    }
+
+    writeText(step.result.summary, PDF_MARGIN + 4, 9, [75, 85, 99], false, 2);
+
+    if (!isSkipped && step.result.issues.length > 0) {
       for (const issue of step.result.issues) {
-        ensureSpace(14);
         const sevColor: [number, number, number] =
-          issue.severity === 'high' ? [220, 38, 38] :
-          issue.severity === 'medium' ? [217, 119, 6] : [107, 114, 128];
-        writeText(`[${issue.severity.toUpperCase()}] ${issue.description}`, MARGIN + 8, 8, sevColor);
-        writeText(`→ ${issue.recommendation}`, MARGIN + 10, 8, [75, 85, 99]);
-        y += 1;
+          issue.severity === 'high' ? [220, 38, 38]
+          : issue.severity === 'medium' ? [217, 119, 6]
+          : [107, 114, 128];
+
+        ensureSpace(lineHeightMm(8) * 4 + 4);
+        writeText(
+          `[${issue.severity.toUpperCase()}]  ${issue.description}`,
+          PDF_MARGIN + 8, 8, sevColor, false, 1
+        );
+        writeText(
+          `Recommendation: ${issue.recommendation}`,
+          PDF_MARGIN + 8, 8, [75, 85, 99], false, 2
+        );
       }
     }
-    y += 4;
+    y += 4; // inter-page gap
   }
 
-  // Footer on each page
+  // ── Page footers ──────────────────────────────────────────────────────────
   const totalPages = doc.getNumberOfPages();
   for (let i = 1; i <= totalPages; i++) {
     doc.setPage(i);
+    doc.setDrawColor(226, 232, 240);
+    doc.line(PDF_MARGIN, 286, PDF_PAGE_W - PDF_MARGIN, 286);
     doc.setFontSize(8);
     doc.setTextColor(156, 163, 175);
     doc.setFont('helvetica', 'normal');
-    doc.text(`SafePost Website Compliance Audit — ${dateStr} — Page ${i} of ${totalPages}`, MARGIN, 290);
+    doc.text(
+      `SafePost Website Compliance Audit  ·  ${dateStr}  ·  Page ${i} of ${totalPages}`,
+      PDF_MARGIN, 291
+    );
   }
 
-  doc.save(`SafePost-Audit-${dateStr.replace(/\s/g, '-')}.pdf`);
+  doc.save(`SafePost-Audit-${dateStr.replace(/[\s,]+/g, '-')}.pdf`);
 }
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// ── Status icon helper ────────────────────────────────────────────────────────
 
-const StatusIcon: React.FC<{ status: 'pass' | 'warning' | 'fail'; className?: string }> = ({ status, className }) => {
-  if (status === 'pass') return <CheckCircle className={className ?? 'w-4 h-4 text-green-600'} />;
-  if (status === 'warning') return <AlertTriangle className={className ?? 'w-4 h-4 text-amber-600'} />;
-  return <XCircle className={className ?? 'w-4 h-4 text-red-600'} />;
+const StatusIcon: React.FC<{ status: string; className?: string }> = ({ status, className }) => {
+  const cls = className ?? 'w-4 h-4';
+  if (status === 'pass') return <CheckCircle className={`${cls} text-green-600`} />;
+  if (status === 'warning') return <AlertTriangle className={`${cls} text-amber-600`} />;
+  if (status === 'skipped') return <MinusCircle className={`${cls} text-gray-400`} />;
+  return <XCircle className={`${cls} text-red-600`} />;
 };
 
-const StepAccordion: React.FC<{ step: AuditStep; index: number }> = ({ step, index }) => {
+// ── Step accordion ────────────────────────────────────────────────────────────
+
+const StepAccordion: React.FC<{ step: AuditStep }> = ({ step }) => {
   const [open, setOpen] = useState(false);
   if (!step.result) return null;
+
+  const isSkipped = step.result.complianceStatus === 'skipped';
+  const findingCount = step.result.issues.length;
 
   return (
     <div className="border border-slate-200 rounded-xl overflow-hidden">
@@ -144,7 +220,9 @@ const StepAccordion: React.FC<{ step: AuditStep; index: number }> = ({ step, ind
           <StatusIcon status={step.result.complianceStatus} />
           <div>
             <p className="text-[13px] font-semibold text-gray-900">{step.name}</p>
-            <p className="text-[11px] text-gray-400 mt-0.5">{step.result.issues.length} finding{step.result.issues.length !== 1 ? 's' : ''}</p>
+            <p className="text-[11px] text-gray-400 mt-0.5">
+              {isSkipped ? 'Not analysed' : `${findingCount} finding${findingCount !== 1 ? 's' : ''}`}
+            </p>
           </div>
         </div>
         {open ? <ChevronUp className="w-4 h-4 text-gray-400" /> : <ChevronDown className="w-4 h-4 text-gray-400" />}
@@ -152,28 +230,34 @@ const StepAccordion: React.FC<{ step: AuditStep; index: number }> = ({ step, ind
 
       {open && (
         <div className="border-t border-slate-100 p-4 bg-slate-50 flex flex-col gap-3">
-          <p className="text-[13px] text-gray-600">{step.result.summary}</p>
-          {step.result.url && (
-            <p className="text-[11px] text-gray-400 break-all">{step.result.url}</p>
-          )}
-          {step.result.issues.length > 0 ? (
-            step.result.issues.map((issue, idx) => (
-              <div key={idx} className="bg-white rounded-lg border border-slate-200 p-3">
-                <div className="flex items-center gap-2 mb-1.5">
-                  <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
-                    issue.severity === 'high' ? 'bg-red-100 text-red-700' :
-                    issue.severity === 'medium' ? 'bg-amber-100 text-amber-700' :
-                    'bg-slate-100 text-slate-600'
-                  }`}>
-                    {issue.severity.charAt(0).toUpperCase() + issue.severity.slice(1)}
-                  </span>
-                </div>
-                <p className="text-[12px] text-gray-800 mb-1.5">{issue.description}</p>
-                <p className="text-[12px] text-blue-700 bg-blue-50 rounded p-2">{issue.recommendation}</p>
-              </div>
-            ))
+          {isSkipped ? (
+            <p className="text-[13px] text-gray-400 italic">This page was not analysed.</p>
           ) : (
-            <p className="text-[12px] text-green-700">No issues found on this page.</p>
+            <>
+              <p className="text-[13px] text-gray-600">{step.result.summary}</p>
+              {step.result.url && (
+                <p className="text-[11px] text-gray-400 break-all">{step.result.url}</p>
+              )}
+              {step.result.issues.length > 0 ? (
+                step.result.issues.map((issue, idx) => (
+                  <div key={idx} className="bg-white rounded-lg border border-slate-200 p-3">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+                        issue.severity === 'high' ? 'bg-red-100 text-red-700' :
+                        issue.severity === 'medium' ? 'bg-amber-100 text-amber-700' :
+                        'bg-slate-100 text-slate-600'
+                      }`}>
+                        {issue.severity.charAt(0).toUpperCase() + issue.severity.slice(1)}
+                      </span>
+                    </div>
+                    <p className="text-[12px] text-gray-800 mb-1.5">{issue.description}</p>
+                    <p className="text-[12px] text-blue-700 bg-blue-50 rounded p-2">{issue.recommendation}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-[12px] text-green-700">No issues found on this page.</p>
+              )}
+            </>
           )}
         </div>
       )}
@@ -181,13 +265,14 @@ const StepAccordion: React.FC<{ step: AuditStep; index: number }> = ({ step, ind
   );
 };
 
+// ── Page component ────────────────────────────────────────────────────────────
+
 const AuditReport: React.FC = () => {
   const navigate = useNavigate();
-  const { accountId, practiceName, accountLoading, auditPurchased } = useAccount();
+  const { accountId, practiceName, accountLoading } = useAccount();
   const [session, setSession] = useState<AuditSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [pdfLoading, setPdfLoading] = useState(false);
-  const [newAuditLoading, setNewAuditLoading] = useState(false);
 
   const loadSession = useCallback(async () => {
     if (!accountId) return;
@@ -207,14 +292,10 @@ const AuditReport: React.FC = () => {
   }, [accountId]);
 
   useEffect(() => {
-    if (!accountLoading) {
-      if (!auditPurchased) {
-        navigate('/audit', { replace: true });
-        return;
-      }
+    if (!accountLoading && accountId) {
       loadSession();
     }
-  }, [accountLoading, auditPurchased, loadSession, navigate]);
+  }, [accountLoading, accountId, loadSession]);
 
   const handleDownloadPdf = async () => {
     if (!session) return;
@@ -225,24 +306,6 @@ const AuditReport: React.FC = () => {
       console.error('PDF generation failed:', err);
     } finally {
       setPdfLoading(false);
-    }
-  };
-
-  const handleNewAudit = async () => {
-    if (!accountId) return;
-    setNewAuditLoading(true);
-    try {
-      // Mark all in_progress sessions as abandoned so AuditFlow creates a fresh one
-      await supabase
-        .from('audit_sessions')
-        .update({ status: 'abandoned' })
-        .eq('account_id', accountId)
-        .eq('status', 'in_progress');
-      navigate('/audit/start');
-    } catch (err) {
-      console.error('Failed to start new audit:', err);
-    } finally {
-      setNewAuditLoading(false);
     }
   };
 
@@ -261,31 +324,33 @@ const AuditReport: React.FC = () => {
       <LoggedInLayout>
         <div className="max-w-2xl mx-auto px-6 py-16 text-center">
           <h2 className="text-[20px] font-semibold text-gray-900 mb-3">No completed audit found</h2>
-          <p className="text-[14px] text-gray-500 mb-6">Complete all 6 steps of your audit to generate the report.</p>
+          <p className="text-[14px] text-gray-500 mb-6">
+            Complete your website audit to generate the compliance report.
+          </p>
           <button
-            onClick={() => navigate('/audit/start')}
+            onClick={() => navigate('/audit')}
             className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-xl transition-colors"
           >
-            Continue Audit
+            Go to Audit
           </button>
         </div>
       </LoggedInLayout>
     );
   }
 
-  const completedSteps = session.steps.filter((s) => s.status === 'complete' && s.result);
-  const passCount = completedSteps.filter((s) => s.result?.complianceStatus === 'pass').length;
-  const warnCount = completedSteps.filter((s) => s.result?.complianceStatus === 'warning').length;
-  const failCount = completedSteps.filter((s) => s.result?.complianceStatus === 'fail').length;
-  const totalIssues = completedSteps.reduce((acc, s) => acc + (s.result?.issues.length ?? 0), 0);
-  const score = completedSteps.length > 0
-    ? Math.round(((passCount + warnCount * 0.5) / completedSteps.length) * 100)
+  // Only count non-skipped steps for the score
+  const analysedSteps = session.steps.filter((s) => s.status === 'complete' && s.result && s.result.complianceStatus !== 'skipped');
+  const passCount = analysedSteps.filter((s) => s.result?.complianceStatus === 'pass').length;
+  const warnCount = analysedSteps.filter((s) => s.result?.complianceStatus === 'warning').length;
+  const failCount = analysedSteps.filter((s) => s.result?.complianceStatus === 'fail').length;
+  const totalIssues = analysedSteps.reduce((acc, s) => acc + (s.result?.issues.length ?? 0), 0);
+  const skippedCount = session.steps.filter((s) => s.result?.complianceStatus === 'skipped').length;
+  const score = analysedSteps.length > 0
+    ? Math.round(((passCount + warnCount * 0.5) / analysedSteps.length) * 100)
     : 0;
 
-  const scoreColor =
-    score >= 80 ? 'text-green-600' : score >= 50 ? 'text-amber-600' : 'text-red-600';
-  const scoreBarColor =
-    score >= 80 ? 'bg-green-500' : score >= 50 ? 'bg-amber-500' : 'bg-red-500';
+  const scoreColor = score >= 80 ? 'text-green-600' : score >= 50 ? 'text-amber-600' : 'text-red-600';
+  const scoreBarColor = score >= 80 ? 'bg-green-500' : score >= 50 ? 'bg-amber-500' : 'bg-red-500';
 
   return (
     <LoggedInLayout>
@@ -301,24 +366,14 @@ const AuditReport: React.FC = () => {
               {practiceName && ` — ${practiceName}`}
             </p>
           </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            <button
-              onClick={handleNewAudit}
-              disabled={newAuditLoading}
-              className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-gray-600 bg-white border border-slate-200 hover:bg-slate-50 rounded-xl transition-colors disabled:opacity-60"
-            >
-              {newAuditLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
-              Run New Audit
-            </button>
-            <button
-              onClick={handleDownloadPdf}
-              disabled={pdfLoading}
-              className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-60"
-            >
-              {pdfLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-              Download PDF Report
-            </button>
-          </div>
+          <button
+            onClick={handleDownloadPdf}
+            disabled={pdfLoading}
+            className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-60"
+          >
+            {pdfLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+            Download PDF Report
+          </button>
         </div>
 
         {/* Score summary */}
@@ -327,6 +382,9 @@ const AuditReport: React.FC = () => {
             <div>
               <p className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Overall Score</p>
               <p className={`text-[48px] font-bold leading-none ${scoreColor}`}>{score}%</p>
+              {analysedSteps.length < session.steps.length && (
+                <p className="text-[11px] text-gray-400 mt-1">Based on {analysedSteps.length} analysed page{analysedSteps.length !== 1 ? 's' : ''}</p>
+              )}
             </div>
             <div className="flex-1 min-w-[160px]">
               <div className="h-3 bg-gray-100 rounded-full overflow-hidden mb-3">
@@ -335,16 +393,19 @@ const AuditReport: React.FC = () => {
                   style={{ width: `${score}%` }}
                 />
               </div>
-              <div className="flex gap-4 text-[13px]">
+              <div className="flex gap-4 text-[13px] flex-wrap">
                 <span className="text-green-600 font-medium">{passCount} compliant</span>
                 <span className="text-amber-600 font-medium">{warnCount} warnings</span>
                 <span className="text-red-600 font-medium">{failCount} issues</span>
+                {skippedCount > 0 && (
+                  <span className="text-gray-400 font-medium">{skippedCount} skipped</span>
+                )}
               </div>
             </div>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-100">
             <div className="text-center p-3 bg-slate-50 rounded-xl">
-              <p className="text-[22px] font-bold text-gray-900">{completedSteps.length}</p>
+              <p className="text-[22px] font-bold text-gray-900">{analysedSteps.length}</p>
               <p className="text-[11px] text-gray-400">Pages analysed</p>
             </div>
             <div className="text-center p-3 bg-slate-50 rounded-xl">
@@ -353,7 +414,7 @@ const AuditReport: React.FC = () => {
             </div>
             <div className="text-center p-3 bg-slate-50 rounded-xl col-span-2 sm:col-span-1">
               <p className="text-[22px] font-bold text-gray-900">
-                {completedSteps.reduce((acc, s) => acc + (s.result?.issues.filter((i) => i.severity === 'high').length ?? 0), 0)}
+                {analysedSteps.reduce((acc, s) => acc + (s.result?.issues.filter((i) => i.severity === 'high').length ?? 0), 0)}
               </p>
               <p className="text-[11px] text-gray-400">High severity</p>
             </div>
@@ -364,9 +425,7 @@ const AuditReport: React.FC = () => {
         <h2 className="text-[16px] font-semibold text-gray-900 mb-3">Page-by-Page Breakdown</h2>
         <div className="flex flex-col gap-3">
           {session.steps.map((step, idx) =>
-            step.status === 'complete' ? (
-              <StepAccordion key={idx} step={step} index={idx} />
-            ) : null
+            step.status === 'complete' ? <StepAccordion key={idx} step={step} /> : null
           )}
         </div>
 
