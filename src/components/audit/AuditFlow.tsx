@@ -315,7 +315,7 @@ const AuditFlow: React.FC = () => {
           <h1 className="text-[24px] font-bold text-gray-900 mb-1">Website Compliance Audit</h1>
           <p className="text-[14px] text-gray-500">
             {phase === 'setup'
-              ? 'Tell us which pages to audit, then we'll check each one against AHPRA and TGA rules.'
+              ? "Tell us which pages to audit, then we'll check each one against AHPRA and TGA rules."
               : 'Enter the URL for each page of your website to analyse it for AHPRA and TGA compliance.'}
           </p>
         </div>
