@@ -299,7 +299,7 @@ const HomePage: React.FC = () => {
               <span className="text-[#2563EB]">AHPRA and TGA compliant.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
-              Instant social media and online advertising compliance checks for Australian medical practitioners and practices.
+              Instant social media, online advertising and website compliance checks for Australian medical practitioners and practices.
             </p>
           </div>
           {/* Hero image/banner placeholder — add your image here */}
