@@ -25,7 +25,7 @@ const AuditWaitlistSection: React.FC = () => {
               Subscriber Add-On
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Is your website already compliant?
+              Is your website compliant?
             </h2>
             <p className="text-[16px] text-gray-500 mb-10 leading-relaxed">
               Our <strong className="text-gray-700">Website Compliance Audit</strong> is a one-off, AI-powered review of your practice website — checked page by page against AHPRA advertising guidelines and TGA regulations. Available exclusively to SafePost subscribers as a one-time add-on.
