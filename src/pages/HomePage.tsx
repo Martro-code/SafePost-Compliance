@@ -303,7 +303,7 @@ const HomePage: React.FC = () => {
               Check your posts, ads and website for AHPRA and TGA compliance<span className="text-[#2563EB]"> before they go live.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
-              Instant social media, online advertising and website compliance checks for Australian medical practitioners and practices.
+              AI-powered compliance checking for Australian medical practitioners and practices. Built for social media, online advertising and your practice website.
             </p>
           </div>
           {/* Hero image/banner placeholder — add your image here */}
