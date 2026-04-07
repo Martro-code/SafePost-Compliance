@@ -46,9 +46,9 @@ function invalidateCache(): void {
 // Plan check limits — used as fallback when account context is not available
 export const PLAN_LIMITS: Record<string, number> = {
   free: 3,
-  starter: 3,
-  professional: 30,
-  pro_plus: 100,
+  starter: 5,
+  professional: 20,
+  pro_plus: 50,
   ultra: Infinity,
 };
 
@@ -56,8 +56,8 @@ export const PLAN_LIMITS: Record<string, number> = {
 export const HISTORY_LIMITS: Record<string, number> = {
   free: 10,
   starter: 10,
-  professional: 30,
-  pro_plus: 100,
+  professional: 20,
+  pro_plus: 50,
   ultra: 1000,
 };
 

@@ -98,6 +98,8 @@ const App: React.FC = () => {
           <Route path="/cookie-policy" element={<CookiePolicy />} />
           <Route path="/news" element={<NewsPage />} />
           <Route path="/news/:slug" element={<NewsArticlePage />} />
+          <Route path="/content/news" element={<NewsPage />} />
+          <Route path="/content/news/:slug" element={<NewsArticlePage />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/mfa-challenge" element={<MFAChallenge />} />
           <Route path="/update-password" element={<ProtectedRoute><UpdatePassword /></ProtectedRoute>} />

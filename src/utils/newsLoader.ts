@@ -25,13 +25,11 @@ const mdxModules = import.meta.glob('../content/news/*.mdx', { eager: true }) as
 
 export function getAllArticles(): NewsArticle[] {
   const articles: NewsArticle[] = [];
-
   for (const path in mdxModules) {
     const mod = mdxModules[path];
     const { frontmatter } = mod;
     if (!frontmatter) continue;
-    const slug = path.replace('/src/content/news/', '').replace('.mdx', '');
-
+    const slug = path.replace('../content/news/', '').replace('.mdx', '');
     articles.push({
       slug,
       title: frontmatter.title,
@@ -42,10 +40,9 @@ export function getAllArticles(): NewsArticle[] {
       Component: mod.default,
     });
   }
-
-  return articles.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  return articles;
 }
 
 export function getArticleBySlug(slug: string): NewsArticle | undefined {
-  return getAllArticles().find((a) => a.slug === slug);
+  return getAllArticles().find(a => a.slug === slug);
 }
