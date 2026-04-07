@@ -8,7 +8,7 @@ import LoggedInLayout from '../layout/LoggedInLayout';
 
 // ── HTML report generation ────────────────────────────────────────────────────
 
-function generateHtml(session: AuditSession, practiceName: string): string {
+async function generateHtml(session: AuditSession, practiceName: string): Promise<string> {
   const analysedSteps = session.steps.filter(
     (s) => s.status === 'complete' && s.result && s.result.complianceStatus !== 'skipped'
   );
@@ -18,6 +18,23 @@ function generateHtml(session: AuditSession, practiceName: string): string {
   const score = analysedSteps.length > 0
     ? Math.round(((passCount + warnCount * 0.5) / analysedSteps.length) * 100)
     : 0;
+
+  const scoreHexColor = score >= 67 ? '#22c55e' : score >= 34 ? '#f59e0b' : '#ef4444';
+
+  // ── Fetch logo as base64 ──────────────────────────────────────────────────
+
+  let logoBase64 = '';
+  try {
+    const response = await fetch('/safepost-logo.png');
+    const blob = await response.blob();
+    logoBase64 = await new Promise<string>((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.readAsDataURL(blob);
+    });
+  } catch {
+    // fall back to logo mark in header
+  }
 
   const auditDate = new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
     day: 'numeric', month: 'long', year: 'numeric',
@@ -97,7 +114,9 @@ function generateHtml(session: AuditSession, practiceName: string): string {
     .report-meta { font-family: 'Arial', sans-serif; font-size: 13px; color: #64748b; }
     .score-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 32px 36px; margin-bottom: 48px; }
     .score-heading { font-family: 'Arial', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; margin-bottom: 8px; }
-    .score-value { font-size: 48px; font-weight: bold; color: #0f172a; line-height: 1; margin-bottom: 24px; }
+    .score-value { font-size: 48px; font-weight: bold; line-height: 1; margin-bottom: 10px; }
+    .score-progress-track { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-bottom: 24px; }
+    .score-progress-bar { height: 100%; border-radius: 4px; }
     .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
     .score-stat { text-align: center; padding: 12px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; }
     .score-stat-value { font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; color: #0f172a; }
@@ -140,12 +159,10 @@ function generateHtml(session: AuditSession, practiceName: string): string {
 <body>
 
   <div class="header">
-    <div class="header-logo-mark">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    <div class="header-brand">SafePost&#8482;</div>
+    ${logoBase64
+      ? `<img src="${logoBase64}" alt="SafePost" style="height:34px;" />`
+      : `<div class="header-logo-mark"><span></span><span></span><span></span></div><div class="header-brand">SafePost&#8482;</div>`
+    }
     <div class="header-tag">Website Compliance Audit</div>
   </div>
 
@@ -159,7 +176,10 @@ function generateHtml(session: AuditSession, practiceName: string): string {
 
     <div class="score-card">
       <div class="score-heading">Overall Compliance Score</div>
-      <div class="score-value">${score}%</div>
+      <div class="score-value" style="color: ${scoreHexColor}">${score}%</div>
+      <div class="score-progress-track">
+        <div class="score-progress-bar" style="width: ${score}%; background-color: ${scoreHexColor};"></div>
+      </div>
       <div class="score-grid">
         <div class="score-stat">
           <div class="score-stat-value">${analysedSteps.length}</div>
@@ -314,11 +334,11 @@ const AuditReport: React.FC = () => {
     }
   }, [accountLoading, accountId, loadSession]);
 
-  const handleDownloadHtml = () => {
+  const handleDownloadHtml = async () => {
     if (!session) return;
     setDownloadLoading(true);
     try {
-      const htmlContent = generateHtml(session, practiceName);
+      const htmlContent = await generateHtml(session, practiceName);
       const d = new Date(session.updated_at || session.created_at);
       const day = String(d.getDate()).padStart(2, '0');
       const month = d.toLocaleDateString('en-AU', { month: 'long' });
