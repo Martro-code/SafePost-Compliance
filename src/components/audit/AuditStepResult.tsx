@@ -92,6 +92,10 @@ const AuditStepResult: React.FC<AuditStepResultProps> = ({ result, onNext, isLas
               </div>
             ))}
           </div>
+        ) : (result.complianceStatus === 'fail' || result.complianceStatus === 'issues' || result.complianceStatus === 'warning') ? (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-center">
+            <p className="text-[13px] text-amber-700">Issues were identified on this page. Please refer to the summary above for details.</p>
+          </div>
         ) : (
           <div className="bg-green-50 border border-green-200 rounded-xl p-4 text-center">
             <p className="text-[13px] text-green-700">No issues found on this page.</p>
