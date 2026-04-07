@@ -307,7 +307,7 @@ const AuditFlow: React.FC = () => {
 
   return (
     <LoggedInLayout>
-      <div className="max-w-2xl mx-auto px-6 py-12">
+      <div className="max-w-5xl mx-auto px-6 py-12">
         {/* Page header */}
         <div className="mb-8">
           <h1 className="text-[24px] font-bold text-gray-900 mb-1">Website Compliance Audit</h1>
