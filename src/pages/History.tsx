@@ -495,13 +495,7 @@ const History: React.FC = () => {
         )}
 
         {/* Content area */}
-        {checker.isLoadingHistory ? (
-          <div className="space-y-2.5">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="animate-pulse bg-gray-200 rounded h-16 w-full" />
-            ))}
-          </div>
-        ) : totalChecks === 0 && auditSessions.length === 0 ? (
+        {checker.isLoadingHistory ? null : totalChecks === 0 && auditSessions.length === 0 ? (
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
             <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
               <Clock className="w-6 h-6 text-gray-400" />
