@@ -318,16 +318,6 @@ const About: React.FC = () => {
                 Our vision is to make compliance the standard — not the exception
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Today, SafePost helps Australian medical practitioners check their content before it goes live. But our vision reaches further. We believe there is a future where every doctor and medical practice has a single trusted platform they turn to for compliance confidence \u2014 not just for what they publish online, but for how they communicate with patients, how they market their services, and how they run their practice. A platform that sits alongside them the way a trusted adviser would. We\u2019re building toward that future, one compliance check at a time."}
-              </p>
-            </div>
-
-            {/* Section 5 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                Our vision is to make compliance the standard — not the exception
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
                 {"Today, SafePost checks your content before it goes live. But our vision reaches further \u2014 a single trusted platform that every Australian doctor and medical practice turns to for compliance confidence across everything they publish, communicate and practise. We\u2019re building toward that future, one check at a time."}
               </p>
             </div>
