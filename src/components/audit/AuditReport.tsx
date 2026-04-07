@@ -405,7 +405,7 @@ const AuditReport: React.FC = () => {
   if (!session) {
     return (
       <LoggedInLayout>
-        <div className="max-w-2xl mx-auto px-6 py-16 text-center">
+        <div className="max-w-5xl mx-auto px-6 py-16 text-center">
           <h2 className="text-[20px] font-semibold text-gray-900 mb-3">No completed audit found</h2>
           <p className="text-[14px] text-gray-500 mb-6">
             Complete your website audit to generate the compliance report.
@@ -437,7 +437,7 @@ const AuditReport: React.FC = () => {
 
   return (
     <LoggedInLayout>
-      <div className="max-w-3xl mx-auto px-6 py-12">
+      <div className="max-w-5xl mx-auto px-6 py-12">
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-8 flex-wrap">
           <div>
