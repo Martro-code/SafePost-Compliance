@@ -305,7 +305,7 @@ const About: React.FC = () => {
             {/* Section 4 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re not lawyers. We\u2019re your compliance platform."}
+                {"We\u2019re not lawyers. We\u2019re your compliance platform"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns and website audits, we\u2019re here to support you at every step."}
@@ -319,6 +319,16 @@ const About: React.FC = () => {
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 {"Today, SafePost helps Australian medical practitioners check their content before it goes live. But our vision reaches further. We believe there is a future where every doctor and medical practice has a single trusted platform they turn to for compliance confidence \u2014 not just for what they publish online, but for how they communicate with patients, how they market their services, and how they run their practice. A platform that sits alongside them the way a trusted adviser would. We\u2019re building toward that future, one compliance check at a time."}
+              </p>
+            </div>
+
+            {/* Section 5 */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
+                Our vision is to make compliance the standard — not the exception
+              </h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                {"Today, SafePost checks your content before it goes live. But our vision reaches further \u2014 a single trusted platform that every Australian doctor and medical practice turns to for compliance confidence across everything they publish, communicate and practise. We\u2019re building toward that future, one check at a time."}
               </p>
             </div>
 
