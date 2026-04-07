@@ -66,19 +66,32 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
 
       const findingsHtml = result.issues.map((issue) => {
         const sev = issue.severity;
+        const sevBadgeStyle =
+          sev === 'high'   ? 'background:#fee2e2;color:#991b1b;' :
+          sev === 'medium' ? 'background:#fef3c7;color:#92400e;' :
+                             'background:#dbeafe;color:#1e40af;';
+        const cardBg =
+          sev === 'high'   ? '#fff8f8' :
+          sev === 'medium' ? '#fffdf5' :
+                             '#f5f8ff';
         return `
-      <div class="finding finding-${sev}">
-        <div class="finding-severity severity-${sev}">${sev.toUpperCase()}</div>
+      <div class="finding finding-${sev}" style="background: ${cardBg}; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+        <span class="finding-severity-badge" style="${sevBadgeStyle}">${sev.toUpperCase()}</span>
         <div class="finding-description">${escHtml(issue.description)}</div>
         <div class="finding-recommendation">
-          <strong>Recommendation</strong>
+          <span class="recommendation-label">Recommendation</span>
           ${escHtml(issue.recommendation)}
         </div>
       </div>`;
       }).join('');
 
+      const hrColor =
+        result.complianceStatus === 'pass'    ? '#22c55e' :
+        result.complianceStatus === 'warning' ? '#f59e0b' : '#ef4444';
+
       return `
     <div class="page-block">
+      <hr style="border: none; border-top: 2px solid ${hrColor}; margin-bottom: 20px; border-radius: 2px;" />
       <div class="page-name">${escHtml(step.name)}</div>
       ${result.url ? `<div class="page-url">${escHtml(result.url)}</div>` : ''}
       <span class="status-badge ${badgeClass}">${badgeLabel}</span>
@@ -132,17 +145,14 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
     .status-issues { background: #fee2e2; color: #991b1b; }
     .status-skipped { background: #f1f5f9; color: #64748b; }
     .page-summary { color: #374151; margin-bottom: 20px; font-size: 14px; }
-    .finding { border-left: 4px solid #e2e8f0; padding: 16px 20px; margin-bottom: 16px; background: #f8fafc; border-radius: 0 8px 8px 0; }
+    .finding { border-left: 4px solid #e2e8f0; margin-bottom: 16px; border-radius: 0 8px 8px 0; }
     .finding-high { border-left-color: #ef4444; }
     .finding-medium { border-left-color: #f59e0b; }
     .finding-low { border-left-color: #3b82f6; }
-    .finding-severity { font-family: 'Arial', sans-serif; font-size: 10px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
-    .severity-high { color: #ef4444; }
-    .severity-medium { color: #f59e0b; }
-    .severity-low { color: #3b82f6; }
-    .finding-description { font-size: 14px; color: #1e293b; margin-bottom: 10px; }
-    .finding-recommendation { font-size: 13px; color: #475569; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px; }
-    .finding-recommendation strong { display: block; font-family: 'Arial', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #94a3b8; margin-bottom: 4px; }
+    .finding-severity-badge { display: inline-block; font-family: 'Arial', sans-serif; font-size: 10px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+    .finding-description { font-size: 15px; color: #1e293b; margin-bottom: 12px; }
+    .finding-recommendation { font-size: 13px; color: #334155; background: #f0f4f8; border-left: 4px solid #3b82f6; border-radius: 0 6px 6px 0; padding: 12px 14px; }
+    .recommendation-label { display: inline-block; font-family: 'Arial', sans-serif; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 20px; margin-bottom: 6px; }
     .disclaimer { margin-top: 64px; padding: 24px 28px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Arial', sans-serif; font-size: 12px; color: #64748b; line-height: 1.6; }
     .disclaimer strong { display: block; margin-bottom: 6px; color: #374151; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
     .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #e2e8f0; font-family: 'Arial', sans-serif; font-size: 11px; color: #94a3b8; text-align: center; }
@@ -153,6 +163,9 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
       .finding { -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
       .page-block { break-inside: avoid; }
       .status-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .finding-severity-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .finding-recommendation { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .recommendation-label { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
@@ -201,6 +214,28 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
     </div>
 
     <div class="section-heading">Page-by-Page Findings</div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 40px;">
+      ${session.steps.filter((s) => s.status === 'complete' && s.result).map((step) => {
+        const st = step.result!.complianceStatus;
+        const borderColor =
+          st === 'pass'    ? '#22c55e' :
+          st === 'warning' ? '#f59e0b' :
+          st === 'skipped' ? '#cbd5e1' : '#ef4444';
+        const labelColor =
+          st === 'pass'    ? '#166534' :
+          st === 'warning' ? '#854d0e' :
+          st === 'skipped' ? '#64748b' : '#991b1b';
+        const statusText =
+          st === 'pass'    ? 'Compliant' :
+          st === 'warning' ? 'Warnings'  :
+          st === 'skipped' ? 'Not Analysed' : 'Issues Found';
+        return `<div style="border-left: 4px solid ${borderColor}; background: #f8fafc; border-radius: 0 8px 8px 0; padding: 10px 14px;">
+          <div style="font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 3px;">${escHtml(step.name)}</div>
+          <div style="font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; color: ${labelColor}; text-transform: uppercase; letter-spacing: 0.5px;">${statusText}</div>
+        </div>`;
+      }).join('')}
+    </div>
 
     ${pageBlocks}
 
