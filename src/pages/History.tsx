@@ -256,6 +256,13 @@ const History: React.FC = () => {
   // Plan limit banner dismissal
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
+  // Delayed loader — only show spinner if loading takes longer than 500ms
+  const [showLoader, setShowLoader] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Audit sessions
   const [auditSessions, setAuditSessions] = useState<AuditSession[]>([]);
 
@@ -491,10 +498,12 @@ const History: React.FC = () => {
 
         {/* Content area */}
         {checker.isLoadingHistory ? (
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center gap-3">
-            <Loader2 className="w-7 h-7 text-blue-500 animate-spin" />
-            <p className="text-[14px] text-gray-400 font-medium">Loading your compliance history...</p>
-          </div>
+          showLoader ? (
+            <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center gap-3">
+              <Loader2 className="w-7 h-7 text-blue-500 animate-spin" />
+              <p className="text-[14px] text-gray-400 font-medium">Loading your compliance history...</p>
+            </div>
+          ) : null
         ) : totalChecks === 0 && auditSessions.length === 0 ? (
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
             <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">

@@ -28,6 +28,12 @@ const AuditPurchaseGate: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(isPurchaseReturn);
   const [error, setError] = useState<string | null>(null);
+  const [showLoader, setShowLoader] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowLoader(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // When returning from a successful Stripe payment, refresh the account so
   // audit_purchased updates without a manual page reload.
@@ -41,6 +47,7 @@ const AuditPurchaseGate: React.FC = () => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (accountLoading || refreshing) {
+    if (!showLoader) return null;
     return (
       <LoggedInLayout>
         <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
