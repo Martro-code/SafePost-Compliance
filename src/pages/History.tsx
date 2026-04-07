@@ -4,7 +4,7 @@ import {
   ArrowLeft, Clock,
   CheckCircle2, XCircle, AlertTriangle, Loader2, Search,
   Filter, Trash2, ChevronRight,
-  ChevronLeft, X, ShieldOff, Globe,
+  X, ShieldOff, Globe,
 } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useComplianceChecker, SavedComplianceCheck, HISTORY_LIMITS } from '../hooks/useComplianceChecker';
@@ -92,7 +92,7 @@ function formatDateShort(dateStr: string): string {
   return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
 }
 
-const PAGE_SIZE = 10;
+const LOAD_MORE_SIZE = 20;
 
 // ─── Audit helpers ────────────────────────────────────────────────────────────
 
@@ -250,18 +250,12 @@ const History: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [filterOpen, setFilterOpen] = useState(false);
 
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
+  // Load-more state
+  const [visibleCount, setVisibleCount] = useState(LOAD_MORE_SIZE);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   // Plan limit banner dismissal
   const [bannerDismissed, setBannerDismissed] = useState(false);
-
-  // Delayed loader — only show spinner if loading takes longer than 500ms
-  const [showLoader, setShowLoader] = useState(false);
-  useEffect(() => {
-    const timer = setTimeout(() => setShowLoader(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
 
   // Audit sessions
   const [auditSessions, setAuditSessions] = useState<AuditSession[]>([]);
@@ -351,17 +345,21 @@ const History: React.FC = () => {
     }),
   ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-  // Pagination over merged list
+  // Load-more slice
   const totalFiltered = mergedEntries.length;
-  const totalPages = Math.max(1, Math.ceil(totalFiltered / PAGE_SIZE));
-  const safePage = Math.min(currentPage, totalPages);
-  const startIdx = (safePage - 1) * PAGE_SIZE;
-  const endIdx = Math.min(startIdx + PAGE_SIZE, totalFiltered);
-  const paginatedEntries = mergedEntries.slice(startIdx, endIdx);
+  const visibleEntries = mergedEntries.slice(0, visibleCount);
+  const hasMore = totalFiltered > visibleCount;
 
-  // Reset to page 1 when filters change
+  const handleLoadMore = async () => {
+    setLoadingMore(true);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setVisibleCount(c => c + LOAD_MORE_SIZE);
+    setLoadingMore(false);
+  };
+
+  // Reset visible count when filters change
   useEffect(() => {
-    setCurrentPage(1);
+    setVisibleCount(LOAD_MORE_SIZE);
   }, [searchQuery, statusFilter]);
 
   // Stats
@@ -498,12 +496,11 @@ const History: React.FC = () => {
 
         {/* Content area */}
         {checker.isLoadingHistory ? (
-          showLoader ? (
-            <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center gap-3">
-              <Loader2 className="w-7 h-7 text-blue-500 animate-spin" />
-              <p className="text-[14px] text-gray-400 font-medium">Loading your compliance history...</p>
-            </div>
-          ) : null
+          <div className="space-y-2.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="animate-pulse bg-gray-200 rounded h-16 w-full" />
+            ))}
+          </div>
         ) : totalChecks === 0 && auditSessions.length === 0 ? (
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
             <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
@@ -538,55 +535,7 @@ const History: React.FC = () => {
               {statusFilter !== 'all' || searchQuery ? ' matching your filters' : ' total'}
             </p>
 
-            {/* Top pagination bar */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between pb-4 mb-4 border-b border-black/[0.06]">
-                <p className="text-[13px] text-gray-500">
-                  Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
-                </p>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={safePage === 1}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                      safePage === 1
-                        ? 'text-gray-300 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                    Prev
-                  </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                        page === safePage
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                  <button
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={safePage === totalPages}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                      safePage === totalPages
-                        ? 'text-gray-300 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    Next
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {paginatedEntries.map((entry) =>
+            {visibleEntries.map((entry) =>
               entry.kind === 'audit' ? (
                 <AuditRow
                   key={`audit-${entry.data.id}`}
@@ -603,56 +552,17 @@ const History: React.FC = () => {
               )
             )}
 
-            {/* Pagination bar */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between pt-4 mt-4 border-t border-black/[0.06]">
-                <p className="text-[13px] text-gray-500">
-                  Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
-                </p>
-                <div className="flex items-center gap-1">
-                  {/* Prev button */}
-                  <button
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={safePage === 1}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                      safePage === 1
-                        ? 'text-gray-300 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                    Prev
-                  </button>
-
-                  {/* Page number buttons */}
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                        page === safePage
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-
-                  {/* Next button */}
-                  <button
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={safePage === totalPages}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                      safePage === totalPages
-                        ? 'text-gray-300 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    Next
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+            {/* Load more button */}
+            {hasMore && (
+              <div className="flex justify-center pt-4">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-[13px] font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 disabled:opacity-60 transition-all duration-150"
+                >
+                  {loadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  {loadingMore ? 'Loading…' : `Load more (${totalFiltered - visibleCount} remaining)`}
+                </button>
               </div>
             )}
           </div>
