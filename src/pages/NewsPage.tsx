@@ -15,7 +15,7 @@ const categoryColors: Record<string, string> = {
 
 const NewsPage: React.FC = () => {
   const navigate = useNavigate();
-  const articles = getAllArticles();
+  const sortedArticles = getAllArticles().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [customersDropdownOpen, setCustomersDropdownOpen] = useState(false);
@@ -227,7 +227,7 @@ const NewsPage: React.FC = () => {
               AHPRA &amp; TGA compliance news
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
-              The latest updates, press releases, and industry insights from SafePost.
+              The latest updates, press releases, and industry insights from SafePost
             </p>
           </div>
         </div>
@@ -236,11 +236,11 @@ const NewsPage: React.FC = () => {
       {/* Articles Grid */}
       <section className="w-full pb-24 md:pb-32" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6">
-          {articles.length === 0 ? (
+          {sortedArticles.length === 0 ? (
             <p className="text-gray-500 text-[14px]">No articles yet. Check back soon.</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.map((article) => (
+              {sortedArticles.map((article) => (
                 <Link
                   key={article.slug}
                   to={`/news/${article.slug}`}
