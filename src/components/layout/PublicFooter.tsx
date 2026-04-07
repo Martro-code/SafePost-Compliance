@@ -13,7 +13,7 @@ const PublicFooter = () => {
             <span className="text-[#2563EB]">Post</span>™
           </div>
           <p className="text-[13px] text-gray-500 leading-relaxed max-w-[360px]">
-            Checks your online advertising and social media content against AHPRA and TGA rules — before you publish, not&nbsp;after.
+            Checks your social media, online advertising and website content against AHPRA and TGA rules — before you publish, not&nbsp;after.
           </p>
         </div>
 
@@ -66,7 +66,7 @@ const PublicFooter = () => {
               <li><button onClick={() => navigate('/terms-of-use')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Software Terms of Use</button></li>
               <li><button onClick={() => navigate('/website-terms')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Website Terms of Use</button></li>
               <li><button onClick={() => navigate('/privacy-policy')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Privacy Policy</button></li>
-              <li><button onClick={() => navigate('/cookie-policy')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Cookie Policy</button></li>
+              <li><button onClick={() => navigate('/cookie-policy')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Cookies Policy</button></li>
             </ul>
           </div>
         </div>

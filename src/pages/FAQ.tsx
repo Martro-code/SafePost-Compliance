@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink, CheckCircle } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
@@ -34,6 +35,7 @@ const FAQ: React.FC = () => {
     'Full compliance history & audit trail',
     'No prompt engineering or expertise required',
     'Before/after photo analysis',
+    'Page-by-page website compliance audit',
     'Star rating risk assessment',
     'Team access & shared history on Pro+ and Ultra plans',
   ];
@@ -44,7 +46,7 @@ const FAQ: React.FC = () => {
       items: [
         {
           question: 'Why was SafePost built?',
-          answer: 'Australian medical practitioners and practices face real consequences for non-compliant social media content and online advertising \u2014 from formal AHPRA complaints to TGA enforcement action. SafePost was built to give practitioners an instant, reliable way to check their content before posting, without needing to read hundreds of pages of guidelines.',
+          answer: 'Australian medical practitioners and practices face real consequences for non-compliant social media content, online advertising and website content \u2014 from formal AHPRA complaints to TGA enforcement action. SafePost was built to give practitioners an instant, reliable way to check their content before publishing, without needing to read hundreds of pages of guidelines.',
         },
         {
           question: 'Who is SafePost for?',
@@ -65,7 +67,7 @@ const FAQ: React.FC = () => {
       items: [
         {
           question: 'What types of content can I check?',
-          answer: 'SafePost analyses social media posts, online advertising copy, website content, email marketing, and any other text-based content intended for public audiences. You can also attach images for visual content analysis including before/after photos and star ratings.',
+          answer: 'SafePost analyses social media posts, online advertising copy, website content, email marketing, and any other text-based content intended for public audiences. You can also attach images for visual content analysis including before/after photos and star ratings. Subscribers can also run a full Website Compliance Audit \u2014 a guided page-by-page review of their practice website for $149 AUD (incl. GST).',
         },
         {
           question: 'Can SafePost guarantee my content will be compliant?',
@@ -73,7 +75,7 @@ const FAQ: React.FC = () => {
         },
         {
           question: 'How does SafePost handle before/after photos?',
-          answer: 'Before/after photos are assessed under AHPRA\u2019s specific prohibition on such imagery in health practitioner advertising. SafePost flags these under the correct AHPRA framework and provides guidance on compliant alternatives.',
+          answer: 'Before/after photos are assessed under AHPRA\u2019s specific prohibition on such imagery in health practitioner advertising. SafePost flags these under the correct AHPRA framework and provides guidance on suggested alternatives.',
         },
         {
           question: 'How current are the compliance rules?',
@@ -86,7 +88,7 @@ const FAQ: React.FC = () => {
       items: [
         {
           question: 'Can I try SafePost before paying?',
-          answer: 'Yes \u2014 the Starter plan is free with 3 compliance checks included. No credit card required.',
+          answer: 'Yes \u2014 the Starter plan is free with 5 compliance checks included. No credit card required.',
         },
         {
           question: 'Can I upgrade or downgrade my plan at any time?',
@@ -127,10 +129,10 @@ const FAQ: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Got questions? We've got answers.
+            Got questions about AHPRA &amp; TGA compliance?
           </h1>
           <p className="text-lg text-gray-500">
-            Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works.
+            Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works
           </p>
         </div>
       </section>
@@ -157,7 +159,7 @@ const FAQ: React.FC = () => {
                 Every compliance check is logged in your account history, giving you documented evidence of due diligence if AHPRA ever investigates.
               </p>
               <p className="text-[15px] text-gray-400 leading-relaxed">
-                174 AHPRA and TGA rules are built into every check. Paste your content and get a compliance verdict in seconds — no prompting, no expertise required.
+                174 AHPRA and TGA rules are built into every check. Paste your content and get a compliance assessment in seconds — no prompting, no expertise required.
               </p>
               <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 <button
@@ -238,6 +240,10 @@ const FAQ: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>FAQ — SafePost Compliance Checker</title>
+        <meta name="description" content="Answers to common questions about how SafePost works, what it checks, AHPRA and TGA advertising rules, and your subscription." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">

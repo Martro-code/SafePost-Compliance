@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, Check, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import FAQSection from '../components/ui/FAQSection';
+import AuditWaitlistSection from '../components/ui/AuditWaitlistSection';
 import PublicFooter from '../components/layout/PublicFooter';
 import { trackUpgradeInitiated } from '../services/analytics';
 
@@ -33,7 +35,7 @@ const PricingMedicalPractices: React.FC = () => {
   const faqs = [
     {
       question: 'What\u2019s the difference between the plans for practices?',
-      answer: 'The key differences are check volume, team size, and history access. Pro+ suits a single-practitioner practice (100 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
+      answer: 'The key differences are check volume, team size, and history access. Pro+ suits a single-practitioner practice (50 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
     },
     {
       question: 'Can multiple staff members use the same SafePost account?',
@@ -55,6 +57,10 @@ const PricingMedicalPractices: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>Pricing for Medical Practices — SafePost</title>
+        <meta name="description" content="Team plans for Australian medical practices. Check all your staff's social media posts for AHPRA and TGA compliance from one account." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -78,7 +84,7 @@ const PricingMedicalPractices: React.FC = () => {
                 <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${pricingDropdownOpen ? 'rotate-180' : ''}`} />
               </button>
               {pricingDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in z-50">
                   <button onClick={() => navigate('/pricing/medical-practitioners')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
                     Practitioners
                   </button>
@@ -288,7 +294,7 @@ const PricingMedicalPractices: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-10 md:pb-12 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Pricing for practices
+            AHPRA &amp; TGA compliance pricing for practices
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl mx-auto">
             Choose the right plan for your practice
@@ -337,12 +343,12 @@ const PricingMedicalPractices: React.FC = () => {
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$490' : '$49'}</span>
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$390' : '$39'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">{isYearly ? '/year' : '/month (incl. GST)'}</span>
                 </div>
                 {isYearly && (
                   <p className="text-[12px] text-gray-400 mt-1.5 flex items-center gap-1.5">
-                    $41/month
+                    $32/month
                     <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none">
                       2 months free
                     </span>
@@ -356,7 +362,7 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">100 compliance checks per month</span>
+                  <span className="text-[14px] text-gray-600">50 compliance checks per month</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -364,7 +370,7 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliance history (last 100 checks)</span>
+                  <span className="text-[14px] text-gray-600">Compliance history (last 50 checks)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -395,12 +401,12 @@ const PricingMedicalPractices: React.FC = () => {
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$1,490' : '$149'}</span>
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$990' : '$99'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">{isYearly ? '/year' : '/month (incl. GST)'}</span>
                 </div>
                 {isYearly && (
                   <p className="text-[12px] text-gray-400 mt-1.5 flex items-center gap-1.5">
-                    $124/month
+                    $82/month
                     <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none">
                       2 months free
                     </span>
@@ -455,6 +461,9 @@ const PricingMedicalPractices: React.FC = () => {
         </div>
       </section>
 
+      {/* Website Compliance Audit Waitlist */}
+      <AuditWaitlistSection plan="medical_practice" />
+
       {/* FAQ Section */}
       <FAQSection
         title="Frequently asked questions"
@@ -465,10 +474,10 @@ const PricingMedicalPractices: React.FC = () => {
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to stay compliant?
+            Ready to check your compliance?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Get your practice set up with SafePost and keep your entire team compliant
+            Get your practice set up with SafePost and keep your entire team across AHPRA and TGA requirements
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button

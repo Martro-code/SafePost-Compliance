@@ -53,7 +53,7 @@ const Dashboard: React.FC = () => {
   const [documentFile, setDocumentFile] = useState<File | null>(null);
   const [isExtractingText, setIsExtractingText] = useState(false);
   const [extractionError, setExtractionError] = useState<string | null>(null);
-  const [pdfError, setPdfError] = useState(false);
+  const [pdfBase64, setPdfBase64] = useState<string | null>(null);
   const documentInputRef = useRef<HTMLInputElement>(null);
 
   // Bulk upload state
@@ -100,7 +100,7 @@ const Dashboard: React.FC = () => {
       setAttachedFile(null);
       setDocumentFile(null);
       setExtractionError(null);
-      setPdfError(false);
+      setPdfBase64(null);
       setView('input');
       checker.resetChecker();
     };
@@ -167,17 +167,21 @@ const Dashboard: React.FC = () => {
   };
 
   const handleCheckCompliance = async () => {
-    if (!content.trim()) return;
+    if (!content.trim() && !pdfBase64) return;
     console.log('[handleCheckCompliance] submitting content to runCheck:', {
       length: content.length,
       preview: content.slice(0, 300),
       fromDocumentUpload: !!documentFile,
+      isPdf: !!pdfBase64,
     });
     setView('loading');
     setIsHistorical(false);
     setHistoricalCheckedAt(undefined);
     trackComplianceCheckRun('general', 'social_media_post');
-    await checker.runCheck(content);
+    await checker.runCheck(content, 'social_media_post', 'general', {
+      pdfBase64: pdfBase64 ?? undefined,
+      onExtractedText: setContent,
+    });
     setView('results');
   };
 
@@ -186,7 +190,7 @@ const Dashboard: React.FC = () => {
     setAttachedFile(null);
     setDocumentFile(null);
     setExtractionError(null);
-    setPdfError(false);
+    setPdfBase64(null);
     setView('input');
     setIsHistorical(false);
     setHistoricalCheckedAt(undefined);
@@ -200,15 +204,25 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  // Document upload: extract text from .txt/.docx → populate textarea for review
+  // Document upload: extract text from .txt/.docx → populate textarea; for .pdf → store base64
   const handleDocumentUpload = async (file: File) => {
     setDocumentFile(file);
     setAttachedFile(null); // mutual exclusivity
+    setPdfBase64(null);
     setIsExtractingText(true);
     setExtractionError(null);
     try {
-      const text = await extractTextFromFile(file);
+      const result = await extractTextFromFile(file);
 
+      if (result.type === 'pdf') {
+        // PDF: store base64 for server-side analysis; Claude will extract the text
+        setPdfBase64(result.base64);
+        setContent('');
+        return;
+      }
+
+      // .txt / .docx: populate textarea for review before submitting
+      const text = result.content;
       console.log('[handleDocumentUpload] extracted text result:', {
         fileName: file.name,
         length: text.length,
@@ -236,14 +250,7 @@ const Dashboard: React.FC = () => {
 
   const handleDocumentFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.name.toLowerCase().endsWith('.pdf')) {
-        setPdfError(true);
-        e.target.value = '';
-        return;
-      }
-      setPdfError(false);
-      handleDocumentUpload(file);
+      handleDocumentUpload(e.target.files[0]);
     }
   };
 
@@ -292,7 +299,7 @@ const Dashboard: React.FC = () => {
             {/* Welcome */}
             <div>
               <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2 dark:text-white">
-                {firstName ? `Welcome back, ${firstName}!` : 'Welcome back!'}
+                Welcome back!
               </h2>
               <p className="text-[14px] text-gray-500 dark:text-gray-300">
                 Instant AHPRA and TGA compliance check for medical practitioners and practices
@@ -354,7 +361,7 @@ const Dashboard: React.FC = () => {
                     <FileUp className="w-3.5 h-3.5" />
                     <span className="truncate">{documentFile.name}</span>
                     <button
-                      onClick={() => { setDocumentFile(null); setContent(''); setExtractionError(null); }}
+                      onClick={() => { setDocumentFile(null); setContent(''); setPdfBase64(null); setExtractionError(null); }}
                       className="text-gray-400 hover:text-gray-600 ml-1"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -390,7 +397,7 @@ const Dashboard: React.FC = () => {
                       {isExtractingText ? (
                         <><Loader2 className="w-4 h-4 animate-spin" />Extracting text...</>
                       ) : (
-                        <><FileUp className="w-4 h-4" />Upload document (.txt, .docx)</>
+                        <><FileUp className="w-4 h-4" />Upload document (.txt, .docx, .pdf)</>
                       )}
                     </button>
                     <input
@@ -400,20 +407,6 @@ const Dashboard: React.FC = () => {
                       onChange={handleDocumentFileChange}
                       className="hidden"
                     />
-                    {pdfError && (
-                      <div className="flex items-start gap-2 px-3 py-2.5 bg-red-50 border border-red-200 rounded-lg dark:bg-red-950 dark:border-red-800">
-                        <XCircle className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" />
-                        <p className="text-[12px] text-red-600 dark:text-red-400 flex-1">
-                          PDF files are not currently supported. Please save your content as a .txt or .docx file, or paste it directly into the text area.
-                        </p>
-                        <button
-                          onClick={() => setPdfError(false)}
-                          className="text-red-400 hover:text-red-600 dark:text-red-500 dark:hover:text-red-300 flex-shrink-0"
-                        >
-                          <X className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    )}
                   </>
                 )}
 
@@ -455,7 +448,7 @@ const Dashboard: React.FC = () => {
                 ) : (
                   <button
                     onClick={handleCheckCompliance}
-                    disabled={!content.trim()}
+                    disabled={!content.trim() && !pdfBase64}
                     className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30 flex items-center justify-center gap-2.5"
                   >
                     Check compliance
@@ -638,7 +631,7 @@ const Dashboard: React.FC = () => {
                   </li>
                   <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                     <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    AI-powered compliant rewrites
+                    AI-powered suggested rewrites
                   </li>
                   <li className="flex items-center gap-2.5 text-[13px] text-gray-700 dark:text-white">
                     <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />

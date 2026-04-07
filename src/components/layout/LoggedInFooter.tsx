@@ -11,7 +11,7 @@ const LoggedInFooter = () => {
               <span className="text-[#2563EB]">Post</span>™
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed mt-2 max-w-[200px]">
-              Checks your online advertising and social media content against AHPRA and TGA rules — before you publish, not after.
+              Checks your social media, online advertising and website content against AHPRA and TGA rules — before you publish, not after.
             </p>
           </div>
 
@@ -30,7 +30,7 @@ const LoggedInFooter = () => {
               <li><Link to="/terms-of-use" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Software Terms of Use</Link></li>
               <li><Link to="/website-terms" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Website Terms of Use</Link></li>
               <li><Link to="/privacy-policy" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Privacy Policy</Link></li>
-              <li><Link to="/cookie-policy" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Cookie Policy</Link></li>
+              <li><Link to="/cookie-policy" className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200 dark:text-gray-400 dark:hover:text-white">Cookies Policy</Link></li>
             </ul>
           </div>
 

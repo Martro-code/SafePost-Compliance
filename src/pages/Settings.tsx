@@ -80,7 +80,7 @@ const Settings: React.FC = () => {
         .maybeSingle();
 
       if (error) {
-        console.error('Failed to load preferences:', error);
+        // Fail silently — preferences table may not exist yet
         return;
       }
 
@@ -257,8 +257,8 @@ const Settings: React.FC = () => {
             </div>
           </div>
 
-          {/* Setting 2 — In-app notifications */}
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700">
+          {/* Setting 2 — In-app notifications (temporarily hidden) */}
+          {false && <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700">
             {/* Master row */}
             <div className="flex items-center justify-between p-5 md:px-6">
               <div className="flex items-center gap-3">
@@ -371,10 +371,10 @@ const Settings: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div>}
 
-          {/* Setting 3 — Email preferences */}
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700">
+          {/* Setting 3 — Email preferences (temporarily hidden) */}
+          {false && <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700">
             {/* Master row */}
             <div className="flex items-center justify-between p-5 md:px-6">
               <div className="flex items-center gap-3">
@@ -516,7 +516,7 @@ const Settings: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div>}
 
           {/* Setting 4 — Two-factor authentication */}
           <button

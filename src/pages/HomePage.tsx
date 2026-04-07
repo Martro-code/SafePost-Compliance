@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, ShieldAlert, Star, Compass, Play, Layers, FileText, BadgeCheck, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
@@ -61,6 +62,10 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
+      <Helmet>
+        <title>SafePost — AI-Powered AHPRA &amp; TGA Compliance Checker</title>
+        <meta name="description" content="Check your social media posts for AHPRA and TGA compliance in seconds. AI-powered analysis built for Australian medical practitioners and practices." />
+      </Helmet>
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -295,11 +300,10 @@ const HomePage: React.FC = () => {
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20">
           <div className="max-w-3xl">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.08] text-gray-900 mb-6 text-balance">
-              Navigate your online presence. Stay{' '}
-              <span className="text-[#2563EB]">AHPRA and TGA compliant.</span>
+              Check your posts, ads and website for AHPRA and TGA compliance<span className="text-[#2563EB]"> before they go live.</span>
             </h1>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-2xl">
-              Instant social media and online advertising compliance checks for Australian medical practitioners and practices.
+              AI-powered compliance checking for Australian medical practitioners and practices. Built for social media, online advertising and your practice website.
             </p>
           </div>
           {/* Hero image/banner placeholder — add your image here */}
@@ -374,10 +378,10 @@ const HomePage: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
               <div className="text-5xl font-extrabold text-blue-600/20 mb-5">1</div>
               <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
-                Paste your content
+                Add your content or URLs
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Copy and paste your social media post, ad copy, or marketing content directly into the tool — no setup required.
+                Paste your social media post, ad copy or website page URL directly into SafePost — no setup required.
               </p>
             </div>
 
@@ -385,10 +389,10 @@ const HomePage: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
               <div className="text-5xl font-extrabold text-blue-600/20 mb-5">2</div>
               <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
-                Get instant analysis
+                Get instant compliance analysis
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                SafePost analyses your content against AHPRA and TGA compliance guidelines and flags specific issues with direct references to the relevant rules and sections.
+                SafePost analyses your content against 174 AHPRA and TGA rules and flags specific issues with direct references to the relevant guidelines.
               </p>
             </div>
 
@@ -396,10 +400,10 @@ const HomePage: React.FC = () => {
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm text-center">
               <div className="text-5xl font-extrabold text-blue-600/20 mb-5">3</div>
               <h3 className="text-lg font-bold text-gray-900 mb-3 leading-snug">
-                Receive compliant alternatives
+                Act on your results
               </h3>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Get ready-to-use rewritten versions of your content that meet AHPRA and TGA regulatory requirements — so you can post with confidence.
+                Receive severity-rated findings, suggested alternatives for posts and ads, and a full downloadable report for website audits — so you can publish with confidence.
               </p>
             </div>
           </div>
@@ -473,10 +477,10 @@ const HomePage: React.FC = () => {
                   See SafePost in action
                 </h2>
                 <p className="text-lg text-gray-500 leading-relaxed">
-                  Watch how SafePost identifies AHPRA and TGA compliance issues and generates compliant alternatives in seconds.
+                  Watch how SafePost identifies AHPRA and TGA compliance issues and generates suggested alternatives in seconds.
                 </p>
                 <p className="text-[15px] text-gray-400 leading-relaxed">
-                  SafePost analyses your social media posts and advertising content against AHPRA and TGA advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use compliant alternatives.
+                  SafePost analyses your social media posts, advertising content and practice website against AHPRA and TGA advertising guidelines, highlights specific breaches with guideline references, and provides ready-to-use suggested alternatives.
                 </p>
                 <div className="pt-2 flex flex-col sm:flex-row gap-3">
                   <button
@@ -539,7 +543,7 @@ const HomePage: React.FC = () => {
                   Comprehensive coverage
                 </h3>
                 <p className="text-[14px] text-gray-500 leading-relaxed">
-                  Analyses posts against Section 133 of the Health Practitioner Regulation National Law Act 2009, testimonial restrictions, before/after photo regulations, cosmetic procedure advertising rules, and professional conduct standards.
+                  Analyses your posts, ads and website pages against Section 133 of the Health Practitioner Regulation National Law Act 2009, testimonial restrictions, before/after photo regulations, cosmetic procedure advertising rules, and professional conduct standards.
                 </p>
               </div>
 
@@ -576,10 +580,10 @@ const HomePage: React.FC = () => {
         <section className="w-full bg-white">
           <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Try SafePost now
+              Try SafePost free today
             </h2>
             <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-              Protect your practice with instant AHPRA and TGA social media and advertising compliance checks
+              Protect your practice with instant AHPRA and TGA social media, advertising and website compliance checks
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button

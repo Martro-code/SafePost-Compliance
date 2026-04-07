@@ -4,11 +4,13 @@ import {
   ArrowLeft, Clock,
   CheckCircle2, XCircle, AlertTriangle, Loader2, Search,
   Filter, Trash2, ChevronRight,
-  ChevronLeft, X, ShieldOff
+  X, ShieldOff, Globe,
 } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useComplianceChecker, SavedComplianceCheck, HISTORY_LIMITS } from '../hooks/useComplianceChecker';
 import { useAccount } from '../context/AccountContext';
+import { supabase } from '../services/supabaseClient';
+import { AuditSession, AuditStep } from '../types/audit';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 const statusConfig: Record<string, {
@@ -53,6 +55,16 @@ function getStatusConfig(status: string) {
   return statusConfig[status] ?? statusConfig.warning;
 }
 
+function getStatusDisplayLabel(status: string): string {
+  const statusMap: Record<string, string> = {
+    'Compliant': 'No issues detected',
+    'Non-compliant': 'Potential breaches detected',
+    'Requires review': 'Requires review',
+    'Conduct Risk': 'Conduct risk',
+  };
+  return statusMap[status] || status;
+}
+
 function formatDate(dateStr: string): string {
   const date = new Date(dateStr);
   return date.toLocaleDateString('en-AU', {
@@ -80,7 +92,69 @@ function formatDateShort(dateStr: string): string {
   return date.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
 }
 
-const PAGE_SIZE = 10;
+const LOAD_MORE_SIZE = 20;
+
+// ─── Audit helpers ────────────────────────────────────────────────────────────
+
+function computeAuditScore(steps: AuditStep[]): { score: number; analysedCount: number } {
+  const analysed = steps.filter(
+    (s) => s.status === 'complete' && s.result && s.result.complianceStatus !== 'skipped'
+  );
+  const pass = analysed.filter((s) => s.result?.complianceStatus === 'pass').length;
+  const warn = analysed.filter((s) => s.result?.complianceStatus === 'warning').length;
+  const score = analysed.length > 0
+    ? Math.round(((pass + warn * 0.5) / analysed.length) * 100)
+    : 0;
+  return { score, analysedCount: analysed.length };
+}
+
+// ─── Unified entry type ───────────────────────────────────────────────────────
+
+type MergedEntry =
+  | { kind: 'check'; data: SavedComplianceCheck; created_at: string }
+  | { kind: 'audit'; data: AuditSession; created_at: string; score: number; analysedCount: number };
+
+// ─── Audit Row Component ──────────────────────────────────────────────────────
+
+const AuditRow: React.FC<{ entry: MergedEntry & { kind: 'audit' }; onView: () => void }> = ({ entry, onView }) => {
+  const { data: session, score, analysedCount } = entry;
+  const dateStr = new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
+    day: 'numeric', month: 'short', year: 'numeric',
+  });
+  const scoreBadge = score >= 80
+    ? 'bg-green-50 text-green-700 border-green-200'
+    : score >= 50
+    ? 'bg-amber-50 text-amber-700 border-amber-200'
+    : 'bg-red-50 text-red-700 border-red-200';
+
+  return (
+    <div
+      onClick={onView}
+      className="bg-white rounded-xl border border-gray-100 border-l-4 border-l-blue-400 shadow-sm shadow-black/[0.02] hover:shadow-md hover:shadow-black/[0.04] transition-all duration-200 cursor-pointer overflow-visible"
+    >
+      <div className="flex items-center gap-3 p-4 md:p-5">
+        <Globe className="w-4 h-4 text-blue-500 flex-shrink-0" />
+        <div className="flex-1 min-w-0">
+          <p className="text-[14px] font-medium text-gray-800 leading-snug">Website Compliance Audit</p>
+          <p className="text-[11px] text-gray-400 mt-0.5">
+            {dateStr} · {analysedCount} page{analysedCount !== 1 ? 's' : ''} analysed
+          </p>
+        </div>
+        <span className={`inline-flex items-center justify-center px-2 py-0.5 rounded-md text-[11px] font-semibold whitespace-nowrap flex-shrink-0 border ${scoreBadge}`}>
+          Score: {score}%
+        </span>
+        <span className="text-[11px] text-gray-400 flex items-center gap-1 flex-shrink-0">
+          <Clock className="w-3 h-3" />
+          {formatDateShort(session.updated_at || session.created_at)}
+        </span>
+        <span className="flex items-center gap-1 text-[12px] font-medium text-blue-600 flex-shrink-0">
+          View Report
+          <ChevronRight className="w-3.5 h-3.5" />
+        </span>
+      </div>
+    </div>
+  );
+};
 
 // ─── Check Row Component ──────────────────────────────────────────────────────
 const CheckRow: React.FC<{
@@ -104,7 +178,7 @@ const CheckRow: React.FC<{
 
         {/* Status badge */}
         <span className={`inline-flex items-center justify-center min-w-[140px] px-2 py-0.5 rounded-md text-[11px] font-semibold whitespace-nowrap flex-shrink-0 ${cfg.badge}`}>
-          {cfg.label}
+          {getStatusDisplayLabel(cfg.label)}
         </span>
 
         {/* Relative timestamp with absolute-date tooltip */}
@@ -176,16 +250,33 @@ const History: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [filterOpen, setFilterOpen] = useState(false);
 
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
+  // Load-more state
+  const [visibleCount, setVisibleCount] = useState(LOAD_MORE_SIZE);
+  const [loadingMore, setLoadingMore] = useState(false);
 
   // Plan limit banner dismissal
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
-  // Load history on mount
+  // Audit sessions
+  const [auditSessions, setAuditSessions] = useState<AuditSession[]>([]);
+
+  // Load history and audit sessions on mount
   useEffect(() => {
     checker.loadHistory();
   }, []);
+
+  useEffect(() => {
+    if (!accountId) return;
+    supabase
+      .from('audit_sessions')
+      .select('*')
+      .eq('account_id', accountId)
+      .eq('status', 'complete')
+      .order('updated_at', { ascending: false })
+      .then(({ data }) => {
+        if (data) setAuditSessions(data as AuditSession[]);
+      });
+  }, [accountId]);
 
   // Auto-open a check navigated from Dashboard sidebar
   useEffect(() => {
@@ -233,25 +324,42 @@ const History: React.FC = () => {
     });
   };
 
-  // Filter logic
-  const filteredHistory = checker.history.filter(check => {
+  // Filter logic — applies to compliance checks only
+  const filteredChecks = checker.history.filter(check => {
     const matchesSearch = searchQuery === '' ||
       check.content_text?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || check.overall_status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
-  // Pagination
-  const totalFiltered = filteredHistory.length;
-  const totalPages = Math.max(1, Math.ceil(totalFiltered / PAGE_SIZE));
-  const safePage = Math.min(currentPage, totalPages);
-  const startIdx = (safePage - 1) * PAGE_SIZE;
-  const endIdx = Math.min(startIdx + PAGE_SIZE, totalFiltered);
-  const paginatedHistory = filteredHistory.slice(startIdx, endIdx);
+  // Build merged sorted list: audit sessions always included, checks filtered
+  const mergedEntries: MergedEntry[] = [
+    ...filteredChecks.map((c): MergedEntry => ({
+      kind: 'check',
+      data: c,
+      created_at: c.created_at,
+    })),
+    ...auditSessions.map((s): MergedEntry => {
+      const { score, analysedCount } = computeAuditScore(s.steps);
+      return { kind: 'audit', data: s, created_at: s.updated_at || s.created_at, score, analysedCount };
+    }),
+  ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
-  // Reset to page 1 when filters change
+  // Load-more slice
+  const totalFiltered = mergedEntries.length;
+  const visibleEntries = mergedEntries.slice(0, visibleCount);
+  const hasMore = totalFiltered > visibleCount;
+
+  const handleLoadMore = async () => {
+    setLoadingMore(true);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setVisibleCount(c => c + LOAD_MORE_SIZE);
+    setLoadingMore(false);
+  };
+
+  // Reset visible count when filters change
   useEffect(() => {
-    setCurrentPage(1);
+    setVisibleCount(LOAD_MORE_SIZE);
   }, [searchQuery, statusFilter]);
 
   // Stats
@@ -318,10 +426,10 @@ const History: React.FC = () => {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
             {[
               { label: 'Total checks', value: totalChecks, color: 'text-gray-700', darkColor: '', bg: 'bg-white', darkBg: '' },
-              { label: 'Compliant', value: compliantCount, color: 'text-emerald-700', darkColor: '', bg: 'bg-emerald-50', darkBg: '' },
-              { label: 'Non-compliant', value: nonCompliantCount, color: 'text-red-700', darkColor: '', bg: 'bg-red-50', darkBg: '' },
+              { label: 'No issues detected', value: compliantCount, color: 'text-emerald-700', darkColor: '', bg: 'bg-emerald-50', darkBg: '' },
+              { label: 'Potential breaches detected', value: nonCompliantCount, color: 'text-red-700', darkColor: '', bg: 'bg-red-50', darkBg: '' },
               { label: 'Requires review', value: reviewCount, color: 'text-amber-700', darkColor: '', bg: 'bg-amber-50', darkBg: '' },
-              { label: 'Conduct Risk', value: conductRiskCount, color: 'text-purple-700', darkColor: 'dark:text-purple-400', bg: 'bg-purple-50', darkBg: 'dark:bg-purple-900/20' },
+              { label: 'Conduct risk', value: conductRiskCount, color: 'text-purple-700', darkColor: 'dark:text-purple-400', bg: 'bg-purple-50', darkBg: 'dark:bg-purple-900/20' },
             ].map(stat => (
               <div key={stat.label} className={`${stat.bg} ${stat.darkBg} rounded-xl border border-black/[0.06] p-4`}>
                 <p className={`text-2xl font-extrabold ${stat.color} ${stat.darkColor}`}>{stat.value}</p>
@@ -357,16 +465,16 @@ const History: React.FC = () => {
                 }`}
               >
                 <Filter className="w-3.5 h-3.5" />
-                {statusFilter === 'all' ? 'All' : getStatusConfig(statusFilter).label}
+                {statusFilter === 'all' ? 'All' : getStatusDisplayLabel(getStatusConfig(statusFilter).label)}
               </button>
               {filterOpen && (
                 <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg py-1.5 z-10">
                   {[
                     { value: 'all', label: 'All checks' },
-                    { value: 'compliant', label: 'Compliant' },
-                    { value: 'non_compliant', label: 'Non-compliant' },
+                    { value: 'compliant', label: 'No issues detected' },
+                    { value: 'non_compliant', label: 'Potential breaches detected' },
                     { value: 'requires_review', label: 'Requires review' },
-                    { value: 'conduct_risk', label: 'Conduct Risk' },
+                    { value: 'conduct_risk', label: 'Conduct risk' },
                   ].map(option => (
                     <button
                       key={option.value}
@@ -387,12 +495,7 @@ const History: React.FC = () => {
         )}
 
         {/* Content area */}
-        {checker.isLoadingHistory ? (
-          <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center gap-3">
-            <Loader2 className="w-7 h-7 text-blue-500 animate-spin" />
-            <p className="text-[14px] text-gray-400 font-medium">Loading your compliance history...</p>
-          </div>
-        ) : totalChecks === 0 ? (
+        {checker.isLoadingHistory ? null : totalChecks === 0 && auditSessions.length === 0 ? (
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
             <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
               <Clock className="w-6 h-6 text-gray-400" />
@@ -408,7 +511,7 @@ const History: React.FC = () => {
               Go to Dashboard
             </button>
           </div>
-        ) : filteredHistory.length === 0 ? (
+        ) : mergedEntries.length === 0 ? (
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-10 text-center">
             <p className="text-[14px] text-gray-400">No checks match your search or filter.</p>
             <button
@@ -422,117 +525,38 @@ const History: React.FC = () => {
           <div className="space-y-2.5">
             {/* Results count */}
             <p className="text-[12px] text-gray-400 px-1 mb-3">
-              {totalFiltered} {totalFiltered === 1 ? 'check' : 'checks'}
+              {totalFiltered} {totalFiltered === 1 ? 'entry' : 'entries'}
               {statusFilter !== 'all' || searchQuery ? ' matching your filters' : ' total'}
             </p>
 
-            {/* Top pagination bar */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between pb-4 mb-4 border-b border-black/[0.06]">
-                <p className="text-[13px] text-gray-500">
-                  Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
-                </p>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={safePage === 1}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                      safePage === 1
-                        ? 'text-gray-300 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                    Prev
-                  </button>
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                        page === safePage
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-                  <button
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={safePage === totalPages}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                      safePage === totalPages
-                        ? 'text-gray-300 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    Next
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
+            {visibleEntries.map((entry) =>
+              entry.kind === 'audit' ? (
+                <AuditRow
+                  key={`audit-${entry.data.id}`}
+                  entry={entry}
+                  onView={() => navigate('/audit/report')}
+                />
+              ) : (
+                <CheckRow
+                  key={entry.data.id}
+                  check={entry.data}
+                  onView={handleViewCheck}
+                  onDelete={checker.deleteCheck}
+                />
+              )
             )}
 
-            {paginatedHistory.map((check) => (
-              <CheckRow
-                key={check.id}
-                check={check}
-                onView={handleViewCheck}
-                onDelete={checker.deleteCheck}
-              />
-            ))}
-
-            {/* Pagination bar */}
-            {totalPages > 1 && (
-              <div className="flex items-center justify-between pt-4 mt-4 border-t border-black/[0.06]">
-                <p className="text-[13px] text-gray-500">
-                  Showing {startIdx + 1}–{endIdx} of {totalFiltered} checks
-                </p>
-                <div className="flex items-center gap-1">
-                  {/* Prev button */}
-                  <button
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={safePage === 1}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                      safePage === 1
-                        ? 'text-gray-300 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                    Prev
-                  </button>
-
-                  {/* Page number buttons */}
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                    <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`w-8 h-8 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                        page === safePage
-                          ? 'bg-blue-600 text-white'
-                          : 'text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-                      }`}
-                    >
-                      {page}
-                    </button>
-                  ))}
-
-                  {/* Next button */}
-                  <button
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={safePage === totalPages}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-150 ${
-                      safePage === totalPages
-                        ? 'text-gray-300 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    Next
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+            {/* Load more button */}
+            {hasMore && (
+              <div className="flex justify-center pt-4">
+                <button
+                  onClick={handleLoadMore}
+                  disabled={loadingMore}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-[13px] font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 disabled:opacity-60 transition-all duration-150"
+                >
+                  {loadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                  {loadingMore ? 'Loading…' : `Load more (${totalFiltered - visibleCount} remaining)`}
+                </button>
               </div>
             )}
           </div>
