@@ -260,7 +260,7 @@ const About: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            About SafePost: AHPRA &amp; TGA compliance for Australian healthcare
+            About SafePost
           </h1>
           <p className="text-lg text-gray-500">
             Supporting Australian medical practitioners and practices with compliance confidence across everything they publish online
@@ -312,6 +312,16 @@ const About: React.FC = () => {
               </p>
             </div>
 
+            {/* Section 5 */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
+                Our vision is to make compliance the standard — not the exception
+              </h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                {"Today, SafePost helps Australian medical practitioners check their content before it goes live. But our vision reaches further. We believe there is a future where every doctor and medical practice has a single trusted platform they turn to for compliance confidence \u2014 not just for what they publish online, but for how they communicate with patients, how they market their services, and how they run their practice. A platform that sits alongside them the way a trusted adviser would. We\u2019re building toward that future, one compliance check at a time."}
+              </p>
+            </div>
+
             {/* SafePost Logo Divider */}
             <div className="py-16 flex justify-center">
               <img
@@ -339,7 +349,7 @@ const About: React.FC = () => {
                 {"It\u2019s a design that says compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
               </p>
               <p className="text-lg font-bold text-gray-900 leading-snug mt-4">
-                {"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}
+                {"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that everything you put online is something you can stand behind with complete confidence."}
               </p>
             </div>
           </div>
