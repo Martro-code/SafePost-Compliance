@@ -27,6 +27,20 @@ const Features: React.FC = () => {
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
 
+  const platformCategories = [
+    { category: 'Social networking', platforms: ['Facebook', 'X', 'WeChat', 'Weibo', 'WhatsApp'] },
+    { category: 'Professional networking', platforms: ['LinkedIn', 'Yammer'] },
+    { category: 'Discussion forums', platforms: ['Reddit', 'Whirlpool', 'Discord', 'Quora'] },
+    { category: 'Media sharing', platforms: ['YouTube', 'Flickr', 'Instagram', 'TikTok', 'Pinterest'] },
+    { category: 'Microblogging', platforms: ['Tumblr', 'Blogger', 'X'] },
+    { category: 'Audio publishing', platforms: ['Spotify', 'iTunes', 'Podcasts'] },
+    { category: 'Text publishing', platforms: ['Blogs', 'SlideShare'] },
+    { category: 'Knowledge aggregation', platforms: ['Wikipedia'] },
+    { category: 'Booking sites & apps', platforms: ['HealthEngine', 'Whitecoat', 'Podium'] },
+  ];
+  const [activeCategory, setActiveCategory] = useState('Social networking');
+  const activePlatforms = platformCategories.find(c => c.category === activeCategory)?.platforms ?? [];
+
   const resourceLinks = [
     { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
     { label: 'Code of Conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
@@ -404,24 +418,40 @@ const Features: React.FC = () => {
               </p>
             </div>
 
-            {/* Right Column — Platform List */}
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { category: 'Social networking', platforms: 'Facebook, X, WeChat, Weibo, WhatsApp' },
-                { category: 'Professional networking', platforms: 'LinkedIn, Yammer' },
-                { category: 'Discussion forums', platforms: 'Reddit, Whirlpool, Discord, Quora' },
-                { category: 'Media sharing', platforms: 'YouTube, Flickr, Instagram, TikTok, Pinterest' },
-                { category: 'Microblogging', platforms: 'Tumblr, Blogger, X' },
-                { category: 'Audio publishing', platforms: 'Spotify, iTunes, Podcasts' },
-                { category: 'Text publishing', platforms: 'Blogs, SlideShare' },
-                { category: 'Knowledge aggregation', platforms: 'Wikipedia' },
-                { category: 'Booking sites & apps', platforms: 'HealthEngine, Whitecoat, Podium' },
-              ].map((item, index) => (
-                <div key={index} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
-                  <span className="font-semibold text-slate-800 text-[14px]">{item.category}</span>
-                  <p className="text-[13px] text-slate-500 mt-1">{item.platforms}</p>
+            {/* Right Column — Tabbed Platform Selector */}
+            <div className="flex flex-col gap-4">
+              {/* Tab row — horizontally scrollable on mobile */}
+              <div className="overflow-x-auto">
+                <div className="flex flex-nowrap gap-2 pb-1">
+                  {platformCategories.map(({ category }) => (
+                    <button
+                      key={category}
+                      onClick={() => setActiveCategory(category)}
+                      className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[13px] font-medium transition-colors duration-150 whitespace-nowrap ${
+                        activeCategory === category
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                    >
+                      {category}
+                    </button>
+                  ))}
                 </div>
-              ))}
+              </div>
+
+              {/* Platform pills */}
+              <div className="bg-white rounded-2xl border border-black/[0.06] p-6 min-h-[100px]">
+                <div className="flex flex-wrap gap-2">
+                  {activePlatforms.map(platform => (
+                    <span
+                      key={platform}
+                      className="px-3 py-1.5 bg-slate-100 text-slate-700 text-[13px] font-medium rounded-full"
+                    >
+                      {platform}
+                    </span>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
 
