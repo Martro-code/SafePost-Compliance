@@ -60,13 +60,10 @@ const UpdatePersonalDetails: React.FC = () => {
         setAbnError('ABN verification service unavailable. Please try again.');
         setAbnVerified(false);
       } else if (!data?.valid) {
-        const edgeError = data?.error ?? '';
-        if (edgeError.includes('11 digits') || edgeError.includes('format')) {
-          setAbnError('Please enter a valid 11-digit ABN.');
-        } else if (edgeError.includes('unavailable') || edgeError.includes('unexpected') || edgeError.includes('configured')) {
-          setAbnError('ABN verification service unavailable. Please try again.');
-        } else {
+        if (data?.error === 'ABN_NOT_FOUND') {
           setAbnError('ABN not found or invalid. Please check your ABN and try again.');
+        } else {
+          setAbnError('ABN verification service unavailable. Please try again.');
         }
         setAbnVerified(false);
       } else {
