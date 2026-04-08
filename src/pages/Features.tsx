@@ -349,7 +349,7 @@ const Features: React.FC = () => {
 
       {/* Hero Image */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-2xl mx-auto px-6 mb-16 md:mb-20">
+        <div className="max-w-2xl mx-auto px-6 mb-10 md:mb-12">
           <img
             src={heroImage}
             alt="SafePost AHPRA and TGA compliance checking interface showing a post analysis result"
@@ -364,7 +364,7 @@ const Features: React.FC = () => {
 
       {/* Features Grid */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <div
@@ -388,7 +388,7 @@ const Features: React.FC = () => {
 
       {/* What is Social Media Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
             {/* Left Column — Text Content */}
             <div className="space-y-6">
@@ -430,7 +430,7 @@ const Features: React.FC = () => {
 
       {/* Website Compliance Audit */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
               Your website needs compliance checking too
@@ -462,7 +462,7 @@ const Features: React.FC = () => {
 
       {/* Call to Action */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Ready to get started?
           </h2>
