@@ -269,7 +269,6 @@ const SignUp: React.FC = () => {
       if (plan) params.set('plan', plan);
       if (billing) params.set('billing', billing);
       navigate(`/verify-email?${params.toString()}`);
-    }
   };
 
   return (
