@@ -113,3 +113,8 @@ jobs:
         run: supabase functions deploy fetch-url-content --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+
+      - name: Deploy sign-up
+        run: supabase functions deploy sign-up --no-verify-jwt --project-ref acvcwzaipsxyrwbxithc
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
