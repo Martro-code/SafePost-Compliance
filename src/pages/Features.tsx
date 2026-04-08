@@ -365,11 +365,11 @@ const Features: React.FC = () => {
       {/* Features Grid */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm"
+                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full"
               >
                 <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
                   {feature.icon}
