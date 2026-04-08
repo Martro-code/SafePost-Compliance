@@ -369,7 +369,7 @@ const Features: React.FC = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full min-h-[240px]"
+                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full flex flex-col min-h-[280px]"
               >
                 <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
                   {feature.icon}
@@ -377,7 +377,7 @@ const Features: React.FC = () => {
                 <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
                   {feature.heading}
                 </h3>
-                <p className="text-[14px] text-gray-500 leading-relaxed">
+                <p className="text-[14px] text-gray-500 leading-relaxed flex-grow">
                   {feature.description}
                 </p>
               </div>
@@ -439,11 +439,11 @@ const Features: React.FC = () => {
               Check your practice website page by page against AHPRA and TGA rules — and get a clear report on exactly what to fix.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {auditFeatures.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm"
+                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full flex flex-col min-h-[280px]"
               >
                 <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
                   {feature.icon}
@@ -451,7 +451,7 @@ const Features: React.FC = () => {
                 <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
                   {feature.heading}
                 </h3>
-                <p className="text-[14px] text-gray-500 leading-relaxed">
+                <p className="text-[14px] text-gray-500 leading-relaxed flex-grow">
                   {feature.description}
                 </p>
               </div>
