@@ -313,7 +313,7 @@ const HomePage: React.FC = () => {
 
       {/* Why AHPRA Compliance Matters */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-14 text-center">
             Why AHPRA and TGA compliance matters
           </h2>
@@ -363,7 +363,7 @@ const HomePage: React.FC = () => {
 
       {/* How It Works — 3 Steps */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="text-center mb-14">
             <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400">
               How it works
@@ -412,6 +412,7 @@ const HomePage: React.FC = () => {
 
       {/* Activities That May Trigger Ahpra Investigation */}
       <FAQSection
+        innerClassName="max-w-4xl mx-auto px-6 pt-12 pb-16 md:pb-20"
         title="Activities that may trigger investigation"
         subtitle="Online advertising and social media activities most likely to attract AHPRA and TGA scrutiny"
         groups={[
@@ -466,7 +467,7 @@ const HomePage: React.FC = () => {
       <main className="flex-grow flex flex-col items-center">
         {/* How It Works — Video Demo */}
         <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-          <div className="max-w-6xl mx-auto px-6 pt-4 md:pt-6 pb-24 md:pb-32">
+          <div className="max-w-6xl mx-auto px-6 pt-4 md:pt-6 pb-16 md:pb-20">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-stretch">
               {/* Left Column — Text Content */}
               <div className="space-y-6">
@@ -523,7 +524,7 @@ const HomePage: React.FC = () => {
 
         {/* Trust & Credibility Indicators */}
         <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-          <div className="max-w-6xl mx-auto px-6 pt-16 md:pt-20 pb-24 md:pb-32">
+          <div className="max-w-6xl mx-auto px-6 pt-12 md:pt-16 pb-16 md:pb-20">
             <div className="text-center mb-14">
               <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
                 Built on official AHPRA and TGA guidelines
@@ -578,7 +579,7 @@ const HomePage: React.FC = () => {
 
         {/* Call to Action */}
         <section className="w-full bg-white">
-          <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+          <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
               Try SafePost free today
             </h2>
