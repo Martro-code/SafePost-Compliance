@@ -369,7 +369,7 @@ const Features: React.FC = () => {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full"
+                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full min-h-[240px]"
               >
                 <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
                   {feature.icon}
