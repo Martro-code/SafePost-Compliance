@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History, Globe, AlertTriangle, ClipboardList, FileText, Shield, BadgeCheck } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History, Globe, AlertTriangle, ClipboardList, FileText, Shield, BadgeCheck } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import heroImage from '../assets/features-hero.png';
 import PublicFooter from '../components/layout/PublicFooter';
@@ -38,8 +38,27 @@ const Features: React.FC = () => {
     { category: 'Knowledge aggregation', platforms: ['Wikipedia'] },
     { category: 'Booking sites & apps', platforms: ['HealthEngine', 'Whitecoat', 'Podium'] },
   ];
-  const [activeCategory, setActiveCategory] = useState('Social networking');
-  const activePlatforms = platformCategories.find(c => c.category === activeCategory)?.platforms ?? [];
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [cardVisible, setCardVisible] = useState(true);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+  const goToCard = (index: number) => {
+    setCardVisible(false);
+    setTimeout(() => {
+      setCarouselIndex(index);
+      setCardVisible(true);
+    }, 150);
+  };
+  const prevCard = () => goToCard((carouselIndex - 1 + platformCategories.length) % platformCategories.length);
+  const nextCard = () => goToCard((carouselIndex + 1) % platformCategories.length);
+
+  const handleTouchStart = (e: React.TouchEvent) => setTouchStartX(e.touches[0].clientX);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? nextCard() : prevCard();
+    setTouchStartX(null);
+  };
 
   const resourceLinks = [
     { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
@@ -418,37 +437,65 @@ const Features: React.FC = () => {
               </p>
             </div>
 
-            {/* Right Column — Tabbed Platform Selector */}
+            {/* Right Column — Card Carousel */}
             <div className="flex flex-col gap-4">
-              {/* Tab row — horizontally scrollable on mobile */}
-              <div className="overflow-x-auto">
-                <div className="flex flex-nowrap gap-2 pb-1">
-                  {platformCategories.map(({ category }) => (
-                    <button
-                      key={category}
-                      onClick={() => setActiveCategory(category)}
-                      className={`flex-shrink-0 px-3 py-1.5 rounded-full text-[13px] font-medium transition-colors duration-150 whitespace-nowrap ${
-                        activeCategory === category
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                    >
-                      {category}
-                    </button>
-                  ))}
+              {/* Card row with arrows */}
+              <div className="flex items-center gap-3">
+                {/* Left arrow */}
+                <button
+                  onClick={prevCard}
+                  aria-label="Previous category"
+                  className="flex-shrink-0 w-11 h-11 rounded-full bg-white border border-black/[0.08] flex items-center justify-center text-gray-500 hover:text-gray-900 hover:border-black/[0.15] transition-all duration-200 active:scale-95"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+
+                {/* Card */}
+                <div
+                  className={`flex-1 bg-white rounded-2xl border border-black/[0.06] p-6 min-h-[160px] transition-opacity duration-150 ${cardVisible ? 'opacity-100' : 'opacity-0'}`}
+                  onTouchStart={handleTouchStart}
+                  onTouchEnd={handleTouchEnd}
+                >
+                  <h3 className="text-[15px] font-bold text-gray-900 mb-4">
+                    {platformCategories[carouselIndex].category}
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {platformCategories[carouselIndex].platforms.map(platform => (
+                      <span
+                        key={platform}
+                        className="px-3 py-1.5 bg-slate-100 text-slate-700 text-[13px] font-medium rounded-full"
+                      >
+                        {platform}
+                      </span>
+                    ))}
+                  </div>
                 </div>
+
+                {/* Right arrow */}
+                <button
+                  onClick={nextCard}
+                  aria-label="Next category"
+                  className="flex-shrink-0 w-11 h-11 rounded-full bg-white border border-black/[0.08] flex items-center justify-center text-gray-500 hover:text-gray-900 hover:border-black/[0.15] transition-all duration-200 active:scale-95"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
               </div>
 
-              {/* Platform pills */}
-              <div className="bg-white rounded-2xl border border-black/[0.06] p-6 min-h-[100px]">
-                <div className="flex flex-wrap gap-2">
-                  {activePlatforms.map(platform => (
-                    <span
-                      key={platform}
-                      className="px-3 py-1.5 bg-slate-100 text-slate-700 text-[13px] font-medium rounded-full"
-                    >
-                      {platform}
-                    </span>
+              {/* Counter and dot indicators */}
+              <div className="flex flex-col items-center gap-2.5">
+                <p className="text-[12px] text-gray-400">
+                  {carouselIndex + 1} of {platformCategories.length}
+                </p>
+                <div className="flex gap-1.5">
+                  {platformCategories.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => goToCard(i)}
+                      aria-label={`Go to category ${i + 1}`}
+                      className={`w-2 h-2 rounded-full transition-colors duration-200 ${
+                        i === carouselIndex ? 'bg-blue-600' : 'bg-slate-300 hover:bg-slate-400'
+                      }`}
+                    />
                   ))}
                 </div>
               </div>
