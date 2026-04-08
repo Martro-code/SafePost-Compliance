@@ -139,7 +139,7 @@ const FAQ: React.FC = () => {
 
       {/* Comparison Section — Two Column Layout */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400 mb-4">
             WHY SAFEPOST
           </span>
@@ -196,13 +196,14 @@ const FAQ: React.FC = () => {
 
       {/* FAQ Accordions */}
       <FAQSection
+        innerClassName="max-w-4xl mx-auto px-6 pt-12 pb-16 md:pb-20"
         title="Frequently asked questions"
         groups={faqGroups}
       />
 
       {/* Closing CTA */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Still have questions?
           </h2>

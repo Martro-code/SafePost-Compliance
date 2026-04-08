@@ -16,7 +16,7 @@ const AuditWaitlistSection: React.FC = () => {
 
   return (
     <section className="w-full bg-white border-t border-slate-200">
-      <div className="max-w-6xl mx-auto px-6 pt-20 pb-20">
+      <div className="max-w-6xl mx-auto px-6 pt-14 pb-14">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
 
           {/* Left column */}
