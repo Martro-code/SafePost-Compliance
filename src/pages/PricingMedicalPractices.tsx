@@ -333,7 +333,7 @@ const PricingMedicalPractices: React.FC = () => {
 
       {/* Pricing Cards */}
       <section id="plans" className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-20 md:pb-24">
+        <div className="max-w-4xl mx-auto px-6 pb-14 md:pb-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Pro+ Card */}
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 md:p-10 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm flex flex-col">
@@ -466,13 +466,14 @@ const PricingMedicalPractices: React.FC = () => {
 
       {/* FAQ Section */}
       <FAQSection
+        innerClassName="max-w-4xl mx-auto px-6 pt-12 pb-16 md:pb-20"
         title="Frequently asked questions"
         items={faqs}
       />
 
       {/* Call to Action */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Ready to check your compliance?
           </h2>

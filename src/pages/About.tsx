@@ -270,7 +270,7 @@ const About: React.FC = () => {
 
       {/* Main Content */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="max-w-[800px] mx-auto space-y-12">
             {/* Section 1 */}
             <div>
@@ -323,7 +323,7 @@ const About: React.FC = () => {
             </div>
 
             {/* SafePost Logo Divider */}
-            <div className="py-16 flex justify-center">
+            <div className="py-10 flex justify-center">
               <img
                 src={spLogo}
                 alt="SafePost logo"
@@ -358,7 +358,7 @@ const About: React.FC = () => {
 
       {/* Call to Action */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Ready to experience compliance confidence?
           </h2>
