@@ -307,7 +307,7 @@ const AuditFlow: React.FC = () => {
 
   return (
     <LoggedInLayout>
-      <div className="max-w-5xl mx-auto px-6 py-12">
+      <div className="max-w-5xl mx-auto px-6 pt-6 pb-12 md:pt-8">
         <button
           onClick={() => navigate('/dashboard')}
           className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
