@@ -102,6 +102,39 @@ const Features: React.FC = () => {
     },
   ];
 
+  const auditFeatures = [
+    {
+      icon: <Globe className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Page-by-page analysis',
+      description: 'Check up to 6 pages from your practice website — homepage, services, about, testimonials, pricing, and more.',
+    },
+    {
+      icon: <AlertTriangle className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Severity-rated findings',
+      description: 'Every issue rated High, Medium, or Low with a plain-English explanation of the breach and the specific guideline it relates to.',
+    },
+    {
+      icon: <ClipboardList className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Actionable recommendations',
+      description: 'Each finding includes a specific recommendation so you know exactly what needs to change and why.',
+    },
+    {
+      icon: <FileText className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Downloadable audit report',
+      description: 'Receive a professionally formatted audit report you can save, share with your team, or use as a compliance record.',
+    },
+    {
+      icon: <Shield className="w-7 h-7 text-blue-500/80" />,
+      heading: 'AHPRA and TGA rules',
+      description: 'Checked against AHPRA advertising guidelines and TGA therapeutic goods advertising rules — the same primary sources used for post checking.',
+    },
+    {
+      icon: <BadgeCheck className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Subscriber add-on',
+      description: 'Available to all active SafePost subscribers as a one-time add-on for $149 AUD (incl. GST) per website audit.',
+    },
+  ];
+
   const features = [
     {
       icon: <ScanSearch className="w-7 h-7 text-blue-500/80" />,
@@ -442,6 +475,38 @@ const Features: React.FC = () => {
         <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {features.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full flex flex-col min-h-[280px]"
+              >
+                <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
+                  {feature.heading}
+                </h3>
+                <p className="text-[14px] text-gray-500 leading-relaxed flex-grow">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Website Compliance Audit */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+              Your website needs compliance checking too
+            </h2>
+            <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
+              Check your practice website page by page against AHPRA and TGA rules — and get a clear report on exactly what to fix.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {auditFeatures.map((feature, index) => (
               <div
                 key={index}
                 className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full flex flex-col min-h-[280px]"
