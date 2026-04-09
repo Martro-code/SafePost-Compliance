@@ -314,8 +314,8 @@ const ComplianceHub: React.FC = () => {
       </section>
 
       {/* Social Media Is Advertising */}
+      <div className="-mt-8">
       <FAQSection
-        innerClassName="px-6 pt-12 pb-16 md:pb-20"
         title="Social media is advertising"
         items={[
           {
@@ -345,10 +345,11 @@ const ComplianceHub: React.FC = () => {
           },
         ]}
       />
+      </div>
 
       {/* Activities That May Trigger Investigation */}
+      <div className="-mt-8">
       <FAQSection
-        innerClassName="px-6 pt-12 pb-16 md:pb-20"
         title="Activities that may trigger investigation"
         subtitle="Online advertising and social media activities most likely to attract AHPRA and TGA scrutiny"
         groups={[
@@ -399,6 +400,7 @@ const ComplianceHub: React.FC = () => {
           },
         ]}
       />
+      </div>
 
       {/* Call to Action */}
       <section className="w-full bg-white">
