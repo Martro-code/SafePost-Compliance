@@ -461,6 +461,38 @@ const Features: React.FC = () => {
         </div>
       </section>
 
+      {/* Website Compliance Audit */}
+      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+              Your website needs compliance checking too
+            </h2>
+            <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
+              Check your practice website page by page against AHPRA and TGA rules — and get a clear report on exactly what to fix.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {auditFeatures.map((feature, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full flex flex-col min-h-[280px]"
+              >
+                <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
+                  {feature.icon}
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
+                  {feature.heading}
+                </h3>
+                <p className="text-[14px] text-gray-500 leading-relaxed flex-grow">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
