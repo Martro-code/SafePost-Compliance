@@ -3,12 +3,10 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
 import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
+import FAQSection from '../components/ui/FAQSection';
 import PublicFooter from '../components/layout/PublicFooter';
 
-
-import spLogo from '../assets/SP-logo.svg';
-
-const About: React.FC = () => {
+const ComplianceHub: React.FC = () => {
   const navigate = useNavigate();
 
   const [productDropdownOpen, setProductDropdownOpen] = useState(false);
@@ -27,20 +25,22 @@ const About: React.FC = () => {
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
-
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
       <Helmet>
-        <title>About SafePost — AHPRA &amp; TGA Compliance for Healthcare</title>
-        <meta name="description" content="SafePost is an Australian AI compliance platform helping medical practitioners and practices avoid AHPRA and TGA advertising breaches." />
+        <title>Compliance Hub — AHPRA &amp; TGA Advertising Rules</title>
+        <meta name="description" content="Everything Australian medical practitioners need to know about AHPRA and TGA advertising compliance — what counts as advertising, what activities trigger investigations, and what the rules cover." />
       </Helmet>
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+          {/* Left: Logo */}
           <Link to="/">
             <SafePostLogo />
           </Link>
 
+          {/* Center: Navigation */}
           <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
             <div className="relative">
               <button
@@ -136,6 +136,7 @@ const About: React.FC = () => {
             </div>
           </nav>
 
+          {/* Right: Auth buttons */}
           <div className="hidden lg:flex items-center gap-2.5">
             <button onClick={() => navigate('/login')} className="px-4 py-2 text-[13px] font-medium text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200">
               Login
@@ -145,6 +146,7 @@ const About: React.FC = () => {
             </button>
           </div>
 
+          {/* Mobile: Hamburger button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="lg:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-all duration-200"
@@ -154,9 +156,10 @@ const About: React.FC = () => {
           </button>
         </div>
 
+        {/* Mobile Menu */}
         <div
           className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+            mobileMenuOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
           <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
@@ -302,110 +305,116 @@ const About: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            About SafePost
+            AHPRA &amp; TGA compliance hub
           </h1>
-          <p className="text-lg text-gray-500">
-            Supporting Australian medical practitioners and practices with compliance confidence across everything they publish online
+          <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
+            What counts as advertising, which platforms are covered, and what activities are most likely to trigger an AHPRA or TGA investigation
           </p>
         </div>
       </section>
 
-      {/* Main Content */}
+      {/* Social Media Is Advertising Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
-          <div className="max-w-[800px] mx-auto space-y-12">
-            {/* Section 1 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day"}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
+            {/* Left Column — Text Content */}
+            <div className="space-y-6">
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
+                Social media is advertising
               </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts, online advertising and website content can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
+              <p className="text-[15px] text-gray-600 leading-relaxed">
+                Any social media activity intended to attract patients, promote services, or drive engagement with your practice is considered advertising under Australian law. This applies to all platforms and includes both public posts and closed channels such as private Facebook groups or dark marketing, unless they meet strict health professional-only access requirements.
+              </p>
+              <h3 className="text-lg font-bold text-gray-900">What the rules cover</h3>
+              <p className="text-[15px] text-gray-600 leading-relaxed">
+                Both AHPRA and the TGA regulate what you can say online. AHPRA&rsquo;s National Law prohibits false or misleading claims, patient testimonials, and content that creates unreasonable expectations about treatment results. The TGA&rsquo;s Advertising Code adds additional requirements whenever a post promotes medicines, medical devices, or supplements.
               </p>
             </div>
 
-            {/* Section 2 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We founded SafePost because compliance shouldn\u2019t hold you back from connecting with patients"}
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Social media, digital marketing and your practice website are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post or non-compliant webpage can put your registration at risk."}
-              </p>
-            </div>
-
-            {/* Section 3 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                Our mission is to help Australian medical practitioners and practices communicate confidently, compliantly and authentically
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post or services page will trigger an investigation. SafePost provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations \u2014 across your social media, online advertising and practice website."}
-              </p>
-            </div>
-
-            {/* Section 4 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re not lawyers. We\u2019re your compliance platform"}
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns and website audits, we\u2019re here to support you at every step."}
-              </p>
-            </div>
-
-            {/* Section 5 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                Our vision is to make compliance the standard — not the exception
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Today, SafePost checks your content before it goes live. But our vision reaches further \u2014 a single trusted platform that every Australian doctor and medical practice turns to for compliance confidence across everything they publish, communicate and practise. We\u2019re building toward that future, one check at a time."}
-              </p>
-            </div>
-
-            {/* SafePost Logo Divider */}
-            <div className="py-10 flex justify-center">
-              <img
-                src={spLogo}
-                alt="SafePost logo"
-                loading="lazy"
-                width={600}
-                height={91}
-                className="max-w-[500px] md:max-w-[600px] w-full h-auto"
-              />
-            </div>
-
-            {/* Section 6 - Our Design Story */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"Every detail of SafePost was built with purpose"}
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Even our logo tells the story of what we stand for. The three horizontal bars represent the journey every piece of your content takes \u2014 from the regulatory framework at the top, through SafePost\u2019s intelligent compliance layer in the middle, to your approved, ready-to-publish content at the bottom."}
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                {"But look closer. The staggered alignment of these bars creates something subtle yet intentional: a phantom \u201CS\u201D in the negative space. This hidden letter represents both Safe and Social \u2014 a visual reminder that compliance and communication aren\u2019t opposing forces. They\u2019re integrated, flowing together naturally."}
-              </p>
-              <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
-                {"It\u2019s a design that says compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
-              </p>
-              <p className="text-lg font-bold text-gray-900 leading-snug mt-4">
-                {"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that everything you put online is something you can stand behind with complete confidence."}
-              </p>
+            {/* Right Column — Platform List */}
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { category: 'Social networking', platforms: 'Facebook, X, WeChat, Weibo, WhatsApp' },
+                { category: 'Professional networking', platforms: 'LinkedIn, Yammer' },
+                { category: 'Discussion forums', platforms: 'Reddit, Whirlpool, Discord, Quora' },
+                { category: 'Media sharing', platforms: 'YouTube, Flickr, Instagram, TikTok, Pinterest' },
+                { category: 'Microblogging', platforms: 'Tumblr, Blogger, X' },
+                { category: 'Audio publishing', platforms: 'Spotify, iTunes, Podcasts' },
+                { category: 'Text publishing', platforms: 'Blogs, SlideShare' },
+                { category: 'Knowledge aggregation', platforms: 'Wikipedia' },
+                { category: 'Booking sites & apps', platforms: 'HealthEngine, Whitecoat, Podium' },
+              ].map((item, index) => (
+                <div key={index} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
+                  <span className="font-semibold text-slate-800 text-[14px]">{item.category}</span>
+                  <p className="text-[13px] text-slate-500 mt-1">{item.platforms}</p>
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
+      {/* Activities That May Trigger Investigation */}
+      <FAQSection
+        title="Activities that may trigger investigation"
+        subtitle="Online advertising and social media activities most likely to attract AHPRA and TGA scrutiny"
+        groups={[
+          {
+            label: 'Advertising breaches \u2014 AHPRA and TGA',
+            items: [
+              {
+                question: 'Patient testimonials and reviews',
+                answer:
+                  'Sharing or endorsing patient testimonials about clinical outcomes is prohibited under Section 133 of the Health Practitioner Regulation National Law Act 2009. This includes reposting Google reviews, featuring patient success stories, and posts that reference treatment results \u2014 even when the patient has given consent.',
+              },
+              {
+                question: 'Before and after images',
+                answer:
+                  'Publishing before and after photos for cosmetic, surgical, or aesthetic procedures is explicitly prohibited under AHPRA\u2019s advertising guidelines. This applies to all platforms including Instagram, Facebook, and your practice website \u2014 regardless of whether images are anonymised or accompanied by disclaimers.',
+              },
+              {
+                question: 'Unsubstantiated claims and superlatives',
+                answer:
+                  'Describing yourself or your practice as \u2018the best\u2019, \u2018leading\u2019, \u2018top-rated\u2019, or \u2018most experienced\u2019 without objective evidence constitutes misleading advertising. Claims about treatment outcomes, success rates, or comparative superiority that cannot be independently verified are a common trigger for AHPRA complaints.',
+              },
+              {
+                question: 'Product and treatment endorsements',
+                answer:
+                  'Endorsing specific pharmaceutical products, medical devices, or cosmetic treatments on social media \u2014 including paid partnerships, gifted product posts, and affiliate arrangements \u2014 can breach both AHPRA advertising guidelines and TGA advertising requirements. Practitioners are held to a higher standard than general influencers.',
+              },
+            ],
+          },
+          {
+            label: 'Social media conduct breaches',
+            items: [
+              {
+                question: 'Social media conduct and professionalism',
+                answer:
+                  'Your professional obligations apply online as much as they do in the clinic. Posts made in a personal capacity \u2014 including complaints about colleagues, patients, or your workplace \u2014 can result in a formal AHPRA notification. Even accounts with no explicit link to your profession can be traced through the public register.',
+              },
+              {
+                question: 'Patient confidentiality on social media',
+                answer:
+                  'Inadvertently disclosing patient information through social media is one of the most common compliance risks practitioners overlook. A photo, a comment, or even a combination of seemingly harmless details can be enough to identify a patient \u2014 triggering both an AHPRA notification and a privacy complaint.',
+              },
+              {
+                question: 'Public health misinformation',
+                answer:
+                  'As a registered practitioner, your views carry authority. Posting, sharing, or endorsing content that contradicts established public health guidance or the best available scientific evidence can breach your Code of Conduct obligations \u2014 even when posted on a personal account.',
+              },
+            ],
+          },
+        ]}
+      />
+
       {/* Call to Action */}
       <section className="w-full bg-white">
         <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to experience compliance confidence?
+            Check your content before you post
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join medical practitioners and practices across Australia using SafePost to communicate with confidence
+            SafePost checks your social media posts and advertising against 174 AHPRA and TGA rules in seconds
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -416,10 +425,10 @@ const About: React.FC = () => {
               <ArrowRight className="w-4 h-4" />
             </button>
             <button
-              onClick={() => navigate('/contact')}
+              onClick={() => navigate('/login')}
               className="w-full sm:w-auto px-7 py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-300 flex items-center justify-center gap-2.5 active:scale-[0.97] min-w-[180px]"
             >
-              Contact us
+              Login
               <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -431,4 +440,4 @@ const About: React.FC = () => {
   );
 };
 
-export default About;
+export default ComplianceHub;

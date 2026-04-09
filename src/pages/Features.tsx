@@ -19,10 +19,12 @@ const Features: React.FC = () => {
   const navigate = useNavigate();
 
   // Header state
+  const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileProductOpen, setMobileProductOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
@@ -149,9 +151,26 @@ const Features: React.FC = () => {
 
           {/* Center: Navigation */}
           <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-            <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setProductDropdownOpen(!productDropdownOpen)}
+                onBlur={() => setTimeout(() => setProductDropdownOpen(false), 150)}
+                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Product
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${productDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {productDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  <button onClick={() => navigate('/features')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Features
+                  </button>
+                  <button onClick={() => navigate('/compliance-hub')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Compliance hub
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="relative">
               <button
                 onClick={() => setPricingDropdownOpen(!pricingDropdownOpen)}
@@ -257,9 +276,32 @@ const Features: React.FC = () => {
               Home
             </button>
 
-            <button onClick={() => { navigate('/features'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
+            {/* Mobile Product Dropdown */}
+            <div>
+              <button
+                onClick={() => setMobileProductOpen(!mobileProductOpen)}
+                className="w-full flex items-center justify-between px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Product
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileProductOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{
+                  maxHeight: mobileProductOpen ? '300px' : '0px',
+                  opacity: mobileProductOpen ? 1 : 0,
+                }}
+              >
+                <div className="pl-4 space-y-0.5 pt-1">
+                  <button onClick={() => { navigate('/features'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors">
+                    Features
+                  </button>
+                  <button onClick={() => { navigate('/compliance-hub'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors">
+                    Compliance hub
+                  </button>
+                </div>
+              </div>
+            </div>
 
             {/* Mobile Pricing Dropdown */}
             <div>
@@ -400,124 +442,6 @@ const Features: React.FC = () => {
         <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {features.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full flex flex-col min-h-[280px]"
-              >
-                <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
-                  {feature.icon}
-                </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
-                  {feature.heading}
-                </h3>
-                <p className="text-[14px] text-gray-500 leading-relaxed flex-grow">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* What is Social Media Section */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
-            {/* Left Column — Text Content */}
-            <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
-                Social media is advertising
-              </h2>
-              <p className="text-[15px] text-gray-600 leading-relaxed">
-                Any social media activity intended to attract patients, promote services, or drive engagement with your practice is considered advertising under Australian law. This applies to all platforms and includes both public posts and closed channels such as private Facebook groups or dark marketing, unless they meet strict health professional-only access requirements.
-              </p>
-              <h3 className="text-lg font-bold text-gray-900">What the rules cover</h3>
-              <p className="text-[15px] text-gray-600 leading-relaxed">
-                Both AHPRA and the TGA regulate what you can say online. AHPRA&rsquo;s National Law prohibits false or misleading claims, patient testimonials, and content that creates unreasonable expectations about treatment results. The TGA&rsquo;s Advertising Code adds additional requirements whenever a post promotes medicines, medical devices, or supplements.
-              </p>
-            </div>
-
-            {/* Right Column — Card Carousel */}
-            <div className="flex flex-col gap-4">
-              {/* Card row with arrows */}
-              <div className="flex items-center gap-3">
-                {/* Left arrow */}
-                <button
-                  onClick={prevCard}
-                  aria-label="Previous category"
-                  className="flex-shrink-0 w-11 h-11 rounded-full bg-white border border-black/[0.08] flex items-center justify-center text-gray-500 hover:text-gray-900 hover:border-black/[0.15] transition-all duration-200 active:scale-95"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-
-                {/* Card */}
-                <div
-                  className={`flex-1 bg-white rounded-2xl border border-black/[0.06] p-6 min-h-[160px] transition-opacity duration-150 ${cardVisible ? 'opacity-100' : 'opacity-0'}`}
-                  onTouchStart={handleTouchStart}
-                  onTouchEnd={handleTouchEnd}
-                >
-                  <h3 className="text-[15px] font-bold text-gray-900 mb-4">
-                    {platformCategories[carouselIndex].category}
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {platformCategories[carouselIndex].platforms.map(platform => (
-                      <span
-                        key={platform}
-                        className="px-3 py-1.5 bg-slate-100 text-slate-700 text-[13px] font-medium rounded-full"
-                      >
-                        {platform}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Right arrow */}
-                <button
-                  onClick={nextCard}
-                  aria-label="Next category"
-                  className="flex-shrink-0 w-11 h-11 rounded-full bg-white border border-black/[0.08] flex items-center justify-center text-gray-500 hover:text-gray-900 hover:border-black/[0.15] transition-all duration-200 active:scale-95"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Counter and dot indicators */}
-              <div className="flex flex-col items-center gap-2.5">
-                <p className="text-[12px] text-gray-400">
-                  {carouselIndex + 1} of {platformCategories.length}
-                </p>
-                <div className="flex gap-1.5">
-                  {platformCategories.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => goToCard(i)}
-                      aria-label={`Go to category ${i + 1}`}
-                      className={`w-2 h-2 rounded-full transition-colors duration-200 ${
-                        i === carouselIndex ? 'bg-blue-600' : 'bg-slate-300 hover:bg-slate-400'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* Website Compliance Audit */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Your website needs compliance checking too
-            </h2>
-            <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-              Check your practice website page by page against AHPRA and TGA rules — and get a clear report on exactly what to fix.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-            {auditFeatures.map((feature, index) => (
               <div
                 key={index}
                 className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full flex flex-col min-h-[280px]"

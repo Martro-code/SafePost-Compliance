@@ -9,6 +9,7 @@ import PricingMedicalPractitioners from './pages/PricingMedicalPractitioners';
 import PricingMedicalPractices from './pages/PricingMedicalPractices';
 import ContactUs from './pages/ContactUs';
 import Features from './pages/Features';
+import ComplianceHub from './pages/ComplianceHub';
 import About from './pages/About';
 import FAQ from './pages/FAQ';
 import ForgotPassword from './pages/ForgotPassword';
@@ -90,6 +91,7 @@ const App: React.FC = () => {
           <Route path="/pricing/medical-practices" element={<PricingMedicalPractices />} />
           <Route path="/contact" element={<ContactUs />} />
           <Route path="/features" element={<Features />} />
+          <Route path="/compliance-hub" element={<ComplianceHub />} />
           <Route path="/about" element={<About />} />
           <Route path="/faq" element={<FAQ />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
