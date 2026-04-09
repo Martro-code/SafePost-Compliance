@@ -469,7 +469,7 @@ const Features: React.FC = () => {
               Your website needs compliance checking too
             </h2>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-              Check your practice website page by page against AHPRA and TGA rules — and get a clear report on exactly what to fix.
+              Check your practice website page by page against AHPRA and TGA rules — and get a clear report on exactly what to fix
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
