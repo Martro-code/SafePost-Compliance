@@ -3,7 +3,7 @@ import { ChevronDown } from 'lucide-react';
 
 interface FAQItem {
   question: string;
-  answer: string;
+  answer: React.ReactNode;
 }
 
 interface FAQGroup {
@@ -53,15 +53,15 @@ const AccordionItem: React.FC<{
     <div
       className="transition-all duration-300 ease-in-out"
       style={{
-        maxHeight: isOpen ? '500px' : '0px',
+        maxHeight: isOpen ? '1000px' : '0px',
         opacity: isOpen ? 1 : 0,
       }}
     >
       <div className="px-6 pb-6 pt-0">
         <div className="border-t border-gray-100 pt-4">
-          <p className="text-[14px] text-gray-500 leading-relaxed">
+          <div className="text-[14px] text-gray-500 leading-relaxed">
             {item.answer}
-          </p>
+          </div>
         </div>
       </div>
     </div>
