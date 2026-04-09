@@ -102,39 +102,6 @@ const Features: React.FC = () => {
     },
   ];
 
-  const auditFeatures = [
-    {
-      icon: <Globe className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Page-by-page analysis',
-      description: 'Check up to 6 pages from your practice website — homepage, services, about, testimonials, pricing, and more.',
-    },
-    {
-      icon: <AlertTriangle className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Severity-rated findings',
-      description: 'Every issue rated High, Medium, or Low with a plain-English explanation of the breach and the specific guideline it relates to.',
-    },
-    {
-      icon: <ClipboardList className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Actionable recommendations',
-      description: 'Each finding includes a specific recommendation so you know exactly what needs to change and why.',
-    },
-    {
-      icon: <FileText className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Downloadable audit report',
-      description: 'Receive a professionally formatted audit report you can save, share with your team, or use as a compliance record.',
-    },
-    {
-      icon: <Shield className="w-7 h-7 text-blue-500/80" />,
-      heading: 'AHPRA and TGA rules',
-      description: 'Checked against AHPRA advertising guidelines and TGA therapeutic goods advertising rules — the same primary sources used for post checking.',
-    },
-    {
-      icon: <BadgeCheck className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Subscriber add-on',
-      description: 'Available to all active SafePost subscribers as a one-time add-on for $149 AUD (incl. GST) per website audit.',
-    },
-  ];
-
   const features = [
     {
       icon: <ScanSearch className="w-7 h-7 text-blue-500/80" />,
