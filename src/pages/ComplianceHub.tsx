@@ -1,24 +1,14 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History } from 'lucide-react';
+import { ChevronDown, ArrowRight, Menu, X, ExternalLink } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
-import heroImage from '../assets/features-hero.png';
+import FAQSection from '../components/ui/FAQSection';
 import PublicFooter from '../components/layout/PublicFooter';
 
-// Preload the hero image so the browser fetches it before React renders the <img>
-const preloadLink = document.createElement('link');
-preloadLink.rel = 'preload';
-preloadLink.as = 'image';
-preloadLink.href = heroImage;
-document.head.appendChild(preloadLink);
-
-
-
-const Features: React.FC = () => {
+const ComplianceHub: React.FC = () => {
   const navigate = useNavigate();
 
-  // Header state
   const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
@@ -35,46 +25,13 @@ const Features: React.FC = () => {
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
-
-  const features = [
-    {
-      icon: <ScanSearch className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Instant analysis',
-      description: 'Checked against 174 rules across AHPRA and TGA regulatory documents. Not a summarised guide — primary sources only.',
-    },
-    {
-      icon: <Flag className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Severity-tiered issue flags',
-      description: 'Every issue rated Critical, Warning, or Professional Conduct Risk with a plain-English explanation and the specific guideline reference.',
-    },
-    {
-      icon: <Wand2 className="w-7 h-7 text-blue-500/80" />,
-      heading: 'AI-powered rewrites',
-      description: 'Three suggested alternatives generated instantly. Available on all plans including Starter.',
-    },
-    {
-      icon: <Scale className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Real enforcement precedent',
-      description: 'Analysis draws on tribunal cases — giving you context for what AHPRA and TGA actually pursue.',
-    },
-    {
-      icon: <MonitorSmartphone className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Multi-platform support',
-      description: 'Check Instagram, Facebook, website copy, Google ads, and any other online advertising content.',
-    },
-    {
-      icon: <History className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Compliance history',
-      description: 'Every check saved automatically. Search and revisit past checks to demonstrate your compliance process.',
-    },
-  ];
-
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
       <Helmet>
-        <title>Features — SafePost Compliance Checker</title>
-        <meta name="description" content="Instant compliance checks, detailed verdicts, team management and history. See everything SafePost's AI compliance platform can do for your practice." />
+        <title>Compliance Hub — AHPRA &amp; TGA Advertising Rules</title>
+        <meta name="description" content="Everything Australian medical practitioners need to know about AHPRA and TGA advertising compliance — what counts as advertising, what activities trigger investigations, and what the rules cover." />
       </Helmet>
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white border-b border-black/[0.06]">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -202,7 +159,7 @@ const Features: React.FC = () => {
         {/* Mobile Menu */}
         <div
           className={`lg:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            mobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+            mobileMenuOpen ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0'
           }`}
         >
           <div className="px-6 pb-5 pt-2 border-t border-black/[0.06] space-y-1">
@@ -348,61 +305,116 @@ const Features: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Powerful AHPRA and TGA compliance checking, simplified
+            AHPRA &amp; TGA compliance hub
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-            Everything you need to ensure your content meets AHPRA and TGA guidelines
+            What counts as advertising, which platforms are covered, and what activities are most likely to trigger an AHPRA or TGA investigation
           </p>
         </div>
       </section>
 
-      {/* Hero Image */}
+      {/* Social Media Is Advertising Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-2xl mx-auto px-6 mb-16 md:mb-20">
-          <img
-            src={heroImage}
-            alt="SafePost AHPRA and TGA compliance checking interface showing a post analysis result"
-            loading="eager"
-            fetchPriority="high"
-            width={1507}
-            height={470}
-            className="w-full h-auto rounded-2xl border border-black/[0.06] shadow-lg shadow-black/[0.04]"
-          />
-        </div>
-      </section>
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
+            {/* Left Column — Text Content */}
+            <div className="space-y-6">
+              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
+                Social media is advertising
+              </h2>
+              <p className="text-[15px] text-gray-600 leading-relaxed">
+                Any social media activity intended to attract patients, promote services, or drive engagement with your practice is considered advertising under Australian law. This applies to all platforms and includes both public posts and closed channels such as private Facebook groups or dark marketing, unless they meet strict health professional-only access requirements.
+              </p>
+              <h3 className="text-lg font-bold text-gray-900">What the rules cover</h3>
+              <p className="text-[15px] text-gray-600 leading-relaxed">
+                Both AHPRA and the TGA regulate what you can say online. AHPRA&rsquo;s National Law prohibits false or misleading claims, patient testimonials, and content that creates unreasonable expectations about treatment results. The TGA&rsquo;s Advertising Code adds additional requirements whenever a post promotes medicines, medical devices, or supplements.
+              </p>
+            </div>
 
-      {/* Features Grid */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm"
-              >
-                <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
-                  {feature.icon}
+            {/* Right Column — Platform List */}
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { category: 'Social networking', platforms: 'Facebook, X, WeChat, Weibo, WhatsApp' },
+                { category: 'Professional networking', platforms: 'LinkedIn, Yammer' },
+                { category: 'Discussion forums', platforms: 'Reddit, Whirlpool, Discord, Quora' },
+                { category: 'Media sharing', platforms: 'YouTube, Flickr, Instagram, TikTok, Pinterest' },
+                { category: 'Microblogging', platforms: 'Tumblr, Blogger, X' },
+                { category: 'Audio publishing', platforms: 'Spotify, iTunes, Podcasts' },
+                { category: 'Text publishing', platforms: 'Blogs, SlideShare' },
+                { category: 'Knowledge aggregation', platforms: 'Wikipedia' },
+                { category: 'Booking sites & apps', platforms: 'HealthEngine, Whitecoat, Podium' },
+              ].map((item, index) => (
+                <div key={index} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
+                  <span className="font-semibold text-slate-800 text-[14px]">{item.category}</span>
+                  <p className="text-[13px] text-slate-500 mt-1">{item.platforms}</p>
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
-                  {feature.heading}
-                </h3>
-                <p className="text-[14px] text-gray-500 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
+      {/* Activities That May Trigger Investigation */}
+      <FAQSection
+        title="Activities that may trigger investigation"
+        subtitle="Online advertising and social media activities most likely to attract AHPRA and TGA scrutiny"
+        groups={[
+          {
+            label: 'Advertising breaches \u2014 AHPRA and TGA',
+            items: [
+              {
+                question: 'Patient testimonials and reviews',
+                answer:
+                  'Sharing or endorsing patient testimonials about clinical outcomes is prohibited under Section 133 of the Health Practitioner Regulation National Law Act 2009. This includes reposting Google reviews, featuring patient success stories, and posts that reference treatment results \u2014 even when the patient has given consent.',
+              },
+              {
+                question: 'Before and after images',
+                answer:
+                  'Publishing before and after photos for cosmetic, surgical, or aesthetic procedures is explicitly prohibited under AHPRA\u2019s advertising guidelines. This applies to all platforms including Instagram, Facebook, and your practice website \u2014 regardless of whether images are anonymised or accompanied by disclaimers.',
+              },
+              {
+                question: 'Unsubstantiated claims and superlatives',
+                answer:
+                  'Describing yourself or your practice as \u2018the best\u2019, \u2018leading\u2019, \u2018top-rated\u2019, or \u2018most experienced\u2019 without objective evidence constitutes misleading advertising. Claims about treatment outcomes, success rates, or comparative superiority that cannot be independently verified are a common trigger for AHPRA complaints.',
+              },
+              {
+                question: 'Product and treatment endorsements',
+                answer:
+                  'Endorsing specific pharmaceutical products, medical devices, or cosmetic treatments on social media \u2014 including paid partnerships, gifted product posts, and affiliate arrangements \u2014 can breach both AHPRA advertising guidelines and TGA advertising requirements. Practitioners are held to a higher standard than general influencers.',
+              },
+            ],
+          },
+          {
+            label: 'Social media conduct breaches',
+            items: [
+              {
+                question: 'Social media conduct and professionalism',
+                answer:
+                  'Your professional obligations apply online as much as they do in the clinic. Posts made in a personal capacity \u2014 including complaints about colleagues, patients, or your workplace \u2014 can result in a formal AHPRA notification. Even accounts with no explicit link to your profession can be traced through the public register.',
+              },
+              {
+                question: 'Patient confidentiality on social media',
+                answer:
+                  'Inadvertently disclosing patient information through social media is one of the most common compliance risks practitioners overlook. A photo, a comment, or even a combination of seemingly harmless details can be enough to identify a patient \u2014 triggering both an AHPRA notification and a privacy complaint.',
+              },
+              {
+                question: 'Public health misinformation',
+                answer:
+                  'As a registered practitioner, your views carry authority. Posting, sharing, or endorsing content that contradicts established public health guidance or the best available scientific evidence can breach your Code of Conduct obligations \u2014 even when posted on a personal account.',
+              },
+            ],
+          },
+        ]}
+      />
+
       {/* Call to Action */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Ready to get started?
+            Check your content before you post
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Join practitioners and practices across Australia using SafePost for compliance confidence
+            SafePost checks your social media posts and advertising against 174 AHPRA and TGA rules in seconds
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
@@ -428,4 +440,4 @@ const Features: React.FC = () => {
   );
 };
 
-export default Features;
+export default ComplianceHub;

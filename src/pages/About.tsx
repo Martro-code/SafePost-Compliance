@@ -11,10 +11,12 @@ import spLogo from '../assets/SP-logo.svg';
 const About: React.FC = () => {
   const navigate = useNavigate();
 
+  const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileProductOpen, setMobileProductOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
@@ -40,9 +42,26 @@ const About: React.FC = () => {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-            <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setProductDropdownOpen(!productDropdownOpen)}
+                onBlur={() => setTimeout(() => setProductDropdownOpen(false), 150)}
+                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Product
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${productDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {productDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  <button onClick={() => navigate('/features')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Features
+                  </button>
+                  <button onClick={() => navigate('/compliance-hub')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Compliance hub
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="relative">
               <button
                 onClick={() => setPricingDropdownOpen(!pricingDropdownOpen)}
@@ -145,9 +164,32 @@ const About: React.FC = () => {
               Home
             </button>
 
-            <button onClick={() => { navigate('/features'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
+            {/* Mobile Product Dropdown */}
+            <div>
+              <button
+                onClick={() => setMobileProductOpen(!mobileProductOpen)}
+                className="w-full flex items-center justify-between px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Product
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileProductOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{
+                  maxHeight: mobileProductOpen ? '300px' : '0px',
+                  opacity: mobileProductOpen ? 1 : 0,
+                }}
+              >
+                <div className="pl-4 space-y-0.5 pt-1">
+                  <button onClick={() => { navigate('/features'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors">
+                    Features
+                  </button>
+                  <button onClick={() => { navigate('/compliance-hub'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors">
+                    Compliance hub
+                  </button>
+                </div>
+              </div>
+            </div>
 
             {/* Mobile Pricing Dropdown */}
             <div>

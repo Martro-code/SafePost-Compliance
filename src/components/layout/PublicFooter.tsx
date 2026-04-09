@@ -19,11 +19,12 @@ const PublicFooter = () => {
 
         {/* Footer Columns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
-          {/* Features */}
+          {/* Product */}
           <div>
-            <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Features</h4>
+            <h4 className="text-[13px] font-semibold text-gray-900 mb-4">Product</h4>
             <ul className="space-y-2.5">
               <li><button onClick={() => navigate('/features')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Features</button></li>
+              <li><button onClick={() => navigate('/compliance-hub')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Compliance hub</button></li>
               <li><button onClick={() => navigate('/pricing/medical-practitioners')} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Pricing</button></li>
               <li><a href="#" onClick={(e) => e.preventDefault()} className="text-[13px] text-gray-500 hover:text-gray-900 transition-colors duration-200">Demo</a></li>
             </ul>

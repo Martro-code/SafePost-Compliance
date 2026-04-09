@@ -46,10 +46,12 @@ const socialIcons = [
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
+  const [productDropdownOpen, setProductDropdownOpen] = useState(false);
   const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
   const [customersDropdownOpen, setCustomersDropdownOpen] = useState(false);
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileProductOpen, setMobileProductOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
@@ -76,9 +78,26 @@ const HomePage: React.FC = () => {
 
           {/* Center: Navigation */}
           <nav className="hidden lg:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
-            <button onClick={() => navigate('/features')} className="px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setProductDropdownOpen(!productDropdownOpen)}
+                onBlur={() => setTimeout(() => setProductDropdownOpen(false), 150)}
+                className="flex items-center gap-1 px-3.5 py-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Product
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${productDropdownOpen ? 'rotate-180' : ''}`} />
+              </button>
+              {productDropdownOpen && (
+                <div className="absolute top-full left-0 mt-1 w-48 bg-white rounded-xl border border-black/[0.06] shadow-lg shadow-black/[0.06] py-1.5 fade-in">
+                  <button onClick={() => navigate('/features')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Features
+                  </button>
+                  <button onClick={() => navigate('/compliance-hub')} className="block w-full text-left px-4 py-2 text-[13px] text-gray-500 hover:text-gray-900 hover:bg-black/[0.04] transition-colors">
+                    Compliance hub
+                  </button>
+                </div>
+              )}
+            </div>
             <div className="relative">
               <button
                 onClick={() => setCustomersDropdownOpen(!customersDropdownOpen)}
@@ -184,9 +203,32 @@ const HomePage: React.FC = () => {
               Home
             </button>
 
-            <button onClick={() => { navigate('/features'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200">
-              Features
-            </button>
+            {/* Mobile Product Dropdown */}
+            <div>
+              <button
+                onClick={() => setMobileProductOpen(!mobileProductOpen)}
+                className="w-full flex items-center justify-between px-3 py-2.5 text-[13px] font-medium text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-all duration-200"
+              >
+                Product
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${mobileProductOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{
+                  maxHeight: mobileProductOpen ? '300px' : '0px',
+                  opacity: mobileProductOpen ? 1 : 0,
+                }}
+              >
+                <div className="pl-4 space-y-0.5 pt-1">
+                  <button onClick={() => { navigate('/features'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors">
+                    Features
+                  </button>
+                  <button onClick={() => { navigate('/compliance-hub'); setMobileMenuOpen(false); }} className="block w-full text-left px-3 py-2 text-[13px] text-gray-500 hover:text-gray-900 rounded-lg hover:bg-black/[0.04] transition-colors">
+                    Compliance hub
+                  </button>
+                </div>
+              </div>
+            </div>
 
             {/* Mobile Pricing Dropdown */}
             <div>
@@ -410,59 +452,6 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </section>
-
-      {/* Activities That May Trigger Ahpra Investigation */}
-      <FAQSection
-        title="Activities that may trigger investigation"
-        subtitle="Online advertising and social media activities most likely to attract AHPRA and TGA scrutiny"
-        groups={[
-          {
-            label: 'Advertising breaches — AHPRA and TGA',
-            items: [
-              {
-                question: 'Patient testimonials and reviews',
-                answer:
-                  'Sharing or endorsing patient testimonials about clinical outcomes is prohibited under Section 133 of the Health Practitioner Regulation National Law Act 2009. This includes reposting Google reviews, featuring patient success stories, and posts that reference treatment results \u2014 even when the patient has given consent.',
-              },
-              {
-                question: 'Before and after images',
-                answer:
-                  'Publishing before and after photos for cosmetic, surgical, or aesthetic procedures is explicitly prohibited under AHPRA\u2019s advertising guidelines. This applies to all platforms including Instagram, Facebook, and your practice website \u2014 regardless of whether images are anonymised or accompanied by disclaimers.',
-              },
-              {
-                question: 'Unsubstantiated claims and superlatives',
-                answer:
-                  'Describing yourself or your practice as \u2018the best\u2019, \u2018leading\u2019, \u2018top-rated\u2019, or \u2018most experienced\u2019 without objective evidence constitutes misleading advertising. Claims about treatment outcomes, success rates, or comparative superiority that cannot be independently verified are a common trigger for AHPRA complaints.',
-              },
-              {
-                question: 'Product and treatment endorsements',
-                answer:
-                  'Endorsing specific pharmaceutical products, medical devices, or cosmetic treatments on social media \u2014 including paid partnerships, gifted product posts, and affiliate arrangements \u2014 can breach both AHPRA advertising guidelines and TGA advertising requirements. Practitioners are held to a higher standard than general influencers.',
-              },
-            ],
-          },
-          {
-            label: 'Social media conduct breaches',
-            items: [
-              {
-                question: 'Social media conduct and professionalism',
-                answer:
-                  'Your professional obligations apply online as much as they do in the clinic. Posts made in a personal capacity \u2014 including complaints about colleagues, patients, or your workplace \u2014 can result in a formal AHPRA notification. Even accounts with no explicit link to your profession can be traced through the public register.',
-              },
-              {
-                question: 'Patient confidentiality on social media',
-                answer:
-                  'Inadvertently disclosing patient information through social media is one of the most common compliance risks practitioners overlook. A photo, a comment, or even a combination of seemingly harmless details can be enough to identify a patient \u2014 triggering both an AHPRA notification and a privacy complaint.',
-              },
-              {
-                question: 'Public health misinformation',
-                answer:
-                  'As a registered practitioner, your views carry authority. Posting, sharing, or endorsing content that contradicts established public health guidance or the best available scientific evidence can breach your Code of Conduct obligations \u2014 even when posted on a personal account.',
-              },
-            ],
-          },
-        ]}
-      />
 
       <main className="flex-grow flex flex-col items-center">
         {/* How It Works — Video Demo */}
