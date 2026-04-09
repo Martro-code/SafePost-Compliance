@@ -44,6 +44,15 @@ const SoftwareTerms: React.FC = () => {
 
           {/* Document Content */}
           <div className="max-w-[800px] space-y-8">
+            {user && (
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Dashboard
+              </button>
+            )}
 
             <div>
               <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-gray-900 mb-2">Software Terms of Use</h1>
