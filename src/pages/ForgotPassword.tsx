@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
-import SafePostLogo from '../components/ui/SafePostLogo';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PublicHeader from '../components/layout/PublicHeader';
 import PublicFooter from '../components/layout/PublicFooter';
 import { supabase } from '../services/supabaseClient';
 
@@ -13,37 +12,6 @@ const ForgotPassword: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
-
-  // Header state
-  const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
-  const [customersDropdownOpen, setCustomersDropdownOpen] = useState(false);
-  const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
-  const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
-  const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
-
-  const resourceLinks = [
-    { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
-    { label: 'Code of Conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
-    { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
-  ];
-
-  const resourcesDropdownRef = useRef<HTMLDivElement>(null);
-  const resourcesContextMenuRef = useRef(false);
-
-  // Close Resources dropdown when clicking outside (ignore right-click so users can copy URLs)
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (event.button !== 0) return;
-      if (resourcesDropdownRef.current && !resourcesDropdownRef.current.contains(event.target as Node)) {
-        setResourcesDropdownOpen(false);
-      }
-      resourcesContextMenuRef.current = false;
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   // Validation helpers
   const isValidEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);

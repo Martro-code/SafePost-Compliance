@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, Menu, X, ExternalLink, ArrowRight } from 'lucide-react';
-import SafePostLogo from '../components/ui/SafePostLogo';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import PublicHeader from '../components/layout/PublicHeader';
 import PublicFooter from '../components/layout/PublicFooter';
 import { getAllArticles } from '../utils/newsLoader';
 
@@ -14,22 +14,7 @@ const categoryColors: Record<string, string> = {
 };
 
 const NewsPage: React.FC = () => {
-  const navigate = useNavigate();
   const sortedArticles = getAllArticles().sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-
-  const [companyDropdownOpen, setCompanyDropdownOpen] = useState(false);
-  const [customersDropdownOpen, setCustomersDropdownOpen] = useState(false);
-  const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
-  const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
-  const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
-
-  const resourceLinks = [
-    { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
-    { label: 'Code of Conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
-    { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
-  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#f7f7f4]">
