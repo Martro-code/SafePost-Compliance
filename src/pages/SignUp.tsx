@@ -130,7 +130,8 @@ const SignUp: React.FC = () => {
 
   // Validation helpers
   const isValidEmail = (val: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-  const isValidPassword = (val: string) => val.length >= 8;
+  const isValidPassword = (val: string) => val.length >= 8 && /^[a-zA-Z0-9]+$/.test(val);
+  const passwordHasInvalidChars = password.length > 0 && !/^[a-zA-Z0-9]*$/.test(password);
   const passwordsMatch = () => confirmPassword.length > 0 && password === confirmPassword;
   const isValidAbnFormat = (val: string) => /^\d{11}$/.test(val.replace(/\s/g, ''));
 
@@ -141,7 +142,7 @@ const SignUp: React.FC = () => {
       setAbnEntityName('');
       setAbnStatus('');
       if (cleaned.length > 0) {
-        setAbnError('ABN must be exactly 11 digits.');
+        setAbnError('Please enter a valid 11-digit ABN');
       }
       return;
     }
@@ -164,8 +165,15 @@ const SignUp: React.FC = () => {
 
       if (controller.signal.aborted) return;
 
-      if (error || !data?.valid) {
-        setAbnError(data?.error || 'This ABN could not be verified. Please check and try again.');
+      if (error) {
+        setAbnError('ABN verification service unavailable. Please try again.');
+        setAbnVerified(false);
+      } else if (!data?.valid) {
+        if (data?.error === 'ABN_NOT_FOUND') {
+          setAbnError('ABN not found or invalid. Please check your ABN and try again.');
+        } else {
+          setAbnError('ABN verification service unavailable. Please try again.');
+        }
         setAbnVerified(false);
       } else {
         setAbnVerified(true);
@@ -175,7 +183,7 @@ const SignUp: React.FC = () => {
       }
     } catch {
       if (!controller.signal.aborted) {
-        setAbnError('This ABN could not be verified. Please check and try again.');
+        setAbnError('ABN verification service unavailable. Please try again.');
         setAbnVerified(false);
       }
     } finally {
@@ -190,52 +198,58 @@ const SignUp: React.FC = () => {
     return `${base} border-red-400 focus:border-red-500 focus:ring-2 focus:ring-red-500/20`;
   };
 
+  const allFieldsValid =
+    firstName.trim().length > 0 &&
+    surname.trim().length > 0 &&
+    isValidEmail(email) &&
+    mobileNumber.trim().length > 0 &&
+    practiceName.trim().length > 0 &&
+    specialty.length > 0 &&
+    abnVerified &&
+    streetAddress.trim().length > 0 &&
+    suburb.trim().length > 0 &&
+    state.length > 0 &&
+    postcode.trim().length > 0 &&
+    isValidPassword(password) &&
+    passwordsMatch();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
     setAuthError('');
 
-    if (
-      firstName.trim() &&
-      surname.trim() &&
-      isValidEmail(email) &&
-      abnVerified &&
-      isValidPassword(password) &&
-      passwordsMatch() &&
-      agreedToTerms
-    ) {
-      setIsSubmitting(true);
-      const { error } = await supabase.auth.signUp({
+    if (!allFieldsValid || !agreedToTerms) return;
+
+    setIsSubmitting(true);
+    const { data, error } = await supabase.functions.invoke('sign-up', {
+      body: {
         email: sanitizeInput(email),
         password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-          data: {
-            first_name: sanitizeInput(firstName.trim()),
-            surname: sanitizeInput(surname.trim()),
-            mobile_number: sanitizeInput(mobileNumber.trim()),
-            practice_name: sanitizeInput(practiceName.trim()),
-            street_address: sanitizeInput(streetAddress.trim()),
-            suburb: sanitizeInput(suburb.trim()),
-            state: sanitizeInput(state),
-            postcode: sanitizeInput(postcode.trim()),
-            abn: sanitizeInput(abn.replace(/\s/g, '')),
-            abn_entity_name: sanitizeInput(abnEntityName),
-            specialty: sanitizeInput(specialty),
-            plan: plan || 'starter',
-            billing: billing || 'monthly',
-          },
-        },
-      });
+        firstName: sanitizeInput(firstName.trim()),
+        surname: sanitizeInput(surname.trim()),
+        mobileNumber: sanitizeInput(mobileNumber.trim()),
+        practiceName: sanitizeInput(practiceName.trim()),
+        streetAddress: sanitizeInput(streetAddress.trim()),
+        suburb: sanitizeInput(suburb.trim()),
+        state: sanitizeInput(state),
+        postcode: sanitizeInput(postcode.trim()),
+        abn: sanitizeInput(abn.replace(/\s/g, '')),
+        abnEntityName: sanitizeInput(abnEntityName),
+        specialty: sanitizeInput(specialty),
+        plan: plan || 'starter',
+        billing: billing || 'monthly',
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
 
-      setIsSubmitting(false);
+    setIsSubmitting(false);
 
-      if (error) {
-        setAuthError(error.message);
-        return;
-      }
+    if (error || data?.error) {
+      setAuthError(data?.error || error?.message || 'An unexpected error occurred. Please try again.');
+      return;
+    }
 
-      trackSignUp('email');
+    trackSignUp('email');
 
       // SECURITY: Do not store plan in sessionStorage — it's user-controllable
       // and no longer read by any feature-gating code. Account provisioning
@@ -255,7 +269,6 @@ const SignUp: React.FC = () => {
       if (plan) params.set('plan', plan);
       if (billing) params.set('billing', billing);
       navigate(`/verify-email?${params.toString()}`);
-    }
   };
 
   return (
@@ -515,7 +528,7 @@ const SignUp: React.FC = () => {
               {/* First name */}
               <div>
                 <label htmlFor="firstName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  First name
+                  First name <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="firstName"
@@ -525,12 +538,15 @@ const SignUp: React.FC = () => {
                   onChange={(e) => setFirstName(e.target.value)}
                   className={getInputClasses(firstName, firstName.trim().length > 0)}
                 />
+                {submitted && !firstName.trim() && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
               </div>
 
               {/* Surname */}
               <div>
                 <label htmlFor="surname" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Last name
+                  Last name <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="surname"
@@ -540,12 +556,15 @@ const SignUp: React.FC = () => {
                   onChange={(e) => setSurname(e.target.value)}
                   className={getInputClasses(surname, surname.trim().length > 0)}
                 />
+                {submitted && !surname.trim() && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
               </div>
 
               {/* Email */}
               <div>
                 <label htmlFor="email" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Email
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="email"
@@ -555,12 +574,18 @@ const SignUp: React.FC = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   className={getInputClasses(email, isValidEmail(email))}
                 />
+                {submitted && !email.trim() && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
+                {submitted && email.trim() && !isValidEmail(email) && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">Please enter a valid email address.</p>
+                )}
               </div>
 
               {/* Mobile number */}
               <div>
                 <label htmlFor="mobileNumber" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Mobile number
+                  Mobile number <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="mobileNumber"
@@ -571,12 +596,15 @@ const SignUp: React.FC = () => {
                   onKeyDown={(e) => { if (e.key.length === 1 && !/[0-9]/.test(e.key)) e.preventDefault(); }}
                   className={getInputClasses(mobileNumber, mobileNumber.trim().length > 0)}
                 />
+                {submitted && !mobileNumber.trim() && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
               </div>
 
               {/* Practice name */}
               <div>
                 <label htmlFor="practiceName" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Practice name
+                  Practice name <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="practiceName"
@@ -586,12 +614,15 @@ const SignUp: React.FC = () => {
                   onChange={(e) => setPracticeName(e.target.value)}
                   className={getInputClasses(practiceName, practiceName.trim().length > 0)}
                 />
+                {submitted && !practiceName.trim() && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
               </div>
 
               {/* Specialty */}
               <div>
                 <label htmlFor="specialty" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Specialty
+                  Specialty <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <select
@@ -607,12 +638,15 @@ const SignUp: React.FC = () => {
                   </select>
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                 </div>
+                {submitted && !specialty && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
               </div>
 
               {/* ABN */}
               <div>
                 <label htmlFor="abn" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  ABN
+                  ABN <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -655,14 +689,17 @@ const SignUp: React.FC = () => {
                   <p className="text-[13px] text-red-600 font-medium mt-1.5">{abnError}</p>
                 )}
                 {submitted && !abnVerified && !abnError && abn.replace(/\s/g, '').length === 0 && (
-                  <p className="text-[13px] text-red-600 font-medium mt-1.5">Please enter and verify your ABN.</p>
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
+                {submitted && !abnVerified && !abnError && abn.replace(/\s/g, '').length > 0 && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">Please verify your ABN.</p>
                 )}
               </div>
 
               {/* Street address */}
               <div>
                 <label htmlFor="streetAddress" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Street address
+                  Street address <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="streetAddress"
@@ -673,12 +710,15 @@ const SignUp: React.FC = () => {
                   onChange={(e) => setStreetAddress(e.target.value)}
                   className={getInputClasses(streetAddress, streetAddress.trim().length > 0)}
                 />
+                {submitted && !streetAddress.trim() && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
               </div>
 
               {/* Suburb */}
               <div>
                 <label htmlFor="suburb" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Suburb
+                  Suburb <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="suburb"
@@ -688,12 +728,15 @@ const SignUp: React.FC = () => {
                   onChange={(e) => setSuburb(e.target.value)}
                   className={getInputClasses(suburb, suburb.trim().length > 0)}
                 />
+                {submitted && !suburb.trim() && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
               </div>
 
               {/* State */}
               <div>
                 <label htmlFor="state" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  State
+                  State <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <select
@@ -714,12 +757,15 @@ const SignUp: React.FC = () => {
                   </select>
                   <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                 </div>
+                {submitted && !state && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
               </div>
 
               {/* Postcode */}
               <div>
                 <label htmlFor="postcode" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Postcode
+                  Postcode <span className="text-red-500">*</span>
                 </label>
                 <input
                   id="postcode"
@@ -731,12 +777,15 @@ const SignUp: React.FC = () => {
                   maxLength={4}
                   className={getInputClasses(postcode, postcode.trim().length > 0)}
                 />
+                {submitted && !postcode.trim() && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
               </div>
 
               {/* Password */}
               <div>
                 <label htmlFor="password" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Password
+                  Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -744,7 +793,7 @@ const SignUp: React.FC = () => {
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Create a password (min. 8 characters)"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value.replace(/[^a-zA-Z0-9]/g, ''))}
                     className={getInputClasses(password, isValidPassword(password))}
                   />
                   <button
@@ -756,12 +805,21 @@ const SignUp: React.FC = () => {
                     {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
                   </button>
                 </div>
+                {passwordHasInvalidChars && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">Password must contain only letters and numbers — no spaces or special characters.</p>
+                )}
+                {submitted && !password && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
+                {submitted && password && password.length < 8 && !passwordHasInvalidChars && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">Password must be at least 8 characters.</p>
+                )}
               </div>
 
               {/* Confirm password */}
               <div>
                 <label htmlFor="confirmPassword" className="block text-[13px] font-medium text-gray-700 mb-1.5">
-                  Confirm password
+                  Confirm password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <input
@@ -781,6 +839,12 @@ const SignUp: React.FC = () => {
                     {showConfirmPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
                   </button>
                 </div>
+                {submitted && !confirmPassword && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">This field is required.</p>
+                )}
+                {submitted && confirmPassword && !passwordsMatch() && (
+                  <p className="text-[13px] text-red-600 font-medium mt-1.5">Passwords do not match.</p>
+                )}
               </div>
 
               {/* Auth Error */}
@@ -788,35 +852,41 @@ const SignUp: React.FC = () => {
                 <p className="text-[13px] text-red-600 font-medium">{authError}</p>
               )}
 
-              {/* Terms Checkbox */}
+              {/* Terms Checkbox — only shown once all fields are valid */}
               <div className="pt-2">
-                <div className="flex items-start gap-3">
-                  <input
-                    id="terms"
-                    type="checkbox"
-                    checked={agreedToTerms}
-                    onChange={(e) => setAgreedToTerms(e.target.checked)}
-                    className="mt-0.5 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                  />
-                  <label htmlFor="terms" className="text-[13px] text-gray-600 leading-relaxed cursor-pointer">
-                    I agree to the{' '}
-                    <a href="https://www.safepost.com.au/terms-of-use" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                      Software Terms and Conditions
-                    </a>
-                    ,{' '}
-                    <a href="https://www.safepost.com.au/privacy-policy" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                      Privacy Policy
-                    </a>
-                    , and{' '}
-                    <a href="https://www.safepost.com.au/website-terms" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                      Website Terms of Use
-                    </a>
-                  </label>
-                </div>
-                {submitted && !agreedToTerms && (
-                  <p className="text-[13px] text-red-600 font-medium mt-2 ml-7">
-                    Please tick this box to continue.
-                  </p>
+                {!allFieldsValid ? (
+                  <p className="text-[13px] text-gray-400">Complete all fields above to proceed.</p>
+                ) : (
+                  <>
+                    <div className="flex items-start gap-3">
+                      <input
+                        id="terms"
+                        type="checkbox"
+                        checked={agreedToTerms}
+                        onChange={(e) => setAgreedToTerms(e.target.checked)}
+                        className="mt-0.5 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
+                      />
+                      <label htmlFor="terms" className="text-[13px] text-gray-600 leading-relaxed cursor-pointer">
+                        I agree to the{' '}
+                        <a href="https://www.safepost.com.au/terms-of-use" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                          Software Terms and Conditions
+                        </a>
+                        ,{' '}
+                        <a href="https://www.safepost.com.au/privacy-policy" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                          Privacy Policy
+                        </a>
+                        , and{' '}
+                        <a href="https://www.safepost.com.au/website-terms" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                          Website Terms of Use
+                        </a>
+                      </label>
+                    </div>
+                    {submitted && !agreedToTerms && (
+                      <p className="text-[13px] text-red-600 font-medium mt-2 ml-7">
+                        Please tick this box to continue.
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
 
@@ -824,7 +894,7 @@ const SignUp: React.FC = () => {
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={isSubmitting || !abnVerified || !agreedToTerms}
+                  disabled={isSubmitting || (allFieldsValid && !agreedToTerms)}
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
                   {isSubmitting ? 'Creating account...' : 'Create account'}

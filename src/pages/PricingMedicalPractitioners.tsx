@@ -37,7 +37,7 @@ const PricingMedicalPractitioners: React.FC = () => {
   const faqs = [
     {
       question: 'Can I try SafePost before paying?',
-      answer: 'Yes \u2014 the Starter plan is free forever with 3 compliance checks. No credit card required.',
+      answer: 'Yes \u2014 the Starter plan is free forever with 5 compliance checks. No credit card required.',
     },
     {
       question: 'What happens if I exceed my monthly check limit?',
@@ -375,7 +375,7 @@ const PricingMedicalPractitioners: React.FC = () => {
 
       {/* Pricing Cards */}
       <section id="plans" className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-20 md:pb-24">
+        <div className="max-w-4xl mx-auto px-6 pb-14 md:pb-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Starter Card */}
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 md:p-10 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm flex flex-col">
@@ -393,7 +393,7 @@ const PricingMedicalPractitioners: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">3 compliance checks</span>
+                  <span className="text-[14px] text-gray-600">5 compliance checks</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -452,7 +452,7 @@ const PricingMedicalPractitioners: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">30 compliance checks per month</span>
+                  <span className="text-[14px] text-gray-600">20 compliance checks per month</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
@@ -464,7 +464,7 @@ const PricingMedicalPractitioners: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliance history (last 30 checks)</span>
+                  <span className="text-[14px] text-gray-600">Compliance history (last 20 checks)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
@@ -490,18 +490,19 @@ const PricingMedicalPractitioners: React.FC = () => {
 
       {/* FAQ Section */}
       <FAQSection
+        innerClassName="max-w-4xl mx-auto px-6 pt-12 pb-16 md:pb-20"
         title="Frequently asked questions"
         items={faqs}
       />
 
       {/* Call to Action */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Ready to stay compliant?
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            Start with 3 free compliance checks and see how SafePost can protect your practice
+            Start with 5 free compliance checks and see how SafePost can protect your practice
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button

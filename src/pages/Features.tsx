@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link } from 'react-router-dom';
-import { ChevronDown, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History } from 'lucide-react';
+import { ChevronDown, ChevronLeft, ChevronRight, ArrowRight, Menu, X, ExternalLink, ScanSearch, Flag, Wand2, Scale, MonitorSmartphone, History, Globe, AlertTriangle, ClipboardList, FileText, Shield, BadgeCheck } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import heroImage from '../assets/features-hero.png';
 import PublicFooter from '../components/layout/PublicFooter';
@@ -29,12 +29,78 @@ const Features: React.FC = () => {
   const [mobilePricingOpen, setMobilePricingOpen] = useState(false);
   const [mobileCompanyOpen, setMobileCompanyOpen] = useState(false);
 
+  const platformCategories = [
+    { category: 'Social networking', platforms: ['Facebook', 'X', 'WeChat', 'Weibo', 'WhatsApp'] },
+    { category: 'Professional networking', platforms: ['LinkedIn', 'Yammer'] },
+    { category: 'Discussion forums', platforms: ['Reddit', 'Whirlpool', 'Discord', 'Quora'] },
+    { category: 'Media sharing', platforms: ['YouTube', 'Flickr', 'Instagram', 'TikTok', 'Pinterest'] },
+    { category: 'Microblogging', platforms: ['Tumblr', 'Blogger', 'X'] },
+    { category: 'Audio publishing', platforms: ['Spotify', 'iTunes', 'Podcasts'] },
+    { category: 'Text publishing', platforms: ['Blogs', 'SlideShare'] },
+    { category: 'Knowledge aggregation', platforms: ['Wikipedia'] },
+    { category: 'Booking sites & apps', platforms: ['HealthEngine', 'Whitecoat', 'Podium'] },
+  ];
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const [cardVisible, setCardVisible] = useState(true);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+
+  const goToCard = (index: number) => {
+    setCardVisible(false);
+    setTimeout(() => {
+      setCarouselIndex(index);
+      setCardVisible(true);
+    }, 150);
+  };
+  const prevCard = () => goToCard((carouselIndex - 1 + platformCategories.length) % platformCategories.length);
+  const nextCard = () => goToCard((carouselIndex + 1) % platformCategories.length);
+
+  const handleTouchStart = (e: React.TouchEvent) => setTouchStartX(e.touches[0].clientX);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX === null) return;
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? nextCard() : prevCard();
+    setTouchStartX(null);
+  };
+
   const resourceLinks = [
     { label: 'Advertising Hub', href: 'https://www.ahpra.gov.au/Resources/Advertising-hub.aspx' },
     { label: 'Code of Conduct', href: 'https://www.medicalboard.gov.au/codes-guidelines-policies/code-of-conduct.aspx' },
     { label: 'TGA Guidelines', href: 'https://www.tga.gov.au/resources/guidance/advertising-therapeutic-goods-social-media' },
   ];
 
+
+  const auditFeatures = [
+    {
+      icon: <Globe className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Page-by-page analysis',
+      description: 'Check up to 6 pages from your practice website — homepage, services, about, testimonials, pricing, and more.',
+    },
+    {
+      icon: <AlertTriangle className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Severity-rated findings',
+      description: 'Every issue rated High, Medium, or Low with a plain-English explanation of the breach and the specific guideline it relates to.',
+    },
+    {
+      icon: <ClipboardList className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Actionable recommendations',
+      description: 'Each finding includes a specific recommendation so you know exactly what needs to change and why.',
+    },
+    {
+      icon: <FileText className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Downloadable audit report',
+      description: 'Receive a professionally formatted audit report you can save, share with your team, or use as a compliance record.',
+    },
+    {
+      icon: <Shield className="w-7 h-7 text-blue-500/80" />,
+      heading: 'AHPRA and TGA rules',
+      description: 'Checked against AHPRA advertising guidelines and TGA therapeutic goods advertising rules — the same primary sources used for post checking.',
+    },
+    {
+      icon: <BadgeCheck className="w-7 h-7 text-blue-500/80" />,
+      heading: 'Subscriber add-on',
+      description: 'Available to all active SafePost subscribers as a one-time add-on for $149 AUD (incl. GST) per website audit.',
+    },
+  ];
 
   const features = [
     {
@@ -358,7 +424,7 @@ const Features: React.FC = () => {
 
       {/* Hero Image */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-2xl mx-auto px-6 mb-16 md:mb-20">
+        <div className="max-w-2xl mx-auto px-6 mb-10 md:mb-12">
           <img
             src={heroImage}
             alt="SafePost AHPRA and TGA compliance checking interface showing a post analysis result"
@@ -373,12 +439,12 @@ const Features: React.FC = () => {
 
       {/* Features Grid */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm"
+                className="bg-white rounded-2xl border border-black/[0.06] p-8 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm h-full flex flex-col min-h-[280px]"
               >
                 <div className="w-14 h-14 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mb-6">
                   {feature.icon}
@@ -386,7 +452,7 @@ const Features: React.FC = () => {
                 <h3 className="text-lg font-bold text-gray-900 mb-2 leading-snug">
                   {feature.heading}
                 </h3>
-                <p className="text-[14px] text-gray-500 leading-relaxed">
+                <p className="text-[14px] text-gray-500 leading-relaxed flex-grow">
                   {feature.description}
                 </p>
               </div>
@@ -397,7 +463,7 @@ const Features: React.FC = () => {
 
       {/* Call to Action */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Ready to get started?
           </h2>

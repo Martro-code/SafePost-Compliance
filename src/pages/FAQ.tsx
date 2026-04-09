@@ -37,6 +37,7 @@ const FAQ: React.FC = () => {
     'Full compliance history & audit trail',
     'No prompt engineering or expertise required',
     'Before/after photo analysis',
+    'Page-by-page website compliance audit',
     'Star rating risk assessment',
     'Team access & shared history on Pro+ and Ultra plans',
   ];
@@ -47,7 +48,7 @@ const FAQ: React.FC = () => {
       items: [
         {
           question: 'Why was SafePost built?',
-          answer: 'Australian medical practitioners and practices face real consequences for non-compliant social media content and online advertising \u2014 from formal AHPRA complaints to TGA enforcement action. SafePost was built to give practitioners an instant, reliable way to check their content before posting, without needing to read hundreds of pages of guidelines.',
+          answer: 'Australian medical practitioners and practices face real consequences for non-compliant social media content, online advertising and website content \u2014 from formal AHPRA complaints to TGA enforcement action. SafePost was built to give practitioners an instant, reliable way to check their content before publishing, without needing to read hundreds of pages of guidelines.',
         },
         {
           question: 'Who is SafePost for?',
@@ -68,7 +69,7 @@ const FAQ: React.FC = () => {
       items: [
         {
           question: 'What types of content can I check?',
-          answer: 'SafePost analyses social media posts, online advertising copy, website content, email marketing, and any other text-based content intended for public audiences. You can also attach images for visual content analysis including before/after photos and star ratings.',
+          answer: 'SafePost analyses social media posts, online advertising copy, website content, email marketing, and any other text-based content intended for public audiences. You can also attach images for visual content analysis including before/after photos and star ratings. Subscribers can also run a full Website Compliance Audit \u2014 a guided page-by-page review of their practice website for $149 AUD (incl. GST).',
         },
         {
           question: 'Can SafePost guarantee my content will be compliant?',
@@ -89,7 +90,7 @@ const FAQ: React.FC = () => {
       items: [
         {
           question: 'Can I try SafePost before paying?',
-          answer: 'Yes \u2014 the Starter plan is free with 3 compliance checks included. No credit card required.',
+          answer: 'Yes \u2014 the Starter plan is free with 5 compliance checks included. No credit card required.',
         },
         {
           question: 'Can I upgrade or downgrade my plan at any time?',
@@ -130,17 +131,17 @@ const FAQ: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Got questions about AHPRA &amp; TGA compliance? We've got answers.
+            Got questions about AHPRA &amp; TGA compliance?
           </h1>
           <p className="text-lg text-gray-500">
-            Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works.
+            Everything you need to know about SafePost, AHPRA and TGA compliance, and how it all works
           </p>
         </div>
       </section>
 
       {/* Comparison Section — Two Column Layout */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <span className="inline-block text-[11px] font-semibold uppercase tracking-[0.2em] text-gray-400 mb-4">
             WHY SAFEPOST
           </span>
@@ -197,13 +198,14 @@ const FAQ: React.FC = () => {
 
       {/* FAQ Accordions */}
       <FAQSection
+        innerClassName="max-w-4xl mx-auto px-6 pt-12 pb-16 md:pb-20"
         title="Frequently asked questions"
         groups={faqGroups}
       />
 
       {/* Closing CTA */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Still have questions?
           </h2>

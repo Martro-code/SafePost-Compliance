@@ -33,7 +33,7 @@ const UpdatePersonalDetails: React.FC = () => {
       setAbnEntityName('');
       setAbnStatus('');
       if (cleaned.length > 0) {
-        setAbnError('ABN must be exactly 11 digits.');
+        setAbnError('Please enter a valid 11-digit ABN');
       }
       return;
     }
@@ -56,8 +56,15 @@ const UpdatePersonalDetails: React.FC = () => {
 
       if (controller.signal.aborted) return;
 
-      if (error || !data?.valid) {
-        setAbnError(data?.error || 'This ABN could not be verified. Please check and try again.');
+      if (error) {
+        setAbnError('ABN verification service unavailable. Please try again.');
+        setAbnVerified(false);
+      } else if (!data?.valid) {
+        if (data?.error === 'ABN_NOT_FOUND') {
+          setAbnError('ABN not found or invalid. Please check your ABN and try again.');
+        } else {
+          setAbnError('ABN verification service unavailable. Please try again.');
+        }
         setAbnVerified(false);
       } else {
         setAbnVerified(true);
@@ -67,7 +74,7 @@ const UpdatePersonalDetails: React.FC = () => {
       }
     } catch {
       if (!controller.signal.aborted) {
-        setAbnError('This ABN could not be verified. Please check and try again.');
+        setAbnError('ABN verification service unavailable. Please try again.');
         setAbnVerified(false);
       }
     } finally {

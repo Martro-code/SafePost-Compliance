@@ -11,7 +11,7 @@ const LoggedInFooter = () => {
               <span className="text-[#2563EB]">Post</span>™
             </div>
             <p className="text-[13px] text-gray-500 leading-relaxed mt-2 max-w-[200px]">
-              Checks your online advertising and social media content against AHPRA and TGA rules — before you publish, not after.
+              Checks your social media, online advertising and website content against AHPRA and TGA rules — before you publish, not after.
             </p>
           </div>
 

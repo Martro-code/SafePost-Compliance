@@ -2,10 +2,11 @@
 // Requires the ABR_GUID secret to be set in Supabase Edge Function secrets.
 // To set: supabase secrets set ABR_GUID=<your-guid> --project-ref <ref>
 //
-// All "business logic" failures (missing secret, bad ABN, inactive ABN, ABR
-// API errors) return HTTP 200 with { valid: false, error: '...' } so the
-// frontend can read data.error directly. Non-2xx statuses cause supabase-js
-// to set data = null, which silences the real error message.
+// All responses return HTTP 200 so supabase-js can read the body.
+// Structured error codes:
+//   INVALID_FORMAT      — ABN is not exactly 11 digits
+//   ABN_NOT_FOUND       — ABN inactive, cancelled, or not found in ABR
+//   SERVICE_UNAVAILABLE — network error, ABR API failure, or misconfiguration
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -26,7 +27,7 @@ Deno.serve(async (req) => {
   }
 
   if (req.method !== 'POST') {
-    return jsonResponse({ valid: false, error: 'Method not allowed' }, 405);
+    return jsonResponse({ valid: false, error: 'SERVICE_UNAVAILABLE', message: 'Method not allowed' }, 405);
   }
 
   try {
@@ -35,16 +36,13 @@ Deno.serve(async (req) => {
     // Strip spaces and validate format: exactly 11 digits
     const cleaned = (abn ?? '').toString().replace(/\s/g, '');
     if (!/^\d{11}$/.test(cleaned)) {
-      return jsonResponse({ valid: false, error: 'ABN must be exactly 11 digits.' });
+      return jsonResponse({ valid: false, error: 'INVALID_FORMAT', message: 'ABN must be exactly 11 digits' });
     }
 
     const guid = Deno.env.get('ABR_GUID');
     if (!guid) {
       console.error('ABR_GUID secret is not configured');
-      return jsonResponse({
-        valid: false,
-        error: 'ABR lookup is not configured — ABR_GUID secret is missing. Please contact support.',
-      });
+      return jsonResponse({ valid: false, error: 'SERVICE_UNAVAILABLE', message: 'ABN verification service unavailable' });
     }
 
     const abrUrl = `https://abr.business.gov.au/abrxmlsearch/AbrXmlSearch.asmx/SearchByABNv202001?searchString=${cleaned}&includeHistoricalDetails=N&authenticationGuid=${guid}`;
@@ -57,12 +55,12 @@ Deno.serve(async (req) => {
     } catch (fetchErr) {
       const msg = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
       console.error(`ABR API request failed: ${msg}`);
-      return jsonResponse({ valid: false, error: 'ABN verification service unavailable. Please try again.' });
+      return jsonResponse({ valid: false, error: 'SERVICE_UNAVAILABLE', message: 'ABN verification service unavailable' });
     }
 
     if (!abrRes.ok) {
       console.error(`ABR API returned HTTP ${abrRes.status}. Response: ${xml.slice(0, 200)}`);
-      return jsonResponse({ valid: false, error: 'ABN verification service unavailable. Please try again.' });
+      return jsonResponse({ valid: false, error: 'SERVICE_UNAVAILABLE', message: 'ABN verification service unavailable' });
     }
 
     // Helper to extract text content from an XML element by tag name.
@@ -75,7 +73,7 @@ Deno.serve(async (req) => {
     const exceptionDesc = tag('exceptionDescription');
     if (exceptionDesc) {
       console.error('ABR API exception:', exceptionDesc);
-      return jsonResponse({ valid: false, error: 'ABN verification service unavailable. Please try again.' });
+      return jsonResponse({ valid: false, error: 'SERVICE_UNAVAILABLE', message: 'ABN verification service unavailable' });
     }
 
     // Extract entity name — prefer organisation name, fall back to
@@ -120,10 +118,11 @@ Deno.serve(async (req) => {
     if (!isActive) {
       return jsonResponse({
         valid: false,
+        error: 'ABN_NOT_FOUND',
+        message: 'ABN not found or invalid',
         entityName,
         entityType,
         status: abnStatus || 'Unknown',
-        error: `This ABN is ${abnStatus || 'not active'}. Please check and try again.`,
       });
     }
 
@@ -136,6 +135,6 @@ Deno.serve(async (req) => {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error('verify-abn unhandled error:', msg);
-    return jsonResponse({ valid: false, error: 'An unexpected error occurred. Please try again.' });
+    return jsonResponse({ valid: false, error: 'SERVICE_UNAVAILABLE', message: 'ABN verification service unavailable' });
   }
 });

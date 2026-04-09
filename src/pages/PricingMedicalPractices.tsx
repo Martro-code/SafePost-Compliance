@@ -37,7 +37,7 @@ const PricingMedicalPractices: React.FC = () => {
   const faqs = [
     {
       question: 'What\u2019s the difference between the plans for practices?',
-      answer: 'The key differences are check volume, team size, and history access. Pro+ suits a single-practitioner practice (100 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
+      answer: 'The key differences are check volume, team size, and history access. Pro+ suits a single-practitioner practice (50 checks/month, up to 3 users). Ultra suits multi-practitioner practices running integrated campaigns (unlimited checks, up to 10 users, PDF audit export).',
     },
     {
       question: 'Can multiple staff members use the same SafePost account?',
@@ -375,7 +375,7 @@ const PricingMedicalPractices: React.FC = () => {
 
       {/* Pricing Cards */}
       <section id="plans" className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-4xl mx-auto px-6 pb-20 md:pb-24">
+        <div className="max-w-4xl mx-auto px-6 pb-14 md:pb-16">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Pro+ Card */}
             <div className="bg-white rounded-2xl border border-black/[0.06] p-8 md:p-10 transition-all duration-200 hover:border-black/[0.1] hover:shadow-sm flex flex-col">
@@ -385,12 +385,12 @@ const PricingMedicalPractices: React.FC = () => {
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$490' : '$49'}</span>
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$390' : '$39'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">{isYearly ? '/year' : '/month (incl. GST)'}</span>
                 </div>
                 {isYearly && (
                   <p className="text-[12px] text-gray-400 mt-1.5 flex items-center gap-1.5">
-                    $41/month
+                    $32/month
                     <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none">
                       2 months free
                     </span>
@@ -404,7 +404,7 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">100 compliance checks per month</span>
+                  <span className="text-[14px] text-gray-600">50 compliance checks per month</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -412,7 +412,7 @@ const PricingMedicalPractices: React.FC = () => {
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[14px] text-gray-600">Compliance history (last 100 checks)</span>
+                  <span className="text-[14px] text-gray-600">Compliance history (last 50 checks)</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -443,12 +443,12 @@ const PricingMedicalPractices: React.FC = () => {
               </div>
               <div className="mb-8">
                 <div className="flex items-end gap-2">
-                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$1,490' : '$149'}</span>
+                  <span className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-none">{isYearly ? '$990' : '$99'}</span>
                   <span className="text-[15px] text-gray-500 font-medium leading-none pb-0.5">{isYearly ? '/year' : '/month (incl. GST)'}</span>
                 </div>
                 {isYearly && (
                   <p className="text-[12px] text-gray-400 mt-1.5 flex items-center gap-1.5">
-                    $124/month
+                    $82/month
                     <span className="text-[11px] font-semibold text-green-700 bg-green-100 border border-green-200 px-2 py-0.5 rounded-full leading-none">
                       2 months free
                     </span>
@@ -508,13 +508,14 @@ const PricingMedicalPractices: React.FC = () => {
 
       {/* FAQ Section */}
       <FAQSection
+        innerClassName="max-w-4xl mx-auto px-6 pt-12 pb-16 md:pb-20"
         title="Frequently asked questions"
         items={faqs}
       />
 
       {/* Call to Action */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Ready to check your compliance?
           </h2>

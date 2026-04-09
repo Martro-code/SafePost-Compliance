@@ -294,7 +294,7 @@ const PrivacyPolicy: React.FC = () => {
             <div>
               <h2 id="requesting-access" className="text-lg font-bold text-gray-900 leading-snug mb-3">11. Requesting access or correcting your personal information</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed mb-4">
-                If you wish to request access to the personal information we hold about you, please contact us using the contact details set out below including your name and contact details. We may need to verify your identity before providing you with your personal information. In some cases, we may be unable to provide you with access to all your personal information and where this occurs, we will explain why. We will deal with all requests for access to personal information within a reasonable timeframe.
+                If you wish to request access to the personal information we hold about you, please contact us using the contact details set out below and include your name and contact details. We may need to verify your identity before providing you with your personal information. In some cases, we may be unable to provide you with access to all your personal information and where this occurs, we will explain why. We will deal with all requests for access to personal information within a reasonable timeframe.
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 If you think that any personal information we hold about you is inaccurate, please contact us using the contact details set out below and we will take reasonable steps to ensure that it is corrected.
@@ -313,7 +313,7 @@ const PrivacyPolicy: React.FC = () => {
             <div>
               <h2 id="contact-us" className="text-lg font-bold text-gray-900 leading-snug mb-3">13. Contact us</h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                Please contact us at <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a> if you have any questions about our Privacy Policy or practices, or to access or correct your personal information, or to make a complaint.
+                Please contact us at <a href="mailto:privacy@safepost.com.au" className="text-blue-600 hover:text-blue-700 underline underline-offset-2">privacy@safepost.com.au</a> if you have any questions about our Privacy Policy or practices, to access or correct your personal information or to make a complaint.
               </p>
             </div>
 

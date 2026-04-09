@@ -302,17 +302,17 @@ const About: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            About SafePost: AHPRA &amp; TGA compliance for Australian healthcare
+            About SafePost
           </h1>
           <p className="text-lg text-gray-500">
-            Supporting Australian medical practitioners and practices with compliance confidence
+            Supporting Australian medical practitioners and practices with compliance confidence across everything they publish online
           </p>
         </div>
       </section>
 
       {/* Main Content */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-24 md:pb-32">
+        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="max-w-[800px] mx-auto space-y-12">
             {/* Section 1 */}
             <div>
@@ -320,7 +320,7 @@ const About: React.FC = () => {
                 {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts and online advertising can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
+                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts, online advertising and website content can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
               </p>
             </div>
 
@@ -330,7 +330,7 @@ const About: React.FC = () => {
                 {"We founded SafePost because compliance shouldn\u2019t hold you back from connecting with patients"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Social media and digital marketing are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post can put your registration at risk."}
+                {"Social media, digital marketing and your practice website are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post or non-compliant webpage can put your registration at risk."}
               </p>
             </div>
 
@@ -340,22 +340,32 @@ const About: React.FC = () => {
                 Our mission is to help Australian medical practitioners and practices communicate confidently, compliantly and authentically
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post will trigger an investigation. SafePost provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations."}
+                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post or services page will trigger an investigation. SafePost provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations \u2014 across your social media, online advertising and practice website."}
               </p>
             </div>
 
             {/* Section 4 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re not lawyers. We\u2019re your compliance partner"}
+                {"We\u2019re not lawyers. We\u2019re your compliance platform"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns, we\u2019re here to support you at every step."}
+                {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns and website audits, we\u2019re here to support you at every step."}
+              </p>
+            </div>
+
+            {/* Section 5 */}
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
+                Our vision is to make compliance the standard — not the exception
+              </h2>
+              <p className="text-[14px] text-gray-500 leading-relaxed">
+                {"Today, SafePost checks your content before it goes live. But our vision reaches further \u2014 a single trusted platform that every Australian doctor and medical practice turns to for compliance confidence across everything they publish, communicate and practise. We\u2019re building toward that future, one check at a time."}
               </p>
             </div>
 
             {/* SafePost Logo Divider */}
-            <div className="py-16 flex justify-center">
+            <div className="py-10 flex justify-center">
               <img
                 src={spLogo}
                 alt="SafePost logo"
@@ -381,7 +391,7 @@ const About: React.FC = () => {
                 {"It\u2019s a design that says compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
               </p>
               <p className="text-lg font-bold text-gray-900 leading-snug mt-4">
-                {"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that every post you share is one you can stand behind with complete confidence."}
+                {"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that everything you put online is something you can stand behind with complete confidence."}
               </p>
             </div>
           </div>
@@ -390,7 +400,7 @@ const About: React.FC = () => {
 
       {/* Call to Action */}
       <section className="w-full bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-20 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Ready to experience compliance confidence?
           </h2>
