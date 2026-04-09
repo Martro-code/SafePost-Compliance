@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { ChevronDown, Menu, X, ExternalLink } from 'lucide-react';
+import { ChevronDown, Menu, X, ExternalLink, ArrowLeft } from 'lucide-react';
 import SafePostLogo from '../components/ui/SafePostLogo';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
@@ -655,7 +655,18 @@ const SoftwareTerms: React.FC = () => {
   if (user) {
     return (
       <LoggedInLayout>
-        {contentSection}
+        <>
+          <div className="max-w-6xl mx-auto px-6 pt-6">
+            <button
+              onClick={() => navigate('/dashboard')}
+              className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Dashboard
+            </button>
+          </div>
+          {contentSection}
+        </>
       </LoggedInLayout>
     );
   }

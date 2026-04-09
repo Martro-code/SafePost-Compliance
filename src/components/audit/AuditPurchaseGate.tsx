@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useNavigate, useSearchParams } from 'react-router-dom';
-import { Check, CheckCircle, LockIcon } from 'lucide-react';
+import { Check, CheckCircle, LockIcon, ArrowLeft } from 'lucide-react';
 import { useAccount } from '../../context/AccountContext';
 import { supabase } from '../../services/supabaseClient';
 import LoggedInLayout from '../layout/LoggedInLayout';
@@ -112,6 +112,13 @@ const AuditPurchaseGate: React.FC = () => {
     return (
       <LoggedInLayout>
         <div className="max-w-3xl mx-auto px-6 py-16">
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Dashboard
+          </button>
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full mb-5">
               <LockIcon className="w-3.5 h-3.5 text-blue-600" />
@@ -190,6 +197,13 @@ const AuditPurchaseGate: React.FC = () => {
   return (
     <LoggedInLayout>
       <div className="max-w-3xl mx-auto px-6 py-16">
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </button>
         {/* Header */}
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full mb-5">

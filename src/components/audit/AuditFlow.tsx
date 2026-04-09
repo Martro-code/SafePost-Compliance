@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Globe } from 'lucide-react';
+import { Loader2, Globe, ArrowLeft } from 'lucide-react';
 import { supabase } from '../../services/supabaseClient';
 import { useAccount } from '../../context/AccountContext';
 import { AuditStep, AuditStepResult } from '../../types/audit';
@@ -308,6 +308,13 @@ const AuditFlow: React.FC = () => {
   return (
     <LoggedInLayout>
       <div className="max-w-5xl mx-auto px-6 py-12">
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors mb-8"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Dashboard
+        </button>
         {/* Page header */}
         <div className="mb-8">
           <h1 className="text-[24px] font-bold text-gray-900 mb-1">Website Compliance Audit</h1>
