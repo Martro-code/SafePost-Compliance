@@ -17,6 +17,7 @@ let optionsConfigured = false;
 function parseAddressComponents(
   components: google.maps.GeocoderAddressComponent[]
 ): AddressComponents {
+  let subpremise = '';
   let streetNumber = '';
   let route = '';
   let suburb = '';
@@ -25,7 +26,9 @@ function parseAddressComponents(
 
   for (const component of components) {
     const types = component.types;
-    if (types.includes('street_number')) {
+    if (types.includes('subpremise') || types.includes('premise')) {
+      subpremise = component.long_name;
+    } else if (types.includes('street_number')) {
       streetNumber = component.long_name;
     } else if (types.includes('route')) {
       route = component.long_name;
@@ -38,7 +41,8 @@ function parseAddressComponents(
     }
   }
 
-  const streetAddress = streetNumber ? `${streetNumber} ${route}` : route;
+  const base = streetNumber ? `${streetNumber} ${route}` : route;
+  const streetAddress = subpremise ? `${subpremise}/${base}` : base;
 
   return { streetAddress, suburb, state, postcode };
 }
