@@ -852,41 +852,36 @@ const SignUp: React.FC = () => {
                 <p className="text-[13px] text-red-600 font-medium">{authError}</p>
               )}
 
-              {/* Terms Checkbox — only shown once all fields are valid */}
+              {/* Terms Checkbox */}
               <div className="pt-2">
-                {!allFieldsValid ? (
-                  <p className="text-[13px] text-gray-400">Complete all fields above to proceed.</p>
-                ) : (
-                  <>
-                    <div className="flex items-start gap-3">
-                      <input
-                        id="terms"
-                        type="checkbox"
-                        checked={agreedToTerms}
-                        onChange={(e) => setAgreedToTerms(e.target.checked)}
-                        className="mt-0.5 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-                      />
-                      <label htmlFor="terms" className="text-[13px] text-gray-600 leading-relaxed cursor-pointer">
-                        I agree to the{' '}
-                        <a href="https://www.safepost.com.au/terms-of-use" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                          Software Terms and Conditions
-                        </a>
-                        ,{' '}
-                        <a href="https://www.safepost.com.au/privacy-policy" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                          Privacy Policy
-                        </a>
-                        , and{' '}
-                        <a href="https://www.safepost.com.au/website-terms" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
-                          Website Terms of Use
-                        </a>
-                      </label>
-                    </div>
-                    {submitted && !agreedToTerms && (
-                      <p className="text-[13px] text-red-600 font-medium mt-2 ml-7">
-                        Please tick this box to continue.
-                      </p>
-                    )}
-                  </>
+                <div className="flex items-start gap-3">
+                  <input
+                    id="terms"
+                    type="checkbox"
+                    checked={agreedToTerms}
+                    onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    disabled={!allFieldsValid}
+                    className="mt-0.5 w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                  />
+                  <label htmlFor="terms" className={`text-[13px] leading-relaxed ${!allFieldsValid ? 'text-gray-400 cursor-not-allowed' : 'text-gray-600 cursor-pointer'}`}>
+                    I agree to the{' '}
+                    <a href="https://www.safepost.com.au/terms-of-use" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                      Software Terms and Conditions
+                    </a>
+                    ,{' '}
+                    <a href="https://www.safepost.com.au/privacy-policy" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                      Privacy Policy
+                    </a>
+                    , and{' '}
+                    <a href="https://www.safepost.com.au/website-terms" target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-blue-600 hover:text-blue-700 underline underline-offset-2">
+                      Website Terms of Use
+                    </a>
+                  </label>
+                </div>
+                {submitted && allFieldsValid && !agreedToTerms && (
+                  <p className="text-[13px] text-red-600 font-medium mt-2 ml-7">
+                    Please tick this box to continue.
+                  </p>
                 )}
               </div>
 
@@ -894,7 +889,7 @@ const SignUp: React.FC = () => {
               <div className="pt-2">
                 <button
                   type="submit"
-                  disabled={isSubmitting || (allFieldsValid && !agreedToTerms)}
+                  disabled={isSubmitting || !allFieldsValid || !agreedToTerms}
                   className="w-full h-12 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-[15px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] hover:shadow-blue-600/30"
                 >
                   {isSubmitting ? 'Creating account...' : 'Create account'}
