@@ -305,54 +305,45 @@ const ComplianceHub: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            AHPRA &amp; TGA compliance hub
+            Compliance hub
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-            What counts as advertising, which platforms are covered, and what activities are most likely to trigger an AHPRA or TGA investigation
+            Everything Australian medical practitioners need to understand AHPRA and TGA advertising rules.
           </p>
         </div>
       </section>
 
-      {/* Social Media Is Advertising Section */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start">
-            {/* Left Column — Text Content */}
-            <div className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 leading-[1.15]">
-                Social media is advertising
-              </h2>
-              <p className="text-[15px] text-gray-600 leading-relaxed">
-                Any social media activity intended to attract patients, promote services, or drive engagement with your practice is considered advertising under Australian law. This applies to all platforms and includes both public posts and closed channels such as private Facebook groups or dark marketing, unless they meet strict health professional-only access requirements.
-              </p>
-              <h3 className="text-lg font-bold text-gray-900">What the rules cover</h3>
-              <p className="text-[15px] text-gray-600 leading-relaxed">
-                Both AHPRA and the TGA regulate what you can say online. AHPRA&rsquo;s National Law prohibits false or misleading claims, patient testimonials, and content that creates unreasonable expectations about treatment results. The TGA&rsquo;s Advertising Code adds additional requirements whenever a post promotes medicines, medical devices, or supplements.
-              </p>
-            </div>
-
-            {/* Right Column — Platform List */}
-            <div className="grid grid-cols-2 gap-3">
-              {[
-                { category: 'Social networking', platforms: 'Facebook, X, WeChat, Weibo, WhatsApp' },
-                { category: 'Professional networking', platforms: 'LinkedIn, Yammer' },
-                { category: 'Discussion forums', platforms: 'Reddit, Whirlpool, Discord, Quora' },
-                { category: 'Media sharing', platforms: 'YouTube, Flickr, Instagram, TikTok, Pinterest' },
-                { category: 'Microblogging', platforms: 'Tumblr, Blogger, X' },
-                { category: 'Audio publishing', platforms: 'Spotify, iTunes, Podcasts' },
-                { category: 'Text publishing', platforms: 'Blogs, SlideShare' },
-                { category: 'Knowledge aggregation', platforms: 'Wikipedia' },
-                { category: 'Booking sites & apps', platforms: 'HealthEngine, Whitecoat, Podium' },
-              ].map((item, index) => (
-                <div key={index} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
-                  <span className="font-semibold text-slate-800 text-[14px]">{item.category}</span>
-                  <p className="text-[13px] text-slate-500 mt-1">{item.platforms}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Social Media Is Advertising */}
+      <FAQSection
+        title="Social media is advertising"
+        items={[
+          {
+            question: 'What is social media?',
+            answer:
+              'Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, to advertise or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media, used for social networking (Facebook, X, WeChat, Weibo, WhatsApp), professional networking (LinkedIn, Yammer), discussion forums (Reddit, Whirlpool, Discord, Quora), media sharing (YouTube, Flickr, Instagram, TikTok, Pinterest), microblogging (Tumblr, Blogger), audio publishing (Spotify, iTunes, Podcasts), text publishing (Blogs, SlideShare), knowledge and information aggregation (Wikipedia), and booking sites and apps (HealthEngine, Whitecoat, Podium).',
+          },
+          {
+            question: 'What is social media advertising?',
+            answer:
+              'Any social media activity intended to attract patients, promote services, or drive engagement with your practice is considered advertising under Australian law. This applies to all platforms and includes both public posts and closed channels such as private Facebook groups or dark marketing, unless they meet strict health professional-only access requirements.',
+          },
+          {
+            question: 'What do the rules cover?',
+            answer:
+              'Both AHPRA and the TGA regulate what you can say online. AHPRA\u2019s National Law prohibits false or misleading claims, patient testimonials, and content that creates unreasonable expectations about treatment results. The TGA\u2019s Advertising Code adds additional requirements whenever a post promotes medicines, medical devices, or supplements.',
+          },
+          {
+            question: 'Can I be investigated for what I post on social media?',
+            answer:
+              'AHPRA and the National Boards recognise the freedom of expression for practitioners and their right to communicate, including advocating for causes via social media, provided their activities do not involve the abuse or discrimination of others, or present a risk to the public. Registered practitioners will not be investigated purely for holding or expressing their views on social media. Regulatory action may be considered if the way a practitioner expresses their views presents a risk to public safety, provides false or misleading information, breaches privacy or confidentiality, risks the public\u2019s confidence in their profession, or requires action to maintain professional standards. All notifications to AHPRA are assessed according to their individual merits and circumstances to determine if they reach the threshold requiring an investigation or regulatory action.',
+          },
+          {
+            question: 'How does social media use affect my professional standing?',
+            answer:
+              'A primary objective of the National Registration and Accreditation Scheme is to protect the public. Community trust in registered health practitioners is essential. Every practitioner has a responsibility to behave ethically to justify this trust. Inappropriate use of social media can result in harm to patients and the profession, particularly given the changing nature of privacy and the capacity for material to be posted by others. Harm may include breaches of confidentiality, defamation of colleagues or employers, violation of practitioner\u2013patient boundaries, or an unintended exposure of personal information to the public, employers, consumers and others. Information published on social media is often impossible to remove or change and can be circulated widely, easily and rapidly. Be very careful about what you like or post online \u2014 regardless of where in the world the site is based or the language used.',
+          },
+        ]}
+      />
 
       {/* Activities That May Trigger Investigation */}
       <FAQSection
