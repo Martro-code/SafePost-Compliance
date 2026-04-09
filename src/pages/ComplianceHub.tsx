@@ -308,7 +308,7 @@ const ComplianceHub: React.FC = () => {
             Compliance hub
           </h1>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-            Everything Australian medical practitioners need to understand AHPRA and TGA advertising rules.
+            Everything Australian medical practitioners and practices need to understand AHPRA and TGA advertising rules
           </p>
         </div>
       </section>
@@ -317,6 +317,7 @@ const ComplianceHub: React.FC = () => {
       <div className="-mt-8">
       <FAQSection
         title="Social media is advertising"
+        subtitle="What counts as advertising — and what happens if you get it wrong"
         items={[
           {
             question: 'What is social media?',
