@@ -423,7 +423,7 @@ const ComplianceHub: React.FC = () => {
             Check your content before you post
           </h2>
           <p className="text-lg md:text-xl text-gray-500 max-w-2xl mx-auto mb-10">
-            SafePost checks your social media posts and advertising against 174 AHPRA and TGA rules in seconds
+            SafePost checks your social media posts and advertising against AHPRA and TGA rules in seconds
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
