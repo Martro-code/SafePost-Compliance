@@ -320,8 +320,22 @@ const ComplianceHub: React.FC = () => {
         items={[
           {
             question: 'What is social media?',
-            answer:
-              'Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, to advertise or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media, used for social networking (Facebook, X, WeChat, Weibo, WhatsApp), professional networking (LinkedIn, Yammer), discussion forums (Reddit, Whirlpool, Discord, Quora), media sharing (YouTube, Flickr, Instagram, TikTok, Pinterest), microblogging (Tumblr, Blogger), audio publishing (Spotify, iTunes, Podcasts), text publishing (Blogs, SlideShare), knowledge and information aggregation (Wikipedia), and booking sites and apps (HealthEngine, Whitecoat, Podium).',
+            answer: (
+              <>
+                <p>Social media is a term that is constantly evolving but generally refers to internet-based tools that allow individuals and groups to communicate, to advertise or share opinions, information, ideas, messages, experiences, images, and video or audio clips. They may include blogs, social networks, video and photo-sharing sites, wikis, or a myriad of other media, used for:</p>
+                <ul className="list-disc ml-4 mt-2 space-y-1">
+                  <li>social networking (Facebook, X, WeChat, Weibo, WhatsApp)</li>
+                  <li>professional networking (LinkedIn, Yammer)</li>
+                  <li>discussion forums (Reddit, Whirlpool, Discord, Quora)</li>
+                  <li>media sharing (YouTube, Flickr, Instagram, TikTok, Pinterest)</li>
+                  <li>microblogging (Tumblr, Blogger)</li>
+                  <li>audio publishing (Spotify, iTunes, Podcasts)</li>
+                  <li>text publishing (Blogs, SlideShare)</li>
+                  <li>knowledge/information aggregation (Wikipedia)</li>
+                  <li>booking sites and apps (HealthEngine, Whitecoat, Podium)</li>
+                </ul>
+              </>
+            ),
           },
           {
             question: 'What is social media advertising?',
