@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff, ArrowLeft, Loader2, CheckCircle2, Stethoscope } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Loader2, CheckCircle2, Stethoscope, ChevronDown } from 'lucide-react';
 import PublicHeader from '../components/layout/PublicHeader';
 import PublicFooter from '../components/layout/PublicFooter';
 import { supabase } from '../services/supabaseClient';
@@ -13,6 +13,8 @@ const SignUp: React.FC = () => {
   const [searchParams] = useSearchParams();
   const plan = searchParams.get('plan') || '';
   const billing = searchParams.get('billing') || '';
+  const auditPending = searchParams.get('audit') === 'pending';
+  const auditRedirect = searchParams.get('redirect'); // 'audit-standard' | 'audit-extended'
 
   const [firstName, setFirstName] = useState('');
   const [surname, setSurname] = useState('');
@@ -247,6 +249,18 @@ const SignUp: React.FC = () => {
           plan: selectedPlan,
           billing: billing || 'monthly',
         }));
+      }
+
+      // If user came from the standalone audit purchase flow, store the redirect
+      // destination so AuthCallback can pick it up after email verification.
+      if (auditPending) {
+        localStorage.setItem('safepost_pending_redirect', '/audit?purchase=success&type=standalone');
+      }
+
+      // If user came from an audit pricing CTA, store the audit type so
+      // AuthCallback can initiate the Stripe checkout after email verification.
+      if (auditRedirect === 'audit-standard' || auditRedirect === 'audit-extended') {
+        localStorage.setItem('safepost_pending_audit_redirect', auditRedirect);
       }
 
       const params = new URLSearchParams();

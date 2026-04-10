@@ -12,14 +12,27 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
   const analysedSteps = session.steps.filter(
     (s) => s.status === 'complete' && s.result && s.result.complianceStatus !== 'skipped'
   );
-  const passCount   = analysedSteps.filter((s) => s.result?.complianceStatus === 'pass').length;
-  const warnCount   = analysedSteps.filter((s) => s.result?.complianceStatus === 'warning').length;
-  const failCount   = analysedSteps.filter((s) => s.result?.complianceStatus === 'fail').length;
+  const passCount = analysedSteps.filter((s) => s.result?.complianceStatus === 'pass').length;
+  const warnCount = analysedSteps.filter((s) => s.result?.complianceStatus === 'warning').length;
+  const failCount = analysedSteps.filter((s) => s.result?.complianceStatus === 'fail').length;
   const score = analysedSteps.length > 0
     ? Math.round(((passCount + warnCount * 0.5) / analysedSteps.length) * 100)
     : 0;
 
-  const scoreHexColor = score >= 67 ? '#22c55e' : score >= 34 ? '#f59e0b' : '#ef4444';
+  // Score colour: 0–25 red, 26–50 amber, 51–75 blue, 76–100 green
+  const scoreColor =
+    score <= 25 ? '#ef4444' :
+    score <= 50 ? '#f59e0b' :
+    score <= 75 ? '#3b82f6' :
+                  '#22c55e';
+
+  // Plain English interpretation
+  const scoreInterpretation =
+    score === 100 ? 'Your website appears compliant with AHPRA and TGA advertising standards based on the pages reviewed.' :
+    score >= 76   ? 'Your website is largely compliant with a few minor issues to address.' :
+    score >= 51   ? 'Your website is partially compliant but has areas that need improvement to meet AHPRA and TGA advertising standards.' :
+    score >= 26   ? 'Your website has several compliance issues that should be addressed to reduce your risk of an AHPRA or TGA complaint.' :
+                    'Your website has significant compliance issues that require urgent attention before they attract regulatory scrutiny.';
 
   const auditDate = new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
     day: 'numeric', month: 'long', year: 'numeric',
@@ -38,7 +51,7 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
     <div class="page-block">
       <div class="page-name">${escHtml(step.name)}</div>
       <span class="status-badge status-skipped">Not Analysed</span>
-      <div class="page-summary">This page was skipped and not analysed.</div>
+      <p style="font-size:14px;color:#64748b;margin-top:8px;">This page was skipped and not analysed.</p>
     </div>`;
       }
 
@@ -46,41 +59,32 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
         result.complianceStatus === 'pass'    ? 'status-compliant' :
         result.complianceStatus === 'warning' ? 'status-warning'   : 'status-issues';
       const badgeLabel =
-        result.complianceStatus === 'pass'    ? 'Compliant'       :
-        result.complianceStatus === 'warning' ? 'Warnings Found'  : 'Issues Found';
+        result.complianceStatus === 'pass'    ? 'Compliant'      :
+        result.complianceStatus === 'warning' ? 'Warnings Found' : 'Issues Found';
 
       const findingsHtml = result.issues.map((issue) => {
         const sev = issue.severity;
-        const sevBadgeStyle =
-          sev === 'high'   ? 'background:#fee2e2;color:#991b1b;' :
-          sev === 'medium' ? 'background:#fef3c7;color:#92400e;' :
-                             'background:#dbeafe;color:#1e40af;';
-        const cardBg =
-          sev === 'high'   ? '#fff8f8' :
-          sev === 'medium' ? '#fffdf5' :
-                             '#f5f8ff';
+        const sevClass =
+          sev === 'high'   ? 'severity-high'   :
+          sev === 'medium' ? 'severity-medium'  :
+                             'severity-low';
         return `
-      <div class="finding finding-${sev}" style="background: ${cardBg}; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-        <span class="finding-severity-badge" style="${sevBadgeStyle}">${sev.toUpperCase()}</span>
+      <div class="finding finding-${sev}">
+        <span class="severity-badge ${sevClass}">${sev.toUpperCase()}</span>
         <div class="finding-description">${escHtml(issue.description)}</div>
-        <div class="finding-recommendation">
-          <span class="recommendation-label">Recommendation</span>
-          ${escHtml(issue.recommendation)}
+        <div class="recommendation-box">
+          <div class="recommendation-label">Recommendation</div>
+          <div class="recommendation-text">${escHtml(issue.recommendation)}</div>
         </div>
       </div>`;
       }).join('');
 
-      const hrColor =
-        result.complianceStatus === 'pass'    ? '#22c55e' :
-        result.complianceStatus === 'warning' ? '#f59e0b' : '#ef4444';
-
       return `
     <div class="page-block">
-      <hr style="border: none; border-top: 2px solid ${hrColor}; margin-bottom: 20px; border-radius: 2px;" />
       <div class="page-name">${escHtml(step.name)}</div>
       ${result.url ? `<div class="page-url">${escHtml(result.url)}</div>` : ''}
       <span class="status-badge ${badgeClass}">${badgeLabel}</span>
-      <div class="page-summary">${escHtml(result.summary)}</div>
+      <p style="font-size:14px;color:#374151;margin-bottom:20px;line-height:1.6;">${escHtml(result.summary)}</p>
       ${findingsHtml}
     </div>`;
     })
@@ -116,39 +120,44 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
     .section-heading { font-size: 22px; font-weight: bold; color: #0f172a; margin-bottom: 28px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
     .page-block { margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid #f1f5f9; }
     .page-block:last-of-type { border-bottom: none; }
-    .page-name { font-size: 20px; font-weight: bold; color: #0f172a; margin-bottom: 4px; }
-    .page-url { font-family: 'Arial', sans-serif; font-size: 12px; color: #94a3b8; margin-bottom: 12px; }
-    .status-badge { display: inline-block; font-family: 'Arial', sans-serif; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 16px; }
+    .page-name { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .page-url { font-family: Arial, sans-serif; font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
+    .status-badge { display: inline-block; font-family: Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
     .status-compliant { background: #dcfce7; color: #166534; }
     .status-warning { background: #fef9c3; color: #854d0e; }
     .status-issues { background: #fee2e2; color: #991b1b; }
     .status-skipped { background: #f1f5f9; color: #64748b; }
-    .page-summary { color: #374151; margin-bottom: 20px; font-size: 14px; }
-    .finding { border-left: 4px solid #e2e8f0; margin-bottom: 16px; border-radius: 0 8px 8px 0; }
-    .finding-high { border-left-color: #ef4444; }
-    .finding-medium { border-left-color: #f59e0b; }
-    .finding-low { border-left-color: #3b82f6; }
-    .finding-severity-badge { display: inline-block; font-family: 'Arial', sans-serif; font-size: 10px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
-    .finding-description { font-size: 15px; color: #1e293b; margin-bottom: 12px; }
-    .finding-recommendation { font-size: 13px; color: #334155; background: #f0f4f8; border-left: 4px solid #3b82f6; border-radius: 0 6px 6px 0; padding: 12px 14px; }
-    .recommendation-label { display: inline-block; font-family: 'Arial', sans-serif; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 20px; margin-bottom: 6px; }
-    .disclaimer { margin-top: 64px; padding: 24px 28px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Arial', sans-serif; font-size: 12px; color: #64748b; line-height: 1.6; }
-    .disclaimer strong { display: block; margin-bottom: 6px; color: #374151; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-    .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #e2e8f0; font-family: 'Arial', sans-serif; font-size: 11px; color: #94a3b8; text-align: center; }
+    .finding { border-left: 4px solid #e2e8f0; padding: 18px 20px; margin-bottom: 16px; background: #f8fafc; border-radius: 0 8px 8px 0; }
+    .finding-high { border-left-color: #ef4444; background: #fff8f8; }
+    .finding-medium { border-left-color: #f59e0b; background: #fffdf0; }
+    .finding-low { border-left-color: #3b82f6; background: #f8faff; }
+    .finding-description { font-size: 14px; color: #1e293b; margin-bottom: 12px; line-height: 1.6; }
+
+    /* Disclaimer */
+    .disclaimer { margin: 0 40px 0; padding: 24px 28px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: Arial, sans-serif; font-size: 12px; color: #64748b; line-height: 1.6; }
+    .disclaimer-heading { display: block; margin-bottom: 6px; color: #374151; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+    /* PART 10 — Print */
     @media print {
-      body { font-size: 13px; }
-.score-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .finding { -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
+      body { font-size: 12px; }
+      .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .header-accent { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .score-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
+      .next-steps { -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
+      .findings-section-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .finding { break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .severity-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .recommendation-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
+      .score-progress-bar-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .step-number { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .page-block { break-inside: avoid; }
-      .status-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .finding-severity-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .finding-recommendation { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .recommendation-label { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
 <body>
+<div class="page-content">
 
+  <!-- PART 1: Header -->
   <div class="header">
     <svg width="120" height="18" viewBox="0 0 1436 217" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clip-path="url(#clip0_13004_30)">
@@ -173,77 +182,89 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
     <div class="header-label">WEBSITE COMPLIANCE AUDIT</div>
   </div>
 
-  <div class="page">
-
-    <div class="report-title-block">
-      <div class="report-label">Compliance Audit Report</div>
-      <div class="report-title">${escHtml(practiceName || 'Your Practice')}</div>
-      <div class="report-meta">Audit completed: ${escHtml(auditDate)}</div>
-    </div>
-
-    <div class="score-card">
-      <div class="score-heading">Overall Compliance Score</div>
-      <div class="score-value" style="color: ${scoreHexColor}">${score}%</div>
-      <div class="score-progress-track">
-        <div class="score-progress-bar" style="width: ${score}%; background-color: ${scoreHexColor};"></div>
-      </div>
-      <div class="score-grid">
-        <div class="score-stat">
-          <div class="score-stat-value">${analysedSteps.length}</div>
-          <div class="score-stat-label">Pages Analysed</div>
-        </div>
-        <div class="score-stat">
-          <div class="score-stat-value">${passCount}</div>
-          <div class="score-stat-label">Compliant</div>
-        </div>
-        <div class="score-stat">
-          <div class="score-stat-value">${warnCount}</div>
-          <div class="score-stat-label">Warnings</div>
-        </div>
-        <div class="score-stat">
-          <div class="score-stat-value">${failCount}</div>
-          <div class="score-stat-label">Issues Found</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="section-heading">Page-by-Page Findings</div>
-
-    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 40px;">
-      ${session.steps.filter((s) => s.status === 'complete' && s.result).map((step) => {
-        const st = step.result!.complianceStatus;
-        const borderColor =
-          st === 'pass'    ? '#22c55e' :
-          st === 'warning' ? '#f59e0b' :
-          st === 'skipped' ? '#cbd5e1' : '#ef4444';
-        const labelColor =
-          st === 'pass'    ? '#166534' :
-          st === 'warning' ? '#854d0e' :
-          st === 'skipped' ? '#64748b' : '#991b1b';
-        const statusText =
-          st === 'pass'    ? 'Compliant' :
-          st === 'warning' ? 'Warnings'  :
-          st === 'skipped' ? 'Not Analysed' : 'Issues Found';
-        return `<div style="border-left: 4px solid ${borderColor}; background: #f8fafc; border-radius: 0 8px 8px 0; padding: 10px 14px;">
-          <div style="font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 3px;">${escHtml(step.name)}</div>
-          <div style="font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; color: ${labelColor}; text-transform: uppercase; letter-spacing: 0.5px;">${statusText}</div>
-        </div>`;
-      }).join('')}
-    </div>
-
-    ${pageBlocks}
-
-    <div class="disclaimer">
-      <strong>Important Disclaimer</strong>
-      This report has been generated by SafePost using AI-powered analysis of publicly available website content. It is intended as a general compliance screening tool only and does not constitute legal advice. AHPRA and TGA advertising regulations are complex and subject to change. SafePost accepts no liability for any decisions made based on this report. Practitioners should seek independent legal or compliance advice before making changes to their advertising materials. For the most current AHPRA advertising guidelines, visit www.ahpra.gov.au.
-    </div>
-
-    <div class="footer">
-      Generated by SafePost &#8212; AI-powered AHPRA and TGA compliance for Australian medical practitioners &nbsp;&middot;&nbsp; www.safepost.com.au
-    </div>
-
+  <!-- PART 2: Report title -->
+  <div class="report-title-block">
+    <div class="report-label">Compliance Audit Report</div>
+    <div class="report-practice-name">${escHtml(practiceName || 'Your Practice')}</div>
+    <div class="report-date">${escHtml(auditDate)}</div>
   </div>
 
+  <!-- PART 3: Score card -->
+  <div class="score-card" style="border-left-color: ${scoreColor};">
+    <div class="score-label">Overall Compliance Score</div>
+    <div class="score-value" style="color: ${scoreColor};">${score}%</div>
+    <div class="score-progress-bar-track">
+      <div class="score-progress-bar-fill" style="width: ${score}%; background: ${scoreColor};"></div>
+    </div>
+    <div class="score-interpretation">${scoreInterpretation}</div>
+    <div class="score-stats">
+      <div class="score-stat">
+        <div class="score-stat-value">${analysedSteps.length}</div>
+        <div class="score-stat-label">Pages Analysed</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat-value">${passCount}</div>
+        <div class="score-stat-label">Compliant</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat-value">${warnCount}</div>
+        <div class="score-stat-label">Warnings</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat-value">${failCount}</div>
+        <div class="score-stat-label">Issues Found</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 4: What to do next -->
+  <div class="next-steps">
+    <div class="next-steps-heading">What to do next</div>
+    <div class="step">
+      <div class="step-number">1</div>
+      <div>
+        <div class="step-title">Address your High severity findings first</div>
+        <div class="step-body">These represent the most serious compliance risks and are most likely to attract AHPRA or TGA attention.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <div>
+        <div class="step-title">Review each page&#39;s recommendations</div>
+        <div class="step-body">Work through the Page-by-Page Findings below and make the suggested changes to your website content.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <div>
+        <div class="step-title">Run a new audit to confirm your changes</div>
+        <div class="step-body">Once you have made changes, consider running a new audit to verify your website meets AHPRA and TGA standards.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 5: Findings section header -->
+  <div class="findings-section-header">
+    <div class="findings-section-title">Page-by-Page Findings</div>
+  </div>
+
+  <!-- Per-page blocks -->
+  ${pageBlocks}
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <span class="disclaimer-heading">Important Disclaimer</span>
+    This report has been generated by SafePost using AI-powered analysis of publicly available website content. It is intended as a general compliance screening tool only and does not constitute legal advice. AHPRA and TGA advertising regulations are complex and subject to change. SafePost accepts no liability for any decisions made based on this report. Practitioners should seek independent legal or compliance advice before making changes to their advertising materials. For the most current AHPRA advertising guidelines, visit www.ahpra.gov.au.
+  </div>
+
+  <!-- PART 8: Footer -->
+  <div class="footer">
+    <div class="footer-brand">SafePost</div>
+    <div class="footer-center">AI-powered AHPRA and TGA compliance &middot; www.safepost.com.au</div>
+    <div class="footer-right">${escHtml(auditDate)}</div>
+  </div>
+
+</div>
 </body>
 </html>`;
 }
@@ -518,6 +539,7 @@ const AuditReport: React.FC = () => {
             {new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
               day: 'numeric', month: 'long', year: 'numeric',
             })}
+            {practiceName && ` — ${practiceName}`}
           </p>
         </div>
 

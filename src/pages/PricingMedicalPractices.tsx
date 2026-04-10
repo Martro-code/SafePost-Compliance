@@ -3,7 +3,6 @@ import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { Check, ArrowRight } from 'lucide-react';
 import FAQSection from '../components/ui/FAQSection';
-import AuditWaitlistSection from '../components/ui/AuditWaitlistSection';
 import PublicFooter from '../components/layout/PublicFooter';
 import PublicHeader from '../components/layout/PublicHeader';
 import { trackUpgradeInitiated } from '../services/analytics';
@@ -219,8 +218,89 @@ const PricingMedicalPractices: React.FC = () => {
         </div>
       </section>
 
-      {/* Website Compliance Audit Waitlist */}
-      <AuditWaitlistSection plan="medical_practice" />
+      {/* Website Compliance Audit */}
+      <section className="w-full bg-white border-t border-slate-200">
+        <div className="max-w-4xl mx-auto px-6 pt-14 pb-14">
+          <div className="text-center mb-10">
+            <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-blue-600 bg-blue-100 rounded-full px-3 py-1 mb-5">
+              One-time purchase
+            </span>
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+              Is your website compliant?
+            </h2>
+            <p className="text-[16px] text-gray-500 max-w-2xl mx-auto leading-relaxed">
+              A one-time, AI-powered review of your practice website — available to everyone
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Standard */}
+            <div className="bg-[#f7f7f4] rounded-2xl border border-slate-200 p-7 flex flex-col">
+              <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Standard</p>
+              <div className="flex items-baseline gap-2 mb-5">
+                <span className="text-[38px] font-bold text-gray-900 leading-none">$149</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
+              </div>
+              <ul className="space-y-2.5 mb-7 flex-grow">
+                {[
+                  'Page-by-page assessment — 6 pages',
+                  'Checked against AHPRA and TGA rules',
+                  'Severity-rated findings — High, Medium, Low',
+                  'Recommended actions for each issue',
+                  'Downloadable compliance report',
+                ].map((f) => (
+                  <li key={f} className="flex items-start gap-2.5">
+                    <Check className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-[13px] text-gray-600">{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => navigate('/signup?redirect=audit-standard')}
+                className="w-full py-3 text-[14px] font-semibold text-gray-700 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
+              >
+                Get Standard Audit
+              </button>
+              <p className="text-center text-[11px] text-gray-400 mt-2">
+                New to SafePost? Create a free account to get started
+              </p>
+            </div>
+            {/* Extended */}
+            <div className="relative bg-white rounded-2xl border-2 border-blue-200 p-7 flex flex-col shadow-lg shadow-blue-600/[0.06]">
+              <div className="absolute -top-3 right-5">
+                <span className="text-[11px] font-semibold text-white bg-blue-600 px-3 py-1 rounded-full shadow-sm">
+                  Best value
+                </span>
+              </div>
+              <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Extended</p>
+              <div className="flex items-baseline gap-2 mb-5">
+                <span className="text-[38px] font-bold text-gray-900 leading-none">$249</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
+              </div>
+              <ul className="space-y-2.5 mb-7 flex-grow">
+                {[
+                  'Everything in Standard, plus:',
+                  'Page-by-page assessment — up to 12 pages',
+                  'Ideal for larger practice websites',
+                ].map((f, idx) => (
+                  <li key={f} className="flex items-start gap-2.5">
+                    <Check className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
+                    <span className={`text-[13px] ${idx === 0 ? 'font-semibold text-gray-700' : 'text-gray-600'}`}>{f}</span>
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={() => navigate('/signup?redirect=audit-extended')}
+                className="w-full py-3 text-[14px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
+              >
+                Get Extended Audit
+              </button>
+              <p className="text-center text-[11px] text-gray-400 mt-2">
+                New to SafePost? Create a free account to get started
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* FAQ Section */}
       <FAQSection

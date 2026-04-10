@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
 import PublicHeader from '../components/layout/PublicHeader';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
@@ -652,15 +652,6 @@ const SoftwareTerms: React.FC = () => {
     return (
       <LoggedInLayout>
         <>
-          <div className="max-w-6xl mx-auto px-6 pt-6">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
-            </button>
-          </div>
           {contentSection}
         </>
       </LoggedInLayout>
