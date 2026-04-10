@@ -107,12 +107,6 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
     .header { background: #0f172a; padding: 0; }
     .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; }
     .header-brand { display: flex; align-items: center; gap: 12px; }
-    .logo-mark { display: flex; flex-direction: column; gap: 3px; }
-    .logo-bar { display: block; background: #3b82f6; border-radius: 2px; height: 4px; }
-    .bar-1 { width: 24px; }
-    .bar-2 { width: 16px; }
-    .bar-3 { width: 10px; }
-    .brand-text { font-family: Arial, sans-serif; font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; }
     .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
     .header-label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #3b82f6; }
     .header-accent { height: 3px; background: #3b82f6; width: 100%; }
@@ -209,12 +203,11 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
   <div class="header">
     <div class="header-inner">
       <div class="header-brand">
-        <div class="logo-mark">
-          <span class="logo-bar bar-1"></span>
-          <span class="logo-bar bar-2"></span>
-          <span class="logo-bar bar-3"></span>
-        </div>
-        <div class="brand-text">SafePost</div>
+        <img
+          src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAACGkAAAFGCAYAAADTzFAoAAAACXBIWXMAABCcAAAQnAEmzTo0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAG3ESURBVHgB7d39dRNXtwfgTVb+v6SCTCoIVBBRQUgFUSoIVICpAKgAUwGkApQKcCrIpIKXVMCdzRzFg5FtSZY0X8+z1lyZjzc3saWZc/b5nX3uBQAAAMzMp0+fquale/1fc90vX98vV1z5+jp15+uP5Vr/fn79b3ld/7q+d+9eHQAAAADMzr0AAACAiSphjEVz/RhtAONBeR2CDGxclNe/Ol9f3Lt372MAAAAAMDlCGgAAAEzGp0+fFtEGMX6KNpxxWxeMocrARh2X4Y0L3TcAAAAAxk9IAwAAgNH69OlThjCWzfVjtOGMsYYytrHuvJHXnyG4AQAAAGNA+RKSDiTQAAAAlklEQVQAAIAxE9IAAAAAAAAAAAAAAAAAAAAAAAAAgJm4FwAAAAAAAAAAAAAAAAAAAAAAAMzAJ5g9oBcAAAAASUVORK5CYII="
+          alt="SafePost"
+          style="height: 36px; width: auto;"
+        />
       </div>
       <div class="header-right">
         <div class="header-label">WEBSITE COMPLIANCE AUDIT</div>
