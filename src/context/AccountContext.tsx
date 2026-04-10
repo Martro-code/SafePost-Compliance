@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { supabase } from '../services/supabaseClient';
 import { sanitizeObject } from '../utils/sanitizeInput';
+import type { SavedComplianceCheck } from '../hooks/useComplianceChecker';
 
 const ACCOUNT_CACHE_KEY = 'safepost_account_cache';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -73,6 +74,9 @@ export interface AccountContextType {
   auditPaymentIntentId: string | null;
   accountLoading: boolean;
   refreshAccount: () => Promise<void>;
+  complianceHistory: SavedComplianceCheck[];
+  isHistoryLoading: boolean;
+  refreshHistory: () => Promise<void>;
 }
 
 const AccountContext = createContext<AccountContextType>({
@@ -98,6 +102,9 @@ const AccountContext = createContext<AccountContextType>({
   auditPaymentIntentId: null,
   accountLoading: true,
   refreshAccount: async () => {},
+  complianceHistory: [],
+  isHistoryLoading: false,
+  refreshHistory: async () => {},
 });
 
 export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -122,6 +129,8 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [auditPurchased, setAuditPurchased] = useState(false);
   const [auditPaymentIntentId, setAuditPaymentIntentId] = useState<string | null>(null);
   const [accountLoading, setAccountLoading] = useState(!cached);
+  const [complianceHistory, setComplianceHistory] = useState<SavedComplianceCheck[]>([]);
+  const [isHistoryLoading, setIsHistoryLoading] = useState(false);
 
   const loadAccount = useCallback(async () => {
     try {
@@ -375,6 +384,44 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
     return () => subscription.unsubscribe();
   }, [loadAccount]);
 
+  // Background-prefetch the 20 most recent compliance checks after account loads.
+  // Runs silently — failures are swallowed so the dashboard is never blocked.
+  useEffect(() => {
+    if (!accountId || accountLoading) return;
+    const prefetch = async () => {
+      setIsHistoryLoading(true);
+      try {
+        const { data } = await supabase
+          .from('compliance_checks')
+          .select('*')
+          .eq('account_id', accountId)
+          .order('created_at', { ascending: false })
+          .limit(20);
+        setComplianceHistory(data ?? []);
+      } catch {
+        // fail silently
+      } finally {
+        setIsHistoryLoading(false);
+      }
+    };
+    prefetch();
+  }, [accountId, accountLoading]);
+
+  const refreshHistory = useCallback(async () => {
+    if (!accountId) return;
+    try {
+      const { data } = await supabase
+        .from('compliance_checks')
+        .select('*')
+        .eq('account_id', accountId)
+        .order('created_at', { ascending: false })
+        .limit(20);
+      setComplianceHistory(data ?? []);
+    } catch {
+      // fail silently
+    }
+  }, [accountId]);
+
   const refreshAccount = useCallback(async () => {
     if (!accountId) return;
     const { data: account } = await supabase
@@ -421,7 +468,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [accountId]);
 
   return (
-    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, auditPurchased, auditPaymentIntentId, accountLoading, refreshAccount }}>
+    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, auditPurchased, auditPaymentIntentId, accountLoading, refreshAccount, complianceHistory, isHistoryLoading, refreshHistory }}>
       {children}
     </AccountContext.Provider>
   );

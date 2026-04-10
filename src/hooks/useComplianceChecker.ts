@@ -154,6 +154,8 @@ interface UseComplianceCheckerOptions {
   checksUsed?: number;
   checksLimit?: number | null;
   onCheckComplete?: () => Promise<void>;
+  /** Pre-seed history from a parent context to skip the initial network fetch */
+  initialHistory?: SavedComplianceCheck[];
 }
 
 export function useComplianceChecker(planNameOrOptions: string | UseComplianceCheckerOptions = 'free') {
@@ -169,6 +171,7 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
     checksUsed: accountChecksUsed,
     checksLimit: accountChecksLimit,
     onCheckComplete,
+    initialHistory,
   } = options;
 
   // ── Core checker state ──────────────────────────────────────────────────
@@ -182,8 +185,13 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
   const lastCheckIdRef = useRef<string | null>(null);
 
   // ── History state ───────────────────────────────────────────────────────
-  const [history, setHistory] = useState<SavedComplianceCheck[]>([]);
+  const [history, setHistory] = useState<SavedComplianceCheck[]>(initialHistory ?? []);
   const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
+  // Ref keeps the latest initialHistory value accessible inside effects without
+  // adding it to the dependency array (avoids redundant refetches).
+  const initialHistoryRef = useRef<SavedComplianceCheck[] | undefined>(initialHistory);
+  useEffect(() => { initialHistoryRef.current = initialHistory; });
 
   // ── Usage state ─────────────────────────────────────────────────────────
   const [checksUsedThisMonth, setChecksUsedThisMonth] = useState(0);
@@ -232,6 +240,13 @@ export function useComplianceChecker(planNameOrOptions: string | UseComplianceCh
   // ── Load history on mount (with sessionStorage cache) ──
   useEffect(() => {
     const initialLoad = async () => {
+      // If pre-seeded from context, skip the network fetch entirely.
+      // The ref holds the latest value so we always see the most-recent prop.
+      if (initialHistoryRef.current?.length) {
+        setHistory(initialHistoryRef.current);
+        return;
+      }
+
       // Check for valid cached data first
       const cachedHistory = getCache<SavedComplianceCheck[]>(CACHE_KEY_HISTORY);
 
