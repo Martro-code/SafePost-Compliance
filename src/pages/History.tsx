@@ -229,7 +229,7 @@ const CheckRow = React.memo<{
 // ─── Main History Page ─────────────────────────────────────────────────────────
 const History: React.FC = () => {
   const navigate = useNavigate();
-  const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount, complianceHistory, isHistoryLoading: isContextHistoryLoading } = useAccount();
+  const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount, complianceHistory, isHistoryLoading: isContextHistoryLoading, prefetchedAuditSessions } = useAccount();
 
   // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
   // Only trust the database-backed value from AccountContext.
@@ -257,8 +257,8 @@ const History: React.FC = () => {
   // Plan limit banner dismissal
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
-  // Audit sessions
-  const [auditSessions, setAuditSessions] = useState<AuditSession[]>([]);
+  // Audit sessions — seeded from context prefetch if available
+  const [auditSessions, setAuditSessions] = useState<AuditSession[]>(prefetchedAuditSessions);
 
   // Load history and audit sessions on mount.
   // Skip if context already prefetched data — the checker is seeded directly.
@@ -269,7 +269,7 @@ const History: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (!accountId) return;
+    if (!accountId || prefetchedAuditSessions.length > 0) return;
     supabase
       .from('audit_sessions')
       .select('id, account_id, created_at, updated_at, status, steps')

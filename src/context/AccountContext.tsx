@@ -131,6 +131,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [accountLoading, setAccountLoading] = useState(!cached);
   const [complianceHistory, setComplianceHistory] = useState<SavedComplianceCheck[]>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [prefetchedAuditSessions, setPrefetchedAuditSessions] = useState<AuditSession[]>([]);
 
   const loadAccount = useCallback(async () => {
     try {
@@ -364,11 +365,53 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
     loadAccount();
   }, [loadAccount]);
 
-  // Re-load when auth state changes
+  // Prefetch compliance history and audit sessions for a given user.
+  // Resolves account_id via account_members so this can fire at SIGNED_IN
+  // before loadAccount() has finished populating accountId state.
+  const prefetchHistory = useCallback(async (userId: string) => {
+    try {
+      const { data: membership } = await supabase
+        .from('account_members')
+        .select('account_id')
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .single();
+      if (!membership?.account_id) return;
+
+      setIsHistoryLoading(true);
+      const [checksResult, auditsResult] = await Promise.all([
+        supabase
+          .from('compliance_checks')
+          .select('id, content_text, overall_status, created_at, ai_status, critical_issue_count, warning_issue_count, specialty, breach_categories, frameworks_triggered')
+          .eq('account_id', membership.account_id)
+          .order('created_at', { ascending: false })
+          .limit(20),
+        supabase
+          .from('audit_sessions')
+          .select('id, account_id, created_at, updated_at, status, steps')
+          .eq('account_id', membership.account_id)
+          .eq('status', 'complete')
+          .order('updated_at', { ascending: false })
+          .limit(5),
+      ]);
+
+      if (checksResult.data) setComplianceHistory(checksResult.data);
+      if (auditsResult.data) setPrefetchedAuditSessions(auditsResult.data as AuditSession[]);
+    } catch {
+      // fail silently
+    } finally {
+      setIsHistoryLoading(false);
+    }
+  }, []);
+
+  // Re-load when auth state changes; also prefetch history on sign-in
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
         loadAccount();
+      }
+      if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
+        prefetchHistory(session.user.id);
       }
       if (event === 'SIGNED_OUT') {
         localStorage.removeItem(ACCOUNT_CACHE_KEY);
@@ -378,38 +421,13 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         setChecksUsed(0);
         setChecksLimit(3);
         setAccountLoading(false);
+        setComplianceHistory([]);
+        setPrefetchedAuditSessions([]);
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [loadAccount]);
-
-  // Background-prefetch the 20 most recent compliance checks after account loads.
-  // Runs silently — failures are swallowed so the dashboard is never blocked.
-  useEffect(() => {
-    if (!accountId || accountLoading) return;
-    const prefetch = async () => {
-      // Confirm a valid auth session exists before querying (guards against the
-      // cached-accountId case where the JWT may not yet be restored by Supabase).
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-      setIsHistoryLoading(true);
-      try {
-        const { data } = await supabase
-          .from('compliance_checks')
-          .select('id, content_text, overall_status, created_at, ai_status, critical_issue_count, warning_issue_count, specialty, breach_categories, frameworks_triggered')
-          .eq('account_id', accountId)
-          .order('created_at', { ascending: false })
-          .limit(20);
-        setComplianceHistory(data ?? []);
-      } catch {
-        // fail silently
-      } finally {
-        setIsHistoryLoading(false);
-      }
-    };
-    prefetch();
-  }, [accountId, accountLoading]);
+  }, [loadAccount, prefetchHistory]);
 
   const refreshHistory = useCallback(async () => {
     if (!accountId) return;
@@ -472,7 +490,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, [accountId]);
 
   return (
-    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, auditPurchased, auditPaymentIntentId, accountLoading, refreshAccount, complianceHistory, isHistoryLoading, refreshHistory }}>
+    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, auditPurchased, auditPaymentIntentId, accountLoading, refreshAccount, complianceHistory, isHistoryLoading, refreshHistory, prefetchedAuditSessions }}>
       {children}
     </AccountContext.Provider>
   );
