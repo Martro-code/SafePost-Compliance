@@ -652,15 +652,6 @@ const SoftwareTerms: React.FC = () => {
     return (
       <LoggedInLayout>
         <>
-          <div className="max-w-6xl mx-auto px-6 pt-6">
-            <button
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center gap-2 text-[13px] font-medium text-gray-500 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Back to Dashboard
-            </button>
-          </div>
           {contentSection}
         </>
       </LoggedInLayout>
