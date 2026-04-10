@@ -205,13 +205,13 @@ const PricingMedicalPractitioners: React.FC = () => {
         <div className="max-w-4xl mx-auto px-6 pt-14 pb-14">
           <div className="text-center mb-10">
             <span className="inline-block text-[11px] font-bold tracking-widest uppercase text-blue-600 bg-blue-100 rounded-full px-3 py-1 mb-5">
-              One-time add-on
+              One-time purchase
             </span>
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
               Is your website compliant?
             </h2>
             <p className="text-[16px] text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              A one-time, AI-powered review of your practice website — checked page by page against AHPRA advertising guidelines and TGA regulations.
+              A one-time, AI-powered review of your practice website — available to everyone. No subscription required.
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
