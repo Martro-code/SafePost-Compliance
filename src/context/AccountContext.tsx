@@ -389,6 +389,10 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   useEffect(() => {
     if (!accountId || accountLoading) return;
     const prefetch = async () => {
+      // Confirm a valid auth session exists before querying (guards against the
+      // cached-accountId case where the JWT may not yet be restored by Supabase).
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
       setIsHistoryLoading(true);
       try {
         const { data } = await supabase
