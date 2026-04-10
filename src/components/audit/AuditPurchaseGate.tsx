@@ -14,9 +14,13 @@ const STANDARD_FEATURES = [
 ];
 
 const EXTENDED_FEATURES = [
-  'Everything in Standard, plus:',
-  'Audit up to 12 pages of your website',
-  'Ideal for larger practices with more content',
+  'Guided page-by-page assessment across up to 12 website sections',
+  'Everything included in the Standard Audit',
+  'Ideal for larger practice websites',
+  'Checked against AHPRA advertising guidelines and TGA rules',
+  'Severity-rated findings — High, Medium, and Low',
+  'Recommended actions for each issue identified',
+  'Downloadable audit report for your records',
 ];
 
 const STEPS = [
@@ -26,7 +30,7 @@ const STEPS = [
 ];
 
 const AuditPurchaseGate: React.FC = () => {
-  const { auditPurchased, extendedAuditPurchased, auditOnly, accountLoading, refreshAccount, plan } = useAccount();
+  const { auditPurchased, extendedAuditPurchased, auditOnly, accountLoading, refreshAccount, plan, accountId } = useAccount();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isPurchaseReturn = searchParams.get('purchase') === 'success';
@@ -297,7 +301,7 @@ const AuditPurchaseGate: React.FC = () => {
               Audit Your Practice Website
             </h1>
             <p className="text-[16px] text-gray-500 max-w-xl mx-auto leading-relaxed">
-              A one-time purchase gives you a comprehensive, page-by-page review of your practice website against AHPRA advertising guidelines and TGA therapeutic goods rules. No subscription required.
+              Check your practice website page by page against AHPRA and TGA rules. No subscription required.
             </p>
           </div>
 
@@ -366,10 +370,10 @@ const AuditPurchaseGate: React.FC = () => {
                 <span className="text-[13px] text-gray-400">AUD</span>
               </div>
               <div className="flex flex-col gap-2.5 mb-6 flex-grow">
-                {[...STANDARD_FEATURES, 'Audit up to 12 pages of your website'].map((f, idx) => (
+                {EXTENDED_FEATURES.map((f, idx) => (
                   <div key={idx} className="flex items-start gap-2.5">
                     <Check className="w-3.5 h-3.5 text-blue-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-[13px] text-gray-700">{idx === STANDARD_FEATURES.length ? <strong>{f}</strong> : f}</span>
+                    <span className="text-[13px] text-gray-700">{f}</span>
                   </div>
                 ))}
               </div>
@@ -406,24 +410,32 @@ const AuditPurchaseGate: React.FC = () => {
           </div>
 
           <div className="text-center">
-            <p className="text-[13px] text-gray-400 mb-4">
-              Already subscribed to SafePost? Your audit access is included.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <button
-                onClick={() => navigate('/pricing/medical-practitioners')}
-                className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
-              >
-                View subscription plans
-              </button>
-              <span className="text-gray-300 hidden sm:inline">|</span>
-              <button
-                onClick={() => navigate('/login')}
-                className="text-[13px] font-medium text-gray-500 hover:text-gray-700 transition-colors"
-              >
-                Log in to existing account
-              </button>
-            </div>
+            {accountId !== null ? (
+              <p className="text-[13px] text-gray-400">
+                Your audit purchase is linked to your SafePost account automatically.
+              </p>
+            ) : (
+              <>
+                <p className="text-[13px] text-gray-400 mb-4">
+                  Already subscribed to SafePost? Your audit access is included.
+                </p>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                  <button
+                    onClick={() => navigate('/pricing/medical-practitioners')}
+                    className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
+                  >
+                    View subscription plans
+                  </button>
+                  <span className="text-gray-300 hidden sm:inline">|</span>
+                  <button
+                    onClick={() => navigate('/login')}
+                    className="text-[13px] font-medium text-gray-500 hover:text-gray-700 transition-colors"
+                  >
+                    Log in to existing account
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </LoggedInLayout>
@@ -487,7 +499,7 @@ const AuditPurchaseGate: React.FC = () => {
             Full Website Compliance Audit
           </h1>
           <p className="text-[16px] text-gray-500 max-w-xl mx-auto leading-relaxed">
-            A comprehensive, page-by-page review of your practice website against AHPRA advertising guidelines and TGA therapeutic goods rules.
+            Check your practice website page by page against AHPRA and TGA rules. No subscription required.
           </p>
         </div>
 
@@ -539,10 +551,10 @@ const AuditPurchaseGate: React.FC = () => {
               </div>
             </div>
             <div className="flex flex-col gap-2.5 mb-7 flex-grow">
-              {[...STANDARD_FEATURES, 'Audit up to 12 pages of your website'].map((f, idx) => (
+              {EXTENDED_FEATURES.map((f, idx) => (
                 <div key={idx} className="flex items-start gap-2.5">
                   <Check className="w-3.5 h-3.5 text-blue-500 flex-shrink-0 mt-0.5" />
-                  <span className="text-[13px] text-gray-700">{idx === STANDARD_FEATURES.length ? <strong>{f}</strong> : f}</span>
+                  <span className="text-[13px] text-gray-700">{f}</span>
                 </div>
               ))}
             </div>
