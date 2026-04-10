@@ -15,7 +15,6 @@ const STANDARD_FEATURES = [
 
 const EXTENDED_FEATURES = [
   'Guided page-by-page assessment across up to 12 website sections',
-  'Everything included in the Standard Audit',
   'Ideal for larger practice websites',
   'Checked against AHPRA advertising guidelines and TGA rules',
   'Severity-rated findings — High, Medium, and Low',
@@ -301,7 +300,7 @@ const AuditPurchaseGate: React.FC = () => {
               Audit Your Practice Website
             </h1>
             <p className="text-[16px] text-gray-500 max-w-xl mx-auto leading-relaxed">
-              Check your practice website page by page against AHPRA and TGA rules. No subscription required.
+              Check your practice website page by page against AHPRA and TGA rules. No subscription required
             </p>
           </div>
 
@@ -311,7 +310,7 @@ const AuditPurchaseGate: React.FC = () => {
               <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Standard</p>
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="text-[36px] font-bold text-gray-900 leading-none">$149</span>
-                <span className="text-[13px] text-gray-400">AUD</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
               </div>
               <div className="flex flex-col gap-2.5 mb-6 flex-grow">
                 {STANDARD_FEATURES.map((f, idx) => (
@@ -367,7 +366,7 @@ const AuditPurchaseGate: React.FC = () => {
               <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Extended</p>
               <div className="flex items-baseline gap-2 mb-4">
                 <span className="text-[36px] font-bold text-gray-900 leading-none">$249</span>
-                <span className="text-[13px] text-gray-400">AUD</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
               </div>
               <div className="flex flex-col gap-2.5 mb-6 flex-grow">
                 {EXTENDED_FEATURES.map((f, idx) => (
@@ -471,7 +470,7 @@ const AuditPurchaseGate: React.FC = () => {
             Full Website Compliance Audit
           </h1>
           <p className="text-[16px] text-gray-500 max-w-xl mx-auto leading-relaxed">
-            Check your practice website page by page against AHPRA and TGA rules. No subscription required.
+            Check your practice website page by page against AHPRA and TGA rules. No subscription required
           </p>
         </div>
 
@@ -488,7 +487,7 @@ const AuditPurchaseGate: React.FC = () => {
               <p className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Standard</p>
               <div className="flex items-baseline gap-2">
                 <span className="text-[38px] font-bold text-gray-900 leading-none">$149</span>
-                <span className="text-[13px] text-gray-400">AUD</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
               </div>
             </div>
             <div className="flex flex-col gap-2.5 mb-7 flex-grow">
@@ -519,7 +518,7 @@ const AuditPurchaseGate: React.FC = () => {
               <p className="text-[13px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Extended</p>
               <div className="flex items-baseline gap-2">
                 <span className="text-[38px] font-bold text-gray-900 leading-none">$249</span>
-                <span className="text-[13px] text-gray-400">AUD</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
               </div>
             </div>
             <div className="flex flex-col gap-2.5 mb-7 flex-grow">
