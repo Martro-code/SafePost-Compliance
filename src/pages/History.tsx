@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Clock,
-  CheckCircle2, XCircle, AlertTriangle, Loader2, Search,
+  CheckCircle2, XCircle, AlertTriangle, Search,
   Filter, Trash2, ChevronRight,
   X, ShieldOff, Globe,
 } from 'lucide-react';
@@ -116,7 +116,7 @@ type MergedEntry =
 
 // ─── Audit Row Component ──────────────────────────────────────────────────────
 
-const AuditRow: React.FC<{ entry: MergedEntry & { kind: 'audit' }; onView: () => void }> = ({ entry, onView }) => {
+const AuditRow = React.memo<{ entry: MergedEntry & { kind: 'audit' }; onView: () => void }>(({ entry, onView }) => {
   const { data: session, score, analysedCount } = entry;
   const dateStr = new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
     day: 'numeric', month: 'short', year: 'numeric',
@@ -154,14 +154,14 @@ const AuditRow: React.FC<{ entry: MergedEntry & { kind: 'audit' }; onView: () =>
       </div>
     </div>
   );
-};
+});
 
 // ─── Check Row Component ──────────────────────────────────────────────────────
-const CheckRow: React.FC<{
+const CheckRow = React.memo<{
   check: SavedComplianceCheck;
   onView: (check: SavedComplianceCheck) => void;
   onDelete: (id: string) => void;
-}> = ({ check, onView, onDelete }) => {
+}>(({ check, onView, onDelete }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const cfg = getStatusConfig(check.overall_status);
 
@@ -224,7 +224,7 @@ const CheckRow: React.FC<{
       </div>
     </div>
   );
-};
+});
 
 // ─── Main History Page ─────────────────────────────────────────────────────────
 const History: React.FC = () => {
@@ -253,7 +253,6 @@ const History: React.FC = () => {
 
   // Load-more state
   const [visibleCount, setVisibleCount] = useState(LOAD_MORE_SIZE);
-  const [loadingMore, setLoadingMore] = useState(false);
 
   // Plan limit banner dismissal
   const [bannerDismissed, setBannerDismissed] = useState(false);
@@ -310,7 +309,7 @@ const History: React.FC = () => {
   }, [checker.isLoadingHistory, checker.history]);
 
   // View a check on the dashboard
-  const handleViewCheck = (check: SavedComplianceCheck) => {
+  const handleViewCheck = useCallback((check: SavedComplianceCheck) => {
     const normalised = check.result_json ? {
       ...check.result_json,
       overall_status: check.overall_status,
@@ -326,18 +325,23 @@ const History: React.FC = () => {
         createdAt: check.created_at,
       },
     });
-  };
+  }, [navigate]);
+
+  const handleViewAudit = useCallback(() => navigate('/audit/report'), [navigate]);
 
   // Filter logic — applies to compliance checks only
-  const filteredChecks = checker.history.filter(check => {
-    const matchesSearch = searchQuery === '' ||
-      check.content_text?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || check.overall_status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredChecks = useMemo(() =>
+    checker.history.filter(check => {
+      const matchesSearch = searchQuery === '' ||
+        check.content_text?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || check.overall_status === statusFilter;
+      return matchesSearch && matchesStatus;
+    }),
+    [checker.history, searchQuery, statusFilter]
+  );
 
   // Build merged sorted list: audit sessions always included, checks filtered
-  const mergedEntries: MergedEntry[] = [
+  const mergedEntries = useMemo<MergedEntry[]>(() => [
     ...filteredChecks.map((c): MergedEntry => ({
       kind: 'check',
       data: c,
@@ -347,18 +351,20 @@ const History: React.FC = () => {
       const { score, analysedCount } = computeAuditScore(s.steps);
       return { kind: 'audit', data: s, created_at: s.updated_at || s.created_at, score, analysedCount };
     }),
-  ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
+    [filteredChecks, auditSessions]
+  );
 
   // Load-more slice
   const totalFiltered = mergedEntries.length;
-  const visibleEntries = mergedEntries.slice(0, visibleCount);
+  const visibleEntries = useMemo(
+    () => mergedEntries.slice(0, visibleCount),
+    [mergedEntries, visibleCount]
+  );
   const hasMore = totalFiltered > visibleCount;
 
-  const handleLoadMore = async () => {
-    setLoadingMore(true);
-    await new Promise(resolve => setTimeout(resolve, 300));
+  const handleLoadMore = () => {
     setVisibleCount(c => c + LOAD_MORE_SIZE);
-    setLoadingMore(false);
   };
 
   // Reset visible count when filters change
@@ -367,13 +373,15 @@ const History: React.FC = () => {
   }, [searchQuery, statusFilter]);
 
   // Stats
-  const totalChecks = checker.history.length;
-  const compliantCount = checker.history.filter(c => c.overall_status === 'compliant').length;
-  const nonCompliantCount = checker.history.filter(c => c.overall_status === 'non_compliant').length;
-  const reviewCount = checker.history.filter(c =>
-    c.overall_status === 'warning' || c.overall_status === 'requires_review'
-  ).length;
-  const conductRiskCount = checker.history.filter(c => c.overall_status === 'conduct_risk').length;
+  const { totalChecks, compliantCount, nonCompliantCount, reviewCount, conductRiskCount } = useMemo(() => ({
+    totalChecks: checker.history.length,
+    compliantCount: checker.history.filter(c => c.overall_status === 'compliant').length,
+    nonCompliantCount: checker.history.filter(c => c.overall_status === 'non_compliant').length,
+    reviewCount: checker.history.filter(c =>
+      c.overall_status === 'warning' || c.overall_status === 'requires_review'
+    ).length,
+    conductRiskCount: checker.history.filter(c => c.overall_status === 'conduct_risk').length,
+  }), [checker.history]);
 
   // Show plan limit banner
   const showLimitBanner = !isUltra && !bannerDismissed && totalChecks >= historyLimit;
@@ -538,7 +546,7 @@ const History: React.FC = () => {
                 <AuditRow
                   key={`audit-${entry.data.id}`}
                   entry={entry}
-                  onView={() => navigate('/audit/report')}
+                  onView={handleViewAudit}
                 />
               ) : (
                 <CheckRow
@@ -555,11 +563,9 @@ const History: React.FC = () => {
               <div className="flex justify-center pt-4">
                 <button
                   onClick={handleLoadMore}
-                  disabled={loadingMore}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-[13px] font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 disabled:opacity-60 transition-all duration-150"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-[13px] font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 transition-all duration-150"
                 >
-                  {loadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  {loadingMore ? 'Loading…' : `Load more (${totalFiltered - visibleCount} remaining)`}
+                  {`Load more (${totalFiltered - visibleCount} remaining)`}
                 </button>
               </div>
             )}
