@@ -55,7 +55,7 @@ const Features: React.FC = () => {
     {
       icon: <Globe className="w-7 h-7 text-blue-500/80" />,
       heading: 'Page-by-page analysis',
-      description: 'Check up to 6 pages from your practice website — homepage, services, about, testimonials, pricing, and more.',
+      description: 'Check up to 12 pages from your practice website — homepage, services, about, testimonials, pricing, and more.',
     },
     {
       icon: <AlertTriangle className="w-7 h-7 text-blue-500/80" />,
@@ -80,7 +80,7 @@ const Features: React.FC = () => {
     {
       icon: <BadgeCheck className="w-7 h-7 text-blue-500/80" />,
       heading: 'Subscriber add-on',
-      description: 'Available to all active SafePost subscribers as a one-time add-on for $149 AUD (incl. GST) per website audit.',
+      description: 'Available to all active SafePost subscribers as a one-time add-on. Standard audit $149 AUD (incl. GST) for up to 6 pages. Extended audit $249 AUD (incl. GST) for up to 12 pages.',
     },
   ];
 
@@ -193,9 +193,12 @@ const Features: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
               Website compliance audit
             </h2>
+            <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
+              Page-by-page AHPRA and TGA compliance checking for your practice website.
+            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {auditFeatures.map((feature, index) => (
