@@ -22,11 +22,19 @@ const About: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
           <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            About SafePost
+            About SafePost — your essential infrastructure layer for compliance in medical practice
           </h1>
-          <p className="text-lg text-gray-500">
-            Supporting Australian medical practitioners and practices with compliance confidence across everything they publish online
-          </p>
+          {/* SafePost Logo Divider */}
+          <div className="py-10 flex justify-center">
+            <img
+              src={spLogo}
+              alt="SafePost logo"
+              loading="lazy"
+              width={600}
+              height={91}
+              className="max-w-[500px] md:max-w-[600px] w-full h-auto"
+            />
+          </div>
         </div>
       </section>
 
@@ -82,18 +90,6 @@ const About: React.FC = () => {
               <p className="text-[14px] text-gray-500 leading-relaxed">
                 {"Today, SafePost checks your content before it goes live. But our vision reaches further \u2014 a single trusted platform that every Australian doctor and medical practice turns to for compliance confidence across everything they publish, communicate and practise. We\u2019re building toward that future, one check at a time."}
               </p>
-            </div>
-
-            {/* SafePost Logo Divider */}
-            <div className="py-10 flex justify-center">
-              <img
-                src={spLogo}
-                alt="SafePost logo"
-                loading="lazy"
-                width={600}
-                height={91}
-                className="max-w-[500px] md:max-w-[600px] w-full h-auto"
-              />
             </div>
 
             {/* Section 6 - Our Design Story */}
