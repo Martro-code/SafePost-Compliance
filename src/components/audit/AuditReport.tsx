@@ -519,12 +519,92 @@ const AuditReport: React.FC = () => {
       <div className="max-w-5xl mx-auto px-6 py-12">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-[24px] font-bold text-gray-900 mb-1">Audit Report</h1>
-          <p className="text-[13px] text-gray-400">
-            {new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
-              day: 'numeric', month: 'long', year: 'numeric',
-            })}
-          </p>
+          <div className="flex items-start justify-between gap-4 flex-wrap">
+            <div>
+              <h1 className="text-[24px] font-bold text-gray-900 mb-1">Audit Report</h1>
+              <p className="text-[13px] text-gray-400">
+                {new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
+                  day: 'numeric', month: 'long', year: 'numeric',
+                })}
+                {practiceName && ` — ${practiceName}`}
+              </p>
+            </div>
+            <div className="flex flex-col items-end gap-3">
+              <div className="flex flex-col items-end gap-1">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleDownloadHtml}
+                    disabled={downloadLoading}
+                    className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-60"
+                  >
+                    {downloadLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+                    Download Audit Report (HTML)
+                  </button>
+                  <button
+                    onClick={() => { setEmailFormOpen(true); setEmailSuccess(false); setEmailError(''); setEmailValidationError(''); }}
+                    className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-gray-700 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-xl transition-colors"
+                  >
+                    <Mail className="w-3.5 h-3.5" />
+                    Email this report
+                  </button>
+                </div>
+                <p className="text-[11px] text-gray-400">Opens in any browser · Print to PDF with Ctrl+P</p>
+              </div>
+              <div className="flex flex-col items-end gap-1">
+                <button
+                  onClick={() => navigate('/audit')}
+                  className="px-4 py-2 text-[13px] font-medium text-gray-700 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-xl transition-colors"
+                >
+                  Run New Audit — $149
+                </button>
+                <p className="text-[11px] text-gray-400">Each audit is a one-time purchase</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Inline email form */}
+          {emailFormOpen && (
+            <div className="mt-4 p-4 bg-white border border-slate-200 rounded-xl">
+              {emailSuccess ? (
+                <p className="text-[13px] text-green-700 font-medium">Report sent successfully. Please check your inbox.</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="email"
+                      value={emailAddress}
+                      onChange={(e) => { setEmailAddress(e.target.value); setEmailValidationError(''); }}
+                      placeholder="Enter email address"
+                      className="flex-1 px-3 py-2 text-[13px] border border-slate-200 rounded-lg outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all"
+                    />
+                    <button
+                      onClick={handleSendEmail}
+                      disabled={emailSending}
+                      className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg transition-colors disabled:opacity-60 whitespace-nowrap"
+                    >
+                      {emailSending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                      {emailSending ? 'Sending...' : 'Send Report'}
+                    </button>
+                    <button
+                      onClick={() => { setEmailFormOpen(false); setEmailError(''); setEmailValidationError(''); setEmailAddress(''); }}
+                      className="text-[13px] text-gray-400 hover:text-gray-600 transition-colors whitespace-nowrap"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  {emailValidationError && (
+                    <p className="text-[12px] text-red-600 mt-2">{emailValidationError}</p>
+                  )}
+                  {emailError && (
+                    <p className="text-[12px] text-red-600 mt-2">{emailError}</p>
+                  )}
+                  <p className="text-[11px] text-gray-400 mt-2">
+                    The report will be sent to the email address you enter. You can send it to yourself or a colleague.
+                  </p>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Score summary */}

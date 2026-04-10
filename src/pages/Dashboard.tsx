@@ -20,7 +20,7 @@ const Dashboard: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const resultsAreaRef = useRef<HTMLDivElement>(null);
   const { firstName, signOut } = useAuth();
-  const { accountId, plan: accountPlan, billingPeriod: accountBillingPeriod, checksUsed, checksLimit, refreshAccount, refreshHistory } = useAccount();
+  const { accountId, plan: accountPlan, billingPeriod: accountBillingPeriod, checksUsed, checksLimit, refreshAccount, refreshHistory, auditOnly } = useAccount();
 
   // Use account-level plan, fall back to URL param for initial render
   const rawPlan = accountPlan || searchParams.get('plan') || '';
@@ -306,19 +306,65 @@ const Dashboard: React.FC = () => {
               </p>
             </div>
 
+            {/* Audit-only account banner */}
+            {auditOnly && (
+              <div className="px-5 py-4 bg-amber-50 border border-amber-200 rounded-xl flex items-start justify-between gap-4 dark:bg-amber-900/20 dark:border-amber-800">
+                <div>
+                  <p className="text-[13px] font-semibold text-amber-800 dark:text-amber-300 mb-0.5">
+                    Audit-only access
+                  </p>
+                  <p className="text-[13px] text-amber-700 dark:text-amber-400">
+                    Your account includes the Website Compliance Audit only. The post compliance checker requires an active subscription.
+                  </p>
+                </div>
+                <button
+                  onClick={() => navigate('/pricing/medical-practitioners')}
+                  className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors flex-shrink-0 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1"
+                >
+                  View plans
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
+
             {/* Active Plan Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
-              <div className="w-2 h-2 rounded-full bg-blue-500" />
-              <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
-                {getDisplayPlanName(planName)}
-              </span>
-              <span className="text-[12px] text-blue-400 dark:text-blue-500">
-                &middot; {billingPeriod ? formatBillingPeriod(billingPeriod) : 'Monthly'}
-              </span>
-            </div>
+            {!auditOnly && (
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-blue-50 dark:bg-blue-950 dark:border-blue-800">
+                <div className="w-2 h-2 rounded-full bg-blue-500" />
+                <span className="text-[13px] font-semibold text-blue-700 dark:text-blue-300">
+                  {getDisplayPlanName(planName)}
+                </span>
+                <span className="text-[12px] text-blue-400 dark:text-blue-500">
+                  &middot; {billingPeriod ? formatBillingPeriod(billingPeriod) : 'Monthly'}
+                </span>
+              </div>
+            )}
 
             {/* Input / Loading / Results views */}
-            {view === 'input' && inputMode === 'single' && (
+            {auditOnly && view === 'input' && (
+              <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6 md:p-8">
+                <div className="flex flex-col items-center justify-center gap-4 py-8 text-center">
+                  <Lock className="w-8 h-8 text-gray-300 dark:text-gray-600" />
+                  <div>
+                    <p className="text-[15px] font-semibold text-gray-700 dark:text-gray-300 mb-1">
+                      Post compliance checker
+                    </p>
+                    <p className="text-[13px] text-gray-400 dark:text-gray-500">
+                      Upgrade to a SafePost subscription to check your social media and advertising content for AHPRA and TGA compliance.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => navigate('/pricing/medical-practitioners')}
+                    className="mt-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[14px] font-semibold rounded-xl transition-colors duration-200 flex items-center gap-2"
+                  >
+                    View subscription plans
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {!auditOnly && view === 'input' && inputMode === 'single' && (
               <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6 md:p-8 space-y-4">
                 {/* Bulk upload pill — top-right of card */}
                 <div className="relative flex justify-end -mt-1 -mb-1">
@@ -459,7 +505,7 @@ const Dashboard: React.FC = () => {
             )}
 
             {/* Bulk upload — Ultra file drop zone */}
-            {view === 'input' && inputMode === 'bulk' && isUltra && (
+            {!auditOnly && view === 'input' && inputMode === 'bulk' && isUltra && (
               <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm dark:bg-gray-800 dark:border-gray-700 p-6 md:p-8 space-y-4">
                 <div className="flex justify-end -mt-1 -mb-1">
                   <button

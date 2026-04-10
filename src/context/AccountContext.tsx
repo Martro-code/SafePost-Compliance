@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { supabase } from '../services/supabaseClient';
 import { sanitizeObject } from '../utils/sanitizeInput';
 import type { SavedComplianceCheck } from '../hooks/useComplianceChecker';
+import type { AuditSession } from '../types/audit';
 
 const ACCOUNT_CACHE_KEY = 'safepost_account_cache';
 const CACHE_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours
@@ -72,11 +73,15 @@ export interface AccountContextType {
   abnRequired: boolean;
   auditPurchased: boolean;
   auditPaymentIntentId: string | null;
+  extendedAuditPurchased: boolean;
+  auditOnly: boolean;
+  auditPageLimit: number;
   accountLoading: boolean;
   refreshAccount: () => Promise<void>;
   complianceHistory: SavedComplianceCheck[];
   isHistoryLoading: boolean;
   refreshHistory: () => Promise<void>;
+  prefetchedAuditSessions: AuditSession[];
 }
 
 const AccountContext = createContext<AccountContextType>({
@@ -100,11 +105,15 @@ const AccountContext = createContext<AccountContextType>({
   abnRequired: false,
   auditPurchased: false,
   auditPaymentIntentId: null,
+  extendedAuditPurchased: false,
+  auditOnly: false,
+  auditPageLimit: 0,
   accountLoading: true,
   refreshAccount: async () => {},
   complianceHistory: [],
   isHistoryLoading: false,
   refreshHistory: async () => {},
+  prefetchedAuditSessions: [],
 });
 
 export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -128,6 +137,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [abnEntityName, setAbnEntityName] = useState('');
   const [auditPurchased, setAuditPurchased] = useState(false);
   const [auditPaymentIntentId, setAuditPaymentIntentId] = useState<string | null>(null);
+  const [extendedAuditPurchased, setExtendedAuditPurchased] = useState(false);
   const [accountLoading, setAccountLoading] = useState(!cached);
   const [complianceHistory, setComplianceHistory] = useState<SavedComplianceCheck[]>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
@@ -166,7 +176,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // Found membership — load the account
         const { data: account, error: accountFetchError } = await supabase
           .from('accounts')
-          .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id')
+          .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id, audit_only, extended_audit_purchased')
           .eq('id', membership.account_id)
           .single();
         if (accountFetchError) {
@@ -213,6 +223,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setAbnEntityName(account.abn_entity_name || '');
           setAuditPurchased(account.audit_purchased ?? false);
           setAuditPaymentIntentId(account.audit_payment_intent_id ?? null);
+          setExtendedAuditPurchased(account.extended_audit_purchased ?? false);
           writeAccountCache({
             accountId: account.id,
             plan: account.plan || 'starter',
@@ -346,6 +357,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setAbnEntityName(resolvedAccount.abn_entity_name || '');
       setAuditPurchased(resolvedAccount.audit_purchased ?? false);
       setAuditPaymentIntentId(resolvedAccount.audit_payment_intent_id ?? null);
+      setExtendedAuditPurchased(resolvedAccount.extended_audit_purchased ?? false);
       writeAccountCache({
         accountId: resolvedAccount.id,
         plan: resolvedAccount.plan || provisionPlan,
@@ -479,6 +491,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setAbnEntityName(account.abn_entity_name || '');
       setAuditPurchased(account.audit_purchased ?? false);
       setAuditPaymentIntentId(account.audit_payment_intent_id ?? null);
+      setExtendedAuditPurchased(account.extended_audit_purchased ?? false);
       writeAccountCache({
         accountId,
         plan: account.plan || 'starter',
@@ -489,8 +502,11 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
     }
   }, [accountId]);
 
+  const isAuditOnly = auditPurchased && (!plan || plan === '' || plan === 'starter');
+  const auditPageLimit = extendedAuditPurchased ? 12 : auditPurchased ? 6 : 0;
+
   return (
-    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, auditPurchased, auditPaymentIntentId, accountLoading, refreshAccount, complianceHistory, isHistoryLoading, refreshHistory, prefetchedAuditSessions }}>
+    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, auditPurchased, auditPaymentIntentId, extendedAuditPurchased, auditOnly: isAuditOnly, auditPageLimit, accountLoading, refreshAccount, complianceHistory, isHistoryLoading, refreshHistory, prefetchedAuditSessions }}>
       {children}
     </AccountContext.Provider>
   );
