@@ -14,6 +14,7 @@ const SignUp: React.FC = () => {
   const plan = searchParams.get('plan') || '';
   const billing = searchParams.get('billing') || '';
   const auditPending = searchParams.get('audit') === 'pending';
+  const auditRedirect = searchParams.get('redirect'); // 'audit-standard' | 'audit-extended'
 
   const [firstName, setFirstName] = useState('');
   const [surname, setSurname] = useState('');
@@ -254,6 +255,12 @@ const SignUp: React.FC = () => {
       // destination so AuthCallback can pick it up after email verification.
       if (auditPending) {
         localStorage.setItem('safepost_pending_redirect', '/audit?purchase=success&type=standalone');
+      }
+
+      // If user came from an audit pricing CTA, store the audit type so
+      // AuthCallback can initiate the Stripe checkout after email verification.
+      if (auditRedirect === 'audit-standard' || auditRedirect === 'audit-extended') {
+        localStorage.setItem('safepost_pending_audit_redirect', auditRedirect);
       }
 
       const params = new URLSearchParams();
