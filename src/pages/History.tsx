@@ -229,7 +229,7 @@ const CheckRow: React.FC<{
 // ─── Main History Page ─────────────────────────────────────────────────────────
 const History: React.FC = () => {
   const navigate = useNavigate();
-  const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount } = useAccount();
+  const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount, complianceHistory, isHistoryLoading: isContextHistoryLoading } = useAccount();
 
   // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
   // Only trust the database-backed value from AccountContext.
@@ -240,6 +240,7 @@ const History: React.FC = () => {
     checksUsed,
     checksLimit,
     onCheckComplete: refreshAccount,
+    initialHistory: complianceHistory,
   });
 
   const isUltra = planName.toLowerCase() === 'ultra';
@@ -260,9 +261,12 @@ const History: React.FC = () => {
   // Audit sessions
   const [auditSessions, setAuditSessions] = useState<AuditSession[]>([]);
 
-  // Load history and audit sessions on mount
+  // Load history and audit sessions on mount.
+  // Skip if context already prefetched data — the checker is seeded directly.
   useEffect(() => {
-    checker.loadHistory();
+    if (complianceHistory.length === 0) {
+      checker.loadHistory();
+    }
   }, []);
 
   useEffect(() => {
@@ -280,7 +284,7 @@ const History: React.FC = () => {
 
   // Auto-open a check navigated from Dashboard sidebar
   useEffect(() => {
-    if (checker.isLoadingHistory) return;
+    if (checker.isLoadingHistory && complianceHistory.length === 0) return;
     const targetId = sessionStorage.getItem('safepost_view_check_id');
     if (!targetId) return;
     sessionStorage.removeItem('safepost_view_check_id');
@@ -422,7 +426,7 @@ const History: React.FC = () => {
         )}
 
         {/* Stats row */}
-        {!checker.isLoadingHistory && totalChecks > 0 && (
+        {!(checker.isLoadingHistory && complianceHistory.length === 0) && totalChecks > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
             {[
               { label: 'Total checks', value: totalChecks, color: 'text-gray-700', darkColor: '', bg: 'bg-white', darkBg: '' },
@@ -440,7 +444,7 @@ const History: React.FC = () => {
         )}
 
         {/* Search and filter bar */}
-        {!checker.isLoadingHistory && totalChecks > 0 && (
+        {!(checker.isLoadingHistory && complianceHistory.length === 0) && totalChecks > 0 && (
           <div className="flex items-center gap-3 mb-5">
             {/* Search */}
             <div className="flex-1 relative">
@@ -495,7 +499,7 @@ const History: React.FC = () => {
         )}
 
         {/* Content area */}
-        {checker.isLoadingHistory ? null : totalChecks === 0 && auditSessions.length === 0 ? (
+        {(checker.isLoadingHistory || isContextHistoryLoading) && checker.history.length === 0 && complianceHistory.length === 0 ? null : totalChecks === 0 && auditSessions.length === 0 ? (
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
             <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
               <Clock className="w-6 h-6 text-gray-400" />
