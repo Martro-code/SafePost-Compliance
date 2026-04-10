@@ -580,6 +580,7 @@ const AuditReport: React.FC = () => {
             {new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
               day: 'numeric', month: 'long', year: 'numeric',
             })}
+            {practiceName && ` — ${practiceName}`}
           </p>
         </div>
 
