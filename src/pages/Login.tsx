@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import PublicHeader from '../components/layout/PublicHeader';
 import { supabase } from '../services/supabaseClient';
@@ -9,6 +9,8 @@ import { trackLogin } from '../services/analytics';
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
+  const auditRedirect = searchParams.get('redirect'); // 'audit-standard' | 'audit-extended'
 
   // If user arrives from email verification (URL contains access_token or type=signup),
   // skip the login page and redirect directly to the dashboard.
@@ -134,6 +136,31 @@ const Login: React.FC = () => {
       setIsSubmitting(false);
       navigate('/mfa-challenge');
       return;
+    }
+
+    // If user arrived from an audit pricing CTA, initiate Stripe checkout now
+    if ((auditRedirect === 'audit-standard' || auditRedirect === 'audit-extended') && signInData.session) {
+      const productType = auditRedirect === 'audit-extended' ? 'audit_extended' : 'audit';
+      try {
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+        const response = await fetch(`${supabaseUrl}/functions/v1/create-checkout-session`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${signInData.session.access_token}`,
+          },
+          body: JSON.stringify({ productType }),
+        });
+        if (response.ok) {
+          const data = await response.json();
+          if (data?.url) {
+            window.location.href = data.url;
+            return;
+          }
+        }
+      } catch {
+        // fall through to dashboard
+      }
     }
 
     // Check for pending checkout from signup flow
