@@ -197,7 +197,7 @@ const Features: React.FC = () => {
               Website compliance audit
             </h2>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-              Page-by-page AHPRA and TGA compliance checking for your practice website.
+              Page-by-page AHPRA and TGA compliance checking for your practice website
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
