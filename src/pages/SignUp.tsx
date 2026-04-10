@@ -13,6 +13,7 @@ const SignUp: React.FC = () => {
   const [searchParams] = useSearchParams();
   const plan = searchParams.get('plan') || '';
   const billing = searchParams.get('billing') || '';
+  const auditPending = searchParams.get('audit') === 'pending';
 
   const [firstName, setFirstName] = useState('');
   const [surname, setSurname] = useState('');
@@ -247,6 +248,12 @@ const SignUp: React.FC = () => {
           plan: selectedPlan,
           billing: billing || 'monthly',
         }));
+      }
+
+      // If user came from the standalone audit purchase flow, store the redirect
+      // destination so AuthCallback can pick it up after email verification.
+      if (auditPending) {
+        localStorage.setItem('safepost_pending_redirect', '/audit?purchase=success&type=standalone');
       }
 
       const params = new URLSearchParams();
