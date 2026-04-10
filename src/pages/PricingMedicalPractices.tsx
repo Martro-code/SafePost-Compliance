@@ -229,7 +229,7 @@ const PricingMedicalPractices: React.FC = () => {
               Is your website compliant?
             </h2>
             <p className="text-[16px] text-gray-500 max-w-2xl mx-auto leading-relaxed">
-              A one-time, AI-powered review of your practice website — available to everyone.
+              A one-time, AI-powered review of your practice website — available to everyone
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
