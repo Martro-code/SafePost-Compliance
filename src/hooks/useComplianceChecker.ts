@@ -92,7 +92,7 @@ export interface UsageInfo {
 async function fetchAccountComplianceHistory(accountId: string, limit: number = 20): Promise<SavedComplianceCheck[]> {
   const { data, error } = await supabase
     .from('compliance_checks')
-    .select('*')
+    .select('id, content_text, overall_status, created_at, ai_status, critical_issue_count, warning_issue_count, specialty, breach_categories, frameworks_triggered')
     .eq('account_id', accountId)
     .order('created_at', { ascending: false })
     .limit(limit);
@@ -104,7 +104,7 @@ async function fetchAccountComplianceHistory(accountId: string, limit: number = 
 async function fetchUserComplianceHistory(userId: string, limit: number = 20): Promise<SavedComplianceCheck[]> {
   const { data, error } = await supabase
     .from('compliance_checks')
-    .select('*')
+    .select('id, content_text, overall_status, created_at, ai_status, critical_issue_count, warning_issue_count, specialty, breach_categories, frameworks_triggered')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
     .limit(limit);
