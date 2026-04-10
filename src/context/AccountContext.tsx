@@ -131,6 +131,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [accountLoading, setAccountLoading] = useState(!cached);
   const [complianceHistory, setComplianceHistory] = useState<SavedComplianceCheck[]>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+  const [prefetchedAuditSessions, setPrefetchedAuditSessions] = useState<AuditSession[]>([]);
 
   const loadAccount = useCallback(async () => {
     try {
@@ -427,48 +428,6 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
 
     return () => subscription.unsubscribe();
   }, [loadAccount, prefetchHistory]);
-
-  const refreshHistory = useCallback(async () => {
-    if (!accountId) return;
-    try {
-      const { data } = await supabase
-        .from('compliance_checks')
-        .select('id, content_text, overall_status, created_at, ai_status, critical_issue_count, warning_issue_count, specialty, breach_categories, frameworks_triggered')
-        .eq('account_id', accountId)
-        .order('created_at', { ascending: false })
-        .limit(20);
-      setComplianceHistory(data ?? []);
-    } catch {
-      // fail silently
-    }
-  }, [accountId]);
-
-  // Background-prefetch the 20 most recent compliance checks after account loads.
-  // Runs silently — failures are swallowed so the dashboard is never blocked.
-  useEffect(() => {
-    if (!accountId || accountLoading) return;
-    const prefetch = async () => {
-      // Confirm a valid auth session exists before querying (guards against the
-      // cached-accountId case where the JWT may not yet be restored by Supabase).
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-      setIsHistoryLoading(true);
-      try {
-        const { data } = await supabase
-          .from('compliance_checks')
-          .select('id, content_text, overall_status, created_at, ai_status, critical_issue_count, warning_issue_count, specialty, breach_categories, frameworks_triggered')
-          .eq('account_id', accountId)
-          .order('created_at', { ascending: false })
-          .limit(20);
-        setComplianceHistory(data ?? []);
-      } catch {
-        // fail silently
-      } finally {
-        setIsHistoryLoading(false);
-      }
-    };
-    prefetch();
-  }, [accountId, accountLoading]);
 
   const refreshHistory = useCallback(async () => {
     if (!accountId) return;
