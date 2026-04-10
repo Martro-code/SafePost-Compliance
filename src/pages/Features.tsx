@@ -55,7 +55,7 @@ const Features: React.FC = () => {
     {
       icon: <Globe className="w-7 h-7 text-blue-500/80" />,
       heading: 'Page-by-page analysis',
-      description: 'Check up to 6 pages from your practice website — homepage, services, about, testimonials, pricing, and more.',
+      description: 'Check up to 12 pages from your practice website — homepage, services, about, testimonials, pricing, and more.',
     },
     {
       icon: <AlertTriangle className="w-7 h-7 text-blue-500/80" />,
@@ -79,8 +79,8 @@ const Features: React.FC = () => {
     },
     {
       icon: <BadgeCheck className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Subscriber add-on',
-      description: 'Available to all active SafePost subscribers as a one-time add-on for $149 AUD (incl. GST) per website audit.',
+      heading: 'One-time purchase',
+      description: 'Available as a one-time purchase, no subscription required. Standard audit $149 AUD (incl. GST) for up to 6 pages. Extended audit $249 AUD (incl. GST) for up to 12 pages.',
     },
   ];
 
@@ -130,9 +130,9 @@ const Features: React.FC = () => {
       {/* Hero Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Powerful AHPRA and TGA compliance checking, simplified
-          </h1>
+          <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+            Social media and advertising compliance
+          </h2>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
             Everything you need to ensure your content meets AHPRA and TGA guidelines
           </p>
@@ -178,15 +178,26 @@ const Features: React.FC = () => {
         </div>
       </section>
 
+      {/* Section Divider */}
+      <div className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
+        <div className="max-w-6xl mx-auto px-6 pt-6 pb-12 flex items-center gap-4">
+          <div className="flex-1 h-px" style={{ backgroundColor: '#e2e8f0' }} />
+          <span style={{ fontFamily: 'Arial, sans-serif', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: '#94a3b8' }}>
+            ALSO INCLUDED
+          </span>
+          <div className="flex-1 h-px" style={{ backgroundColor: '#e2e8f0' }} />
+        </div>
+      </div>
+
       {/* Website Compliance Audit */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-              Your website needs compliance checking too
+              Website compliance audit
             </h2>
             <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-              Check your practice website page by page against AHPRA and TGA rules — and get a clear report on exactly what to fix
+              Page-by-page AHPRA and TGA compliance checking for your practice website
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">

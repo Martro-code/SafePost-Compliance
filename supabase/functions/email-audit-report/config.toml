@@ -1,0 +1,2 @@
+[functions.email-audit-report]
+verify_jwt = false
