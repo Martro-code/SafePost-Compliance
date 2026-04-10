@@ -127,26 +127,14 @@ const Features: React.FC = () => {
       <PublicHeader />
 
 
-      {/* Page Hero */}
+      {/* Hero Section */}
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pt-24 md:pt-32 pb-16 md:pb-20 text-center">
-          <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-            Everything you need to stay compliant online
-          </h1>
-          <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-            SafePost covers the two biggest compliance risks for Australian medical practitioners — your social media content and your practice website.
-          </p>
-        </div>
-      </section>
-
-      {/* Social Media Section Hero */}
-      <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 pb-8 md:pb-10 text-center">
           <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
             Social media and advertising compliance
           </h2>
           <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-            Check your posts and ads against 174 AHPRA and TGA rules before you publish — in seconds.
+            Everything you need to ensure your content meets AHPRA and TGA guidelines
           </p>
         </div>
       </section>
@@ -192,7 +180,7 @@ const Features: React.FC = () => {
 
       {/* Section Divider */}
       <div className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
-        <div className="max-w-6xl mx-auto px-6 py-6 flex items-center gap-4">
+        <div className="max-w-6xl mx-auto px-6 pt-6 pb-12 flex items-center gap-4">
           <div className="flex-1 h-px" style={{ backgroundColor: '#e2e8f0' }} />
           <span style={{ fontFamily: 'Arial, sans-serif', fontSize: '10px', letterSpacing: '2px', textTransform: 'uppercase', color: '#94a3b8' }}>
             ALSO INCLUDED
@@ -205,12 +193,9 @@ const Features: React.FC = () => {
       <section className="w-full" style={{ backgroundColor: '#f7f7f4' }}>
         <div className="max-w-6xl mx-auto px-6 pb-16 md:pb-20">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
+            <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900">
               Website compliance audit
             </h2>
-            <p className="text-lg md:text-xl text-gray-500 leading-relaxed max-w-3xl mx-auto">
-              Check your practice website page by page and get a clear report on exactly what to fix.
-            </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {auditFeatures.map((feature, index) => (
