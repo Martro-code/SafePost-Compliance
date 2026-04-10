@@ -37,10 +37,10 @@ const About: React.FC = () => {
             {/* Section 1 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day"}
+                {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges health practitioners face every day"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts, online advertising and website content can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
+                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts, online advertising and website content can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated health practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
               </p>
             </div>
 
@@ -57,20 +57,20 @@ const About: React.FC = () => {
             {/* Section 3 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                Our mission is to help Australian medical practitioners and practices communicate confidently, compliantly and authentically
+                Our mission is to help Australian health practitioners and practices communicate confidently, compliantly and authentically
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We believe doctors should focus on patient care, not worrying whether their latest Instagram post or services page will trigger an investigation. SafePost provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations \u2014 across your social media, online advertising and practice website."}
+                {"We believe health practitioners should focus on patient care, not worrying whether their latest Instagram post or services page will trigger an investigation. SafePost provides instant, intelligent compliance checking powered by AI that understands the nuances of Australian health practitioner regulations \u2014 across your social media, online advertising and practice website."}
               </p>
             </div>
 
             {/* Section 4 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re not lawyers. We\u2019re your compliance platform"}
+                {"We\u2019re not lawyers. We\u2019re your compliance platform."}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns and website audits, we\u2019re here to support you at every step."}
+                {"SafePost doesn\u2019t replace professional advice \u2014 it empowers you with the knowledge and tools to navigate advertising regulations confidently. From solo health practitioners managing their own social media to multi-practitioner practices running comprehensive marketing campaigns and website audits, we\u2019re here to support you at every step."}
               </p>
             </div>
 
@@ -80,7 +80,7 @@ const About: React.FC = () => {
                 Our vision is to make compliance the standard — not the exception
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Today, SafePost checks your content before it goes live. But our vision reaches further \u2014 a single trusted platform that every Australian doctor and medical practice turns to for compliance confidence across everything they publish, communicate and practise. We\u2019re building toward that future, one check at a time."}
+                {"Today, SafePost checks your content before it goes live. But our vision reaches further \u2014 a single trusted platform that every Australian health professional and medical practice turns to for compliance confidence across everything they publish, communicate and practise. We\u2019re building toward that future, one check at a time."}
               </p>
             </div>
 
@@ -109,9 +109,6 @@ const About: React.FC = () => {
               </p>
               <p className="text-[14px] text-gray-500 leading-relaxed mt-4">
                 {"It\u2019s a design that says compliance isn\u2019t about restriction \u2014 it\u2019s about structure. The kind of structure that gives you guardrails, not roadblocks. The kind that transforms uncertainty into confidence and lets you communicate freely within the boundaries that protect your registration."}
-              </p>
-              <p className="text-lg font-bold text-gray-900 leading-snug mt-4">
-                {"We built SafePost to be the layer of protection between your intention and your publication \u2014 so that everything you put online is something you can stand behind with complete confidence."}
               </p>
             </div>
           </div>
