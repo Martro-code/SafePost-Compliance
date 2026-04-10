@@ -131,7 +131,7 @@ const PricingMedicalPractitioners: React.FC = () => {
                 onClick={() => navigate('/signup?plan=starter')}
                 className="w-full py-3 text-[15px] font-semibold text-gray-600 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
               >
-                Start free
+                Get Started
               </button>
             </div>
 
