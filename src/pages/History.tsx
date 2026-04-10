@@ -273,7 +273,7 @@ const History: React.FC = () => {
     if (!accountId) return;
     supabase
       .from('audit_sessions')
-      .select('*')
+      .select('id, account_id, created_at, updated_at, status, steps')
       .eq('account_id', accountId)
       .eq('status', 'complete')
       .order('updated_at', { ascending: false })
