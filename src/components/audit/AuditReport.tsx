@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Loader2, Download, CheckCircle, AlertTriangle, XCircle, MinusCircle, ChevronDown, ChevronUp } from 'lucide-react';
+import { Loader2, Download, CheckCircle, AlertTriangle, XCircle, MinusCircle, ChevronDown, ChevronUp, Mail } from 'lucide-react';
 import { supabase } from '../../services/supabaseClient';
 import { useAccount } from '../../context/AccountContext';
 import { AuditSession, AuditStep } from '../../types/audit';
@@ -339,12 +339,29 @@ const StepAccordion: React.FC<{ step: AuditStep }> = ({ step }) => {
 
 // ── Page component ────────────────────────────────────────────────────────────
 
+function getScoreInterpretation(score: number): string {
+  if (score === 100) return 'Your website appears compliant with AHPRA and TGA advertising standards based on the pages reviewed.';
+  if (score >= 76) return 'Your website is largely compliant with a few minor issues to address.';
+  if (score >= 51) return 'Your website is partially compliant but has areas that need improvement to meet AHPRA and TGA advertising standards.';
+  if (score >= 26) return 'Your website has several compliance issues that should be addressed to reduce your risk of an AHPRA or TGA complaint.';
+  return 'Your website has significant compliance issues that require urgent attention before they attract regulatory scrutiny.';
+}
+
 const AuditReport: React.FC = () => {
   const navigate = useNavigate();
-  const { accountId, practiceName, accountLoading } = useAccount();
+  const { accountId, practiceName, accountLoading, plan } = useAccount();
   const [session, setSession] = useState<AuditSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [downloadLoading, setDownloadLoading] = useState(false);
+  const [emailFormOpen, setEmailFormOpen] = useState(false);
+  const [emailAddress, setEmailAddress] = useState('');
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSuccess, setEmailSuccess] = useState(false);
+  const [emailError, setEmailError] = useState('');
+  const [emailValidationError, setEmailValidationError] = useState('');
+  const [standardAuditLoading, setStandardAuditLoading] = useState(false);
+  const [extAuditLoading, setExtAuditLoading] = useState(false);
+  const [newAuditError, setNewAuditError] = useState<string | null>(null);
 
   const loadSession = useCallback(async () => {
     if (!accountId) return;
@@ -389,6 +406,68 @@ const AuditReport: React.FC = () => {
       console.error('HTML report generation failed:', err);
     } finally {
       setDownloadLoading(false);
+    }
+  };
+
+  const handleSendEmail = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailAddress.trim())) {
+      setEmailValidationError('Please enter a valid email address');
+      return;
+    }
+    setEmailValidationError('');
+    setEmailError('');
+    setEmailSending(true);
+    const auditDate = new Date(session!.updated_at || session!.created_at).toLocaleDateString('en-AU', {
+      day: 'numeric', month: 'long', year: 'numeric',
+    });
+    try {
+      const { error } = await supabase.functions.invoke('email-audit-report', {
+        body: {
+          email: emailAddress.trim(),
+          auditSession: session,
+          practiceName: practiceName || 'Your Practice',
+          auditDate,
+        },
+      });
+      if (error) throw error;
+      setEmailSuccess(true);
+      setEmailAddress('');
+    } catch {
+      setEmailError('Failed to send report. Please try again.');
+    } finally {
+      setEmailSending(false);
+    }
+  };
+
+  const handleBuyAudit = async (type: 'standard' | 'extended') => {
+    setNewAuditError(null);
+    if (type === 'standard') setStandardAuditLoading(true); else setExtAuditLoading(true);
+    try {
+      const { data: { session: authSession } } = await supabase.auth.getSession();
+      if (!authSession?.access_token) {
+        setNewAuditError('Something went wrong. Please try again.');
+        return;
+      }
+      const isSubscriber = !!(plan && plan !== '' && plan !== 'starter');
+      const productType = type === 'extended'
+        ? 'audit_extended'
+        : isSubscriber ? 'audit' : 'audit_standalone';
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authSession.access_token}` },
+          body: JSON.stringify({ productType }),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok || !data.url) { setNewAuditError('Something went wrong. Please try again.'); return; }
+      window.location.href = data.url;
+    } catch {
+      setNewAuditError('Something went wrong. Please try again.');
+    } finally {
+      if (type === 'standard') setStandardAuditLoading(false); else setExtAuditLoading(false);
     }
   };
 
@@ -439,38 +518,13 @@ const AuditReport: React.FC = () => {
     <LoggedInLayout>
       <div className="max-w-5xl mx-auto px-6 py-12">
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 mb-8 flex-wrap">
-          <div>
-            <h1 className="text-[24px] font-bold text-gray-900 mb-1">Audit Report</h1>
-            <p className="text-[13px] text-gray-400">
-              {new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
-                day: 'numeric', month: 'long', year: 'numeric',
-              })}
-              {practiceName && ` — ${practiceName}`}
-            </p>
-          </div>
-          <div className="flex flex-col items-end gap-3">
-            <div className="flex flex-col items-end gap-1">
-              <button
-                onClick={handleDownloadHtml}
-                disabled={downloadLoading}
-                className="flex items-center gap-2 px-4 py-2 text-[13px] font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors disabled:opacity-60"
-              >
-                {downloadLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-                Download Audit Report (HTML)
-              </button>
-              <p className="text-[11px] text-gray-400">Opens in any browser · Print to PDF with Ctrl+P</p>
-            </div>
-            <div className="flex flex-col items-end gap-1">
-              <button
-                onClick={() => navigate('/audit')}
-                className="px-4 py-2 text-[13px] font-medium text-gray-700 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 rounded-xl transition-colors"
-              >
-                Run New Audit — $149
-              </button>
-              <p className="text-[11px] text-gray-400">Each audit is a one-time purchase</p>
-            </div>
-          </div>
+        <div className="mb-8">
+          <h1 className="text-[24px] font-bold text-gray-900 mb-1">Audit Report</h1>
+          <p className="text-[13px] text-gray-400">
+            {new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
+              day: 'numeric', month: 'long', year: 'numeric',
+            })}
+          </p>
         </div>
 
         {/* Score summary */}
@@ -500,6 +554,7 @@ const AuditReport: React.FC = () => {
               </div>
             </div>
           </div>
+          <p className="text-[14px] text-gray-500 mb-4">{getScoreInterpretation(score)}</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-100">
             <div className="text-center p-3 bg-slate-50 rounded-xl">
               <p className="text-[22px] font-bold text-gray-900">{analysedSteps.length}</p>
@@ -518,6 +573,40 @@ const AuditReport: React.FC = () => {
           </div>
         </div>
 
+        {/* What to do next */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
+          <h2 className="text-[15px] font-semibold text-gray-900 mb-5">What to do next</h2>
+          <div className="flex flex-col gap-5">
+            {[
+              {
+                n: 1,
+                heading: 'Address your High severity findings first',
+                body: 'These represent the most serious compliance risks and are most likely to attract AHPRA or TGA attention.',
+              },
+              {
+                n: 2,
+                heading: 'Review each page\'s recommendations',
+                body: 'Work through the Page-by-Page Breakdown below and make the suggested changes to your website content.',
+              },
+              {
+                n: 3,
+                heading: 'Run a new audit to confirm your changes',
+                body: 'Once you have made changes, consider running a new audit to verify your website meets AHPRA and TGA standards.',
+              },
+            ].map(({ n, heading, body }) => (
+              <div key={n} className="flex items-start gap-4">
+                <div className="w-7 h-7 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-[12px] font-bold text-blue-600">{n}</span>
+                </div>
+                <div>
+                  <p className="text-[14px] font-semibold text-gray-900 mb-0.5">{heading}</p>
+                  <p className="text-[13px] text-gray-500 leading-relaxed">{body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Per-page breakdown */}
         <h2 className="text-[16px] font-semibold text-gray-900 mb-3">Page-by-Page Breakdown</h2>
         <div className="flex flex-col gap-3">
@@ -526,27 +615,126 @@ const AuditReport: React.FC = () => {
           )}
         </div>
 
-        {/* Download CTA */}
-        <div className="mt-8 bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
-          <p className="text-[14px] font-semibold text-blue-900 mb-1">Save a copy for your records</p>
-          <p className="text-[13px] text-blue-600 mb-4">
-            Download the full report as a self-contained HTML file. Open in any browser and print to PDF with Ctrl+P.
-          </p>
-          <button
-            onClick={handleDownloadHtml}
-            disabled={downloadLoading}
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-colors disabled:opacity-60"
-          >
-            {downloadLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-            Download Audit Report (HTML)
-          </button>
-        </div>
-
         {/* Disclaimer */}
         <div className="mt-6 p-5 border border-slate-200 rounded-xl bg-slate-50">
           <p className="text-[12px] text-gray-500 leading-relaxed">
             This report has been generated by SafePost using AI-powered analysis of publicly available website content. It is intended as a general compliance screening tool only and does not constitute legal advice. AHPRA and TGA advertising regulations are complex and subject to change. SafePost accepts no liability for any decisions made based on this report. Practitioners should seek independent legal or compliance advice before making changes to their advertising materials.
           </p>
+        </div>
+
+        {/* Card A — Save your report */}
+        <div className="mt-6 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-[15px] font-semibold text-gray-900 mb-1">Save a copy for your records</h2>
+          <p className="text-[13px] text-gray-500 mb-4">
+            Download or email your full audit report. Open the HTML file in any browser and print to PDF with Ctrl+P.
+          </p>
+          <div className="flex gap-3 flex-wrap">
+            <button
+              onClick={handleDownloadHtml}
+              disabled={downloadLoading}
+              className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-colors disabled:opacity-60"
+            >
+              {downloadLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              Download Report (HTML)
+            </button>
+            <button
+              onClick={() => { setEmailFormOpen(true); setEmailSuccess(false); setEmailError(''); setEmailValidationError(''); }}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-gray-700 text-[13px] font-semibold rounded-xl transition-colors"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              Email this report
+            </button>
+          </div>
+          {emailFormOpen && (
+            <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+              {emailSuccess ? (
+                <p className="text-[13px] text-green-700 font-medium">Report sent successfully. Please check your inbox.</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="email"
+                      value={emailAddress}
+                      onChange={(e) => { setEmailAddress(e.target.value); setEmailValidationError(''); }}
+                      placeholder="Enter email address"
+                      className="flex-1 px-3 py-2 text-[13px] border border-slate-200 rounded-lg outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all"
+                    />
+                    <button
+                      onClick={handleSendEmail}
+                      disabled={emailSending}
+                      className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg transition-colors disabled:opacity-60 whitespace-nowrap"
+                    >
+                      {emailSending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                      {emailSending ? 'Sending...' : 'Send Report'}
+                    </button>
+                    <button
+                      onClick={() => { setEmailFormOpen(false); setEmailError(''); setEmailValidationError(''); setEmailAddress(''); }}
+                      className="text-[13px] text-gray-400 hover:text-gray-600 transition-colors whitespace-nowrap"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  {emailValidationError && <p className="text-[12px] text-red-600 mt-2">{emailValidationError}</p>}
+                  {emailError && <p className="text-[12px] text-red-600 mt-2">{emailError}</p>}
+                  <p className="text-[11px] text-gray-400 mt-2">
+                    The report will be sent to the email address you enter. You can send it to yourself or a colleague.
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Card B — Run another audit */}
+        <div className="mt-4 bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+          <h2 className="text-[15px] font-semibold text-gray-900 mb-1">Want to check more pages?</h2>
+          <p className="text-[13px] text-gray-500 mb-4">
+            Each audit is a one-time purchase. Your previous results are saved to your account.
+          </p>
+          {newAuditError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-[13px] text-red-700">{newAuditError}</p>
+            </div>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Standard */}
+            <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 flex flex-col">
+              <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Standard</p>
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-[28px] font-bold text-gray-900 leading-none">$149</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
+              </div>
+              <p className="text-[13px] text-gray-500 mb-4">Up to 6 pages</p>
+              <button
+                onClick={() => handleBuyAudit('standard')}
+                disabled={standardAuditLoading}
+                className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-[13px] font-semibold rounded-xl transition-colors duration-200 flex items-center justify-center gap-2 mt-auto"
+              >
+                {standardAuditLoading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" />Redirecting…</> : 'Buy Standard Audit'}
+              </button>
+            </div>
+            {/* Extended */}
+            <div className="relative bg-slate-50 rounded-xl border-2 border-blue-200 p-5 flex flex-col">
+              <div className="absolute -top-3 right-4">
+                <span className="text-[11px] font-semibold text-white bg-blue-600 px-3 py-1 rounded-full shadow-sm">
+                  Best value
+                </span>
+              </div>
+              <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Extended</p>
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-[28px] font-bold text-gray-900 leading-none">$249</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
+              </div>
+              <p className="text-[13px] text-gray-500 mb-4">Up to 12 pages</p>
+              <button
+                onClick={() => handleBuyAudit('extended')}
+                disabled={extAuditLoading}
+                className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-[13px] font-semibold rounded-xl transition-colors duration-200 flex items-center justify-center gap-2 mt-auto"
+              >
+                {extAuditLoading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" />Redirecting…</> : 'Buy Extended Audit'}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </LoggedInLayout>
