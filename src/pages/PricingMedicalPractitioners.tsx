@@ -237,13 +237,13 @@ const PricingMedicalPractitioners: React.FC = () => {
                 ))}
               </ul>
               <button
-                onClick={() => navigate('/audit')}
+                onClick={() => navigate('/signup?redirect=audit-standard')}
                 className="w-full py-3 text-[14px] font-semibold text-gray-700 hover:text-gray-900 rounded-xl border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98]"
               >
                 Get Standard Audit
               </button>
               <p className="text-center text-[11px] text-gray-400 mt-2">
-                Available to subscribers and standalone
+                New to SafePost? Create a free account to get started.
               </p>
             </div>
             {/* Extended */}
@@ -271,13 +271,13 @@ const PricingMedicalPractitioners: React.FC = () => {
                 ))}
               </ul>
               <button
-                onClick={() => navigate('/audit')}
+                onClick={() => navigate('/signup?redirect=audit-extended')}
                 className="w-full py-3 text-[14px] font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-lg shadow-blue-600/25 transition-all duration-200 active:scale-[0.98]"
               >
                 Get Extended Audit
               </button>
               <p className="text-center text-[11px] text-gray-400 mt-2">
-                Available to subscribers and standalone
+                New to SafePost? Create a free account to get started.
               </p>
             </div>
           </div>
