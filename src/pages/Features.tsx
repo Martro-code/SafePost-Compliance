@@ -79,8 +79,8 @@ const Features: React.FC = () => {
     },
     {
       icon: <BadgeCheck className="w-7 h-7 text-blue-500/80" />,
-      heading: 'Subscriber add-on',
-      description: 'Available to all active SafePost subscribers as a one-time add-on. Standard audit $149 AUD (incl. GST) for up to 6 pages. Extended audit $249 AUD (incl. GST) for up to 12 pages.',
+      heading: 'One-time purchase',
+      description: 'Available as a one-time purchase, no subscription required. Standard audit $149 AUD (incl. GST) for up to 6 pages. Extended audit $249 AUD (incl. GST) for up to 12 pages.',
     },
   ];
 
