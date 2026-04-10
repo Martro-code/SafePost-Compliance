@@ -37,20 +37,10 @@ const About: React.FC = () => {
             {/* Section 1 */}
             <div>
               <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We\u2019re a doctor-first company built on deep understanding of the compliance challenges medical practitioners face every day"}
+                {"We\u2019re a practitioner-first company built on deep understanding of the compliance challenges health practitioners face every day"}
               </h2>
               <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts, online advertising and website content can trigger AHPRA and TGA investigations. We\u2019ve watched dedicated practitioners navigate complex regulations, face unexpected notifications, and spend countless hours second-guessing their marketing efforts."}
-              </p>
-            </div>
-
-            {/* Section 2 */}
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 leading-snug mb-3">
-                {"We founded SafePost because compliance shouldn\u2019t hold you back from connecting with patients"}
-              </h2>
-              <p className="text-[14px] text-gray-500 leading-relaxed">
-                {"Social media, digital marketing and your practice website are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield. One unclear post or non-compliant webpage can put your registration at risk."}
+                {"We\u2019ve worked in medical indemnity for over a decade, seeing firsthand how easily well-intentioned social media posts, online advertising and website content can trigger AHPRA and TGA investigations. Social media, digital marketing and your practice website are essential tools for modern medical practices \u2014 but the regulatory landscape is increasingly complex. AHPRA\u2019s advertising guidelines, TGA requirements, testimonial restrictions, before/after photo rules \u2014 it\u2019s a minefield that dedicated health practitioners navigate every day, often at risk to their registration."}
               </p>
             </div>
 
