@@ -127,12 +127,23 @@ serve(async (req: Request) => {
         return new Response('Missing account_id', { status: 400 });
       }
 
+      // Only set audit_only=true if the account has no active subscription.
+      const { data: account } = await supabase
+        .from('accounts')
+        .select('plan, subscription_status')
+        .eq('id', accountId)
+        .single();
+
+      const hasActiveSubscription = account?.plan &&
+        account.plan !== '' &&
+        account.subscription_status === 'active';
+
       const { error } = await supabase
         .from('accounts')
         .update({
           audit_purchased: true,
           audit_payment_intent_id: paymentIntentId,
-          audit_only: true,
+          audit_only: !hasActiveSubscription,
         })
         .eq('id', accountId);
 
