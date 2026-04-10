@@ -100,9 +100,10 @@ serve(async (req) => {
       });
     }
 
-    const { priceId, productType } = await req.json();
+    const body = await req.json();
+    const { priceId, productType, accountId: bodyAccountId } = body;
 
-    // ── Audit one-time payment ─────────────────────────────────────────────
+    // ── Audit one-time payment (subscriber, standard) ──────────────────────
     if (productType === 'audit') {
       const auditPriceId = Deno.env.get('AUDIT_PRICE_ID');
       if (!auditPriceId) {
@@ -141,6 +142,86 @@ serve(async (req) => {
       });
 
       return new Response(JSON.stringify({ url: auditSession.url }), {
+        status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // ── Standalone audit purchase (non-subscriber) ─────────────────────────
+    if (productType === 'audit_standalone') {
+      const standalonePrice = 'price_1TIRITJAm9wjk5YfFMTWW0XO';
+
+      // Resolve account — prefer bodyAccountId if provided, else look up by user
+      let accountId: string | null = bodyAccountId ?? null;
+      let stripeCustomerId: string | null = null;
+
+      const { data: account } = await supabaseAdmin
+        .from('accounts')
+        .select('id, stripe_customer_id')
+        .eq('owner_user_id', user.id)
+        .maybeSingle();
+
+      if (account) {
+        accountId = account.id;
+        stripeCustomerId = account.stripe_customer_id;
+      }
+
+      if (!accountId) {
+        return new Response(JSON.stringify({ error: 'Account not found' }), {
+          status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      const siteUrl = Deno.env.get('SITE_URL') ?? 'https://www.safepost.com.au';
+      const standaloneSession = await stripe.checkout.sessions.create({
+        ...(stripeCustomerId && { customer: stripeCustomerId }),
+        payment_method_types: ['card'],
+        line_items: [{ price: standalonePrice, quantity: 1 }],
+        mode: 'payment',
+        success_url: `${siteUrl}/audit?purchase=success&type=standalone`,
+        cancel_url: `${siteUrl}/audit?purchase=cancelled`,
+        metadata: {
+          account_id: accountId,
+          product_type: 'audit_standalone',
+        },
+      });
+
+      return new Response(JSON.stringify({ url: standaloneSession.url }), {
+        status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // ── Extended audit upgrade ─────────────────────────────────────────────
+    if (productType === 'audit_extended') {
+      const extendedPrice = 'price_1TKaJPJAm9wjk5YfP3B1RtSb';
+
+      const { data: account, error: accountError } = await supabaseAdmin
+        .from('accounts')
+        .select('id, stripe_customer_id')
+        .eq('owner_user_id', user.id)
+        .single();
+
+      if (accountError || !account) {
+        console.error('Account not found for extended audit checkout:', accountError);
+        return new Response(JSON.stringify({ error: 'Account not found' }), {
+          status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+
+      const siteUrl = Deno.env.get('SITE_URL') ?? 'https://www.safepost.com.au';
+      const extendedSession = await stripe.checkout.sessions.create({
+        ...(account.stripe_customer_id && { customer: account.stripe_customer_id }),
+        payment_method_types: ['card'],
+        line_items: [{ price: extendedPrice, quantity: 1 }],
+        mode: 'payment',
+        success_url: `${siteUrl}/audit?purchase=success&type=extended`,
+        cancel_url: `${siteUrl}/audit?purchase=cancelled`,
+        metadata: {
+          account_id: account.id,
+          product_type: 'audit_extended',
+        },
+      });
+
+      return new Response(JSON.stringify({ url: extendedSession.url }), {
         status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }

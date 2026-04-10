@@ -11,14 +11,24 @@ import AuditStepResultComponent from './AuditStepResult';
 
 // ── Default page suggestions shown in the setup screen ───────────────────────
 
-const DEFAULT_PAGE_SETUPS: { name: string; url: string }[] = [
+const ALL_PAGE_SUGGESTIONS: { name: string; url: string }[] = [
   { name: 'Homepage', url: '' },
   { name: 'Services', url: '' },
   { name: 'About Us', url: '' },
   { name: 'Testimonials', url: '' },
   { name: 'Pricing', url: '' },
   { name: 'Blog', url: '' },
+  { name: 'Contact', url: '' },
+  { name: 'Team', url: '' },
+  { name: 'Patient Resources', url: '' },
+  { name: 'FAQ', url: '' },
+  { name: 'Before & After', url: '' },
+  { name: 'Treatments', url: '' },
 ];
+
+function buildDefaultPageSetups(limit: number): { name: string; url: string }[] {
+  return ALL_PAGE_SUGGESTIONS.slice(0, limit).map((p) => ({ ...p }));
+}
 
 // ── Setup screen ─────────────────────────────────────────────────────────────
 
@@ -106,10 +116,10 @@ type Phase = 'loading' | 'setup' | 'auditing';
 
 const AuditFlow: React.FC = () => {
   const navigate = useNavigate();
-  const { accountId, auditPurchased, accountLoading, refreshAccount } = useAccount();
+  const { accountId, auditPurchased, auditPageLimit, accountLoading } = useAccount();
 
   const [phase, setPhase] = useState<Phase>('loading');
-  const [pageSetups, setPageSetups] = useState<PageSetup[]>(DEFAULT_PAGE_SETUPS);
+  const [pageSetups, setPageSetups] = useState<PageSetup[]>(() => buildDefaultPageSetups(auditPageLimit || 6));
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [steps, setSteps] = useState<AuditStep[]>([]);
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
@@ -335,7 +345,7 @@ const AuditFlow: React.FC = () => {
           <h1 className="text-[24px] font-bold text-gray-900 mb-1">Website Compliance Audit</h1>
           <p className="text-[14px] text-gray-500">
             {phase === 'setup'
-              ? "Tell us which pages to audit, then we'll check each one against AHPRA and TGA rules."
+              ? `Tell us which pages to audit (up to ${auditPageLimit} pages), then we'll check each one against AHPRA and TGA rules.`
               : 'Enter the URL for each page of your website to analyse it for AHPRA and TGA compliance.'}
           </p>
         </div>
