@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
 import PublicHeader from '../components/layout/PublicHeader';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';

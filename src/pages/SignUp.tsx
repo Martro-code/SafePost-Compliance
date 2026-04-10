@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Eye, EyeOff, ArrowLeft, Loader2, CheckCircle2, Stethoscope } from 'lucide-react';
+import { Eye, EyeOff, ArrowLeft, Loader2, CheckCircle2, Stethoscope, ChevronDown } from 'lucide-react';
 import PublicHeader from '../components/layout/PublicHeader';
 import PublicFooter from '../components/layout/PublicFooter';
 import { supabase } from '../services/supabaseClient';
