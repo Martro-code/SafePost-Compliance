@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft, Clock,
-  CheckCircle2, XCircle, AlertTriangle, Loader2, Search,
+  CheckCircle2, XCircle, AlertTriangle, Search,
   Filter, Trash2, ChevronRight,
   X, ShieldOff, Globe,
 } from 'lucide-react';
@@ -116,7 +116,7 @@ type MergedEntry =
 
 // ─── Audit Row Component ──────────────────────────────────────────────────────
 
-const AuditRow: React.FC<{ entry: MergedEntry & { kind: 'audit' }; onView: () => void }> = ({ entry, onView }) => {
+const AuditRow = React.memo<{ entry: MergedEntry & { kind: 'audit' }; onView: () => void }>(({ entry, onView }) => {
   const { data: session, score, analysedCount } = entry;
   const dateStr = new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
     day: 'numeric', month: 'short', year: 'numeric',
@@ -154,14 +154,14 @@ const AuditRow: React.FC<{ entry: MergedEntry & { kind: 'audit' }; onView: () =>
       </div>
     </div>
   );
-};
+});
 
 // ─── Check Row Component ──────────────────────────────────────────────────────
-const CheckRow: React.FC<{
+const CheckRow = React.memo<{
   check: SavedComplianceCheck;
   onView: (check: SavedComplianceCheck) => void;
   onDelete: (id: string) => void;
-}> = ({ check, onView, onDelete }) => {
+}>(({ check, onView, onDelete }) => {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const cfg = getStatusConfig(check.overall_status);
 
@@ -224,12 +224,12 @@ const CheckRow: React.FC<{
       </div>
     </div>
   );
-};
+});
 
 // ─── Main History Page ─────────────────────────────────────────────────────────
 const History: React.FC = () => {
   const navigate = useNavigate();
-  const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount } = useAccount();
+  const { accountId, plan: accountPlan, checksUsed, checksLimit, refreshAccount, complianceHistory, isHistoryLoading: isContextHistoryLoading, prefetchedAuditSessions } = useAccount();
 
   // SECURITY: Never fall back to sessionStorage for plan — it's user-controlled.
   // Only trust the database-backed value from AccountContext.
@@ -240,6 +240,7 @@ const History: React.FC = () => {
     checksUsed,
     checksLimit,
     onCheckComplete: refreshAccount,
+    initialHistory: complianceHistory,
   });
 
   const isUltra = planName.toLowerCase() === 'ultra';
@@ -252,24 +253,26 @@ const History: React.FC = () => {
 
   // Load-more state
   const [visibleCount, setVisibleCount] = useState(LOAD_MORE_SIZE);
-  const [loadingMore, setLoadingMore] = useState(false);
 
   // Plan limit banner dismissal
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
-  // Audit sessions
-  const [auditSessions, setAuditSessions] = useState<AuditSession[]>([]);
+  // Audit sessions — seeded from context prefetch if available
+  const [auditSessions, setAuditSessions] = useState<AuditSession[]>(prefetchedAuditSessions);
 
-  // Load history and audit sessions on mount
+  // Load history and audit sessions on mount.
+  // Skip if context already prefetched data — the checker is seeded directly.
   useEffect(() => {
-    checker.loadHistory();
+    if (complianceHistory.length === 0) {
+      checker.loadHistory();
+    }
   }, []);
 
   useEffect(() => {
-    if (!accountId) return;
+    if (!accountId || prefetchedAuditSessions.length > 0) return;
     supabase
       .from('audit_sessions')
-      .select('*')
+      .select('id, account_id, created_at, updated_at, status, steps')
       .eq('account_id', accountId)
       .eq('status', 'complete')
       .order('updated_at', { ascending: false })
@@ -280,7 +283,7 @@ const History: React.FC = () => {
 
   // Auto-open a check navigated from Dashboard sidebar
   useEffect(() => {
-    if (checker.isLoadingHistory) return;
+    if (checker.isLoadingHistory && complianceHistory.length === 0) return;
     const targetId = sessionStorage.getItem('safepost_view_check_id');
     if (!targetId) return;
     sessionStorage.removeItem('safepost_view_check_id');
@@ -306,7 +309,7 @@ const History: React.FC = () => {
   }, [checker.isLoadingHistory, checker.history]);
 
   // View a check on the dashboard
-  const handleViewCheck = (check: SavedComplianceCheck) => {
+  const handleViewCheck = useCallback((check: SavedComplianceCheck) => {
     const normalised = check.result_json ? {
       ...check.result_json,
       overall_status: check.overall_status,
@@ -322,18 +325,23 @@ const History: React.FC = () => {
         createdAt: check.created_at,
       },
     });
-  };
+  }, [navigate]);
+
+  const handleViewAudit = useCallback(() => navigate('/audit/report'), [navigate]);
 
   // Filter logic — applies to compliance checks only
-  const filteredChecks = checker.history.filter(check => {
-    const matchesSearch = searchQuery === '' ||
-      check.content_text?.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || check.overall_status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  const filteredChecks = useMemo(() =>
+    checker.history.filter(check => {
+      const matchesSearch = searchQuery === '' ||
+        check.content_text?.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || check.overall_status === statusFilter;
+      return matchesSearch && matchesStatus;
+    }),
+    [checker.history, searchQuery, statusFilter]
+  );
 
   // Build merged sorted list: audit sessions always included, checks filtered
-  const mergedEntries: MergedEntry[] = [
+  const mergedEntries = useMemo<MergedEntry[]>(() => [
     ...filteredChecks.map((c): MergedEntry => ({
       kind: 'check',
       data: c,
@@ -343,18 +351,20 @@ const History: React.FC = () => {
       const { score, analysedCount } = computeAuditScore(s.steps);
       return { kind: 'audit', data: s, created_at: s.updated_at || s.created_at, score, analysedCount };
     }),
-  ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()),
+    [filteredChecks, auditSessions]
+  );
 
   // Load-more slice
   const totalFiltered = mergedEntries.length;
-  const visibleEntries = mergedEntries.slice(0, visibleCount);
+  const visibleEntries = useMemo(
+    () => mergedEntries.slice(0, visibleCount),
+    [mergedEntries, visibleCount]
+  );
   const hasMore = totalFiltered > visibleCount;
 
-  const handleLoadMore = async () => {
-    setLoadingMore(true);
-    await new Promise(resolve => setTimeout(resolve, 300));
+  const handleLoadMore = () => {
     setVisibleCount(c => c + LOAD_MORE_SIZE);
-    setLoadingMore(false);
   };
 
   // Reset visible count when filters change
@@ -363,13 +373,15 @@ const History: React.FC = () => {
   }, [searchQuery, statusFilter]);
 
   // Stats
-  const totalChecks = checker.history.length;
-  const compliantCount = checker.history.filter(c => c.overall_status === 'compliant').length;
-  const nonCompliantCount = checker.history.filter(c => c.overall_status === 'non_compliant').length;
-  const reviewCount = checker.history.filter(c =>
-    c.overall_status === 'warning' || c.overall_status === 'requires_review'
-  ).length;
-  const conductRiskCount = checker.history.filter(c => c.overall_status === 'conduct_risk').length;
+  const { totalChecks, compliantCount, nonCompliantCount, reviewCount, conductRiskCount } = useMemo(() => ({
+    totalChecks: checker.history.length,
+    compliantCount: checker.history.filter(c => c.overall_status === 'compliant').length,
+    nonCompliantCount: checker.history.filter(c => c.overall_status === 'non_compliant').length,
+    reviewCount: checker.history.filter(c =>
+      c.overall_status === 'warning' || c.overall_status === 'requires_review'
+    ).length,
+    conductRiskCount: checker.history.filter(c => c.overall_status === 'conduct_risk').length,
+  }), [checker.history]);
 
   // Show plan limit banner
   const showLimitBanner = !isUltra && !bannerDismissed && totalChecks >= historyLimit;
@@ -422,7 +434,7 @@ const History: React.FC = () => {
         )}
 
         {/* Stats row */}
-        {!checker.isLoadingHistory && totalChecks > 0 && (
+        {!(checker.isLoadingHistory && complianceHistory.length === 0) && totalChecks > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
             {[
               { label: 'Total checks', value: totalChecks, color: 'text-gray-700', darkColor: '', bg: 'bg-white', darkBg: '' },
@@ -440,7 +452,7 @@ const History: React.FC = () => {
         )}
 
         {/* Search and filter bar */}
-        {!checker.isLoadingHistory && totalChecks > 0 && (
+        {!(checker.isLoadingHistory && complianceHistory.length === 0) && totalChecks > 0 && (
           <div className="flex items-center gap-3 mb-5">
             {/* Search */}
             <div className="flex-1 relative">
@@ -495,7 +507,7 @@ const History: React.FC = () => {
         )}
 
         {/* Content area */}
-        {checker.isLoadingHistory ? null : totalChecks === 0 && auditSessions.length === 0 ? (
+        {(checker.isLoadingHistory || isContextHistoryLoading) && checker.history.length === 0 && complianceHistory.length === 0 ? null : totalChecks === 0 && auditSessions.length === 0 ? (
           <div className="bg-white rounded-2xl border border-black/[0.06] shadow-sm p-12 flex flex-col items-center justify-center text-center">
             <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-4">
               <Clock className="w-6 h-6 text-gray-400" />
@@ -534,7 +546,7 @@ const History: React.FC = () => {
                 <AuditRow
                   key={`audit-${entry.data.id}`}
                   entry={entry}
-                  onView={() => navigate('/audit/report')}
+                  onView={handleViewAudit}
                 />
               ) : (
                 <CheckRow
@@ -551,11 +563,9 @@ const History: React.FC = () => {
               <div className="flex justify-center pt-4">
                 <button
                   onClick={handleLoadMore}
-                  disabled={loadingMore}
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-[13px] font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 disabled:opacity-60 transition-all duration-150"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl border border-gray-200 bg-white text-[13px] font-medium text-gray-600 hover:border-gray-300 hover:text-gray-900 transition-all duration-150"
                 >
-                  {loadingMore && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  {loadingMore ? 'Loading…' : `Load more (${totalFiltered - visibleCount} remaining)`}
+                  {`Load more (${totalFiltered - visibleCount} remaining)`}
                 </button>
               </div>
             )}
