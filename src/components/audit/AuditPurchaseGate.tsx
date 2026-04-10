@@ -30,7 +30,7 @@ const STEPS = [
 ];
 
 const AuditPurchaseGate: React.FC = () => {
-  const { auditPurchased, extendedAuditPurchased, auditOnly, accountLoading, refreshAccount, plan, accountId } = useAccount();
+  const { auditPurchased, extendedAuditPurchased, auditOnly, accountLoading, refreshAccount, plan } = useAccount();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const isPurchaseReturn = searchParams.get('purchase') === 'success';
@@ -305,7 +305,7 @@ const AuditPurchaseGate: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Standard */}
             <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 flex flex-col">
               <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Standard</p>
@@ -409,34 +409,6 @@ const AuditPurchaseGate: React.FC = () => {
             </div>
           </div>
 
-          <div className="text-center">
-            {accountId !== null ? (
-              <p className="text-[13px] text-gray-400">
-                Your audit purchase is linked to your SafePost account automatically.
-              </p>
-            ) : (
-              <>
-                <p className="text-[13px] text-gray-400 mb-4">
-                  Already subscribed to SafePost? Your audit access is included.
-                </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <button
-                    onClick={() => navigate('/pricing/medical-practitioners')}
-                    className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors"
-                  >
-                    View subscription plans
-                  </button>
-                  <span className="text-gray-300 hidden sm:inline">|</span>
-                  <button
-                    onClick={() => navigate('/login')}
-                    className="text-[13px] font-medium text-gray-500 hover:text-gray-700 transition-colors"
-                  >
-                    Log in to existing account
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
         </div>
       </LoggedInLayout>
     );
