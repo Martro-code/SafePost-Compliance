@@ -12,29 +12,27 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
   const analysedSteps = session.steps.filter(
     (s) => s.status === 'complete' && s.result && s.result.complianceStatus !== 'skipped'
   );
-  const passCount   = analysedSteps.filter((s) => s.result?.complianceStatus === 'pass').length;
-  const warnCount   = analysedSteps.filter((s) => s.result?.complianceStatus === 'warning').length;
-  const failCount   = analysedSteps.filter((s) => s.result?.complianceStatus === 'fail').length;
+  const passCount = analysedSteps.filter((s) => s.result?.complianceStatus === 'pass').length;
+  const warnCount = analysedSteps.filter((s) => s.result?.complianceStatus === 'warning').length;
+  const failCount = analysedSteps.filter((s) => s.result?.complianceStatus === 'fail').length;
   const score = analysedSteps.length > 0
     ? Math.round(((passCount + warnCount * 0.5) / analysedSteps.length) * 100)
     : 0;
 
-  const scoreHexColor = score >= 67 ? '#22c55e' : score >= 34 ? '#f59e0b' : '#ef4444';
+  // Score colour: 0–25 red, 26–50 amber, 51–75 blue, 76–100 green
+  const scoreColor =
+    score <= 25 ? '#ef4444' :
+    score <= 50 ? '#f59e0b' :
+    score <= 75 ? '#3b82f6' :
+                  '#22c55e';
 
-  // ── Fetch logo as base64 ──────────────────────────────────────────────────
-
-  let logoBase64 = '';
-  try {
-    const response = await fetch('/safepost-logo.png');
-    const blob = await response.blob();
-    logoBase64 = await new Promise<string>((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.readAsDataURL(blob);
-    });
-  } catch {
-    // fall back to logo mark in header
-  }
+  // Plain English interpretation
+  const scoreInterpretation =
+    score === 100 ? 'Your website appears compliant with AHPRA and TGA advertising standards based on the pages reviewed.' :
+    score >= 76   ? 'Your website is largely compliant with a few minor issues to address.' :
+    score >= 51   ? 'Your website is partially compliant but has areas that need improvement to meet AHPRA and TGA advertising standards.' :
+    score >= 26   ? 'Your website has several compliance issues that should be addressed to reduce your risk of an AHPRA or TGA complaint.' :
+                    'Your website has significant compliance issues that require urgent attention before they attract regulatory scrutiny.';
 
   const auditDate = new Date(session.updated_at || session.created_at).toLocaleDateString('en-AU', {
     day: 'numeric', month: 'long', year: 'numeric',
@@ -53,7 +51,7 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
     <div class="page-block">
       <div class="page-name">${escHtml(step.name)}</div>
       <span class="status-badge status-skipped">Not Analysed</span>
-      <div class="page-summary">This page was skipped and not analysed.</div>
+      <p style="font-size:14px;color:#64748b;margin-top:8px;">This page was skipped and not analysed.</p>
     </div>`;
       }
 
@@ -61,41 +59,32 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
         result.complianceStatus === 'pass'    ? 'status-compliant' :
         result.complianceStatus === 'warning' ? 'status-warning'   : 'status-issues';
       const badgeLabel =
-        result.complianceStatus === 'pass'    ? 'Compliant'       :
-        result.complianceStatus === 'warning' ? 'Warnings Found'  : 'Issues Found';
+        result.complianceStatus === 'pass'    ? 'Compliant'      :
+        result.complianceStatus === 'warning' ? 'Warnings Found' : 'Issues Found';
 
       const findingsHtml = result.issues.map((issue) => {
         const sev = issue.severity;
-        const sevBadgeStyle =
-          sev === 'high'   ? 'background:#fee2e2;color:#991b1b;' :
-          sev === 'medium' ? 'background:#fef3c7;color:#92400e;' :
-                             'background:#dbeafe;color:#1e40af;';
-        const cardBg =
-          sev === 'high'   ? '#fff8f8' :
-          sev === 'medium' ? '#fffdf5' :
-                             '#f5f8ff';
+        const sevClass =
+          sev === 'high'   ? 'severity-high'   :
+          sev === 'medium' ? 'severity-medium'  :
+                             'severity-low';
         return `
-      <div class="finding finding-${sev}" style="background: ${cardBg}; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
-        <span class="finding-severity-badge" style="${sevBadgeStyle}">${sev.toUpperCase()}</span>
+      <div class="finding finding-${sev}">
+        <span class="severity-badge ${sevClass}">${sev.toUpperCase()}</span>
         <div class="finding-description">${escHtml(issue.description)}</div>
-        <div class="finding-recommendation">
-          <span class="recommendation-label">Recommendation</span>
-          ${escHtml(issue.recommendation)}
+        <div class="recommendation-box">
+          <div class="recommendation-label">Recommendation</div>
+          <div class="recommendation-text">${escHtml(issue.recommendation)}</div>
         </div>
       </div>`;
       }).join('');
 
-      const hrColor =
-        result.complianceStatus === 'pass'    ? '#22c55e' :
-        result.complianceStatus === 'warning' ? '#f59e0b' : '#ef4444';
-
       return `
     <div class="page-block">
-      <hr style="border: none; border-top: 2px solid ${hrColor}; margin-bottom: 20px; border-radius: 2px;" />
       <div class="page-name">${escHtml(step.name)}</div>
       ${result.url ? `<div class="page-url">${escHtml(result.url)}</div>` : ''}
       <span class="status-badge ${badgeClass}">${badgeLabel}</span>
-      <div class="page-summary">${escHtml(result.summary)}</div>
+      <p style="font-size:14px;color:#374151;margin-bottom:20px;line-height:1.6;">${escHtml(result.summary)}</p>
       ${findingsHtml}
     </div>`;
     })
@@ -111,145 +100,212 @@ async function generateHtml(session: AuditSession, practiceName: string): Promis
   <title>SafePost Website Compliance Audit Report</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Georgia', serif; font-size: 15px; line-height: 1.7; color: #1a1a2e; background: #ffffff; }
-    .header { background: #0f172a; padding: 28px 48px; display: flex; align-items: center; gap: 16px; }
-    .header-logo-mark { display: flex; flex-direction: column; gap: 4px; }
-    .header-logo-mark span { display: block; background: #3b82f6; border-radius: 3px; }
-    .header-logo-mark span:nth-child(1) { width: 28px; height: 6px; }
-    .header-logo-mark span:nth-child(2) { width: 18px; height: 6px; }
-    .header-logo-mark span:nth-child(3) { width: 10px; height: 6px; }
-    .header-brand { font-family: 'Arial', sans-serif; font-size: 26px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; }
-    .header-tag { font-family: 'Arial', sans-serif; font-size: 11px; color: #94a3b8; letter-spacing: 2px; text-transform: uppercase; margin-left: auto; }
-    .page { max-width: 860px; margin: 0 auto; padding: 48px 48px 80px; }
-    .report-title-block { border-bottom: 2px solid #e2e8f0; padding-bottom: 32px; margin-bottom: 36px; }
-    .report-label { font-family: 'Arial', sans-serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #64748b; margin-bottom: 8px; }
-    .report-title { font-size: 32px; font-weight: bold; color: #0f172a; margin-bottom: 8px; }
-    .report-meta { font-family: 'Arial', sans-serif; font-size: 13px; color: #64748b; }
-    .score-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 32px 36px; margin-bottom: 48px; }
-    .score-heading { font-family: 'Arial', sans-serif; font-size: 13px; text-transform: uppercase; letter-spacing: 1.5px; color: #64748b; margin-bottom: 8px; }
-    .score-value { font-size: 48px; font-weight: bold; line-height: 1; margin-bottom: 10px; }
-    .score-progress-track { height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; margin-bottom: 24px; }
-    .score-progress-bar { height: 100%; border-radius: 4px; }
-    .score-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    .score-stat { text-align: center; padding: 12px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; }
-    .score-stat-value { font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; color: #0f172a; }
-    .score-stat-label { font-family: 'Arial', sans-serif; font-size: 11px; color: #64748b; margin-top: 2px; }
-    .section-heading { font-size: 22px; font-weight: bold; color: #0f172a; margin-bottom: 28px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
-    .page-block { margin-bottom: 48px; padding-bottom: 48px; border-bottom: 1px solid #f1f5f9; }
+    body { font-family: Georgia, serif; font-size: 14px; line-height: 1.7; color: #1a1a2e; background: #ffffff; }
+    .page-content { max-width: 860px; margin: 0 auto; }
+
+    /* PART 1 — Header */
+    .header { background: #0f172a; padding: 0; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 16px 40px; }
+    .header-brand { display: flex; align-items: center; gap: 12px; }
+    .logo-mark { display: flex; flex-direction: column; gap: 3px; }
+    .logo-bar { display: block; background: #3b82f6; border-radius: 2px; height: 4px; }
+    .bar-1 { width: 24px; }
+    .bar-2 { width: 16px; }
+    .bar-3 { width: 10px; }
+    .brand-text { font-family: Arial, sans-serif; font-size: 22px; font-weight: 800; color: #ffffff; letter-spacing: -0.3px; }
+    .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+    .header-label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #3b82f6; }
+    .header-accent { height: 3px; background: #3b82f6; width: 100%; }
+
+    /* PART 2 — Report title block */
+    .report-title-block { padding: 36px 40px 28px; border-bottom: 1px solid #e2e8f0; }
+    .report-label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #94a3b8; margin-bottom: 8px; }
+    .report-practice-name { font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 6px; line-height: 1.2; }
+    .report-date { font-family: Arial, sans-serif; font-size: 13px; color: #64748b; }
+
+    /* PART 3 — Score card */
+    .score-card { margin: 28px 40px; border: 1px solid #e2e8f0; border-radius: 12px; border-left-width: 5px; padding: 28px 32px; background: #f8fafc; }
+    .score-label { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #64748b; margin-bottom: 8px; }
+    .score-value { font-size: 64px; font-weight: 800; line-height: 1; margin-bottom: 12px; }
+    .score-progress-bar-track { height: 6px; background: #e2e8f0; border-radius: 3px; margin-bottom: 12px; overflow: hidden; }
+    .score-progress-bar-fill { height: 100%; border-radius: 3px; }
+    .score-interpretation { font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 24px; font-style: italic; }
+    .score-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .score-stat { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; text-align: center; }
+    .score-stat-value { font-family: Arial, sans-serif; font-size: 24px; font-weight: 700; color: #0f172a; }
+    .score-stat-label { font-family: Arial, sans-serif; font-size: 11px; color: #64748b; margin-top: 2px; }
+
+    /* PART 4 — What to do next */
+    .next-steps { margin: 0 40px 28px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 28px 32px; }
+    .next-steps-heading { font-size: 16px; font-weight: 700; color: #0f172a; margin-bottom: 20px; }
+    .step { display: flex; gap: 16px; margin-bottom: 16px; align-items: flex-start; }
+    .step:last-child { margin-bottom: 0; }
+    .step-number { width: 28px; height: 28px; border-radius: 50%; background: #3b82f6; color: #ffffff; font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step-title { font-family: Arial, sans-serif; font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 2px; }
+    .step-body { font-size: 13px; color: #475569; line-height: 1.5; }
+
+    /* PART 5 — Findings section header */
+    .findings-section-header { background: #0f172a; padding: 14px 40px; margin-bottom: 0; }
+    .findings-section-title { font-family: Arial, sans-serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: #ffffff; font-weight: 600; }
+
+    /* PART 6 — Severity badges */
+    .severity-badge { display: inline-block; font-family: Arial, sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+    .severity-high { background: #fee2e2; color: #991b1b; }
+    .severity-medium { background: #fef3c7; color: #92400e; }
+    .severity-low { background: #dbeafe; color: #1e40af; }
+
+    /* PART 7 — Recommendation boxes */
+    .recommendation-box { background: #eff6ff; border-left: 3px solid #3b82f6; border-radius: 0 6px 6px 0; padding: 14px 16px; margin-top: 12px; }
+    .recommendation-label { font-family: Arial, sans-serif; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #3b82f6; margin-bottom: 6px; }
+    .recommendation-text { font-size: 13px; color: #1e3a5f; line-height: 1.6; }
+
+    /* PART 8 — Footer */
+    .footer { margin: 48px 40px 40px; padding-top: 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
+    .footer-brand { font-family: Arial, sans-serif; font-size: 12px; font-weight: 700; color: #0f172a; }
+    .footer-center { font-family: Arial, sans-serif; font-size: 11px; color: #94a3b8; text-align: center; }
+    .footer-right { font-family: Arial, sans-serif; font-size: 11px; color: #94a3b8; text-align: right; }
+
+    /* PART 9 — Page blocks and findings */
+    .page-block { margin: 0 40px 36px; padding-bottom: 36px; border-bottom: 1px solid #f1f5f9; }
     .page-block:last-of-type { border-bottom: none; }
-    .page-name { font-size: 20px; font-weight: bold; color: #0f172a; margin-bottom: 4px; }
-    .page-url { font-family: 'Arial', sans-serif; font-size: 12px; color: #94a3b8; margin-bottom: 12px; }
-    .status-badge { display: inline-block; font-family: 'Arial', sans-serif; font-size: 11px; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 16px; }
+    .page-name { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+    .page-url { font-family: Arial, sans-serif; font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
+    .status-badge { display: inline-block; font-family: Arial, sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; margin-bottom: 12px; }
     .status-compliant { background: #dcfce7; color: #166534; }
     .status-warning { background: #fef9c3; color: #854d0e; }
     .status-issues { background: #fee2e2; color: #991b1b; }
     .status-skipped { background: #f1f5f9; color: #64748b; }
-    .page-summary { color: #374151; margin-bottom: 20px; font-size: 14px; }
-    .finding { border-left: 4px solid #e2e8f0; margin-bottom: 16px; border-radius: 0 8px 8px 0; }
-    .finding-high { border-left-color: #ef4444; }
-    .finding-medium { border-left-color: #f59e0b; }
-    .finding-low { border-left-color: #3b82f6; }
-    .finding-severity-badge { display: inline-block; font-family: 'Arial', sans-serif; font-size: 10px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
-    .finding-description { font-size: 15px; color: #1e293b; margin-bottom: 12px; }
-    .finding-recommendation { font-size: 13px; color: #334155; background: #f0f4f8; border-left: 4px solid #3b82f6; border-radius: 0 6px 6px 0; padding: 12px 14px; }
-    .recommendation-label { display: inline-block; font-family: 'Arial', sans-serif; font-size: 10px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 20px; margin-bottom: 6px; }
-    .disclaimer { margin-top: 64px; padding: 24px 28px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: 'Arial', sans-serif; font-size: 12px; color: #64748b; line-height: 1.6; }
-    .disclaimer strong { display: block; margin-bottom: 6px; color: #374151; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
-    .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid #e2e8f0; font-family: 'Arial', sans-serif; font-size: 11px; color: #94a3b8; text-align: center; }
+    .finding { border-left: 4px solid #e2e8f0; padding: 18px 20px; margin-bottom: 16px; background: #f8fafc; border-radius: 0 8px 8px 0; }
+    .finding-high { border-left-color: #ef4444; background: #fff8f8; }
+    .finding-medium { border-left-color: #f59e0b; background: #fffdf0; }
+    .finding-low { border-left-color: #3b82f6; background: #f8faff; }
+    .finding-description { font-size: 14px; color: #1e293b; margin-bottom: 12px; line-height: 1.6; }
+
+    /* Disclaimer */
+    .disclaimer { margin: 0 40px 0; padding: 24px 28px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: Arial, sans-serif; font-size: 12px; color: #64748b; line-height: 1.6; }
+    .disclaimer-heading { display: block; margin-bottom: 6px; color: #374151; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+
+    /* PART 10 — Print */
     @media print {
-      body { font-size: 13px; }
+      body { font-size: 12px; }
       .header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .score-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .finding { -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
+      .header-accent { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .score-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
+      .next-steps { -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
+      .findings-section-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .finding { break-inside: avoid; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .severity-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .recommendation-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
+      .score-progress-bar-fill { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .step-number { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       .page-block { break-inside: avoid; }
-      .status-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .finding-severity-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .finding-recommendation { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      .recommendation-label { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
   </style>
 </head>
 <body>
+<div class="page-content">
 
+  <!-- PART 1: Header -->
   <div class="header">
-    ${logoBase64
-      ? `<img src="${logoBase64}" alt="SafePost" style="height:34px;" />`
-      : `<div class="header-logo-mark"><span></span><span></span><span></span></div><div class="header-brand">SafePost&#8482;</div>`
-    }
-    <div class="header-tag">Website Compliance Audit</div>
-  </div>
-
-  <div class="page">
-
-    <div class="report-title-block">
-      <div class="report-label">Compliance Audit Report</div>
-      <div class="report-title">${escHtml(practiceName || 'Your Practice')}</div>
-      <div class="report-meta">Audit completed: ${escHtml(auditDate)}</div>
-    </div>
-
-    <div class="score-card">
-      <div class="score-heading">Overall Compliance Score</div>
-      <div class="score-value" style="color: ${scoreHexColor}">${score}%</div>
-      <div class="score-progress-track">
-        <div class="score-progress-bar" style="width: ${score}%; background-color: ${scoreHexColor};"></div>
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="logo-mark">
+          <span class="logo-bar bar-1"></span>
+          <span class="logo-bar bar-2"></span>
+          <span class="logo-bar bar-3"></span>
+        </div>
+        <div class="brand-text">SafePost</div>
       </div>
-      <div class="score-grid">
-        <div class="score-stat">
-          <div class="score-stat-value">${analysedSteps.length}</div>
-          <div class="score-stat-label">Pages Analysed</div>
-        </div>
-        <div class="score-stat">
-          <div class="score-stat-value">${passCount}</div>
-          <div class="score-stat-label">Compliant</div>
-        </div>
-        <div class="score-stat">
-          <div class="score-stat-value">${warnCount}</div>
-          <div class="score-stat-label">Warnings</div>
-        </div>
-        <div class="score-stat">
-          <div class="score-stat-value">${failCount}</div>
-          <div class="score-stat-label">Issues Found</div>
-        </div>
+      <div class="header-right">
+        <div class="header-label">WEBSITE COMPLIANCE AUDIT</div>
       </div>
     </div>
-
-    <div class="section-heading">Page-by-Page Findings</div>
-
-    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 12px; margin-bottom: 40px;">
-      ${session.steps.filter((s) => s.status === 'complete' && s.result).map((step) => {
-        const st = step.result!.complianceStatus;
-        const borderColor =
-          st === 'pass'    ? '#22c55e' :
-          st === 'warning' ? '#f59e0b' :
-          st === 'skipped' ? '#cbd5e1' : '#ef4444';
-        const labelColor =
-          st === 'pass'    ? '#166534' :
-          st === 'warning' ? '#854d0e' :
-          st === 'skipped' ? '#64748b' : '#991b1b';
-        const statusText =
-          st === 'pass'    ? 'Compliant' :
-          st === 'warning' ? 'Warnings'  :
-          st === 'skipped' ? 'Not Analysed' : 'Issues Found';
-        return `<div style="border-left: 4px solid ${borderColor}; background: #f8fafc; border-radius: 0 8px 8px 0; padding: 10px 14px;">
-          <div style="font-family: Arial, sans-serif; font-size: 13px; font-weight: bold; color: #0f172a; margin-bottom: 3px;">${escHtml(step.name)}</div>
-          <div style="font-family: Arial, sans-serif; font-size: 11px; font-weight: bold; color: ${labelColor}; text-transform: uppercase; letter-spacing: 0.5px;">${statusText}</div>
-        </div>`;
-      }).join('')}
-    </div>
-
-    ${pageBlocks}
-
-    <div class="disclaimer">
-      <strong>Important Disclaimer</strong>
-      This report has been generated by SafePost using AI-powered analysis of publicly available website content. It is intended as a general compliance screening tool only and does not constitute legal advice. AHPRA and TGA advertising regulations are complex and subject to change. SafePost accepts no liability for any decisions made based on this report. Practitioners should seek independent legal or compliance advice before making changes to their advertising materials. For the most current AHPRA advertising guidelines, visit www.ahpra.gov.au.
-    </div>
-
-    <div class="footer">
-      Generated by SafePost &#8212; AI-powered AHPRA and TGA compliance for Australian medical practitioners &nbsp;&middot;&nbsp; www.safepost.com.au
-    </div>
-
+    <div class="header-accent"></div>
   </div>
 
+  <!-- PART 2: Report title -->
+  <div class="report-title-block">
+    <div class="report-label">Compliance Audit Report</div>
+    <div class="report-practice-name">${escHtml(practiceName || 'Your Practice')}</div>
+    <div class="report-date">${escHtml(auditDate)}</div>
+  </div>
+
+  <!-- PART 3: Score card -->
+  <div class="score-card" style="border-left-color: ${scoreColor};">
+    <div class="score-label">Overall Compliance Score</div>
+    <div class="score-value" style="color: ${scoreColor};">${score}%</div>
+    <div class="score-progress-bar-track">
+      <div class="score-progress-bar-fill" style="width: ${score}%; background: ${scoreColor};"></div>
+    </div>
+    <div class="score-interpretation">${scoreInterpretation}</div>
+    <div class="score-stats">
+      <div class="score-stat">
+        <div class="score-stat-value">${analysedSteps.length}</div>
+        <div class="score-stat-label">Pages Analysed</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat-value">${passCount}</div>
+        <div class="score-stat-label">Compliant</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat-value">${warnCount}</div>
+        <div class="score-stat-label">Warnings</div>
+      </div>
+      <div class="score-stat">
+        <div class="score-stat-value">${failCount}</div>
+        <div class="score-stat-label">Issues Found</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 4: What to do next -->
+  <div class="next-steps">
+    <div class="next-steps-heading">What to do next</div>
+    <div class="step">
+      <div class="step-number">1</div>
+      <div>
+        <div class="step-title">Address your High severity findings first</div>
+        <div class="step-body">These represent the most serious compliance risks and are most likely to attract AHPRA or TGA attention.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">2</div>
+      <div>
+        <div class="step-title">Review each page&#39;s recommendations</div>
+        <div class="step-body">Work through the Page-by-Page Findings below and make the suggested changes to your website content.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-number">3</div>
+      <div>
+        <div class="step-title">Run a new audit to confirm your changes</div>
+        <div class="step-body">Once you have made changes, consider running a new audit to verify your website meets AHPRA and TGA standards.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PART 5: Findings section header -->
+  <div class="findings-section-header">
+    <div class="findings-section-title">Page-by-Page Findings</div>
+  </div>
+
+  <!-- Per-page blocks -->
+  ${pageBlocks}
+
+  <!-- Disclaimer -->
+  <div class="disclaimer">
+    <span class="disclaimer-heading">Important Disclaimer</span>
+    This report has been generated by SafePost using AI-powered analysis of publicly available website content. It is intended as a general compliance screening tool only and does not constitute legal advice. AHPRA and TGA advertising regulations are complex and subject to change. SafePost accepts no liability for any decisions made based on this report. Practitioners should seek independent legal or compliance advice before making changes to their advertising materials. For the most current AHPRA advertising guidelines, visit www.ahpra.gov.au.
+  </div>
+
+  <!-- PART 8: Footer -->
+  <div class="footer">
+    <div class="footer-brand">SafePost</div>
+    <div class="footer-center">AI-powered AHPRA and TGA compliance &middot; www.safepost.com.au</div>
+    <div class="footer-right">${escHtml(auditDate)}</div>
+  </div>
+
+</div>
 </body>
 </html>`;
 }
@@ -339,9 +395,17 @@ const StepAccordion: React.FC<{ step: AuditStep }> = ({ step }) => {
 
 // ── Page component ────────────────────────────────────────────────────────────
 
+function getScoreInterpretation(score: number): string {
+  if (score === 100) return 'Your website appears compliant with AHPRA and TGA advertising standards based on the pages reviewed.';
+  if (score >= 76) return 'Your website is largely compliant with a few minor issues to address.';
+  if (score >= 51) return 'Your website is partially compliant but has areas that need improvement to meet AHPRA and TGA advertising standards.';
+  if (score >= 26) return 'Your website has several compliance issues that should be addressed to reduce your risk of an AHPRA or TGA complaint.';
+  return 'Your website has significant compliance issues that require urgent attention before they attract regulatory scrutiny.';
+}
+
 const AuditReport: React.FC = () => {
   const navigate = useNavigate();
-  const { accountId, practiceName, accountLoading } = useAccount();
+  const { accountId, practiceName, accountLoading, plan } = useAccount();
   const [session, setSession] = useState<AuditSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [downloadLoading, setDownloadLoading] = useState(false);
@@ -351,6 +415,9 @@ const AuditReport: React.FC = () => {
   const [emailSuccess, setEmailSuccess] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [emailValidationError, setEmailValidationError] = useState('');
+  const [standardAuditLoading, setStandardAuditLoading] = useState(false);
+  const [extAuditLoading, setExtAuditLoading] = useState(false);
+  const [newAuditError, setNewAuditError] = useState<string | null>(null);
 
   const loadSession = useCallback(async () => {
     if (!accountId) return;
@@ -426,6 +493,37 @@ const AuditReport: React.FC = () => {
       setEmailError('Failed to send report. Please try again.');
     } finally {
       setEmailSending(false);
+    }
+  };
+
+  const handleBuyAudit = async (type: 'standard' | 'extended') => {
+    setNewAuditError(null);
+    if (type === 'standard') setStandardAuditLoading(true); else setExtAuditLoading(true);
+    try {
+      const { data: { session: authSession } } = await supabase.auth.getSession();
+      if (!authSession?.access_token) {
+        setNewAuditError('Something went wrong. Please try again.');
+        return;
+      }
+      const isSubscriber = !!(plan && plan !== '' && plan !== 'starter');
+      const productType = type === 'extended'
+        ? 'audit_extended'
+        : isSubscriber ? 'audit' : 'audit_standalone';
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-checkout-session`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authSession.access_token}` },
+          body: JSON.stringify({ productType }),
+        }
+      );
+      const data = await response.json();
+      if (!response.ok || !data.url) { setNewAuditError('Something went wrong. Please try again.'); return; }
+      window.location.href = data.url;
+    } catch {
+      setNewAuditError('Something went wrong. Please try again.');
+    } finally {
+      if (type === 'standard') setStandardAuditLoading(false); else setExtAuditLoading(false);
     }
   };
 
@@ -592,6 +690,7 @@ const AuditReport: React.FC = () => {
               </div>
             </div>
           </div>
+          <p className="text-[14px] text-gray-500 mb-4">{getScoreInterpretation(score)}</p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pt-4 border-t border-slate-100">
             <div className="text-center p-3 bg-slate-50 rounded-xl">
               <p className="text-[22px] font-bold text-gray-900">{analysedSteps.length}</p>
@@ -610,6 +709,40 @@ const AuditReport: React.FC = () => {
           </div>
         </div>
 
+        {/* What to do next */}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-6">
+          <h2 className="text-[15px] font-semibold text-gray-900 mb-5">What to do next</h2>
+          <div className="flex flex-col gap-5">
+            {[
+              {
+                n: 1,
+                heading: 'Address your High severity findings first',
+                body: 'These represent the most serious compliance risks and are most likely to attract AHPRA or TGA attention.',
+              },
+              {
+                n: 2,
+                heading: 'Review each page\'s recommendations',
+                body: 'Work through the Page-by-Page Breakdown below and make the suggested changes to your website content.',
+              },
+              {
+                n: 3,
+                heading: 'Run a new audit to confirm your changes',
+                body: 'Once you have made changes, consider running a new audit to verify your website meets AHPRA and TGA standards.',
+              },
+            ].map(({ n, heading, body }) => (
+              <div key={n} className="flex items-start gap-4">
+                <div className="w-7 h-7 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-[12px] font-bold text-blue-600">{n}</span>
+                </div>
+                <div>
+                  <p className="text-[14px] font-semibold text-gray-900 mb-0.5">{heading}</p>
+                  <p className="text-[13px] text-gray-500 leading-relaxed">{body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Per-page breakdown */}
         <h2 className="text-[16px] font-semibold text-gray-900 mb-3">Page-by-Page Breakdown</h2>
         <div className="flex flex-col gap-3">
@@ -618,27 +751,126 @@ const AuditReport: React.FC = () => {
           )}
         </div>
 
-        {/* Download CTA */}
-        <div className="mt-8 bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center">
-          <p className="text-[14px] font-semibold text-blue-900 mb-1">Save a copy for your records</p>
-          <p className="text-[13px] text-blue-600 mb-4">
-            Download the full report as a self-contained HTML file. Open in any browser and print to PDF with Ctrl+P.
-          </p>
-          <button
-            onClick={handleDownloadHtml}
-            disabled={downloadLoading}
-            className="inline-flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-colors disabled:opacity-60"
-          >
-            {downloadLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
-            Download Audit Report (HTML)
-          </button>
-        </div>
-
         {/* Disclaimer */}
         <div className="mt-6 p-5 border border-slate-200 rounded-xl bg-slate-50">
           <p className="text-[12px] text-gray-500 leading-relaxed">
             This report has been generated by SafePost using AI-powered analysis of publicly available website content. It is intended as a general compliance screening tool only and does not constitute legal advice. AHPRA and TGA advertising regulations are complex and subject to change. SafePost accepts no liability for any decisions made based on this report. Practitioners should seek independent legal or compliance advice before making changes to their advertising materials.
           </p>
+        </div>
+
+        {/* Card A — Save your report */}
+        <div className="mt-6 bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
+          <h2 className="text-[15px] font-semibold text-gray-900 mb-1">Save a copy for your records</h2>
+          <p className="text-[13px] text-gray-500 mb-4">
+            Download or email your full audit report. Open the HTML file in any browser and print to PDF with Ctrl+P.
+          </p>
+          <div className="flex gap-3 flex-wrap">
+            <button
+              onClick={handleDownloadHtml}
+              disabled={downloadLoading}
+              className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-xl transition-colors disabled:opacity-60"
+            >
+              {downloadLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              Download Report (HTML)
+            </button>
+            <button
+              onClick={() => { setEmailFormOpen(true); setEmailSuccess(false); setEmailError(''); setEmailValidationError(''); }}
+              className="flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-gray-700 text-[13px] font-semibold rounded-xl transition-colors"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              Email this report
+            </button>
+          </div>
+          {emailFormOpen && (
+            <div className="mt-4 p-4 bg-slate-50 border border-slate-200 rounded-xl">
+              {emailSuccess ? (
+                <p className="text-[13px] text-green-700 font-medium">Report sent successfully. Please check your inbox.</p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="email"
+                      value={emailAddress}
+                      onChange={(e) => { setEmailAddress(e.target.value); setEmailValidationError(''); }}
+                      placeholder="Enter email address"
+                      className="flex-1 px-3 py-2 text-[13px] border border-slate-200 rounded-lg outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all"
+                    />
+                    <button
+                      onClick={handleSendEmail}
+                      disabled={emailSending}
+                      className="flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg transition-colors disabled:opacity-60 whitespace-nowrap"
+                    >
+                      {emailSending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                      {emailSending ? 'Sending...' : 'Send Report'}
+                    </button>
+                    <button
+                      onClick={() => { setEmailFormOpen(false); setEmailError(''); setEmailValidationError(''); setEmailAddress(''); }}
+                      className="text-[13px] text-gray-400 hover:text-gray-600 transition-colors whitespace-nowrap"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                  {emailValidationError && <p className="text-[12px] text-red-600 mt-2">{emailValidationError}</p>}
+                  {emailError && <p className="text-[12px] text-red-600 mt-2">{emailError}</p>}
+                  <p className="text-[11px] text-gray-400 mt-2">
+                    The report will be sent to the email address you enter. You can send it to yourself or a colleague.
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Card B — Run another audit */}
+        <div className="mt-4 bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+          <h2 className="text-[15px] font-semibold text-gray-900 mb-1">Want to check more pages?</h2>
+          <p className="text-[13px] text-gray-500 mb-4">
+            Each audit is a one-time purchase. Your previous results are saved to your account.
+          </p>
+          {newAuditError && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-[13px] text-red-700">{newAuditError}</p>
+            </div>
+          )}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Standard */}
+            <div className="bg-slate-50 rounded-xl border border-slate-200 p-5 flex flex-col">
+              <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Standard</p>
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-[28px] font-bold text-gray-900 leading-none">$149</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
+              </div>
+              <p className="text-[13px] text-gray-500 mb-4">Up to 6 pages</p>
+              <button
+                onClick={() => handleBuyAudit('standard')}
+                disabled={standardAuditLoading}
+                className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-[13px] font-semibold rounded-xl transition-colors duration-200 flex items-center justify-center gap-2 mt-auto"
+              >
+                {standardAuditLoading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" />Redirecting…</> : 'Buy Standard Audit'}
+              </button>
+            </div>
+            {/* Extended */}
+            <div className="relative bg-slate-50 rounded-xl border-2 border-blue-200 p-5 flex flex-col">
+              <div className="absolute -top-3 right-4">
+                <span className="text-[11px] font-semibold text-white bg-blue-600 px-3 py-1 rounded-full shadow-sm">
+                  Best value
+                </span>
+              </div>
+              <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">Extended</p>
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-[28px] font-bold text-gray-900 leading-none">$249</span>
+                <span className="text-[13px] text-gray-400">AUD (incl. GST)</span>
+              </div>
+              <p className="text-[13px] text-gray-500 mb-4">Up to 12 pages</p>
+              <button
+                onClick={() => handleBuyAudit('extended')}
+                disabled={extAuditLoading}
+                className="w-full py-2.5 px-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300 text-white text-[13px] font-semibold rounded-xl transition-colors duration-200 flex items-center justify-center gap-2 mt-auto"
+              >
+                {extAuditLoading ? <><Loader2 className="w-3.5 h-3.5 animate-spin" />Redirecting…</> : 'Buy Extended Audit'}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </LoggedInLayout>

@@ -273,6 +273,13 @@ const AuditFlow: React.FC = () => {
     await saveSteps(updatedSteps, isLast ? 'complete' : 'in_progress');
 
     if (isLast) {
+      if (accountId) {
+        await supabase
+          .from('accounts')
+          .update({ audit_purchased: false })
+          .eq('id', accountId);
+        await refreshAccount();
+      }
       navigate('/audit/report');
       return;
     }
@@ -281,7 +288,7 @@ const AuditFlow: React.FC = () => {
     const nextIndex = currentStepIndex + 1;
     setCurrentStepIndex(nextIndex);
     setShowingResult(false);
-  }, [steps, currentStepIndex, saveSteps, navigate]);
+  }, [steps, currentStepIndex, saveSteps, accountId, refreshAccount, navigate]);
 
   // Called when user clicks "Next Page" or "View Full Report" on the result screen.
   const handleNext = useCallback(async () => {
@@ -289,12 +296,20 @@ const AuditFlow: React.FC = () => {
     if (isLast) {
       // Mark session complete and navigate when the user explicitly clicks "View Full Report"
       await saveSteps(steps, 'complete');
+      // Reset audit_purchased so the padlock reappears on the nav link after the audit completes
+      if (accountId) {
+        await supabase
+          .from('accounts')
+          .update({ audit_purchased: false })
+          .eq('id', accountId);
+        await refreshAccount();
+      }
       navigate('/audit/report');
       return;
     }
     setCurrentStepIndex(currentStepIndex + 1);
     setShowingResult(false);
-  }, [currentStepIndex, steps, saveSteps, navigate]);
+  }, [currentStepIndex, steps, saveSteps, accountId, refreshAccount, navigate]);
 
   const progressSteps = steps.map((step, idx) => ({
     name: step.name,
