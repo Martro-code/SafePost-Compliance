@@ -261,7 +261,7 @@ const PricingMedicalPractices: React.FC = () => {
                 Get Standard Audit
               </button>
               <p className="text-center text-[11px] text-gray-400 mt-2">
-                New to SafePost? Create a free account to get started.
+                New to SafePost? Create a free account to get started
               </p>
             </div>
             {/* Extended */}
@@ -295,7 +295,7 @@ const PricingMedicalPractices: React.FC = () => {
                 Get Extended Audit
               </button>
               <p className="text-center text-[11px] text-gray-400 mt-2">
-                New to SafePost? Create a free account to get started.
+                New to SafePost? Create a free account to get started
               </p>
             </div>
           </div>
