@@ -3,6 +3,17 @@ import { supabase } from '../services/supabaseClient';
 import { trackLogin, trackSignUp } from '../services/analytics';
 
 function getPostAuthRedirect(): string {
+  // Check for a one-off pending redirect (e.g. audit standalone purchase flow)
+  try {
+    const pendingRedirect = localStorage.getItem('safepost_pending_redirect');
+    if (pendingRedirect) {
+      localStorage.removeItem('safepost_pending_redirect');
+      return pendingRedirect;
+    }
+  } catch {
+    localStorage.removeItem('safepost_pending_redirect');
+  }
+
   try {
     const raw = localStorage.getItem('safepost_pending_checkout');
     if (raw) {

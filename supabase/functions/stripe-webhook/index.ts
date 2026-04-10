@@ -117,6 +117,71 @@ serve(async (req: Request) => {
       return new Response(JSON.stringify({ received: true }), { status: 200 });
     }
 
+    // STANDALONE AUDIT BRANCH — non-subscriber buying audit without subscription
+    if (session.mode === 'payment' && session.metadata?.product_type === 'audit_standalone') {
+      const accountId = session.metadata.account_id;
+      const paymentIntentId = session.payment_intent as string;
+
+      if (!accountId) {
+        console.error('No account_id in audit_standalone payment metadata');
+        return new Response('Missing account_id', { status: 400 });
+      }
+
+      const { error } = await supabase
+        .from('accounts')
+        .update({
+          audit_purchased: true,
+          audit_payment_intent_id: paymentIntentId,
+          audit_only: true,
+        })
+        .eq('id', accountId);
+
+      if (error) {
+        console.error('Failed to update audit_standalone fields:', error.message);
+        return new Response('Database update failed', { status: 500 });
+      }
+
+      await supabase
+        .from('processed_webhook_events')
+        .insert({ event_id: event.id });
+
+      const maskedAccount = accountId.slice(0, 8) + '...';
+      console.log(`Standalone audit purchase confirmed for account ${maskedAccount}`);
+      return new Response(JSON.stringify({ received: true }), { status: 200 });
+    }
+
+    // EXTENDED AUDIT BRANCH — upgrade from standard (6 pages) to extended (12 pages)
+    if (session.mode === 'payment' && session.metadata?.product_type === 'audit_extended') {
+      const accountId = session.metadata.account_id;
+      const paymentIntentId = session.payment_intent as string;
+
+      if (!accountId) {
+        console.error('No account_id in audit_extended payment metadata');
+        return new Response('Missing account_id', { status: 400 });
+      }
+
+      const { error } = await supabase
+        .from('accounts')
+        .update({
+          extended_audit_purchased: true,
+          extended_audit_payment_intent_id: paymentIntentId,
+        })
+        .eq('id', accountId);
+
+      if (error) {
+        console.error('Failed to update extended_audit_purchased:', error.message);
+        return new Response('Database update failed', { status: 500 });
+      }
+
+      await supabase
+        .from('processed_webhook_events')
+        .insert({ event_id: event.id });
+
+      const maskedAccount = accountId.slice(0, 8) + '...';
+      console.log(`Extended audit purchase confirmed for account ${maskedAccount}`);
+      return new Response(JSON.stringify({ received: true }), { status: 200 });
+    }
+
     // SUBSCRIPTION BRANCH — existing logic unchanged below this point
     const userId = session.metadata?.userId || session.client_reference_id;
 
