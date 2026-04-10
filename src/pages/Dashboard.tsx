@@ -20,7 +20,7 @@ const Dashboard: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const resultsAreaRef = useRef<HTMLDivElement>(null);
   const { firstName, signOut } = useAuth();
-  const { accountId, plan: accountPlan, billingPeriod: accountBillingPeriod, checksUsed, checksLimit, refreshAccount } = useAccount();
+  const { accountId, plan: accountPlan, billingPeriod: accountBillingPeriod, checksUsed, checksLimit, refreshAccount, refreshHistory } = useAccount();
 
   // Use account-level plan, fall back to URL param for initial render
   const rawPlan = accountPlan || searchParams.get('plan') || '';
@@ -32,7 +32,7 @@ const Dashboard: React.FC = () => {
     accountId,
     checksUsed,
     checksLimit,
-    onCheckComplete: refreshAccount,
+    onCheckComplete: async () => { await refreshAccount(); refreshHistory(); },
   });
 
   const hasPaidPlan = planName && !['free', 'starter'].includes(planName.toLowerCase());
