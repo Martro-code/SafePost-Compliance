@@ -1082,6 +1082,50 @@ Return only a JSON array with no markdown in this format:
       }
     }
 
+    // --- Load practice-specific guidelines ---
+    let userVertical: string | null = null;
+    const { data: membershipData } = await supabase
+      .from('account_members')
+      .select('account_id')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .maybeSingle();
+
+    if (membershipData?.account_id) {
+      const { data: accountData } = await supabase
+        .from('accounts')
+        .select('practice_vertical')
+        .eq('id', membershipData.account_id)
+        .maybeSingle();
+      userVertical = accountData?.practice_vertical ?? null;
+    }
+
+    const { data: generalGuidelines } = await supabase
+      .from('guidelines')
+      .select('category, subcategory, section_reference, source_document, rule_text, plain_english_summary, recommended_action')
+      .is('practice_vertical', null);
+
+    const guidelineRows = [...(generalGuidelines ?? [])];
+
+    if (userVertical) {
+      const { data: verticalGuidelines } = await supabase
+        .from('guidelines')
+        .select('category, subcategory, section_reference, source_document, rule_text, plain_english_summary, recommended_action')
+        .eq('practice_vertical', userVertical);
+      guidelineRows.push(...(verticalGuidelines ?? []));
+    }
+
+    let guidelinesAppendix = '';
+    if (guidelineRows.length > 0) {
+      guidelinesAppendix = '\n\n## SUPPLEMENTARY COMPLIANCE GUIDELINES\n\n' +
+        guidelineRows.map((g) =>
+          `**${g.subcategory ?? g.category}** (${g.section_reference ?? g.source_document})\n` +
+          `Rule: ${g.rule_text}\n` +
+          `Plain English: ${g.plain_english_summary}\n` +
+          `Recommended action: ${g.recommended_action}`
+        ).join('\n\n');
+    }
+
     const anthropicRequestHeaders: Record<string, string> = {
       'Content-Type': 'application/json',
       'x-api-key': anthropicApiKey,
@@ -1099,7 +1143,7 @@ Return only a JSON array with no markdown in this format:
       body: JSON.stringify({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: isAuditCheck ? 12000 : 8000,
-        system: SYSTEM_INSTRUCTION,
+        system: SYSTEM_INSTRUCTION + guidelinesAppendix,
         messages: [{ role: 'user', content: userContent }],
       }),
     });

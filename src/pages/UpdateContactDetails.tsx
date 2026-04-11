@@ -28,6 +28,7 @@ const UpdateContactDetails: React.FC = () => {
     state: acctState,
     postcode: acctPostcode,
     specialty: acctSpecialty,
+    practiceVertical: acctPracticeVertical,
     accountLoading,
     refreshAccount,
   } = useAccount();
@@ -42,6 +43,7 @@ const UpdateContactDetails: React.FC = () => {
   const [state, setState] = useState(acctState || currentState || '');
   const [postcode, setPostcode] = useState(acctPostcode || currentPostcode || '');
   const [specialty, setSpecialty] = useState(acctSpecialty || currentSpecialty || '');
+  const [practiceVertical, setPracticeVertical] = useState(acctPracticeVertical || '');
 
   // Re-populate all fields once account data finishes loading.
   // useState runs once at mount; if the AccountContext async fetch hasn't
@@ -56,6 +58,7 @@ const UpdateContactDetails: React.FC = () => {
       setState(acctState || currentState || '');
       setPostcode(acctPostcode || currentPostcode || '');
       setSpecialty(acctSpecialty || currentSpecialty || '');
+      setPracticeVertical(acctPracticeVertical || '');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountLoading]);
@@ -129,7 +132,7 @@ const UpdateContactDetails: React.FC = () => {
     if (accountId) {
       const { data } = await supabase
         .from('accounts')
-        .select('mobile, practice_name, address, suburb, state, postcode, specialty')
+        .select('mobile, practice_name, address, suburb, state, postcode, specialty, practice_vertical')
         .eq('id', accountId)
         .single();
       if (data) current = data;
@@ -146,7 +149,8 @@ const UpdateContactDetails: React.FC = () => {
       suburb:        merged(suburb,        'suburb'),
       state:         state || current.state || null,
       postcode:      merged(postcode,      'postcode'),
-      specialty:     specialty || current.specialty || null,
+      specialty:          specialty || current.specialty || null,
+      practice_vertical:  practiceVertical || null,
     };
 
     // Update user_metadata
@@ -299,6 +303,24 @@ const UpdateContactDetails: React.FC = () => {
                   {specialtyOptions.map((opt) => (
                     <option key={opt} value={opt}>{opt}</option>
                   ))}
+                </select>
+                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Practice type</label>
+              <div className="relative">
+                <select
+                  value={practiceVertical}
+                  onChange={(e) => setPracticeVertical(e.target.value)}
+                  className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none cursor-pointer dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                >
+                  <option value="">None</option>
+                  <option value="cosmetic_injectables">Cosmetic injectables</option>
+                  <option value="weight_management">Weight management</option>
+                  <option value="medicinal_cannabis">Medicinal cannabis</option>
+                  <option value="general_practice_allied_health">General practice / Allied health</option>
                 </select>
                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
               </div>

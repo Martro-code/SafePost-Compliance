@@ -76,6 +76,7 @@ export interface AccountContextType {
   extendedAuditPurchased: boolean;
   auditOnly: boolean;
   auditPageLimit: number;
+  practiceVertical: string | null;
   accountLoading: boolean;
   refreshAccount: () => Promise<void>;
   complianceHistory: SavedComplianceCheck[];
@@ -108,6 +109,7 @@ const AccountContext = createContext<AccountContextType>({
   extendedAuditPurchased: false,
   auditOnly: false,
   auditPageLimit: 0,
+  practiceVertical: null,
   accountLoading: true,
   refreshAccount: async () => {},
   complianceHistory: [],
@@ -138,6 +140,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const [auditPurchased, setAuditPurchased] = useState(false);
   const [auditPaymentIntentId, setAuditPaymentIntentId] = useState<string | null>(null);
   const [extendedAuditPurchased, setExtendedAuditPurchased] = useState(false);
+  const [practiceVertical, setPracticeVertical] = useState<string | null>(null);
   const [accountLoading, setAccountLoading] = useState(!cached);
   const [complianceHistory, setComplianceHistory] = useState<SavedComplianceCheck[]>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
@@ -176,7 +179,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
         // Found membership — load the account
         const { data: account, error: accountFetchError } = await supabase
           .from('accounts')
-          .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id, audit_only, extended_audit_purchased')
+          .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id, audit_only, extended_audit_purchased, practice_vertical')
           .eq('id', membership.account_id)
           .single();
         if (accountFetchError) {
@@ -224,6 +227,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
           setAuditPurchased(account.audit_purchased ?? false);
           setAuditPaymentIntentId(account.audit_payment_intent_id ?? null);
           setExtendedAuditPurchased(account.extended_audit_purchased ?? false);
+          setPracticeVertical(account.practice_vertical ?? null);
           writeAccountCache({
             accountId: account.id,
             plan: account.plan || 'starter',
@@ -276,7 +280,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       // zero rows when the row already exists.
       const { data: resolvedAccount, error: fetchError } = await supabase
         .from('accounts')
-        .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id')
+        .select('id, plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id, practice_vertical')
         .eq('owner_user_id', user.id)
         .single();
 
@@ -358,6 +362,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setAuditPurchased(resolvedAccount.audit_purchased ?? false);
       setAuditPaymentIntentId(resolvedAccount.audit_payment_intent_id ?? null);
       setExtendedAuditPurchased(resolvedAccount.extended_audit_purchased ?? false);
+      setPracticeVertical(resolvedAccount.practice_vertical ?? null);
       writeAccountCache({
         accountId: resolvedAccount.id,
         plan: resolvedAccount.plan || provisionPlan,
@@ -460,7 +465,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
     if (!accountId) return;
     const { data: account } = await supabase
       .from('accounts')
-      .select('plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id')
+      .select('plan, billing_period, checks_used, checks_limit, mobile, practice_name, address, suburb, state, postcode, specialty, abn, abn_entity_name, audit_purchased, audit_payment_intent_id, practice_vertical')
       .eq('id', accountId)
       .single();
 
@@ -492,6 +497,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
       setAuditPurchased(account.audit_purchased ?? false);
       setAuditPaymentIntentId(account.audit_payment_intent_id ?? null);
       setExtendedAuditPurchased(account.extended_audit_purchased ?? false);
+      setPracticeVertical(account.practice_vertical ?? null);
       writeAccountCache({
         accountId,
         plan: account.plan || 'starter',
@@ -506,7 +512,7 @@ export const AccountProvider: React.FC<{ children: React.ReactNode }> = ({ child
   const auditPageLimit = extendedAuditPurchased ? 12 : auditPurchased ? 6 : 0;
 
   return (
-    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, auditPurchased, auditPaymentIntentId, extendedAuditPurchased, auditOnly: isAuditOnly, auditPageLimit, accountLoading, refreshAccount, complianceHistory, isHistoryLoading, refreshHistory, prefetchedAuditSessions }}>
+    <AccountContext.Provider value={{ accountId, role, plan, billingPeriod, cancelled, cancelDate, checksUsed, checksLimit, mobile, practiceName, address, suburb, state: accountState, postcode, specialty, abn, abnEntityName, abnRequired: !accountLoading && !!accountId && !abn, auditPurchased, auditPaymentIntentId, extendedAuditPurchased, auditOnly: isAuditOnly, auditPageLimit, practiceVertical, accountLoading, refreshAccount, complianceHistory, isHistoryLoading, refreshHistory, prefetchedAuditSessions }}>
       {children}
     </AccountContext.Provider>
   );
