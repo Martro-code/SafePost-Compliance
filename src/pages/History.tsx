@@ -287,44 +287,12 @@ const History: React.FC = () => {
     const targetId = sessionStorage.getItem('safepost_view_check_id');
     if (!targetId) return;
     sessionStorage.removeItem('safepost_view_check_id');
-    const match = checker.history.find((c) => c.id === targetId);
-    if (match) {
-      // Navigate to dashboard with the check result via location.state
-      const normalised = match.result_json ? {
-        ...match.result_json,
-        overall_status: match.overall_status,
-        summary: match.result_json.summary ?? match.result_json.overallVerdict ?? '',
-        issues: match.result_json.issues ?? [],
-      } : null;
-      navigate('/dashboard', {
-        state: {
-          fromHistory: true,
-          checkId: match.id,
-          checkResult: normalised,
-          contentText: match.content_text ?? '',
-          createdAt: match.created_at,
-        },
-      });
-    }
+    navigate('/dashboard', { state: { checkId: targetId } });
   }, [checker.isLoadingHistory, checker.history]);
 
   // View a check on the dashboard
   const handleViewCheck = useCallback((check: SavedComplianceCheck) => {
-    const normalised = check.result_json ? {
-      ...check.result_json,
-      overall_status: check.overall_status,
-      summary: check.result_json.summary ?? check.result_json.overallVerdict ?? '',
-      issues: check.result_json.issues ?? [],
-    } : null;
-    navigate('/dashboard', {
-      state: {
-        fromHistory: true,
-        checkId: check.id,
-        checkResult: normalised,
-        contentText: check.content_text ?? '',
-        createdAt: check.created_at,
-      },
-    });
+    navigate('/dashboard', { state: { checkId: check.id } });
   }, [navigate]);
 
   const handleViewAudit = useCallback(() => navigate('/audit/report'), [navigate]);

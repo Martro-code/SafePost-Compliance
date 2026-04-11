@@ -63,32 +63,46 @@ const Dashboard: React.FC = () => {
   const [showBulkTooltip, setShowBulkTooltip] = useState(false);
 
   // If navigating from History with a specific check, load it immediately
-  const historyState = location.state as { fromHistory?: boolean; checkId?: string; checkResult?: any; contentText?: string; createdAt?: string; cancelled?: boolean; cancelDate?: string } | null;
+  const historyState = location.state as { checkId?: string; cancelled?: boolean; cancelDate?: string } | null;
 
   // Track whether the current result is a historical check (from sidebar or History page)
   const [isHistorical, setIsHistorical] = useState(false);
   const [historicalCheckedAt, setHistoricalCheckedAt] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    if (historyState?.fromHistory && historyState.checkResult) {
-      checker.loadCheck({
-        id: historyState.checkId ?? '',
-        result_json: historyState.checkResult,
-        overall_status: historyState.checkResult.overall_status,
-        content_text: historyState.contentText ?? '',
-      } as any);
-      setContent(historyState.contentText ?? '');
+    const checkId = historyState?.checkId;
+    if (!checkId) return;
+    // Clear the location state so a page refresh doesn't replay the load
+    window.history.replaceState({}, '');
+    (async () => {
+      const { data, error } = await supabase
+        .from('compliance_checks')
+        .select('id, content_text, overall_status, created_at, result_json')
+        .eq('id', checkId)
+        .single();
+      if (error) {
+        console.error('[Dashboard] Failed to fetch check by ID:', checkId, error.message);
+        return;
+      }
+      if (!data) {
+        console.warn('[Dashboard] No check found for ID:', checkId);
+        return;
+      }
+      if (!data.result_json) {
+        console.warn('[Dashboard] Check has no result data, cannot display results for ID:', checkId);
+        return;
+      }
+      checker.loadCheck(data as any);
+      setContent(data.content_text ?? '');
       setView('results');
       setIsHistorical(true);
-      setHistoricalCheckedAt(historyState.createdAt);
-      // Clear the location state so refreshing / re-navigating doesn't replay
-      window.history.replaceState({}, '');
-    }
+      setHistoricalCheckedAt(data.created_at);
+    })();
   }, []);  // eslint-disable-line react-hooks/exhaustive-deps
 
   // Restore results view if a previous result exists in session (non-History navigation)
   useEffect(() => {
-    if (!historyState?.fromHistory && checker.result && view === 'input') {
+    if (!historyState?.checkId && checker.result && view === 'input') {
       setView('results');
     }
   }, [checker.result]);
