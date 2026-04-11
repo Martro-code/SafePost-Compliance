@@ -1,15 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
 import LoggedInLayout from '../components/layout/LoggedInLayout';
 import { useAuth } from '../hooks/useAuth';
 import { useAccount } from '../context/AccountContext';
+import { supabase } from '../services/supabaseClient';
 import { getDisplayPlanName } from '../utils/planUtils';
+
+const VERTICAL_LABELS: Record<string, string> = {
+  cosmetic_injectables: 'Cosmetic injectables and cosmetic procedure clinics',
+  weight_management: 'Weight management clinics',
+  medicinal_cannabis: 'Medicinal cannabis services',
+  general_practice_allied_health: 'General practice and allied health',
+};
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
   const { userEmail, firstName, surname, mobileNumber, practiceName, streetAddress, suburb, userState, postcode, specialty, signOut } = useAuth();
-  const { plan: accountPlan, billingPeriod: accountBillingPeriod, specialty: acctSpecialty, abn: accountAbn, abnEntityName: accountAbnEntityName } = useAccount();
+  const { plan: accountPlan, billingPeriod: accountBillingPeriod, specialty: acctSpecialty, abn: accountAbn, abnEntityName: accountAbnEntityName, practiceVertical, accountId, refreshAccount } = useAccount();
 
   const displaySpecialty = acctSpecialty || specialty;
 
@@ -17,6 +25,31 @@ const Profile: React.FC = () => {
   const billingPeriod = accountBillingPeriod || '';
 
   const displayPlanName = getDisplayPlanName(planName);
+
+  const [isEditingVertical, setIsEditingVertical] = useState(false);
+  const [verticalDraft, setVerticalDraft] = useState('');
+  const [verticalSaving, setVerticalSaving] = useState(false);
+
+  const handleEditVertical = () => {
+    setVerticalDraft(practiceVertical ?? '');
+    setIsEditingVertical(true);
+  };
+
+  const handleCancelVertical = () => {
+    setIsEditingVertical(false);
+  };
+
+  const handleSaveVertical = async () => {
+    if (!accountId) return;
+    setVerticalSaving(true);
+    await supabase
+      .from('accounts')
+      .update({ practice_vertical: verticalDraft || null })
+      .eq('id', accountId);
+    await refreshAccount();
+    setVerticalSaving(false);
+    setIsEditingVertical(false);
+  };
 
 
   return (
@@ -81,6 +114,68 @@ const Profile: React.FC = () => {
               <p className="text-[14px] font-medium text-gray-900 dark:text-white">{displayPlanName}</p>
               <p className="text-[12px] text-gray-400 mt-0.5">{billingPeriod ? billingPeriod.charAt(0).toUpperCase() + billingPeriod.slice(1).toLowerCase() : 'Monthly'} billing</p>
             </div>
+          </div>
+
+          <div className="border-t border-black/[0.06] dark:border-gray-700" />
+
+          {/* Section: Practice setting */}
+          <div className="p-6 md:p-8">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider dark:text-gray-500">Practice setting</h3>
+              {!isEditingVertical && (
+                <button
+                  onClick={handleEditVertical}
+                  className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition-colors dark:text-blue-400 dark:hover:text-blue-300"
+                >
+                  Edit
+                </button>
+              )}
+            </div>
+
+            {isEditingVertical ? (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-[13px] font-medium text-gray-700 mb-1.5 dark:text-gray-300">Practice type</label>
+                  <div className="relative">
+                    <select
+                      value={verticalDraft}
+                      onChange={(e) => setVerticalDraft(e.target.value)}
+                      className="w-full h-12 px-4 text-[14px] text-gray-900 bg-white rounded-lg border border-gray-200 outline-none transition-all duration-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 appearance-none cursor-pointer dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    >
+                      <option value="">Not set</option>
+                      <option value="cosmetic_injectables">Cosmetic injectables and cosmetic procedure clinics</option>
+                      <option value="weight_management">Weight management clinics</option>
+                      <option value="medicinal_cannabis">Medicinal cannabis services</option>
+                      <option value="general_practice_allied_health">General practice and allied health</option>
+                    </select>
+                    <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={handleCancelVertical}
+                    disabled={verticalSaving}
+                    className="h-9 px-4 text-[13px] font-semibold text-gray-600 hover:text-gray-900 rounded-lg border border-black/[0.08] hover:border-black/[0.15] hover:bg-black/[0.02] transition-all duration-200 active:scale-[0.98] disabled:opacity-50 dark:text-gray-300 dark:hover:text-white dark:border-gray-600"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveVertical}
+                    disabled={verticalSaving}
+                    className="h-9 px-4 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-semibold rounded-lg shadow-sm shadow-blue-600/25 transition-all duration-200 active:scale-[0.98] disabled:opacity-50"
+                  >
+                    {verticalSaving ? 'Saving…' : 'Save'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] text-gray-500 dark:text-gray-400">Practice type</span>
+                <span className={`text-[14px] ${practiceVertical ? 'font-medium text-gray-900 dark:text-white' : 'text-gray-400'}`}>
+                  {practiceVertical ? (VERTICAL_LABELS[practiceVertical] ?? practiceVertical) : 'Not set'}
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="border-t border-black/[0.06] dark:border-gray-700" />
